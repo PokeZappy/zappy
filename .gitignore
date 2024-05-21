@@ -8,3 +8,4 @@ zappy_server
 zappy_gui
 *.a
 .vscode/
+vgcore*

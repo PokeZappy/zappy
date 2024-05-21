@@ -23,7 +23,7 @@ int error_handling(int ac, char **av)
         print_help();
         return 1;
     }
-    if (ac != 8) {
+    if (ac < 13) {
         print_error();
         return 84;
     }
