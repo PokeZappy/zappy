@@ -25,16 +25,26 @@ LDLIBS += -L./criterion/lib -lcriterion
 
 CC = g++
 
+ECHO = echo -e
+GREEN = "\033[0;32m"
+RED = "\033[0;31m"
+BLUE = "\033[0;34m"
+DEFAULT = "\033[0m"
+
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	$(CC) -o $(NAME) main.c $(OBJ) $(CXXFLAGS)
+	@ $(CC) -o $(NAME) main.c $(OBJ) $(CXXFLAGS) && \
+	$(ECHO) $(GREEN) "ZAPPY_SERVER COMPILED" || \
+	$(ECHO) $(RED) "ZAPPY_SERVER NON COMPILED"
 
 clean:
-	rm -f $(OBJ)
+	@ rm -f $(OBJ)
+	@ $(ECHO) $(GREEN) "CLEANED"
 
 fclean: clean
-	rm -f $(NAME)
+	@ rm -f $(NAME)
+	@ $(ECHO) $(GREEN) "FCLEANED"
 
 re: fclean all
 
@@ -48,5 +58,10 @@ tests_clean: fclean
 
 coverage:
 	gcovr
+
+.c.o:
+		@$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@ && \
+        $(ECHO) $(GREEN) "[OK]" $(BLUE) $< $(DEFAULT) || \
+        ($(ECHO) $(RED) "[XX]" $(BLUE) $< $(DEFAULT) && exit 1)
 
 .PHONY: all clean fclean re tests_run coverage
