@@ -9,7 +9,14 @@
 
 static void print_help(void)
 {
-    printf("USAGE: help message shaisssss !\n");
+    printf("USAGE: ./zappy_server -p [port] -x [width] -y [height] ");
+    printf("-n {name1} {name2} ... {namex} -c [clientsNb] -f [freq]\n");
+    printf("\t-p port  \tport number\n");
+    printf("\t-x width \twidth of the world\n");
+    printf("\t-y height\theight of the world\n");
+    printf("\t-n namex \tlist of names of the team\n");
+    printf("\t-c clNb  \tnumber of authorized clients per team\n");
+    printf("\t-f freq  \treciprocal of time unit for execution of actions\n");
 }
 
 static void print_error(void)
