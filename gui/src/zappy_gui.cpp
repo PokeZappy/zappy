@@ -14,9 +14,13 @@ void ZappyGUI::getOptions(int argc, char **argv)
     while ((opt = getopt(argc, argv, "p:h:")) != -1) {
         switch (opt) {
             case 'p':
+                if (_port != -1)
+                    throw DoubleOptionException();
                 _port = std::stoi(optarg);
                 break;
             case 'h':
+                if (_machine != "")
+                    throw DoubleOptionException();
                 _machine = optarg;
                 break;
             default:

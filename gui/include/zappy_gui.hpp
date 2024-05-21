@@ -33,5 +33,9 @@ class ZappyGUI
                 public:
                     const char *what() const noexcept override{ return "Missing exception in parsing"; };
         };
+        class DoubleOptionException : public std::exception {
+                public:
+                    const char *what() const noexcept override{ return "Double option detected in parsing"; };
+        };
         void getOptions(int argc, char **argv);
 };

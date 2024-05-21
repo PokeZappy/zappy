@@ -14,7 +14,14 @@ int main(int ac, char **av)
 
     try {
         gui.getOptions(ac, av);
-    } catch (...) {
+    } catch (ZappyGUI::DoubleOptionException &e) {
+        std::cerr << e.what() << std::endl;
+        return displayUsage();
+    } catch (ZappyGUI::MissingOptionException &e) {
+        std::cerr << e.what() << std::endl;
+        return displayUsage();
+    }
+    catch (ZappyGUI::InvalidOptionException &e) {
         return displayUsage();
     }
     return (0);
