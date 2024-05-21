@@ -7,24 +7,23 @@
 
 #include "../include/zappy_server.h"
 
-static void print_args(server_arg_t *arguments)
-{
-    printf("STRUCT: {\n");
-    printf("   P: %d,\n", arguments->_p);
-    printf("   X: %d,\n", arguments->_x);
-    printf("   Y: %d,\n", arguments->_y);
-    printf("   C: %d,\n", arguments->_c);
-    printf("   F: %d,\n", arguments->_f);
-    printf("   N: ");
-    for (int i = 0; arguments->_n[i]; i++)
-        printf("[%s]", arguments->_n[i]);
-    printf("\n}\n");
-}
+// static void print_args(server_arg_t *arguments)
+// {
+//     printf("STRUCT: {\n");
+//     printf("   P: %d,\n", arguments->_p);
+//     printf("   X: %d,\n", arguments->_x);
+//     printf("   Y: %d,\n", arguments->_y);
+//     printf("   C: %d,\n", arguments->_c);
+//     printf("   F: %d,\n", arguments->_f);
+//     printf("   N: ");
+//     for (int i = 0; arguments->_n[i]; i++)
+//         printf("[%s]", arguments->_n[i]);
+//     printf("\n}\n");
+// }
 
 int zappy_server(server_arg_t *arguments)
 {
     (void) arguments;
     printf("Zappy server !\n");
-    print_args(arguments);
     return 0;
 }
