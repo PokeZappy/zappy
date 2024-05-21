@@ -19,6 +19,8 @@ typedef struct {
     int _c; // number of authorized clients per team
     int _f; // reciprocal of time unit for execution of actions
     char **_n; // name of the team member
+
+    int _num_names; // How many names there are ?
 } server_arg_t;
 
 server_arg_t *parsing(int ac, char **av);
