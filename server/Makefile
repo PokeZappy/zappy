@@ -5,16 +5,16 @@
 ## Makefile
 ##
 
-SRC = 	$(wildcard src/*.cpp)
+SRC = 	$(wildcard src/*.c)
 
-OBJ = $(SRC:.cpp=.o)
+OBJ = $(SRC:.c=.o)
 
 TESTS_SRC = $(SRC)
-TESTS_SRC += $(wildcard tests/*.cpp)
+TESTS_SRC += $(wildcard tests/*.c)
 
 TESTS_TARGET = unit_tests
 
-TESTS_OBJS := $(TESTS_SRC:%.cpp=%.o)
+TESTS_OBJS := $(TESTS_SRC:%.c=%.o)
 
 NAME = zappy_server
 
@@ -28,7 +28,7 @@ CC = g++
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	$(CC) -o $(NAME) main.cpp $(OBJ) $(CXXFLAGS)
+	$(CC) -o $(NAME) main.c $(OBJ) $(CXXFLAGS)
 
 clean:
 	rm -f $(OBJ)
