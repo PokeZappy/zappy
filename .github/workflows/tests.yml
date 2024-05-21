@@ -1,0 +1,19 @@
+name : Zappy Unit tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Build & do test
+      run: |
+        make tests_run
