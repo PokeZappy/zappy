@@ -1,3 +1,4 @@
+.gitignore
 unit_tests*
 .idea
 *.o
@@ -5,3 +6,5 @@ a.out
 zappy_ai
 zappy_server
 zappy_gui
+*.a
+.vscode/

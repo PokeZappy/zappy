@@ -5,14 +5,15 @@
 ** main.c
 */
 
-#include "zappy_server.hpp"
-#include "stdio.h"
+#include "include/error_handling.h"
 
 int main(int ac, char **av)
 {
-    (void) ac;
-    (void) av;
+    int error = error_handling(ac, av);
 
-    printf("Salam server !\n");
+    if (error == 84)
+        return 84;
+    if (error == 1)
+        return 0;
     return 0;
 }
