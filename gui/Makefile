@@ -29,12 +29,13 @@ all: $(NAME)
 
 $(NAME):	$(OBJ)
 	$(CC) -o $(NAME) main.cpp $(OBJ) $(CXXFLAGS)
+	mv $(NAME) ../
 
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f ../$(NAME)
 
 re: fclean all
 
