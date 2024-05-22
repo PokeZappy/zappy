@@ -5,8 +5,8 @@
 ** parsing.c
 */
 
-#include "../include/parsing.h"
-#include "../include/free.h"
+#include "../../include/parsing.h"
+#include "../../include/free.h"
 
 static int is_number(char *str)
 {

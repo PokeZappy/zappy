@@ -5,7 +5,7 @@
 ** free.c
 */
 
-#include "../include/free.h"
+#include "../../include/free.h"
 
 static void free_tab(char **tab)
 {
