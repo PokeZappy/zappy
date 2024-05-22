@@ -9,3 +9,4 @@ zappy_gui
 *.a
 .vscode/
 vgcore*
+storage/

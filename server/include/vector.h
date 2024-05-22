@@ -8,6 +8,6 @@
 #pragma once
 
 typedef struct vector_s {
-    int x; // x coordinate
-    int y; // y coordinate
+    int _x; // x coordinate
+    int _y; // y coordinate
 } vector_t;

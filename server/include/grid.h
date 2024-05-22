@@ -10,9 +10,9 @@
 #include "tile.h"
 
 typedef struct grid_s {
-    int width; // size of the grid
-    int height; // size of the grid
-    tiles_t **tiles; // 2D array of tiles
+    int _width; // size of the grid
+    int _height; // size of the grid
+    tiles_t **_tiles; // 2D array of tiles
 } grid_t;
 
 grid_t *init_grid(int width, int height);

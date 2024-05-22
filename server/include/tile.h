@@ -10,7 +10,7 @@
 #include "constant.h"
 
 typedef struct tiles_s {
-    int items[ITEM_PER_TILE]; // list items on the tile
+    int _items[ITEM_PER_TILE]; // list items on the tile
 } tiles_t;
 
 tiles_t *init_tile(void);

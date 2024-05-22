@@ -13,11 +13,12 @@
 #include "team.h"
 
 typedef struct player_s {
-    vector_t pos; // position of the player
-    direction_t direction; // looking direction of the player
-    int level; // level of the player
-    int items[ITEM_PER_TILE]; // list items on the tile
-    team_t *team; // team of the player
+    vector_t _pos; // position of the player
+    direction_t _direction; // looking direction of the player
+    int _level; // level of the player
+    int _items[ITEM_PER_TILE]; // list items on the tile
+    team_t *_team; // team of the player
+    TAILQ_ENTRY(player_s) entries;
 } player_t;
 
 player_t *init_player(void);
