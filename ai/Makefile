@@ -22,4 +22,7 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+tests_run:
+	pytest --cov=src/ tests/
+
+.PHONY: all clean fclean re tests_run

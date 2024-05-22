@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import socket
 import sys
-from server import connexion
+from src.server import connexion
 
 
 class Bot(object):
@@ -178,8 +178,8 @@ def main():
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")
-        sys.exit(84)
-    sys.exit(0)
+        return 84
+    return 0
 
 
 if __name__ == "__main__":
