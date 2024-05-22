@@ -12,6 +12,7 @@
 #include "grid.h"
 #include <sys/queue.h>
 #include <netinet/in.h>
+#include <stdio.h>
 
 typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
@@ -28,3 +29,4 @@ server_t *init_server(server_arg_t *arguments);
 void free_server(server_t *server);
 void add_player_to_server(server_t *server, player_t *player);
 void remove_player_from_server(server_t *server, player_t *player);
+int zappy_server(server_arg_t *arguments);

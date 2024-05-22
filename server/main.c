@@ -8,7 +8,7 @@
 #include "include/error_handling.h"
 #include "include/parsing.h"
 #include "include/free.h"
-#include "include/zappy_server.h"
+#include "include/server.h"
 
 int main(int ac, char **av)
 {
