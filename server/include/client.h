@@ -8,6 +8,8 @@
 #pragma once
 
 #include "constant.h"
+#include "server.h"
+#include "free.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,4 +24,5 @@ typedef struct client_socket_s {
     TAILQ_ENTRY(client_socket_s) entries;
 } client_socket_t;
 
-void handle_client(int client_socket);
+void handle_client(int client_socket, struct server_s *server);
+void free_server(struct server_s *server);

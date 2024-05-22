@@ -18,16 +18,17 @@ static void send_welcome_message(int socket)
     }
 }
 
-static void handle_command(char *buffer, int client_socket)
+static void handle_command(char *buffer, int client_socket, server_t *server)
 {
     if (strcmp(buffer, "EXIT") == 0) {
         printf("Client requested exit\n");
         close(client_socket);
+        free_server(server);
         exit(EXIT_SUCCESS);
     }
 }
 
-void handle_client(int client_socket)
+void handle_client(int client_socket, server_t *server)
 {
     char buffer[READ_SIZE];
     int bytes;
@@ -47,6 +48,6 @@ void handle_client(int client_socket)
         }
         buffer[bytes - 2] = '\0';
         printf("Received from client: {%s}\n", buffer);
-        handle_command(buffer, client_socket);
+        handle_command(buffer, client_socket, server);
     }
 }

@@ -25,6 +25,5 @@ int main(int ac, char **av)
         return 84;
     }
     zappy_server(args);
-    free_server_arg(args);
     return 0;
 }

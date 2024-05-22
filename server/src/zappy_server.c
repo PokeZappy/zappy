@@ -10,12 +10,13 @@
 #include <errno.h>
 #include <sys/types.h>
 
-static void free_server(server_t *server)
+void free_server(server_t *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
 
     if (!server)
         return;
+    free_server_arg(server->arguments);
     while (client != NULL) {
         TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
         close(client->socket);
@@ -95,13 +96,13 @@ static void wait_for_client(server_t *server)
         ntohs(client_addr.sin_port));
     new_cl_sckt = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_cl_sckt->socket = client_socket;
+    TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_cl_sckt, entries);
     pid = fork();
     if (pid == 0) {
         close(server->socket);
-        handle_client(client_socket);
+        handle_client(client_socket, server);
     } else if (pid > 0) {
         new_cl_sckt->pid = pid;
-        TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_cl_sckt, entries);
         close(client_socket);
     }
 }
