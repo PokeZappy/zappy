@@ -10,9 +10,13 @@
 #include "parsing.h"
 #include "team.h"
 #include "grid.h"
+#include "client.h"
 #include <sys/queue.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
 
 typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
