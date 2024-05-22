@@ -31,3 +31,27 @@ void ZappyGUI::getOptions(int argc, char **argv)
         throw MissingOptionException();
     }
 }
+
+void ZappyGUI::server_connect(void)
+{
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in serv;
+
+    if (sock < 0)
+        throw SocketException();
+    serv.sin_family = AF_INET;
+    serv.sin_port = htons(_port);
+
+    if (inet_pton(AF_INET, _machine.c_str(), &serv.sin_addr) <= 0)
+        throw InvalidAdressException();
+    if (connect(sock, (struct sockaddr *)&serv, sizeof(serv)) < 0)
+        throw ServerConnectionException();
+
+    char buffer[1024] = {0};
+    int valread = recv(sock, buffer, sizeof(buffer) - 1, 0);
+    if (valread < 0)
+        throw ServerConnectionException();
+    std::cout << buffer;
+    // send(sock, "coucou", 6, 0);
+    close(sock);
+}

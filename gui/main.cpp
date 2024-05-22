@@ -24,5 +24,6 @@ int main(int ac, char **av)
     catch (ZappyGUI::InvalidOptionException &e) {
         return displayUsage();
     }
+    gui.server_connect();
     return (0);
 }
