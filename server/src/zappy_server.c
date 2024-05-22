@@ -111,13 +111,14 @@ static int simulate_server(server_t *server)
     fd_set readfds;
     struct timeval timeout;
     char buffer[1024];
+    int activity;
 
     FD_ZERO(&readfds);
     FD_SET(STDIN_FILENO, &readfds);
     FD_SET(server->socket, &readfds);
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
-    int activity = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+    activity = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
         if (fgets(buffer, sizeof(buffer), stdin) == NULL || feof(stdin)) {
             printf("Ctrl+D detected. Exiting...\n");
