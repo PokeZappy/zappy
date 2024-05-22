@@ -14,5 +14,12 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <sys/queue.h>
+
+typedef struct client_socket_s {
+    int socket;
+    pid_t pid;
+    TAILQ_ENTRY(client_socket_s) entries;
+} client_socket_t;
 
 void handle_client(int client_socket);

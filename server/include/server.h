@@ -27,10 +27,7 @@ typedef struct server_s {
     grid_t *grid; // grid of the server
     TAILQ_HEAD(, player_s) _head_player; // list of players
     TAILQ_HEAD(, team_s) _head_team; // list of teams
+    TAILQ_HEAD(client_list, client_socket_s) _head_client_sockets;
 } server_t;
 
-server_t *init_server(server_arg_t *arguments);
-void free_server(server_t *server);
-void add_player_to_server(server_t *server, player_t *player);
-void remove_player_from_server(server_t *server, player_t *player);
 int zappy_server(server_arg_t *arguments);
