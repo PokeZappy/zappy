@@ -148,7 +148,21 @@ class Bot(object):
         self.send_action("Incantation\n")
 
     def run(self) -> None:
-        pass
+        self.forward()
+        print(self.recv_action())
+        while True:
+            self.right()
+            print(self.recv_action())
+            self.forward()
+            print(self.recv_action())
+            self.right()
+            print(self.recv_action())
+            self.right()
+            print(self.recv_action())
+            self.forward()
+            print(self.recv_action())
+            self.right()
+            print(self.recv_action())
 
 
 def display_help() -> 0:
