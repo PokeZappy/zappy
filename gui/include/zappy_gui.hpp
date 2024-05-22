@@ -20,9 +20,13 @@ class ZappyGUI
     private:
         int _port = -1;
         std::string _machine = "";
+        int _socketFd = -1;
     public:
         ZappyGUI(void) = default;
-        ~ZappyGUI(void) = default;
+        ~ZappyGUI(void) {
+            if (_socketFd != -1)
+                close(_socketFd);
+        }
         void setPort(int port) { _port = port; };
         void setMachine(std::string &machine) { _machine = machine; };
         int getPort(void) const { return (_port); }
