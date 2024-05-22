@@ -8,7 +8,6 @@
 #pragma once
 
 #include "parsing.h"
-#include "player.h"
 #include "team.h"
 #include "grid.h"
 #include <sys/queue.h>
@@ -21,8 +20,8 @@ typedef struct server_s {
     fd_set read_fds; // read file descriptor
     fd_set write_fds; // write file descriptor
     grid_t *grid; // grid of the server
-    TAILQ_HEAD(, player_t) head_player; // list of players
-    TAILQ_HEAD(, team_t) head_team; // list of teams
+    TAILQ_HEAD(, player_s) _head_player; // list of players
+    TAILQ_HEAD(, team_s) _head_team; // list of teams
 } server_t;
 
 server_t *init_server(server_arg_t *arguments);

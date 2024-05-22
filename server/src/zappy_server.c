@@ -6,6 +6,7 @@
 */
 
 #include "../include/zappy_server.h"
+#include "../include/server.h"
 
 // static void print_args(server_arg_t *arguments)
 // {
