@@ -22,3 +22,5 @@ typedef struct client_socket_s {
     int socket;
     TAILQ_ENTRY(client_socket_s) entries;
 } client_socket_t;
+
+int handle_client(struct server_s *server, int max_sd, fd_set readfds);
