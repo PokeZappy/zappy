@@ -25,8 +25,6 @@ int main(int ac, char **av)
         return displayUsage();
     }
     gui.getSocket().connectSocket(gui.getPort(), gui.getMachine());
-    gui.getSocket().receive();
-    std::string a("GRAPHIC\n");
-    gui.getSocket().sendData(a);
+    gui.loop();
     return (0);
 }

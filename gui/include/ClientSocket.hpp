@@ -13,6 +13,8 @@
 #include <iostream>
 
 class ClientSocket {
+    #define BUFFER_SIZE 1024
+
     public:
         ClientSocket() {};
         ~ClientSocket() {
@@ -21,7 +23,7 @@ class ClientSocket {
             }
         void connectSocket(int port, std::string &ip);
         int getFd(void) { return (_socketFd); }
-        void sendData(std::string &data);
+        void sendData(std::string data);
         void receive(void);
         std::optional<std::string> getNextCommand(void);
     private:

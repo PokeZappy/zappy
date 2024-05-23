@@ -44,5 +44,6 @@ namespace Zappy {
                         const char *what() const noexcept override{ return "Double option detected in parsing"; };
             };
             void getOptions(int argc, char **argv);
+            void loop(void);
     };
 }
