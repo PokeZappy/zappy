@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import socket
 import sys
-from server import connexion
+from src.server import connexion
 
 
 class Bot(object):
