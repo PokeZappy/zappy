@@ -35,6 +35,16 @@ player_t *init_player(team_t *team)
     return player;
 }
 
+player_t *add_player_to_team(char *team_name, server_t *server)
+{
+    player_t *new_player;
+    team_t *team = search_team(team_name, server);
+
+    if (team == NULL)
+        return NULL;
+    return init_player(team);
+}
+
 void free_player(player_t *player)
 {
     free(player);

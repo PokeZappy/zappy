@@ -11,6 +11,7 @@
 #include "vector.h"
 #include "constant.h"
 #include "team.h"
+#include "server.h"
 
 typedef struct player_s {
     int _id; // id of the player
@@ -29,3 +30,5 @@ void add_item_to_player(player_t *player, int item, int quantity);
 void remove_item_from_player(player_t *player, int item, int quantity);
 int get_player_level(player_t *player);
 int increment_player_level(player_t *player);
+
+player_t *add_player_to_team(char *team_name, struct server_s *server);

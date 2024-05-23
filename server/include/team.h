@@ -9,6 +9,7 @@
 
 #include <sys/queue.h>
 #include "player.h"
+#include "server.h"
 
 typedef struct team_s {
     char *_name; // name of the team
@@ -18,4 +19,5 @@ typedef struct team_s {
 } team_t;
 
 team_t *init_team(char *name, int max_clients);
+team_t *search_team(char *team_name, struct server_s *server);
 void free_team(team_t *team);

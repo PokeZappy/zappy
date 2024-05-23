@@ -33,16 +33,42 @@ static void close_all_clients(struct server_s *server)
     }
 }
 
+static void print_client_list(server_t *server)
+{
+    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+
+    printf("CLIENT LIST:\n");
+    while (client != NULL) {
+        if (client->player != NULL) {
+            printf("- CLIENT: {%d}{%s}\n", client->player->_id,
+                client->player->_team->_name);
+        }
+        client = TAILQ_NEXT(client, entries);
+    }
+}
+
 static void handle_client_cmd(char *commands, client_socket_t *client,
     struct server_s *server)
 {
+    player_t *new_player;
     int client_socket = client->socket;
 
+    if (client->player == NULL) {
+        new_player = add_player_to_team(commands, server);
+        if (new_player == NULL) {
+            fprintf(stderr, "handle_client_cmd: Enable to create player\n");
+            return;
+        }
+        client->player = new_player;
+    }
     if (strcmp(commands, "EXIT") == 0) {
         printf("Client requested exit\n");
         close(client_socket);
         TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
         free(client);
+    }
+    if (strcmp(commands, "CLIENT_LIST") == 0) {
+        print_client_list(server);
     }
 }
 
@@ -99,6 +125,7 @@ static void wait_for_client(struct server_s *server)
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
+    new_client->player = NULL;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
     send_client_message(client_socket, "Welcome !\n");
 }

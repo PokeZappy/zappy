@@ -23,18 +23,36 @@ void free_server_arg(server_arg_t *arguments)
     free(arguments);
 }
 
-void free_server(server_t *server)
+static void free_server_client(server_t *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
 
-    if (!server)
-        return;
-    free_server_arg(server->arguments);
     while (client != NULL) {
         TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
         close(client->socket);
+        free_player(client->player);
         free(client);
         client = TAILQ_FIRST(&server->_head_client_sockets);
     }
+}
+
+static void free_server_team(server_t *server)
+{
+    team_t *team = TAILQ_FIRST(&server->_head_team);
+
+    while (team != NULL) {
+        TAILQ_REMOVE(&server->_head_team, team, _entries);
+        free_team(team);
+        team = TAILQ_FIRST(&server->_head_team);
+    }
+}
+
+void free_server(server_t *server)
+{
+    if (!server)
+        return;
+    free_server_arg(server->arguments);
+    free_server_client(server);
+    free_server_team(server);
     free(server);
 }

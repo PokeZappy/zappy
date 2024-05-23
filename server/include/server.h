@@ -9,6 +9,7 @@
 
 #include "parsing.h"
 #include "team.h"
+#include "player.h"
 #include "grid.h"
 #include "client.h"
 #include "free.h"
@@ -31,9 +32,8 @@ typedef struct server_s {
     fd_set read_fds; // read file descriptor
     fd_set write_fds; // write file descriptor
     grid_t *grid; // grid of the server
-    TAILQ_HEAD(, player_s) _head_player; // list of players
     TAILQ_HEAD(, team_s) _head_team; // list of teams
-    TAILQ_HEAD(client_list, client_socket_s) _head_client_sockets;
+    TAILQ_HEAD(client_list, client_socket_s) _head_client_sockets; // players
 } server_t;
 
 int zappy_server(server_arg_t *arguments);

@@ -15,10 +15,25 @@ static void close_all_clients(server_t *server)
     if (!server)
         return;
     while (client != NULL) {
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
         close(client->socket);
-        free(client);
-        client = TAILQ_FIRST(&server->_head_client_sockets);
+        client = TAILQ_NEXT(client, entries);
+    }
+}
+
+static void init_all_teams(server_t *server)
+{
+    char **teams = server->arguments->_n;
+    int max_clients = server->arguments->_c;
+    team_t *team;
+
+    TAILQ_INIT(&server->_head_team);
+    for (int i = 0; teams[i]; i++) {
+        team = init_team(teams[i], max_clients);
+        if (team) {
+            TAILQ_INSERT_TAIL(&server->_head_team, team, _entries);
+        } else {
+            fprintf(stderr, "init_all_teams: Init team ko: %s\n", teams[i]);
+        }
     }
 }
 
@@ -30,8 +45,7 @@ static int init_server(server_t *server, server_arg_t *arguments)
     FD_ZERO(&server->read_fds);
     FD_ZERO(&server->write_fds);
     server->grid = NULL;
-    TAILQ_INIT(&server->_head_player);
-    TAILQ_INIT(&server->_head_team);
+    init_all_teams(server);
     TAILQ_INIT(&server->_head_client_sockets);
     server->socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket == -1) {

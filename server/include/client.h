@@ -20,7 +20,7 @@
 
 typedef struct client_socket_s {
     int socket;
-    // insert player
+    struct player_s *player;
     TAILQ_ENTRY(client_socket_s) entries;
 } client_socket_t;
 
