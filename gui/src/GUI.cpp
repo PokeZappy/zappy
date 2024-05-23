@@ -42,9 +42,10 @@ namespace Zappy
             _socket.receive();
             command = _socket.getNextCommand();
             while (command.has_value()) {
-                std::cout << command.value() << std::endl;
+                std::cout << command.value();
                 command = _socket.getNextCommand();
             }
+        // std::cout << "RECEIVE BUFFER : " << _socket.getReceiveBuffer();
         }
     }
 } // namespace Zappy

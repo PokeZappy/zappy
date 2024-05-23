@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iostream>
+#include <optional>
 
 class ClientSocket {
     #define BUFFER_SIZE 1024
@@ -26,6 +27,7 @@ class ClientSocket {
         void sendData(std::string data);
         void receive(void);
         std::optional<std::string> getNextCommand(void);
+        std::string getReceiveBuffer(void) { return (_receiveBuffer); }
     private:
         int _socketFd;
         struct sockaddr_in _socketProperties;

@@ -31,12 +31,11 @@ void ClientSocket::connectSocket(int port, std::string &ip) {
 
 void ClientSocket::receive(void)
 {
-    std::cout << "  --  RECEIVE BUFFER :" << _receiveBuffer << "  --  " << std::endl;
+    // std::cout << "  --  RECEIVE BUFFER :" << _receiveBuffer << "  --  " << std::endl;
     char buffer[BUFFER_SIZE] = {0};
     int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, 0);
     if (valread < 0)
         throw ServerConnectionException();
-    std::cout << buffer << std::endl;
     _receiveBuffer += buffer;
 }
 
@@ -50,9 +49,9 @@ std::optional<std::string> ClientSocket::getNextCommand(void)
 {
     if (_receiveBuffer.empty())
         return std::nullopt;
-    std::string command = _receiveBuffer.substr(0, _receiveBuffer.find('\n'));
-    // if (!command.ends_with('\n'))
-    //     return std::nullopt;
-    _receiveBuffer.erase(0, _receiveBuffer.find('\n') + 1);
+    std::string command = _receiveBuffer.substr(0, _receiveBuffer.find('\n') + 1);
+    if (!command.ends_with('\n'))
+        return std::nullopt;
+    _receiveBuffer = _receiveBuffer.erase(0, _receiveBuffer.find('\n') + 1);
     return command;
 }
