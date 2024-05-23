@@ -19,6 +19,7 @@ void ClientSocket::connectSocket(int port, std::string &ip) {
     _socketProperties.sin_port = htons(_port);
 
     if (inet_pton(AF_INET, _ip.c_str(), &_socketProperties.sin_addr) <= 0)
+        throw InvalidAdressException();
     if (connect(_socketFd, (struct sockaddr *)&_socketProperties, sizeof(_socketProperties)) < 0)
         throw ServerConnectionException();
 }

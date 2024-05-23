@@ -5,7 +5,8 @@
 ## Makefile
 ##
 
-SRC				=	$(wildcard src/*.cpp)
+SRC				=	main.cpp	\
+					$(wildcard src/*.cpp)
 
 OBJ				=	$(SRC:.cpp=.o)
 DEPS			=	$(SRC:.cpp=.d)
@@ -29,13 +30,13 @@ LDLIBS			+=	-L./criterion/lib -lcriterion
 
 CC = g++
 
+all: $(NAME)
+
 dbg: CXXFLAGS += $(DBGFLAGS)
 dbg: all
 
 dbgs: CFLAGS += $(DBGFLAGS) -fsanitize=address
 dbgs: $(NAME)
-
-all: $(NAME)
 
 -include $(DEPS)
 
@@ -43,7 +44,7 @@ all: $(NAME)
 	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJ)
-	$(CC) -o $(NAME) main.cpp $(OBJ) $(CXXFLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS)
 	cp $(NAME) ../
 
 clean:
