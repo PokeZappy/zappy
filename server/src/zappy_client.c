@@ -8,6 +8,17 @@
 
 #include "../include/client.h"
 
+static void send_client_message(int socket, const char *msg)
+{
+    size_t message_len = strlen(msg);
+
+    if (send(socket, msg, message_len, 0) == -1) {
+        fprintf(stderr, "send_message: Send failed.\n");
+        close(socket);
+        exit(EXIT_FAILURE);
+    }
+}
+
 static void close_all_clients(struct server_s *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
@@ -89,6 +100,7 @@ static void wait_for_client(struct server_s *server)
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
+    send_client_message(client_socket, "Welcome !\n");
 }
 
 int handle_client(struct server_s *server, int max_sd, fd_set readfds)
