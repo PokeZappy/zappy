@@ -48,6 +48,18 @@ namespace Zappy
                 default: break;
             }
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            _view.move(0.f, -_viewSpeed);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            _view.move(0.f, _viewSpeed);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+            _view.move(-_viewSpeed, 0.f);
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            _view.move(_viewSpeed, 0.f);
+        }
     }
 
     void GUI::initTiles(void)
@@ -102,6 +114,8 @@ namespace Zappy
     {
         std::optional<std::string> command;
         while (_window.isOpen()) {
+            _window.clear();
+            _window.setView(_view);
             _socket.receive();
             handleEvent();
             command = _socket.getNextCommand();
@@ -110,6 +124,7 @@ namespace Zappy
                 command = _socket.getNextCommand();
             }
             drawTiles();
+            _window.setView(_window.getDefaultView());
             _window.display();
         // std::cout << "RECEIVE BUFFER : " << _socket.getReceiveBuffer();
         }

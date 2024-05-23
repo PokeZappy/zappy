@@ -27,8 +27,13 @@ namespace Zappy {
             int _mapX = -1;
             int _mapY = -1;
             std::vector<std::vector<Zappy::Tile>> _tiles;
+            sf::View _view;
+            double _viewSpeed = 1.0f;
         public:
-            GUI(void) : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {};
+            GUI(void) : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
+                _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+                _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+            };
             ~GUI(void) = default;
             void setPort(int port) { _port = port; };
             void setMachine(std::string &machine) { _machine = machine; };
