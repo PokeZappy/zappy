@@ -11,21 +11,25 @@
 #include <stdio.h>
 #include <getopt.h>
 #include "ClientSocket.hpp"
+#include <SFML/Graphics.hpp>
+#include "Tile.hpp"
 
 namespace Zappy {
     class GUI
     {
+        #define GUI_WIDTH 1920
+        #define GUI_HEIGHT 600
         private:
             int _port = -1;
             std::string _machine = "";
-            int _socketFd = -1;
             ClientSocket _socket;
+            sf::RenderWindow _window;
+            int _mapX = -1;
+            int _mapY = -1;
+            std::vector<std::vector<Zappy::Tile>> _tiles;
         public:
-            GUI(void) = default;
-            ~GUI(void) {
-                if (_socketFd != -1)
-                    close(_socketFd);
-            }
+            GUI(void) : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {};
+            ~GUI(void) = default;
             void setPort(int port) { _port = port; };
             void setMachine(std::string &machine) { _machine = machine; };
             int getPort(void) const { return (_port); }
@@ -45,5 +49,9 @@ namespace Zappy {
             };
             void getOptions(int argc, char **argv);
             void loop(void);
+            void handleEvent(void);
+            void handleCommands(std::string &line);
+            void initTiles(void);
+            void drawTiles(void);
     };
 }
