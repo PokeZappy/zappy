@@ -58,8 +58,4 @@ class path() :
             x += dir[0]
             path.append((x % self.limit[0], y))
         self.path.append(path)
-
-if __name__ == "__main__":
-    path = path((10, 10), (0, 0), (5, 5))
-    path.opti_path()
-    print(path.path)
+        return self.path
