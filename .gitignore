@@ -10,3 +10,4 @@ __pycache__
 zappy_ref-2-0-2
 *.log
 *.elf
+zappy_test/
