@@ -7,11 +7,11 @@
 
 #include "../include/client.h"
 
-static void send_welcome_message(int socket)
+static void send_client_message(int socket, const char *msg)
 {
-    char message[] = "Received from server: Welcome !\n";
+    size_t message_len = strlen(msg);
 
-    if (send(socket, message, sizeof(message), 0) == -1) {
+    if (send(socket, msg, message_len, 0) == -1) {
         fprintf(stderr, "send_message: Send failed.\n");
         close(socket);
         exit(EXIT_FAILURE);
@@ -33,7 +33,7 @@ void handle_client(int client_socket, server_t *server)
     char buffer[READ_SIZE];
     int bytes;
 
-    send_welcome_message(client_socket);
+    send_client_message(client_socket, "Received from server: Welcome !\n");
     while (1) {
         bytes = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
         if (bytes == -1) {
