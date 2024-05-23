@@ -7,13 +7,10 @@
 
 #pragma once
 
-#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
-#include <iostream>
 #include <getopt.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include "ClientSocket.hpp"
 
 namespace Zappy {
     class GUI
@@ -43,18 +40,6 @@ namespace Zappy {
             class DoubleOptionException : public std::exception {
                     public:
                         const char *what() const noexcept override{ return "Double option detected in parsing"; };
-            };
-            class SocketException : public std::exception {
-                    public:
-                        const char *what() const noexcept override{ return "Unable to create socket"; };
-            };
-            class InvalidAdressException : public std::exception {
-                    public:
-                        const char *what() const noexcept override{ return "Invalid IP Address for the server."; };
-            };
-            class ServerConnectionException : public std::exception {
-                    public:
-                        const char *what() const noexcept override{ return "Unable to etablish connection to the server."; };
             };
             void getOptions(int argc, char **argv);
             void server_connect(void);
