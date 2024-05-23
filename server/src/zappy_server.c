@@ -1,30 +1,12 @@
 /*
-** EPITECH PROJECT, 2024
+** EPITECH PROJECT, 2023
 ** B-YEP-400-LYN-4-1-zappy-tom.blancheton
 ** File description:
 ** zappy_server.c
 */
 
+
 #include "../include/server.h"
-
-#include <errno.h>
-#include <sys/types.h>
-
-void free_server(server_t *server)
-{
-    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
-
-    if (!server)
-        return;
-    free_server_arg(server->arguments);
-    while (client != NULL) {
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-        close(client->socket);
-        free(client);
-        client = TAILQ_FIRST(&server->_head_client_sockets);
-    }
-    free(server);
-}
 
 static void close_all_clients(server_t *server)
 {
@@ -34,7 +16,6 @@ static void close_all_clients(server_t *server)
         return;
     while (client != NULL) {
         TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-        kill(client->pid, SIGTERM);
         close(client->socket);
         free(client);
         client = TAILQ_FIRST(&server->_head_client_sockets);
@@ -83,43 +64,91 @@ static int connect_server(server_t *server, server_arg_t *arguments)
     return 0;
 }
 
-static void wait_for_client(server_t *server)
+static void handle_client_cmd(char *commands, int cl_sckt, int *cl_close)
 {
-    pid_t pid;
-    struct sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
-    client_socket_t *new_cl_sckt;
-    int client_socket =
-        accept(server->socket, (struct sockaddr *)&client_addr, &client_len);
-
-    printf("Client connected: %s:%d\n", inet_ntoa(client_addr.sin_addr),
-        ntohs(client_addr.sin_port));
-    new_cl_sckt = (client_socket_t *)malloc(sizeof(client_socket_t));
-    new_cl_sckt->socket = client_socket;
-    TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_cl_sckt, entries);
-    pid = fork();
-    if (pid == 0) {
-        close(server->socket);
-        handle_client(client_socket, server);
-    } else if (pid > 0) {
-        new_cl_sckt->pid = pid;
-        close(client_socket);
+    if (strcmp(commands, "EXIT") == 0) {
+        printf("Client requested exit\n");
+        close(cl_sckt);
+        *cl_close = 1;
     }
 }
 
-static int simulate_server(server_t *server)
+static void handle_client_message(int cl_sckt, server_t *server, int *cl_close)
 {
-    fd_set readfds;
-    struct timeval timeout;
-    char buffer[1024];
-    int activity;
+    char buffer[READ_SIZE];
+    int bytes = recv(cl_sckt, buffer, sizeof(buffer) - 1, 0);
 
-    FD_ZERO(&readfds);
-    FD_SET(STDIN_FILENO, &readfds);
-    FD_SET(server->socket, &readfds);
+    if (bytes == -1) {
+        fprintf(stderr, "handle_client_message: Receive failed.\n");
+        close(cl_sckt);
+        *cl_close = 1;
+        return;
+    }
+    if (bytes == 0) {
+        printf("Client disconnected\n");
+        close(cl_sckt);
+        *cl_close = 1;
+        return;
+    }
+    buffer[bytes - 2] = '\0';
+    printf("Received from client: {%s}\n", buffer);
+    handle_client_cmd(buffer, cl_sckt, cl_close);
+}
+
+static void wait_for_client(server_t *server)
+{
+    client_socket_t *new_client;
+    struct sockaddr_in client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    int client_socket =
+        accept(server->socket, (struct sockaddr *)&client_addr, &client_len);
+
+    if (client_socket < 0) {
+        fprintf(stderr, "accept failed: %s\n", strerror(errno));
+        return;
+    }
+    printf("Client connected: %s:%d\n",
+        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+    new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
+    new_client->socket = client_socket;
+    TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
+}
+
+static int loop_all_client(server_t *server, fd_set readfds)
+{
+    int client_closed;
+    client_socket_t *tmp;
+    client_socket_t *client;
+
+    client = TAILQ_FIRST(&server->_head_client_sockets);
+    while (client != NULL) {
+        tmp = TAILQ_NEXT(client, entries);
+        if (FD_ISSET(client->socket, &readfds)) {
+            client_closed = 0;
+            handle_client_message(client->socket, server, &client_closed);
+            if (client_closed) {
+                TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+                free(client);
+            }
+        }
+        client = tmp;
+    }
+    return 1;
+}
+
+static int handle_client(server_t *server, int max_sd, fd_set readfds)
+{
+    struct timeval timeout;
+    int activity;
+    char buffer[READ_SIZE];
+
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
-    activity = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+    activity = select(max_sd + 1, &readfds, NULL, NULL, &timeout);
+    if (activity < 0 && errno != EINTR) {
+        fprintf(stderr, "select error: %s\n", strerror(errno));
+        return 0;
+    }
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
         if (fgets(buffer, sizeof(buffer), stdin) == NULL || feof(stdin)) {
             printf("Ctrl+D detected. Exiting...\n");
@@ -128,7 +157,27 @@ static int simulate_server(server_t *server)
     }
     if (FD_ISSET(server->socket, &readfds))
         wait_for_client(server);
-    return 1;
+    return loop_all_client(server, readfds);
+}
+
+static int simulate_server(server_t *server)
+{
+    fd_set readfds;
+    client_socket_t *client;
+    int max_sd;
+
+    FD_ZERO(&readfds);
+    FD_SET(STDIN_FILENO, &readfds);
+    FD_SET(server->socket, &readfds);
+    max_sd = server->socket;
+    client = TAILQ_FIRST(&server->_head_client_sockets);
+    while (client != NULL) {
+        FD_SET(client->socket, &readfds);
+        if (client->socket > max_sd)
+            max_sd = client->socket;
+        client = TAILQ_NEXT(client, entries);
+    }
+    return handle_client(server, max_sd, readfds);
 }
 
 int zappy_server(server_arg_t *arguments)

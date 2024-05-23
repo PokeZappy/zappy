@@ -22,3 +22,19 @@ void free_server_arg(server_arg_t *arguments)
         free_tab(arguments->_n);
     free(arguments);
 }
+
+void free_server(server_t *server)
+{
+    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+
+    if (!server)
+        return;
+    free_server_arg(server->arguments);
+    while (client != NULL) {
+        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+        close(client->socket);
+        free(client);
+        client = TAILQ_FIRST(&server->_head_client_sockets);
+    }
+    free(server);
+}

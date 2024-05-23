@@ -8,5 +8,7 @@
 #pragma once
 
 #include "parsing.h"
+#include "server.h"
 
 void free_server_arg(server_arg_t *arguments);
+void free_server(struct server_s *server);

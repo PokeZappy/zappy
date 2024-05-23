@@ -11,12 +11,18 @@
 #include "team.h"
 #include "grid.h"
 #include "client.h"
+#include "free.h"
+
 #include <sys/queue.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
