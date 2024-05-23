@@ -8,7 +8,9 @@
 #include "ClientSocket.hpp"
 #include "SocketExceptions.hpp"
 
-ClientSocket::ClientSocket(int port, std::string &ip) : _port(port), _ip(ip){
+void ClientSocket::connectSocket(int port, std::string &ip) {
+    _port = port;
+    _ip = ip;
     _socketFd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (_socketFd < 0)
@@ -21,11 +23,30 @@ ClientSocket::ClientSocket(int port, std::string &ip) : _port(port), _ip(ip){
         throw ServerConnectionException();
 }
 
-void ClientSocket::receive(int buffSize = 1)
+void ClientSocket::receive(void)
 {
     char buffer[1024] = {0};
     int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, 0);
     if (valread < 0)
         throw ServerConnectionException();
     std::cout << buffer << std::endl;
+    _receiveBuffer += buffer;
 }
+
+void ClientSocket::sendData(std::string &data)
+{
+    if (send(_socketFd, data.c_str(), data.size(), 0) == -1)
+        throw ServerConnectionException();
+}
+
+std::optional<std::string> ClientSocket::getNextCommand(void)
+{
+    if (_receiveBuffer.empty())
+        return std::nullopt;
+    std::string command = _receiveBuffer.substr(0, _receiveBuffer.find('\n'));
+    if (!command.ends_with('\n'))
+        return std::nullopt;
+    _receiveBuffer.erase(0, _receiveBuffer.find('\n') + 1);
+    return command;
+}
+

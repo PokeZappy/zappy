@@ -5,39 +5,57 @@
 ## Makefile
 ##
 
-SRC = 	$(wildcard src/*.cpp)
+SRC				=	$(wildcard src/*.cpp)
 
-OBJ = $(SRC:.cpp=.o)
+OBJ				=	$(SRC:.cpp=.o)
+DEPS			=	$(SRC:.cpp=.d)
 
-TESTS_SRC = $(SRC)
-TESTS_SRC += $(wildcard tests/*.cpp)
+TESTS_SRC		=	$(SRC)
+TESTS_SRC		+=	$(wildcard tests/*.cpp)
 
-TESTS_TARGET = unit_tests
+TESTS_TARGET	=	unit_tests
 
-TESTS_OBJS := $(TESTS_SRC:%.cpp=%.o)
+TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
-NAME = zappy_gui
+NAME			=	zappy_gui
 
-CXXFLAGS = -Wall -Wextra -g3 -Iinclude
-CXXFLAGS += -lpthread
+DBGFLAGS		=	-g3 -O0
+CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 -Iinclude
+CXXFLAGS		+=	-lpthread
+DEPSFLAGS		=	-MMD -MP
 
-LDLIBS += -L./criterion/lib -lcriterion
+
+LDLIBS			+=	-L./criterion/lib -lcriterion
 
 CC = g++
 
+dbg: CXXFLAGS += $(DBGFLAGS)
+dbg: all
+
+dbgs: CFLAGS += $(DBGFLAGS) -fsanitize=address
+dbgs: $(NAME)
+
 all: $(NAME)
+
+-include $(DEPS)
+
+%.o: %.cpp
+	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJ)
 	$(CC) -o $(NAME) main.cpp $(OBJ) $(CXXFLAGS)
-	mv $(NAME) ../
+	cp $(NAME) ../
 
 clean:
 	rm -f $(OBJ)
+	rm -f $(DEPS)
 
 fclean: clean
 	rm -f ../$(NAME)
 
-re: fclean all
+re:
+	@$(MAKE) fclean
+	@$(MAKE) all
 
 tests_run: $(TESTS_OBJS) coverage
 	$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
@@ -50,4 +68,4 @@ tests_clean: fclean
 coverage:
 	gcovr
 
-.PHONY: all clean fclean re tests_run coverage
+.PHONY: all clean fclean re tests_run coverage dbg dbgs

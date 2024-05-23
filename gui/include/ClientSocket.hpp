@@ -14,14 +14,16 @@
 
 class ClientSocket {
     public:
-        ClientSocket(int port, std::string &ip);
+        ClientSocket() {};
         ~ClientSocket() {
             if (_socketFd != -1)
                 close(_socketFd);
             }
+        void connectSocket(int port, std::string &ip);
         int getFd(void) { return (_socketFd); }
-        void send(std::string &data);
-        void receive(int buffSize = 1);
+        void sendData(std::string &data);
+        void receive(void);
+        std::optional<std::string> getNextCommand(void);
     private:
         int _socketFd;
         struct sockaddr_in _socketProperties;

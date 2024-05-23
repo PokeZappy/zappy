@@ -1,4 +1,4 @@
-#include "zappy_gui.hpp"
+#include "GUI.hpp"
 
 int displayUsage(void)
 {
@@ -10,20 +10,23 @@ int main(int ac, char **av)
 {
     if (ac == 2 && strcmp(av[1], "-help") == 0)
         return displayUsage();
-    ZappyGUI gui;
+    Zappy::GUI gui;
 
     try {
         gui.getOptions(ac, av);
-    } catch (ZappyGUI::DoubleOptionException &e) {
+    } catch (Zappy::GUI::DoubleOptionException &e) {
         std::cerr << e.what() << std::endl;
         return displayUsage();
-    } catch (ZappyGUI::MissingOptionException &e) {
+    } catch (Zappy::GUI::MissingOptionException &e) {
         std::cerr << e.what() << std::endl;
         return displayUsage();
     }
-    catch (ZappyGUI::InvalidOptionException &e) {
+    catch (Zappy::GUI::InvalidOptionException &e) {
         return displayUsage();
     }
-    gui.server_connect();
+    gui.getSocket().connectSocket(gui.getPort(), gui.getMachine());
+    gui.getSocket().receive();
+    std::string a("GRAPHIC\n");
+    gui.getSocket().sendData(a);
     return (0);
 }
