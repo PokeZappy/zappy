@@ -13,6 +13,3 @@ typedef enum direction_e {
     DOWN,
     LEFT
 } direction_t;
-
-direction_t get_right_direction(direction_t direction);
-direction_t get_left_direction(direction_t direction);

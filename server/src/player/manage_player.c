@@ -7,6 +7,7 @@
 
 #include "../../include/player.h"
 #include <stdlib.h>
+#include <time.h>
 
 static int generate_player_id(void)
 {
@@ -28,6 +29,8 @@ player_t *init_player(team_t *team)
     player->_level = 1;
     player->_pos = (vector_t){0, 0};
     player->_direction = UP;
+    srand(time(NULL));
+    player->_direction = (direction_t)(rand() % 4);
     for (int i = 0; i < ITEM_PER_TILE; i++)
         player->_inventory[i] = 0;
     player->_team = team;
