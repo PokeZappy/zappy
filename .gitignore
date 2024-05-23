@@ -5,3 +5,5 @@ a.out
 zappy_ai
 zappy_server
 zappy_gui
+binaries
+__pycache__
