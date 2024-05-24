@@ -12,8 +12,9 @@
 typedef struct grid_s {
     int _width; // size of the grid
     int _height; // size of the grid
-    tiles_t **_tiles; // 2D array of tiles
+    tiles_t ***_tiles; // 2D array of tiles
 } grid_t;
 
 grid_t *init_grid(int width, int height);
+void print_grid(grid_t *grid);
 void free_grid(grid_t *grid);

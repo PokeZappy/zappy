@@ -9,6 +9,7 @@
 #include "include/parsing.h"
 #include "include/free.h"
 #include "include/server.h"
+#include "list.h"
 
 /*int main(int ac, char **av)
 {
@@ -37,8 +38,25 @@ int main()
     add_item_to_player(player, 1, 1);
     add_item_to_player(player, 4, 1);
     grid_t *grid = init_grid(10, 10);
-    print_player_inventory(player);
-    free(grid);
+    char *str = strdup("player");
+    char *str1 = strdup("envi");
+    char *str2 = strdup("care");
+    char *str3 = strdup("blo");
+    list_t *list = init_list();
+    append_list(list, str);
+    append_list(list, str1);
+    append_list(list, str2);
+    append_list(list, str3);
+    list_t *tmp = list->next;
+    for (; tmp != list; tmp = tmp->next) {
+        printf("%s\n", (char *)tmp->data);
+    }
+    free(str);
+    free(str1);
+    free(str2);
+    free(str3);
+    free_list(list);
+    free_grid(grid);
     free_player(player);
     free_team(team);
 }
