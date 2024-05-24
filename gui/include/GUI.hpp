@@ -15,6 +15,11 @@
 #include "Tile.hpp"
 
 namespace Zappy {
+    typedef struct mouse_pos_s {
+        sf::Vector2i window;
+        sf::Vector2f view;
+        sf::Vector2i grid;
+    } mouse_pos_t;
     class GUI
     {
         #define GUI_WIDTH 1920
@@ -27,13 +32,14 @@ namespace Zappy {
             int _mapX = -1;
             int _mapY = -1;
             std::vector<std::vector<Zappy::Tile>> _tiles;
+            double _tileWidth = -1.f;
+            double _tileHeight = -1.f;
             sf::View _view;
-            double _viewSpeed = 1.0f;
+            double _viewSpeed = 5.0f;
+            sf::RectangleShape _tileSelector;
+            mouse_pos_t _mousePositions;
         public:
-            GUI(void) : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
-                _view.setSize(GUI_WIDTH, GUI_HEIGHT);
-                _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
-            };
+            GUI(void);
             ~GUI(void) = default;
             void setPort(int port) { _port = port; };
             void setMachine(std::string &machine) { _machine = machine; };
@@ -58,5 +64,6 @@ namespace Zappy {
             void handleCommands(std::string &line);
             void initTiles(void);
             void drawTiles(void);
+            void updateMouse(void);
     };
 }

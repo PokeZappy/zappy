@@ -36,6 +36,14 @@ namespace Zappy
         }
     }
 
+    GUI::GUI(void) : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
+        _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+        _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+        _tileSelector.setFillColor(sf::Color::Transparent);
+        _tileSelector.setOutlineColor(sf::Color::Red);
+        _tileSelector.setOutlineThickness(3.0f);
+    };
+
     void GUI::handleEvent(void)
     {
         sf::Event event;
@@ -73,6 +81,9 @@ namespace Zappy
             }
             _tiles.push_back(horizontalVector);
         }
+        _tileWidth = static_cast<double>(GUI_WIDTH) / _tiles[0].size();
+        _tileHeight = static_cast<double>(GUI_HEIGHT) / _tiles.size();
+        _tileSelector.setSize(sf::Vector2f(_tileWidth, _tileHeight));
     }
 
     void GUI::handleCommands(std::string &line)
@@ -92,15 +103,12 @@ namespace Zappy
     {
         if (_tiles.empty())
             return;
-        double sizeWidth = static_cast<double>(GUI_WIDTH) / _tiles[0].size();
-        double sizeHeight = static_cast<double>(GUI_HEIGHT) / _tiles.size();
-        std::cout << sizeHeight << std::endl;
 
         for (size_t height = 0; height < _tiles.size(); height++) {
             for (size_t width = 0; width < _tiles[height].size(); width++) {
                 sf::RectangleShape rectangle;
-                rectangle.setSize(sf::Vector2f(sizeWidth, sizeHeight));
-                rectangle.setPosition(width * sizeWidth, height * sizeHeight);
+                rectangle.setSize(sf::Vector2f(_tileWidth, _tileHeight));
+                rectangle.setPosition(width * _tileWidth, height * _tileHeight);
                 rectangle.setFillColor(sf::Color::Black);
                 rectangle.setOutlineColor(sf::Color::White);
                 rectangle.setOutlineThickness(3.0);
@@ -110,13 +118,26 @@ namespace Zappy
         }
     }
 
+    void GUI::updateMouse(void)
+    {
+        _mousePositions.window = sf::Mouse::getPosition(_window);
+        _window.setView(_view);
+        _mousePositions.view = _window.mapPixelToCoords(_mousePositions.window);
+        if (_mousePositions.view.x >= 0.0f && _tileWidth > 0.0f)
+            _mousePositions.grid.x = _mousePositions.view.x / _tileWidth;
+        if (_mousePositions.view.y >= 0.0f && _tileHeight > 0.0f)
+            _mousePositions.grid.y = _mousePositions.view.y / _tileHeight;
+        _tileSelector.setPosition(_mousePositions.grid.x * _tileWidth, _mousePositions.grid.y * _tileHeight);
+    }
+
     void GUI::loop(void)
     {
         std::optional<std::string> command;
+
         while (_window.isOpen()) {
             _window.clear();
-            _window.setView(_view);
             _socket.receive();
+            updateMouse();
             handleEvent();
             command = _socket.getNextCommand();
             while (command.has_value()) {
@@ -124,6 +145,9 @@ namespace Zappy
                 command = _socket.getNextCommand();
             }
             drawTiles();
+            if (!_tiles.empty())
+                _window.draw(_tileSelector);
+            // important de reset la view pour render tout ce qui n'est pas les tiles (overlay, text ...)
             _window.setView(_window.getDefaultView());
             _window.display();
         // std::cout << "RECEIVE BUFFER : " << _socket.getReceiveBuffer();
