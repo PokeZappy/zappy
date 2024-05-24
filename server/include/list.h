@@ -15,6 +15,6 @@ typedef struct list_s {
     struct list_s *prev;
 } list_t;
 
-list_t *init_list(void);
+list_t *init_list(void *data);
 void free_list(list_t *list);
 void append_list(list_t *list, void *data);

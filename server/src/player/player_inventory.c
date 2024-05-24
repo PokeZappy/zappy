@@ -42,3 +42,19 @@ void remove_item_from_player(player_t *player, int item, int quantity)
 {
     player->_inventory[item] -= quantity;
 }
+
+void player_take_item(player_t *player, tiles_t *tile, int item)
+{
+    if (tile->_items[item] > 0) {
+        add_item_to_player(player, item, 1);
+        remove_item_from_tile(tile, item, 1);
+    }
+}
+
+void player_drop_item(player_t *player, tiles_t *tile, int item)
+{
+    if (player->_inventory[item] > 0) {
+        add_item_to_tile(tile, item, 1);
+        remove_item_from_player(player, item, 1);
+    }
+}

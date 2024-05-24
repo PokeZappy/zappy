@@ -7,13 +7,13 @@
 
 #include "../../../include/list.h"
 
-list_t *init_list(void)
+list_t *init_list(void *data)
 {
     list_t *list = (list_t *)malloc(sizeof(list_t));
 
     if (!list)
         return NULL;
-    list->data = NULL;
+    list->data = data;
     list->next = list;
     list->prev = list;
     return list;

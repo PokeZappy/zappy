@@ -13,6 +13,8 @@
 #include "constant.h"
 #include "team.h"
 #include "server.h"
+#include "grid.h"
+#include "list.h"
 
 typedef struct player_s {
     int _id; // id of the player
@@ -25,7 +27,8 @@ typedef struct player_s {
     TAILQ_ENTRY(player_s) _entries; // list of players
 } player_t;
 
-player_t *init_player(struct team_s *team);
+// -- PLAYER RELATED -- //
+player_t *init_player(struct team_s *team, int width, int height);
 void free_player(player_t *player);
 void add_item_to_player(player_t *player, int item, int quantity);
 void remove_item_from_player(player_t *player, int item, int quantity);
@@ -37,3 +40,8 @@ char *print_player_inventory(player_t *player);
 
 // -- SERVER RELATED -- //
 player_t *add_player_to_team(char *team_name, struct server_s *server);
+list_t *get_player_on_tile(struct server_s *server, vector_t pos);
+
+// -- GRID RELATED -- //
+void player_take_item(player_t *player, tiles_t *tile, int item);
+void player_drop_item(player_t *player, tiles_t *tile, int item);

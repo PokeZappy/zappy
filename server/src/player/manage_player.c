@@ -17,7 +17,7 @@ static int generate_player_id(void)
     return id;
 }
 
-player_t *init_player(team_t *team)
+player_t *init_player(team_t *team, int width, int height)
 {
     player_t *player = (player_t *)malloc(sizeof(player_t));
 
@@ -27,8 +27,10 @@ player_t *init_player(team_t *team)
     }
     player->_id = generate_player_id();
     player->_level = 1;
+    player->_pos._x = rand() % width;
+    player->_pos._y = rand() % height;
     player->_pos = (vector_t){0, 0};
-    player->_direction = UP;
+    player->_direction = (direction_t)(rand() % 4);
     srand(time(NULL));
     player->_direction = (direction_t)(rand() % 4);
     for (int i = 0; i < ITEM_PER_TILE; i++)
@@ -45,7 +47,7 @@ player_t *add_player_to_team(char *team_name, server_t *server)
 
     if (team == NULL)
         return NULL;
-    return init_player(team);
+    return init_player(team, server->grid->_width, server->grid->_height);
 }
 
 void free_player(player_t *player)
