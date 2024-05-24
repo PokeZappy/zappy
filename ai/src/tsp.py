@@ -113,11 +113,3 @@ class held_krap():
                 break
         self.path = self.held_krap([self.obj[i][0] for i in range(dist + 1) if self.obj[i][1] == self.goal[0][0]])
         return self.path
-
-def main():
-    limit = (10, 10)
-    pos = (0, 0)
-    obj = [[(1, 1), 1, 1], [(2, 2), 2, 2], [(8, 3), 5, 3], [(0, 1), 4, 4], [(0, 5), 5, 5]]
-    goal = [(5, 6)]
-    d = held_krap(limit, pos, obj, goal)
-    print(d.algo())
