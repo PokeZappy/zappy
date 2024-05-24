@@ -6,10 +6,13 @@ obj : [(position : tuple, type : int, number : int)]
 type object = [(tuple, int)]
 
 class held_krap():
-    """
-    goal : [(type, number)]
-    """
     def __init__(self, limit : tuple, pos_player : tuple, obj : object, goal : list):
+        """
+        limit : (int, int) -> (size map x, size map y)
+        pos_plaer : (int, int) -> (x player, y player)
+        obj : [(position : tuple, type : int, number : int)]
+        goal : [(type, number)] -> [(type goal, number required)]
+        """
         self.limit = limit
         self.pos = pos_player
         self.obj = obj
@@ -116,5 +119,5 @@ def main():
     pos = (0, 0)
     obj = [[(1, 1), 1, 1], [(2, 2), 2, 2], [(8, 3), 5, 3], [(0, 1), 4, 4], [(0, 5), 5, 5]]
     goal = [(5, 6)]
-    d = dijkstra(limit, pos, obj, goal)
+    d = held_krap(limit, pos, obj, goal)
     print(d.algo())
