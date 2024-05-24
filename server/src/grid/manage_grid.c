@@ -18,9 +18,8 @@ grid_t *init_grid(int width, int height)
     grid->_tiles = (tiles_t **)malloc(sizeof(tiles_t *) * height);
     for (int i = 0; i < height; i++) {
         grid->_tiles[i] = (tiles_t *)malloc(sizeof(tiles_t) * width);
-        for (int j = 0; j < width; j++) {
+        for (int j = 0; j < width; j++)
             grid->_tiles[i][j] = *(tiles_t *)init_tile();
-        }
     }
     return grid;
 }

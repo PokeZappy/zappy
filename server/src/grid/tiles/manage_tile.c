@@ -8,6 +8,7 @@
 #include "../../../include/tile.h"
 #include "stdlib.h"
 #include "time.h"
+#include "stdio.h"
 
 tiles_t *init_tile(void)
 {
@@ -19,8 +20,8 @@ tiles_t *init_tile(void)
 
     srand(time(NULL));
     for (int i = 0; i < ITEM_PER_TILE; i++) {
-        random_number = rand() / (double)RAND_MAX;
-        tile->_items[i] = random_number < densities[i] ? 1 : 0;
+        random_number = rand() % 100;
+        tile->_items[i] = random_number <= (densities[i] * 100) ? 1 : 0;
     }
     return tile;
 }
