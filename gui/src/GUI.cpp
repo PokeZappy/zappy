@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
 ** zappy_gui.cpp
@@ -136,7 +136,7 @@ namespace Zappy
 
         while (_window.isOpen()) {
             _window.clear();
-            _socket.receive();
+            _socket.receive(MSG_DONTWAIT);
             updateMouse();
             handleEvent();
             command = _socket.getNextCommand();
@@ -150,7 +150,6 @@ namespace Zappy
             // important de reset la view pour render tout ce qui n'est pas les tiles (overlay, text ...)
             _window.setView(_window.getDefaultView());
             _window.display();
-        // std::cout << "RECEIVE BUFFER : " << _socket.getReceiveBuffer();
         }
     }
 } // namespace Zappy

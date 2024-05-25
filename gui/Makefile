@@ -21,14 +21,28 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 NAME			=	zappy_gui
 
 DBGFLAGS		=	-g3 -O0
-CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 -Iinclude -lsfml-graphics -lsfml-window -lsfml-system
+CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 -Iinclude
 CXXFLAGS		+=	-lpthread
+LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
 DEPSFLAGS		=	-MMD -MP
 
 
 LDLIBS			+=	-L./criterion/lib -lcriterion
 
 CC = g++
+
+
+MACBREWSFML		= 	/opt/homebrew/Cellar/sfml/2.6.1
+
+MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include
+MACSFMLLIB		=	-L$(MACBREWSFML)/lib
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+	CXXFLAGS += $(MACSFMLINCLUDE)
+	LDFLAGS += $(MACSFMLLIB)
+endif
 
 all: $(NAME)
 
@@ -41,10 +55,10 @@ dbgs: $(NAME)
 -include $(DEPS)
 
 %.o: %.cpp
-	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@
+	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@ $(LDFLAGS)
 
 $(NAME):	$(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 	cp $(NAME) ../
 
 clean:

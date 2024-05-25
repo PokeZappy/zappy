@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
 ** ClientSocket.cpp
@@ -27,15 +27,18 @@ void ClientSocket::connectSocket(int port, std::string &ip) {
         throw ServerConnectionException();
     _receiveBuffer.clear();
     sendData("GRAPHIC\n");
+    // if(fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK) < 0) {
+    //     // handle error
+    // }
 }
 
-void ClientSocket::receive(void)
+void ClientSocket::receive(int flags)
 {
     // std::cout << "  --  RECEIVE BUFFER :" << _receiveBuffer << "  --  " << std::endl;
     char buffer[BUFFER_SIZE] = {0};
-    int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, 0);
-    if (valread < 0)
-        throw ServerConnectionException();
+    int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, flags);
+    // if (valread < 0)
+    //     throw ServerConnectionException();
     _receiveBuffer += buffer;
 }
 

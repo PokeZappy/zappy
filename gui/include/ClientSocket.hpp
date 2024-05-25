@@ -1,8 +1,8 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** Socket.hpp
+** ClientSocket.hpp
 */
 
 #pragma once
@@ -25,7 +25,7 @@ class ClientSocket {
         void connectSocket(int port, std::string &ip);
         int getFd(void) { return (_socketFd); }
         void sendData(std::string data);
-        void receive(void);
+        void receive(int flags = 0);
         std::optional<std::string> getNextCommand(void);
         std::string getReceiveBuffer(void) { return (_receiveBuffer); }
     private:
