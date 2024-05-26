@@ -40,8 +40,8 @@ static void print_client_list(server_t *server)
     printf("CLIENT LIST:\n");
     while (client != NULL) {
         if (client->player != NULL) {
-            printf("- CLIENT: {%d}{%s}\n", client->player->_id,
-                client->player->_team->_name);
+            printf("- CLIENT: {%d}{%d}{%s}\n", client->_id,
+                client->player->_id, client->player->_team->_name);
         }
         client = TAILQ_NEXT(client, entries);
     }
@@ -125,6 +125,7 @@ static void wait_for_client(struct server_s *server)
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
+    new_client->_id = ntohs(client_addr.sin_port);
     new_client->player = NULL;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
     send_client_message(client_socket, "Welcome !\n");
