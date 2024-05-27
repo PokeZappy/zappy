@@ -33,16 +33,20 @@ namespace Zappy {
 
         void drawTiles(void);
         void initTiles(size_t width, size_t height);
+        void updateTile(size_t x, size_t y, Tile tile);
     private:
         sf::RenderWindow _window;
         sf::View _view;
         double _viewSpeed = 5.0f;
+        sf::Font _font;
         int _mapX = -1;
         int _mapY = -1;
         std::vector<std::vector<Zappy::Tile>> _tiles;
         double _tileWidth = -1.f;
         double _tileHeight = -1.f;
+        sf::RectangleShape _tileRect;
         sf::RectangleShape _tileSelector;
+        sf::Text _text;
         mouse_pos_t _mousePositions;
     };
 

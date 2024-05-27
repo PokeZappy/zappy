@@ -23,6 +23,9 @@ namespace Zappy {
             std::string _machine = "";
             ClientSocket _socket;
             Sfml _graphics;
+
+            std::vector<std::string> _teams;
+            
         public:
             GUI(void);
             ~GUI(void) = default;

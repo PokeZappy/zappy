@@ -22,11 +22,27 @@ namespace Zappy
         std::string args = line.substr(commandPos + 1);
         std::istringstream ss(args);
 
-        size_t width, height;
+        size_t x, y;
 
         if (command == "msz") {
-            ss >> width >> height;
-            _graphics.initTiles(width, height);
+            ss >> x >> y;
+            _graphics.initTiles(x, y);
+        }
+        if (command == "bct") {
+            ss >> x >> y;
+            Tile tile(ss);
+            _graphics.updateTile(x, y, tile);
+        }
+        if (command == "tna") {
+            std::string teamName;
+            ss >> teamName;
+            if (teamName.empty())
+                return;
+            for (auto &team : _teams) {
+                if (team == teamName)
+                    return;
+            }
+            _teams.push_back(teamName);
         }
     }
 

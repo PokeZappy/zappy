@@ -12,9 +12,19 @@ namespace Zappy
     Sfml::Sfml() : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
         _view.setSize(GUI_WIDTH, GUI_HEIGHT);
         _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+        _font.loadFromFile("assets/STUNE.otf");
+
         _tileSelector.setFillColor(sf::Color::Transparent);
         _tileSelector.setOutlineColor(sf::Color::Red);
         _tileSelector.setOutlineThickness(3.0f);
+
+        _tileRect.setFillColor(sf::Color::Black);
+        _tileRect.setOutlineColor(sf::Color::White);
+        _tileRect.setOutlineThickness(3.0);
+
+        _text.setFont(_font);
+        _text.setCharacterSize(20);
+        _text.setFillColor(sf::Color::White);
     };
 
     void Sfml::update(void)
