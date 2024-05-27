@@ -6,6 +6,7 @@
 */
 
 #include "../../../include/commands.h"
+#include "../../../include/utils.h"
 
 void cmd_slot(server_t *server, char *args, int client_nbr)
 {
@@ -20,4 +21,14 @@ void cmd_fork(server_t *server, char *args, int client_nbr)
 void cmd_dead(server_t *server, char *args, int client_nbr)
 {
     printf("dead\n");
+}
+
+void cmd_connect_nbr(server_t *server, char *args, int client_nbr)
+{
+    player_t *player = find_player_by_socket(server, client_nbr);
+
+    if (!player)
+        return;
+    dprintf(client_nbr, "%d\n", player->_team->_max_clients - player->_team->_current_clients);
+    printf("connect_nbr\n");
 }

@@ -37,11 +37,12 @@ int increment_player_level(player_t *player);
 void player_move(player_t *player);
 void player_orientation(player_t *player, bool right);
 char *print_player_inventory(player_t *player);
+char *get_player_inventory(player_t *player);
 
 // -- SERVER RELATED -- //
 player_t *add_player_to_team(char *team_name, struct server_s *server);
 list_t *get_player_on_tile(struct server_s *server, vector_t pos);
 
 // -- GRID RELATED -- //
-void player_take_item(player_t *player, tiles_t *tile, int item);
-void player_drop_item(player_t *player, tiles_t *tile, int item);
+bool player_take_item(player_t *player, tiles_t *tile, int item);
+bool player_drop_item(player_t *player, tiles_t *tile, int item);
