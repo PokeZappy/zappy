@@ -5,8 +5,9 @@
 ## Makefile
 ##
 
-SRC				=	main.cpp	\
-					$(wildcard src/*.cpp)
+SRC				=	main.cpp					\
+					$(wildcard src/*.cpp)		\
+					$(wildcard src/sfml/*.cpp)
 
 OBJ				=	$(SRC:.cpp=.o)
 DEPS			=	$(SRC:.cpp=.d)
@@ -22,7 +23,7 @@ NAME			=	zappy_gui
 
 DBGFLAGS		=	-g3 -O0
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 -Iinclude
-CXXFLAGS		+=	-lpthread
+# CXXFLAGS		+=	-lpthread
 LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
 DEPSFLAGS		=	-MMD -MP
 

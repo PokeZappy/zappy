@@ -11,33 +11,18 @@
 #include <stdio.h>
 #include <getopt.h>
 #include "ClientSocket.hpp"
-#include <SFML/Graphics.hpp>
 #include "Tile.hpp"
 
+#include "Sfml.hpp"
+
 namespace Zappy {
-    typedef struct mouse_pos_s {
-        sf::Vector2i window;
-        sf::Vector2f view;
-        sf::Vector2i grid;
-    } mouse_pos_t;
     class GUI
     {
-        #define GUI_WIDTH 1920
-        #define GUI_HEIGHT 600
         private:
             int _port = -1;
             std::string _machine = "";
             ClientSocket _socket;
-            sf::RenderWindow _window;
-            int _mapX = -1;
-            int _mapY = -1;
-            std::vector<std::vector<Zappy::Tile>> _tiles;
-            double _tileWidth = -1.f;
-            double _tileHeight = -1.f;
-            sf::View _view;
-            double _viewSpeed = 5.0f;
-            sf::RectangleShape _tileSelector;
-            mouse_pos_t _mousePositions;
+            Sfml _graphics;
         public:
             GUI(void);
             ~GUI(void) = default;
@@ -60,10 +45,6 @@ namespace Zappy {
             };
             void getOptions(int argc, char **argv);
             void loop(void);
-            void handleEvent(void);
             void handleCommands(std::string &line);
-            void initTiles(void);
-            void drawTiles(void);
-            void updateMouse(void);
     };
 }

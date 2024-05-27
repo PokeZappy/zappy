@@ -37,8 +37,7 @@ void ClientSocket::receive(int flags)
     // std::cout << "  --  RECEIVE BUFFER :" << _receiveBuffer << "  --  " << std::endl;
     char buffer[BUFFER_SIZE] = {0};
     int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, flags);
-    // if (valread < 0)
-    //     throw ServerConnectionException();
+    buffer[valread] = '\0';
     _receiveBuffer += buffer;
 }
 
