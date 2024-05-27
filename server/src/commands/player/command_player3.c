@@ -21,3 +21,14 @@ void cmd_dead(server_t *server, char *args, client_socket_t *client)
 {
     printf("dead\n");
 }
+
+void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
+{
+    player_t *player = client->player;
+
+    if (!player)
+        return;
+    dprintf(client->socket, "%d\n",
+    player->_team->_max_clients - player->_team->_current_clients);
+    printf("connect_nbr\n");
+}

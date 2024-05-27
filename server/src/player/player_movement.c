@@ -19,7 +19,7 @@ void check_player_position(player_t *player, int map_width, int map_height)
         player->_pos._y = 0;
 }
 
-void move_player(player_t *player, int map_width, int map_height)
+void player_move(player_t *player, int map_width, int map_height)
 {
     if (player->_direction == UP)
         player->_pos._y -= 1;
