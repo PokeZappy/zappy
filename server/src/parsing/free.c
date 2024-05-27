@@ -23,6 +23,12 @@ void free_server_arg(server_arg_t *arguments)
     free(arguments);
 }
 
+void free_client(struct client_socket_s *client)
+{
+    free_player(client->player);
+    free(client);
+}
+
 static void free_server_client(server_t *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
@@ -54,5 +60,6 @@ void free_server(server_t *server)
     free_server_arg(server->arguments);
     free_server_client(server);
     free_server_team(server);
+    free_grid(server->grid);
     free(server);
 }

@@ -62,10 +62,10 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
         client->player = new_player;
     }
     if (strcmp(commands, "EXIT") == 0) {
-        printf("Client requested exit\n");
+        printf("Client requested exit {%d}\n", client->_id);
         close(client_socket);
         TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-        free(client);
+        free_client(client);
     }
     if (strcmp(commands, "CLIENT_LIST") == 0) {
         print_client_list(server);
@@ -90,7 +90,7 @@ static void handle_client_message(client_socket_t *client,
         return;
     }
     buffer[bytes - 2] = '\0';
-    printf("Received from client: {%s}\n", buffer);
+    printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
 }
 
