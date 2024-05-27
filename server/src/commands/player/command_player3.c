@@ -7,17 +7,17 @@
 
 #include "../../../include/commands.h"
 
-void cmd_slot(server_t *server, char *args, int client_nbr)
+void cmd_slot(server_t *server, char *args, client_socket_t *client)
 {
     printf("slot_available\n");
 }
 
-void cmd_fork(server_t *server, char *args, int client_nbr)
+void cmd_fork(server_t *server, char *args, client_socket_t *client)
 {
     printf("fork\n");
 }
 
-void cmd_dead(server_t *server, char *args, int client_nbr)
+void cmd_dead(server_t *server, char *args, client_socket_t *client)
 {
     printf("dead\n");
 }

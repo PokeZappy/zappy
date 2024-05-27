@@ -9,6 +9,7 @@
 
 #include "constant.h"
 #include "server.h"
+#include "commands.h"
 #include "free.h"
 
 #include <stdio.h>

@@ -33,20 +33,6 @@ static void close_all_clients(struct server_s *server)
     }
 }
 
-static void print_client_list(server_t *server)
-{
-    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
-
-    printf("CLIENT LIST:\n");
-    while (client != NULL) {
-        if (client->player != NULL) {
-            printf("- CLIENT: {%d}{%d}{%s}\n", client->_id,
-                client->player->_id, client->player->_team->_name);
-        }
-        client = TAILQ_NEXT(client, entries);
-    }
-}
-
 static void handle_client_cmd(char *commands, client_socket_t *client,
     struct server_s *server)
 {
@@ -61,15 +47,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
         }
         client->player = new_player;
     }
-    if (strcmp(commands, "EXIT") == 0) {
-        printf("Client requested exit {%d}\n", client->_id);
-        close(client_socket);
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-        free_client(client);
-    }
-    if (strcmp(commands, "CLIENT_LIST") == 0) {
-        print_client_list(server);
-    }
+    manage_command(commands, client, server);
 }
 
 static void handle_client_message(client_socket_t *client,
