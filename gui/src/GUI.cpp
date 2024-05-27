@@ -11,41 +11,10 @@
 
 namespace Zappy
 {
-    GUI::GUI(void)
+    GUI::GUI()
     {
+        _graphics.setWorld(&_world);
     }
-
-    void GUI::handleCommands(std::string &line)
-    {
-        int commandPos = line.find(' ');
-        std::string command = line.substr(0, commandPos);
-        std::string args = line.substr(commandPos + 1);
-        std::istringstream ss(args);
-
-        size_t x, y;
-
-        if (command == "msz") {
-            ss >> x >> y;
-            _graphics.initTiles(x, y);
-        }
-        if (command == "bct") {
-            ss >> x >> y;
-            Tile tile(ss);
-            _graphics.updateTile(x, y, tile);
-        }
-        if (command == "tna") {
-            std::string teamName;
-            ss >> teamName;
-            if (teamName.empty())
-                return;
-            for (auto &team : _teams) {
-                if (team == teamName)
-                    return;
-            }
-            _teams.push_back(teamName);
-        }
-    }
-
     void GUI::loop(void)
     {
         std::optional<std::string> command;
@@ -55,7 +24,11 @@ namespace Zappy
             _graphics.update();
             command = _socket.getNextCommand();
             while (command.has_value()) {
-                handleCommands(command.value());
+                try {
+                    handleCommands(command.value());
+                } catch (const std::exception &e) {
+                    std::cerr << e.what() << std::endl;
+                }
                 command = _socket.getNextCommand();
             }
             _graphics.display();

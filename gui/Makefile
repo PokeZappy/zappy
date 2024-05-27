@@ -7,7 +7,9 @@
 
 SRC				=	main.cpp					\
 					$(wildcard src/*.cpp)		\
-					$(wildcard src/sfml/*.cpp)
+					$(wildcard src/sfml/*.cpp)	\
+					$(wildcard src/world/*.cpp)
+
 
 OBJ				=	$(SRC:.cpp=.o)
 DEPS			=	$(SRC:.cpp=.d)

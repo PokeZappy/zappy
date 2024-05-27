@@ -11,7 +11,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
-#include "Tile.hpp"
+#include "World.hpp"
 
 namespace Zappy {
     typedef struct mouse_pos_s {
@@ -23,25 +23,26 @@ namespace Zappy {
     #define GUI_WIDTH 1920
     #define GUI_HEIGHT 1080
     public:
-        Sfml();
+        Sfml(World *world = nullptr);
         void update(void);
         void display(void);
         bool isOpen(void) { return (_window.isOpen()); }
+
+        void setWorld(World *world) { _world = world; }
 
         void updateMouse(void);
         void handleEvent(void);
 
         void drawTiles(void);
-        void initTiles(size_t width, size_t height);
-        void updateTile(size_t x, size_t y, Tile tile);
+        void initTiles(const std::vector<std::vector<Tile>> &tiles);
     private:
         sf::RenderWindow _window;
         sf::View _view;
         double _viewSpeed = 5.0f;
         sf::Font _font;
+        World *_world;
         int _mapX = -1;
         int _mapY = -1;
-        std::vector<std::vector<Zappy::Tile>> _tiles;
         double _tileWidth = -1.f;
         double _tileHeight = -1.f;
         sf::RectangleShape _tileRect;
