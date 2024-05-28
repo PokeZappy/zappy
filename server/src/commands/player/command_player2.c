@@ -30,7 +30,7 @@ void cmd_take(server_t *server, char *args, client_socket_t *client)
         return;
     }
     result = player_take_item(player,
-    server->grid->_tiles[player->_pos._y][player->_pos._y] , object_taken);
+    server->grid->_tiles[player->_pos._y][player->_pos._y], object_taken);
     if (result == 0)
         dprintf(client->socket, "ok\n");
     else
@@ -51,7 +51,7 @@ void cmd_set(server_t *server, char *args, client_socket_t *client)
         return;
     }
     result = player_take_item(player,
-    server->grid->_tiles[player->_pos._y][player->_pos._y] , object_set);
+    server->grid->_tiles[player->_pos._y][player->_pos._y], object_set);
     if (result == 0)
         dprintf(client->socket, "ok\n");
     else

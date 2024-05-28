@@ -13,6 +13,8 @@ static void print_client_list(server_t *server)
 
     printf("CLIENT LIST:\n");
     while (client != NULL) {
+        if (client->_is_gui == 1)
+            printf("- GUI: {ID:%d}\n", client->_id);
         if (client->player != NULL) {
             printf("- CLIENT: {ID:%d}{TEAM_ID:%d}{TEAM:%s}{POS:%d-%d}\n",
                 client->_id, client->player->_id, client->player->_team->_name,

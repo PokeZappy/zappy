@@ -39,7 +39,11 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
     player_t *new_player;
     int client_socket = client->socket;
 
-    if (client->player == NULL) {
+    if (client->player == NULL && client->_is_gui == 0) {
+        if (strcmp(commands, "GUI") == 0) {
+            client->_is_gui = 1;
+            return;
+        }
         new_player = add_player_to_team(commands, server);
         if (new_player == NULL) {
             fprintf(stderr, "handle_client_cmd: Enable to create player\n");
@@ -103,6 +107,7 @@ static void wait_for_client(struct server_s *server)
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
+    new_client->_is_gui = 0;
     new_client->_id = ntohs(client_addr.sin_port);
     new_client->player = NULL;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
