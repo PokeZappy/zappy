@@ -53,8 +53,3 @@ void cmd_pex(server_t *server, char *args, client_socket_t *client)
 {
     printf("pex\n");
 }
-
-void cmd_pbc(server_t *server, char *args, client_socket_t *client)
-{
-    printf("pbc\n");
-}

@@ -47,23 +47,8 @@ void cmd_pnw(server_t *server, char *args, client_socket_t *client);
 void cmd_ppo(server_t *server, char *args, client_socket_t *client);
 void cmd_plv(server_t *server, char *args, client_socket_t *client);
 void cmd_pin(server_t *server, char *args, client_socket_t *client);
-void cmd_pex(server_t *server, char *args, client_socket_t *client);
-void cmd_pbc(server_t *server, char *args, client_socket_t *client);
-void cmd_pic(server_t *server, char *args, client_socket_t *client);
-void cmd_pie(server_t *server, char *args, client_socket_t *client);
-void cmd_pfk(server_t *server, char *args, client_socket_t *client);
-void cmd_pdr(server_t *server, char *args, client_socket_t *client);
-void cmd_pgt(server_t *server, char *args, client_socket_t *client);
-void cmd_pdi(server_t *server, char *args, client_socket_t *client);
-void cmd_enw(server_t *server, char *args, client_socket_t *client);
-void cmd_ebo(server_t *server, char *args, client_socket_t *client);
-void cmd_edi(server_t *server, char *args, client_socket_t *client);
 void cmd_sgt(server_t *server, char *args, client_socket_t *client);
 void cmd_sst(server_t *server, char *args, client_socket_t *client);
-void cmd_seg(server_t *server, char *args, client_socket_t *client);
-void cmd_smg(server_t *server, char *args, client_socket_t *client);
-void cmd_suc(server_t *server, char *args, client_socket_t *client);
-void cmd_sbp(server_t *server, char *args, client_socket_t *client);
 
 // -- SERVER -- //
 void cmd_unknown(server_t *server, char *args, client_socket_t *client);
