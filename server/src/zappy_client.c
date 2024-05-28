@@ -50,6 +50,9 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
             return;
         }
         client->player = new_player;
+        dprintf(client->socket, "%d\n%d %d\n",
+            get_client_rest(client->player->_team), client->player->_pos._x,
+            client->player->_pos._y);
     }
     manage_command(commands, client, server);
 }

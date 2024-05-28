@@ -21,3 +21,4 @@ typedef struct team_s {
 team_t *init_team(char *name, int max_clients);
 team_t *search_team(char *team_name, struct server_s *server);
 void free_team(team_t *team);
+int get_client_rest(team_t *team);

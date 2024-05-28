@@ -36,3 +36,8 @@ team_t *search_team(char *team_name, server_t *server)
     }
     return NULL;
 }
+
+int get_client_rest(team_t *team)
+{
+    return team->_max_clients - team->_current_clients;
+}
