@@ -24,15 +24,18 @@ static void print_client_list(server_t *server)
     }
 }
 
+static void exit_command(client_socket_t *client, server_t *server)
+{
+    printf("Client requested exit {%d}\n", client->_id);
+    close(client->socket);
+    TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+    free_client(client);
+}
+
 void manage_command(char *commands, client_socket_t *client, server_t *server)
 {
-    if (strcmp(commands, "EXIT") == 0) {
-        printf("Client requested exit {%d}\n", client->_id);
-        close(client->socket);
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-        free_client(client);
-    }
-    if (strcmp(commands, "CLIENT_LIST") == 0) {
+    if (strcmp(commands, "EXIT") == 0)
+        exit_command(client, server);
+    if (strcmp(commands, "CLIENT_LIST") == 0)
         print_client_list(server);
-    }
 }
