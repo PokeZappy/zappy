@@ -21,7 +21,7 @@ TESTS_TARGET	=	unit_tests
 
 TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
-NAME			=	zappy_core
+NAME			=	zappy_gui
 
 INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
 DBGFLAGS		=	-g3 -O0

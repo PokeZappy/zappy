@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** zappy_core.hpp
+** Core.hpp
 */
 
 #pragma once

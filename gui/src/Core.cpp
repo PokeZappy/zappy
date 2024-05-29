@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** zappy_core.cpp
+** Core.cpp
 */
 
 #include "Core.hpp"

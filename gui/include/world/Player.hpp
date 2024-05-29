@@ -47,7 +47,7 @@ namespace Zappy {
         size_t getY() const { return _posY; }
         Orientation getOrientation() const { return _orientation; }
         size_t getLevel() const { return _level; }
-        const std::string &getTeamName() const { return _team.getName(); }
+        const Team &getTeam() const { return _team; }
         bool isIncanting() const { return _isIncanting; }
         Inventory &getInventory() { return _inventory; }
 

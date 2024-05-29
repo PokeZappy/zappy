@@ -11,7 +11,7 @@
 #include <memory.h>
 
 namespace Zappy {
-    enum Orientation {
+    enum class Orientation {
         NONE,
         NORTH,
         EAST,
@@ -27,4 +27,12 @@ namespace Zappy {
             default: return "NONE";
         }
     }
+    class Color {
+    public:
+        Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
+        Color() : r(0), g(0), b(0) {}
+        unsigned char r;
+        unsigned char g;
+        unsigned char b;
+    };
 }

@@ -27,21 +27,29 @@ namespace Zappy
         _tileRect.setOutlineColor(sf::Color::White);
         _tileRect.setOutlineThickness(3.0);
 
-        _text.setFont(_font);
-        // _text.setCharacterSize(14);
-        _text.setCharacterSize(50);
-        _text.setScale(0.30f, 0.30f);
-        _text.setFillColor(sf::Color::White);
+        _resourcesText.setFont(_font);
+        // _resourcesText.setCharacterSize(14);
+        _resourcesText.setCharacterSize(50);
+        _resourcesText.setScale(0.30f, 0.30f);
+        _resourcesText.setFillColor(sf::Color::White);
+        _resourcesText.setStyle(sf::Text::Bold);
 
         _playerTriangle.setPointCount(3);
-        _playerTriangle.setRadius(30);
+        _playerTriangle.setRadius(25);
         _playerTriangle.setFillColor(sf::Color::Green);
         _playerTriangle.setOrigin(_playerTriangle.getRadius(), _playerTriangle.getRadius());
+        _playerTriangle.setOutlineThickness(8);
         _playerTriangle.setScale(1, 0.5);
+
+        _playerLevelText.setFont(_font);
+        _playerLevelText.setCharacterSize(20);
+        _playerLevelText.setFillColor(sf::Color::White);
 
         _shellText.setFont(_font);
         _shellText.setCharacterSize(20);
         _shellText.setFillColor(sf::Color::White);
+
+        _shellTextTeamColor.setSize(sf::Vector2f(15, 15));
     };
 
     void Sfml::update(void)
@@ -62,26 +70,7 @@ namespace Zappy
         _window.draw(_tileSelector);
         // important de reset la view pour render tout ce qui n'est pas les tiles (overlay, text ...)
         _window.setView(_window.getDefaultView());
-
-        drawShell(world.getShellLines());
+        drawShell(world.getShellCommands());
         _window.display();
-    }
-
-    void Sfml::drawShell(const std::vector<std::string> &shellLines)
-    {
-        int defaultWidth = 900;
-        int defaultHeight = GUI_HEIGHT - 280;
-        sf::Color shellcolor = _shellText.getColor();
-        shellcolor.a = 255;
-        _shellText.setColor(shellcolor);
-        for (auto &text : shellLines) {
-            shellcolor.a -= 5;
-            _shellText.setColor(shellcolor);
-            _shellText.setString(text);
-            _shellText.setPosition(defaultWidth, defaultHeight);
-            // _shellText.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
-            defaultHeight -= 20;
-            _window.draw(_shellText);
-        }
     }
 } // namespace Zappy

@@ -92,7 +92,10 @@
         "future": "cpp",
         "stdfloat": "cpp",
         "valarray": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "__debug": "cpp",
+        "__errc": "cpp",
+        "__mutex_base": "cpp"
     },
     "editor.formatOnSave": false,
     "[cpp]": {

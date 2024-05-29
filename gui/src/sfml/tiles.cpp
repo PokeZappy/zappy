@@ -16,22 +16,24 @@ namespace Zappy
                 _tileRect.setPosition(width * _tileWidth, height * _tileHeight);
                 _window.draw(_tileRect);
                 for (size_t i = 0; i < 7; i++) {
-                    _text.setString(std::to_string(tiles[height][width].getItem(i)));
-                    _text.setPosition(width * _tileWidth + 10,
+                    _resourcesText.setString(std::to_string(tiles[height][width].getItem(i)));
+                    _resourcesText.setPosition(width * _tileWidth + 10,
                         height * _tileHeight + i * 13);
-                    _window.draw(_text);
+                    _resourcesText.setFillColor(getItemColor(static_cast<Item>(i)));
+                    _window.draw(_resourcesText);
                 }
             }
         }
     }
 
-    void Sfml::drawPlayer(const Player &player)
+    void Sfml::drawPlayer(const std::shared_ptr<Player> player)
     {
-        _playerTriangle.setPosition(player.getX() * _tileWidth + _tileWidth / 2,
-            player.getY() * _tileHeight + _tileHeight / 2);
+        sf::Vector2f tileCenter(player->getX() * _tileWidth + _tileWidth / 2,
+            player->getY() * _tileHeight + _tileHeight / 2);
+        _playerTriangle.setPosition(tileCenter);
         // _playerTriangle.setRotation(90 * 0);
-        // _playerTriangle.setRotation((player.getOrientation() - 1) * 90);
-        switch (player.getOrientation()) {
+        // _playerTriangle.setRotation((player->getOrientation() - 1) * 90);
+        switch (player->getOrientation()) {
         case Orientation::NORTH: _playerTriangle.setRotation(180); break;
         case Orientation::EAST: _playerTriangle.setRotation(90); break;
         case Orientation::SOUTH: _playerTriangle.setRotation(0); break;
@@ -39,6 +41,11 @@ namespace Zappy
         default:
             break;
         }
+        _playerTriangle.setFillColor(getTeamColor(player->getTeam().getType()));
+        _playerTriangle.setOutlineColor(getPlayerColor(player));
+        _playerLevelText.setString(std::to_string(player->getLevel()));
+        _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10));
         _window.draw(_playerTriangle);
+        _window.draw(_playerLevelText);
     }
 } // namespace Zappy

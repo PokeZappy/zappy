@@ -9,68 +9,29 @@
 
 namespace Zappy
 {
-    void World::initTiles(size_t width, size_t height)
+    void World::addShellCommand(const std::string &text, std::shared_ptr<Player> player)
     {
-        _mapX = width;
-        _mapY = height;
-        if (_mapX == -1 || _mapY == -1 || !_tiles.empty())
-            return;
-        for (int height = 0; height < _mapY; height++) {
-            std::vector<Tile> horizontalVector;
-            for (int width = 0; width < _mapX; width++) {
-                horizontalVector.push_back(Tile());
-            }
-            _tiles.push_back(horizontalVector);
-        }
+        _shellCommands.insert(_shellCommands.begin(), ShellCommand(text, player));
+        if (_shellCommands.size() > 42)
+            _shellCommands.pop_back();
     }
 
-    void World::updateTile(size_t x, size_t y, const Tile &tile)
+    const std::vector<ShellCommand> &World::getShellCommands(void) const
     {
-        if (x >= _tiles.size() || y >= _tiles[0].size())
-            return;
-        _tiles[y][x] = tile;
-    }
-
-    void World::updateTileInventory(size_t x, size_t y, const Inventory &inventory)
-    {
-        if (x >= _tiles.size() || y >= _tiles[0].size())
-            return;
-        _tiles[y][x].setInventory(inventory);
-    }
-
-    void World::addTeam(const std::string &teamName)
-    {
-        if (teamName.empty())
-            return;
-        for (auto &team : _teams) {
-            if (team.getName() == teamName)
-                return;
-        }
-        _teams.push_back(Team(teamName));
-    }
-
-    Team &World::getTeam(const std::string &teamName)
-    {
-        for (auto &team : _teams) {
-            if (team.getName() == teamName)
-                return team;
-        }
-        throw std::runtime_error("Team not found");
-    }
-
-    Player &World::getPlayer(size_t id)
-    {
-        for (auto &player : _players) {
-            if (player.getId() == id)
-                return player;
-        }
-        throw std::runtime_error("Player not found");
-    }
-
-    void World::addShellLine(const std::string &line)
-    {
-        _shellLines.insert(_shellLines.begin(), line);
-        if (_shellLines.size() > 42)
-            _shellLines.pop_back();
+        // I would like to scroll to see the previouses commands but it segfaults
+        // std::vector<ShellCommand> commands;
+        // size_t index = 0;
+        // commands.push_back(ShellCommand("test", nullptr));
+        // for (auto &command : _shellCommands) {
+        //     // for (size_t i = 0; i < _shellOffset; i++) {
+        //     //     continue;
+        //     // }
+        //     commands.push_back(command);
+        //     // if (index >= 30)
+        //     //     break;
+        //     index++;
+        // }
+        // return commands;
+        return _shellCommands;
     }
 } // namespace Zappy

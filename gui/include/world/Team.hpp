@@ -14,20 +14,26 @@ namespace Zappy {
     class Eggs {
 
     };
+
+    enum TeamType {
+        FIRE,
+        GRASS,
+        WATER,
+        STEEL,
+        FAIRY,
+        SIZE,
+        NONE
+    };
     class Team {
     public:
         Team() = default;
-        Team(const std::string &name) : _name(name) {}
+        Team(const std::string &name, TeamType type = TeamType::NONE) : _name(name), _type(type) {}
         ~Team() = default;
 
         const std::string &getName() const { return _name; }
+        TeamType getType() const { return _type; }
     private:
         std::string _name;
-        // std::vector<Player *> _players;
-        // std::vector<std::shared_ptr<Player>> _players;
-        // std::vector<size_t> _playersId;
-
-        // std::vector<Player> _players;
-        // std::vector<Eggs> _eggs;
+        TeamType _type;
     };
 } // namespace Zappy

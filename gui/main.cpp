@@ -2,7 +2,7 @@
 
 int displayUsage(void)
 {
-    printf("USAGE: ./zappy_core -p port -h machine\n");
+    printf("USAGE: ./zappy_gui -p port -h machine\n");
     return (84);
 }
 

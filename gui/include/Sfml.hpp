@@ -32,24 +32,39 @@ namespace Zappy {
         void handleEvent(void);
 
         void drawTiles(const std::vector<std::vector<Tile>> &tiles);
-
-        void drawPlayer(const Player &player);
-        void drawShell(const std::vector<std::string> &shellLines);
+        void drawPlayer(const std::shared_ptr<Player> player);
+        void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
+        sf::Color getTeamColor(TeamType teamType);
+        sf::Color getTextColor(const ShellCommand &command);
+        sf::Color getPlayerColor(const std::shared_ptr<Player> player);
+        sf::Color getItemColor(Item itemType);
+
         sf::RenderWindow _window;
         sf::View _view;
-        double _viewSpeed = 5.0f;
+        double _viewSpeed = 1.0f;
         sf::Font _font;
+        mouse_pos_t _mousePositions;
+
+        // Tiles
         int _mapX = -1;
         int _mapY = -1;
         double _tileWidth = -1.f;
         double _tileHeight = -1.f;
         sf::RectangleShape _tileRect;
         sf::RectangleShape _tileSelector;
-        sf::Text _text;
-        mouse_pos_t _mousePositions;
+
+        // Resources
+        sf::Text _resourcesText;
+
+        // Player
         sf::CircleShape _playerTriangle;
+        sf::Text _playerLevelText;
+        std::map<size_t, sf::Color> _playerColors;
+
+        // Shell
         sf::Text _shellText;
+        sf::RectangleShape _shellTextTeamColor;
     };
 
 } // namespace Zappy

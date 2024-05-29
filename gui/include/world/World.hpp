@@ -10,6 +10,7 @@
 #include "Tile.hpp"
 #include "world/Player.hpp"
 #include "world/Team.hpp"
+#include "ShellCommand.hpp"
 
 namespace Zappy {
     class World {
@@ -22,21 +23,26 @@ namespace Zappy {
 
         void handleCommand(std::string &command);
         const std::vector<std::vector<Tile>> &getTiles() const { return (_tiles); }
-        void addTeam(const std::string &teamName);
-        void addPlayer(Player &player) { _players.push_back(player); }
+        TeamType determineTeamType(const std::string &teamName);
 
-        Player &getPlayer(size_t id);
-        const std::vector<Player> &getPlayers() const { return _players; }
+        void addPlayer(std::shared_ptr<Player> player) { _players.push_back(player); }
+        std::shared_ptr<Player> getPlayer(size_t id);
+        const std::vector<std::shared_ptr<Player>> &getPlayers() const { return _players; }
+        std::vector<std::shared_ptr<Player>> getPlayers(size_t x, size_t y);
+        void killPlayer(size_t id);
+
+        void addTeam(const std::string &teamName);
         Team &getTeam(const std::string &teamName);
 
-        const std::vector<std::string> &getShellLines(void) const { return _shellLines; }
-        void addShellLine(const std::string &line);
+        const std::vector<ShellCommand> &getShellCommands(void) const;
+        void addShellCommand(const std::string &text, std::shared_ptr<Player> player = nullptr);
     private:
         int _mapX = -1;
         int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;
         std::vector<Team> _teams;
-        std::vector<Player> _players;
-        std::vector<std::string> _shellLines;
+        std::vector<std::shared_ptr<Player>> _players;
+        std::vector<ShellCommand> _shellCommands;
+        size_t _shellOffset = 0;
     };
 } // namespace Zappy
