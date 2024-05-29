@@ -2,12 +2,12 @@
 ** EPITECH PROJECT, 2023
 ** B-YEP-400-LYN-4-1-zappy-tom.blancheton
 ** File description:
-** manage_commands.c
+** my_commands.c
 */
 
 #include "../../include/commands.h"
 
-static void print_client_list(server_t *server)
+void print_client_list(server_t *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
 
@@ -24,18 +24,10 @@ static void print_client_list(server_t *server)
     }
 }
 
-static void exit_command(client_socket_t *client, server_t *server)
+void exit_command(client_socket_t *client, server_t *server)
 {
     printf("Client requested exit {%d}\n", client->_id);
     close(client->socket);
     TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
     free_client(client);
-}
-
-void manage_command(char *commands, client_socket_t *client, server_t *server)
-{
-    if (strcmp(commands, "EXIT") == 0)
-        exit_command(client, server);
-    if (strcmp(commands, "CLIENT_LIST") == 0)
-        print_client_list(server);
 }

@@ -20,22 +20,23 @@ typedef struct command_s {
     void (*ptr)(server_t *server, char *args, client_socket_t *client);
 } command_t;
 
-void manage_command(char *commands, client_socket_t *client, server_t *server);
+void manage_cmd_play(char *command, client_socket_t *client, server_t *server);
+void manage_cmd_gui(char *command, client_socket_t *client, server_t *server);
 
 // -- PLAYER -- //
-void cmd_forward(server_t *server, char *args, client_socket_t *client);
-void cmd_right(server_t *server, char *args, client_socket_t *client);
-void cmd_left(server_t *server, char *args, client_socket_t *client);
+void cmd_forward(server_t *server, client_socket_t *client);
+void cmd_right(server_t *server, client_socket_t *client);
+void cmd_left(server_t *server, client_socket_t *client);
 void cmd_look(server_t *server, char *args, client_socket_t *client);
-void cmd_inventory(server_t *server, char *args, client_socket_t *client);
+void cmd_inventory(server_t *server, client_socket_t *client);
 void cmd_broadcast(server_t *server, char *args, client_socket_t *client);
 void cmd_slot(server_t *server, char *args, client_socket_t *client);
 void cmd_fork(server_t *server, char *args, client_socket_t *client);
 void cmd_eject(server_t *server, char *args, client_socket_t *client);
 void cmd_dead(server_t *server, char *args, client_socket_t *client);
-void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client);
-void cmd_take_object(server_t *server, char *args, client_socket_t *client);
-void cmd_set_object(server_t *server, char *args, client_socket_t *client);
+void cmd_connect_nbr(server_t *server, client_socket_t *client);
+void cmd_take(server_t *server, char *args, client_socket_t *client);
+void cmd_set(server_t *server, char *args, client_socket_t *client);
 void cmd_incantation(server_t *server, char *args, client_socket_t *client);
 
 // -- GUI -- //
@@ -52,3 +53,7 @@ void cmd_sst(server_t *server, char *args, client_socket_t *client);
 
 // -- SERVER -- //
 void cmd_unknown(server_t *server, char *args, client_socket_t *client);
+
+// -- MY_CMD -- //
+void print_client_list(server_t *server);
+void exit_command(client_socket_t *client, server_t *server);
