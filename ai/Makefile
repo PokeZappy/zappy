@@ -5,13 +5,13 @@
 ## HEADER
 ##
 
-SRC	=	./src/zappy_ai.py
+SRC	=	./src/main.py
 
 NAME =	zappy_ai
 
 $(NAME)	:
 			cp $(SRC) ./
-			mv zappy_ai.py zappy_ai
+			mv main.py zappy_ai
 
 all: $(NAME)
 

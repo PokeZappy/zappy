@@ -1,4 +1,4 @@
-class path() :
+class Path() :
     def __init__(self, limit, start, end):
         self.limit = limit
         self.start = start

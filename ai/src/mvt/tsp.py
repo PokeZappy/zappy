@@ -1,4 +1,4 @@
-import path
+from src.mvt.path import Path
 
 """
 obj : [(position : tuple, type : int, number : int)]
@@ -37,7 +37,7 @@ class held_krap():
             for i in range(len(self.obj)):
                 if self.obj[i][2] > greater[2]:
                     greater = self.obj[i]
-            return [path.path(self.limit, self.pos, greater[0]).opti_path()]
+            return [Path(self.limit, self.pos, greater[0]).opti_path()]
         """
         In case there are enough elements to reach the goal,
         the play will take the shortest path to reach the goal
