@@ -59,3 +59,5 @@ void cmd_unknown(server_t *server, char *args, client_socket_t *client);
 // -- MY_CMD -- //
 void print_client_list(server_t *server);
 void exit_command(client_socket_t *client, server_t *server);
+void hack_player_pos(client_socket_t *client, server_t *server, char *args);
+void hack_player_dir(client_socket_t *client, server_t *server, char *args);

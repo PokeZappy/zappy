@@ -23,6 +23,10 @@ static void m_cmd_2(char *command, client_socket_t *client, server_t *server)
         return cmd_dead(server, command, client);
     if (strncmp(command, "connect_nbr", 11) == 0)
         return cmd_connect_nbr(server, client);
+    if (strncmp(command, "HACK_DIR ", 9) == 0)
+        return hack_player_dir(client, server, command + 9);
+    if (strncmp(command, "HACK_POS ", 9) == 0)
+        return hack_player_pos(client, server, command + 9);
 }
 
 void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
