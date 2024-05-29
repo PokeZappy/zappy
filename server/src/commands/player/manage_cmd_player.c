@@ -45,7 +45,7 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
         return cmd_look(server, command, client);
     if (strncmp(command, "inventory", 9) == 0)
         return cmd_inventory(server, client);
-    if (strncmp(command, "broadcast ", 10) == 0)
+    if (strncmp(command, "broadcast", 9) == 0)
         return cmd_broadcast(server, command, client);
     if (strncmp(command, "eject ", 6) == 0)
         return cmd_eject(server, command, client);
