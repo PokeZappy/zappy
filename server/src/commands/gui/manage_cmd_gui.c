@@ -22,7 +22,7 @@ void manage_cmd_gui(char *command, client_socket_t *client, server_t *server)
     if (strcmp(command, "EXIT") == 0)
         return exit_command(client, server);
     if (strcmp(command, "CLIENT_LIST") == 0)
-        return print_client_list(server);
+        return print_client_list(client, server);
     if (strncmp(command, "msz ", 4) == 0)
         return cmd_msz(server, command, client);
     if (strncmp(command, "bct ", 4) == 0)

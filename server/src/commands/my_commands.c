@@ -8,21 +8,23 @@
 #include "../../include/commands.h"
 #include "../../include/utils.h"
 
-void print_client_list(server_t *server)
+void print_client_list(client_socket_t *client, server_t *server)
 {
-    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
-    printf("CLIENT LIST:\n");
-    while (client != NULL) {
-        if (client->_is_gui == 1)
-            printf("- GUI: {ID:%d}\n", client->_id);
-        if (client->player != NULL) {
-            printf("- CLIENT: {ID:%d}{TEAM_ID:%d}{TEAM:%s}{POS:%d-%d:%d}\n",
-                client->_id, client->player->_id, client->player->_team->_name,
-                client->player->_pos._x, client->player->_pos._y,
-                client->player->_direction);
+    dprintf(client->socket, "CLIENT LIST:\n");
+    while (current != NULL) {
+        if (current->_is_gui == 1)
+            dprintf(client->socket, "- GUI: {ID:%d}\n", current->_id);
+        if (current->player != NULL) {
+            dprintf(client->socket,
+                "- CLIENT: {ID:%d}{TEAM_ID:%d}{TEAM:%s}{POS:%d-%d:%d}\n",
+                current->_id, current->player->_id,
+                    current->player->_team->_name,
+                current->player->_pos._x, current->player->_pos._y,
+                current->player->_direction);
         }
-        client = TAILQ_NEXT(client, entries);
+        current = TAILQ_NEXT(current, entries);
     }
 }
 
