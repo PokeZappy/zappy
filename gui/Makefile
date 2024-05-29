@@ -23,6 +23,7 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
+INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
 DBGFLAGS		=	-g3 -O0
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 -Iinclude
 # CXXFLAGS		+=	-lpthread

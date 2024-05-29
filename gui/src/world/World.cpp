@@ -5,7 +5,7 @@
 ** World.cpp
 */
 
-#include "World.hpp"
+#include "world/World.hpp"
 
 namespace Zappy
 {
@@ -38,7 +38,6 @@ namespace Zappy
         _tiles[y][x].setInventory(inventory);
     }
 
-
     void World::addTeam(const std::string &teamName)
     {
         if (teamName.empty())
@@ -58,6 +57,13 @@ namespace Zappy
         //             if (player->getId() == id)
         //                 return player;
         //         }
+        //     }
+        // }
+
+        // for (auto &team : _teams) {
+        //     for (auto &player : team->getPlayers()) {
+        //         if (player.getId() == id)
+        //             return player;
         //     }
         // }
         throw std::runtime_error("Player not found");

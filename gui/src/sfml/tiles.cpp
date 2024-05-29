@@ -11,8 +11,8 @@ namespace Zappy
 {
     void Sfml::initTiles(const std::vector<std::vector<Tile>> &tiles)
     {
-        _tileWidth = static_cast<double>(GUI_WIDTH) / tiles[0].size();
-        _tileHeight = static_cast<double>(GUI_HEIGHT) / tiles.size();
+        _tileHeight = 100;
+        _tileWidth = _tileHeight;
         _tileSelector.setSize(sf::Vector2f(_tileWidth, _tileHeight));
         _tileRect.setSize(sf::Vector2f(_tileWidth, _tileHeight));
     }

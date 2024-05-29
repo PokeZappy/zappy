@@ -11,7 +11,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
-#include "World.hpp"
+#include "world/World.hpp"
 
 namespace Zappy {
     typedef struct mouse_pos_s {

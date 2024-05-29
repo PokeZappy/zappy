@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Inventory.hpp"
-#include "Player.hpp"
+#include "world/Player.hpp"
 
 namespace Zappy {
     class Tile {
@@ -27,6 +27,7 @@ namespace Zappy {
             // std::vector<std::unique_ptr<Player>> &getPlayers() { return _players; }
         private:
             Inventory _inventory;
+            // std::vector<Player *>> _players;
             // std::vector<std::unique_ptr<Player>> _players;
             // size_t _eggs = 0;
     };

@@ -18,6 +18,8 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
+        // std::cout << "Command: " << command << std::endl;
+
         if (command == "msz") {
             ss >> x >> y;
             _world.initTiles(x, y);
@@ -51,6 +53,9 @@ namespace Zappy
             ss >> id;
             Inventory inventory(ss);
             _world.getPlayer(id)->setInventory(inventory);
+        }
+        else {
+            std::cerr << "Unknown command: " << command << std::endl;
         }
     }
 } // namespace Zappy

@@ -14,7 +14,7 @@
 
 #include "ClientSocket.hpp"
 #include "Sfml.hpp"
-#include "World.hpp"
+#include "world/World.hpp"
 
 namespace Zappy {
     class GUI {

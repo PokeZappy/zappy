@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Tile.hpp"
-#include "Player.hpp"
+#include "world/Player.hpp"
 
 namespace Zappy {
     class World {
@@ -22,7 +22,7 @@ namespace Zappy {
         void handleCommands(std::string &line);
         const std::vector<std::vector<Tile>> &getTiles() const { return (_tiles); }
         void addTeam(const std::string &teamName);
-        // void addPlayer(std::unique_ptr<Player> &player) { _players.push_back(std::move(player)); }
+        // void addPlayer(Player &player) { _players.push_back(player); }
 
         std::unique_ptr<Player> & getPlayer(size_t id);
     private:
@@ -30,5 +30,6 @@ namespace Zappy {
         int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;
         std::vector<std::string> _teams;
+        // std::vector<Player> _players;
     };
 } // namespace Zappy
