@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** zappy_gui.hpp
+** zappy_core.hpp
 */
 
 #pragma once
@@ -17,10 +17,10 @@
 #include "world/World.hpp"
 
 namespace Zappy {
-    class GUI {
+    class Core {
     public:
-        GUI();
-        ~GUI() = default;
+        Core() = default;
+        ~Core() = default;
         void setPort(int port) { _port = port; };
         void setMachine(std::string &machine) { _machine = machine; };
         int getPort(void) const { return (_port); }
@@ -40,7 +40,6 @@ namespace Zappy {
         };
         void getOptions(int argc, char **argv);
         void loop(void);
-        void handleCommands(std::string &line);
     private:
         int _port = -1;
         std::string _machine = "";

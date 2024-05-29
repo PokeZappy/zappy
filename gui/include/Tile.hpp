@@ -27,8 +27,10 @@ namespace Zappy {
             // std::vector<std::unique_ptr<Player>> &getPlayers() { return _players; }
         private:
             Inventory _inventory;
-            // std::vector<Player *>> _players;
-            // std::vector<std::unique_ptr<Player>> _players;
+            // std::vector<Player *> _players;
+            // std::vector<std::shared_ptr<Player>> _players;
+            // std::vector<size_t> _playersId;
+
             // size_t _eggs = 0;
     };
 }

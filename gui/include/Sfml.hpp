@@ -23,24 +23,23 @@ namespace Zappy {
     #define GUI_WIDTH 1920
     #define GUI_HEIGHT 1080
     public:
-        Sfml(World *world = nullptr);
+        Sfml();
         void update(void);
-        void display(void);
+        void display(const World &world);
         bool isOpen(void) { return (_window.isOpen()); }
-
-        void setWorld(World *world) { _world = world; }
 
         void updateMouse(void);
         void handleEvent(void);
 
-        void drawTiles(void);
-        void initTiles(const std::vector<std::vector<Tile>> &tiles);
+        void drawTiles(const std::vector<std::vector<Tile>> &tiles);
+
+        void drawPlayer(const Player &player);
+        void drawShell(const std::vector<std::string> &shellLines);
     private:
         sf::RenderWindow _window;
         sf::View _view;
         double _viewSpeed = 5.0f;
         sf::Font _font;
-        World *_world;
         int _mapX = -1;
         int _mapY = -1;
         double _tileWidth = -1.f;
@@ -49,6 +48,8 @@ namespace Zappy {
         sf::RectangleShape _tileSelector;
         sf::Text _text;
         mouse_pos_t _mousePositions;
+        sf::CircleShape _playerTriangle;
+        sf::Text _shellText;
     };
 
 } // namespace Zappy

@@ -2,20 +2,16 @@
 ** EPITECH PROJECT, 2024
 ** zappy
 ** File description:
-** zappy_gui.cpp
+** zappy_core.cpp
 */
 
-#include "GUI.hpp"
+#include "Core.hpp"
 #include "SocketExceptions.hpp"
 #include <sstream>
 
 namespace Zappy
 {
-    GUI::GUI()
-    {
-        _graphics.setWorld(&_world);
-    }
-    void GUI::loop(void)
+    void Core::loop(void)
     {
         std::optional<std::string> command;
 
@@ -25,13 +21,13 @@ namespace Zappy
             command = _socket.getNextCommand();
             while (command.has_value()) {
                 try {
-                    handleCommands(command.value());
+                    _world.handleCommand(command.value());
                 } catch (const std::exception &e) {
                     std::cerr << e.what() << std::endl;
                 }
                 command = _socket.getNextCommand();
             }
-            _graphics.display();
+            _graphics.display(_world);
         }
     }
 } // namespace Zappy

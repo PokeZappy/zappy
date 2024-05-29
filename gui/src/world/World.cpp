@@ -43,29 +43,34 @@ namespace Zappy
         if (teamName.empty())
             return;
         for (auto &team : _teams) {
-            if (team == teamName)
+            if (team.getName() == teamName)
                 return;
         }
-        _teams.push_back(teamName);
+        _teams.push_back(Team(teamName));
     }
 
-    std::unique_ptr<Player> & World::getPlayer(size_t id)
+    Team &World::getTeam(const std::string &teamName)
     {
-        // for (auto &row : _tiles) {
-        //     for (auto &tile : row) {
-        //         for (auto &player : tile.getPlayers()) {
-        //             if (player->getId() == id)
-        //                 return player;
-        //         }
-        //     }
-        // }
+        for (auto &team : _teams) {
+            if (team.getName() == teamName)
+                return team;
+        }
+        throw std::runtime_error("Team not found");
+    }
 
-        // for (auto &team : _teams) {
-        //     for (auto &player : team->getPlayers()) {
-        //         if (player.getId() == id)
-        //             return player;
-        //     }
-        // }
+    Player &World::getPlayer(size_t id)
+    {
+        for (auto &player : _players) {
+            if (player.getId() == id)
+                return player;
+        }
         throw std::runtime_error("Player not found");
+    }
+
+    void World::addShellLine(const std::string &line)
+    {
+        _shellLines.insert(_shellLines.begin(), line);
+        if (_shellLines.size() > 42)
+            _shellLines.pop_back();
     }
 } // namespace Zappy
