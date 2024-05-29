@@ -16,9 +16,10 @@ void print_client_list(server_t *server)
         if (client->_is_gui == 1)
             printf("- GUI: {ID:%d}\n", client->_id);
         if (client->player != NULL) {
-            printf("- CLIENT: {ID:%d}{TEAM_ID:%d}{TEAM:%s}{POS:%d-%d}\n",
+            printf("- CLIENT: {ID:%d}{TEAM_ID:%d}{TEAM:%s}{POS:%d-%d:%d}\n",
                 client->_id, client->player->_id, client->player->_team->_name,
-                client->player->_pos._x, client->player->_pos._y);
+                client->player->_pos._x, client->player->_pos._y,
+                client->player->_direction);
         }
         client = TAILQ_NEXT(client, entries);
     }

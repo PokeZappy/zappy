@@ -9,6 +9,8 @@
 
 #include "server.h"
 
+#include <math.h>
+
 struct server_s;
 typedef struct server_s server_t;
 
