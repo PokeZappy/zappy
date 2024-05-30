@@ -44,7 +44,6 @@ void cmd_look(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "%s\n", response);
     free(response);
     printf("look\n");
-
 }
 
 void cmd_inventory(server_t *server, client_socket_t *client)

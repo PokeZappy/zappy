@@ -37,7 +37,7 @@ DEFAULT = "\033[0m"
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	@ $(CC) -o $(NAME) $(MY_MAIN) $(OBJ) $(CXXFLAGS) && \
+	@ $(CC) -o $(NAME) $(MAIN) $(OBJ) $(CXXFLAGS) && \
 	$(ECHO) $(GREEN) "ZAPPY_SERVER COMPILED" || \
 	$(ECHO) $(RED) "ZAPPY_SERVER NON COMPILED"
 
