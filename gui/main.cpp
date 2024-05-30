@@ -1,4 +1,5 @@
 #include "Core.hpp"
+#include "SocketExceptions.hpp"
 
 int displayUsage(void)
 {
@@ -24,7 +25,15 @@ int main(int ac, char **av)
     catch (Zappy::Core::InvalidOptionException &e) {
         return displayUsage();
     }
-    core.getSocket().connectSocket(core.getPort(), core.getMachine());
+    try {
+        core.getSocket().connectSocket(core.getPort(), core.getMachine());
+    } catch (ServerConnectionException &e) {
+        std::cerr << e.what() << std::endl;
+        return (84);
+    } catch (SocketException &e) {
+        std::cerr << e.what() << std::endl;
+        return (84);
+    }
     core.loop();
     return (0);
 }
