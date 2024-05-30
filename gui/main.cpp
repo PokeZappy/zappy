@@ -27,10 +27,7 @@ int main(int ac, char **av)
     }
     try {
         core.getSocket().connectSocket(core.getPort(), core.getMachine());
-    } catch (ServerConnectionException &e) {
-        std::cerr << e.what() << std::endl;
-        return (84);
-    } catch (SocketException &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return (84);
     }
