@@ -15,7 +15,7 @@ namespace Zappy
             if (player->getId() == id)
                 return player;
         }
-        return nullptr;
+        throw std::runtime_error("Player not found");
     }
 
     std::vector<std::shared_ptr<Player>> World::getPlayers(size_t x, size_t y)
