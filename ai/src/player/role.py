@@ -16,7 +16,7 @@ class Role(Player):
 
     def set_goal(self) -> None:
         self.goal = evolution(self.level)
-        self.mvt.goal = self.goal
+        self.mvt = held_krap(self.limit, self.pos, self.inv, self.goal)
 
     def update_goals(self) -> None:
         if self.life < 300:
@@ -31,9 +31,7 @@ class Role(Player):
             self.mvt.goal = self.goal
         if is_all_val0(self.goal) and self.pos == (0, 0):
             result = self.incantation()
-            if result:
-                self.level += 1
-                self.set_goal()
+            self.set_goal()
 
     def run(self) -> None:
         while self.level < 8:
@@ -45,8 +43,9 @@ class Role(Player):
                 for i in self.goal.keys():
                     for j in self.map_knowledge[self.pos[1]][self.pos[0]].keys():
                         if i == j:
-                            self.take_obj()
-                            self.goal[i] -= 1
+                            if self.take_obj():
+                                self.inv[i] += 1
+                                self.goal[i] -= 1
             elif is_all_val0(self.goal):
                 self.create_egg()
             else:

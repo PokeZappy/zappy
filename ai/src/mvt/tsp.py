@@ -19,6 +19,8 @@ class held_krap():
         self.goal = goal
         self.path = []
 
+    def set_goal(self, goal):
+        self.goal = goal
     def get_paths(self):
         nb_ele = 0
         for i in range(len(self.obj)):

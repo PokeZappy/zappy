@@ -64,13 +64,17 @@ class Player(zappy_ai.Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    def incantation(self) -> None:
+    def incantation(self) -> bool:
         for i in self.goal:
             Path(self.limit, self.pos, (0, 0)).opti_path()
             for j in self.inv:
                 if i[0] == j[0]:
                     self.send_action(f"Set {i[0]}\n")
         self.send_action("Incantation\n")
+        if self.recv_action() == "ok":
+            self.level += 1
+            return True
+        return False
 
     def pos_view(self, axis: str, i: int, dire: dir) -> int:
         sense = 1
