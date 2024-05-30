@@ -34,14 +34,14 @@ namespace Zappy
     sf::Color Sfml::getPlayerColor(const std::shared_ptr<Player> player)
     {
         size_t playerId = player->getId();
-        if (_playerColors.contains(playerId)) {
+        if (_playersGraphics.contains(playerId)) {
             if (player->isIncanting()) {
                 return sf::Color(rand() % 255, rand() % 255, rand() % 255);
             }
-            return _playerColors[playerId];
+            return _playersGraphics[playerId].color;
         }
         sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-        _playerColors[playerId] = color;
+        _playersGraphics[playerId] = PlayerGraphics(color);
         return color;
     }
 

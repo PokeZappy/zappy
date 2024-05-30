@@ -12,6 +12,7 @@
 #include "world/Team.hpp"
 #include "ShellCommand.hpp"
 #include <memory>
+#include <algorithm>
 
 namespace Zappy {
     class World {
