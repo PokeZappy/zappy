@@ -37,6 +37,7 @@ namespace Zappy {
         std::vector<std::shared_ptr<Player>> getPlayers(size_t x, size_t y);
         const std::vector<std::shared_ptr<Egg>> &getEggs() const { return _eggs; }
         void killPlayer(size_t id);
+        void killEgg(size_t id);
 
         void addTeam(const std::string &teamName);
         Team &getTeam(const std::string &teamName);
@@ -45,6 +46,7 @@ namespace Zappy {
         void addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity = nullptr);
     private:
         std::string getOrientationString(Orientation orientation);
+        std::string getItemString(Item item);
         int _mapX = -1;
         int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;

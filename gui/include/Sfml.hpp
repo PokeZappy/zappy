@@ -44,6 +44,9 @@ namespace Zappy {
         sf::Vector2f getEntityOffset(const std::shared_ptr<IEntity> player);
         size_t getEntityPointCount(const std::shared_ptr<IEntity> entity);
         sf::Color getItemColor(Item itemType);
+        sf::Color getRandomColor(void) {
+            return sf::Color(50 + rand() % 205, 50 + rand() % 205, 50 + rand() % 205);
+        }
 
 
         sf::RenderWindow _window;

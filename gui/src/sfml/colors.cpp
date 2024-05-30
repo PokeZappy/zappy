@@ -36,7 +36,7 @@ namespace Zappy
         size_t entityId = entity->getId();
         EntityType entityType = entity->getType();
         for (auto &playerGraphics : _entityGraphics) {
-            if (playerGraphics.first.second != entityId)
+            if (playerGraphics.first.first != entityType || playerGraphics.first.second != entityId)
                 continue;
             switch (entityType) {
             case EntityType::PLAYER: {
@@ -53,7 +53,7 @@ namespace Zappy
             }
         }
 
-        sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
+        sf::Color color = getRandomColor();
         _entityGraphics[std::pair(entityType, entityId)] = PlayerGraphics(color,
             entityType == EntityType::PLAYER ? 3 : 30);
         return color;

@@ -15,7 +15,7 @@ namespace Zappy
             if (player->getId() == id)
                 return player;
         }
-        throw std::runtime_error("Player not found");
+        throw std::runtime_error(std::string("Player T") + std::to_string(id) + " not found");
     }
 
     std::vector<std::shared_ptr<Player>> World::getPlayers(size_t x, size_t y)
@@ -33,6 +33,16 @@ namespace Zappy
         for (auto it = _players.begin(); it != _players.end(); it++) {
             if ((*it)->getId() == id) {
                 _players.erase(it);
+                return;
+            }
+        }
+    }
+
+    void World::killEgg(size_t id)
+    {
+        for (auto it = _eggs.begin(); it != _eggs.end(); it++) {
+            if ((*it)->getId() == id) {
+                _eggs.erase(it);
                 return;
             }
         }

@@ -45,6 +45,19 @@ namespace Zappy
         }
     }
 
+    std::string World::getItemString(Item item) {
+        switch (item) {
+            case Item::FOOD: return "food";
+            case Item::LINEMATE: return "linemate";
+            case Item::DERAUMERE: return "deraumere";
+            case Item::SIBUR: return "sibur";
+            case Item::MENDIANE: return "mendiane";
+            case Item::PHIRAS: return "phiras";
+            case Item::THYSTAME: return "thystame";
+            default: return "none";
+        }
+    }
+
     std::shared_ptr<Egg> World::getEgg(size_t id)
     {
         for (auto egg : _eggs) {

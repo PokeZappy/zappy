@@ -13,7 +13,7 @@ namespace Zappy {
     class PlayerGraphics {
     public:
         PlayerGraphics() = default;
-        PlayerGraphics(const sf::Color &color, size_t pointCount) : color(color), pointCount(pointCount) {
+        PlayerGraphics(sf::Color color, size_t pointCount) : color(color), pointCount(pointCount) {
             offset = {static_cast<float>(rand() % 20 - 10),
                 static_cast<float>(rand() % 20 - 10)};
         }

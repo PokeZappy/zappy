@@ -7,12 +7,19 @@
 
 #include "Sfml.hpp"
 
+#include <filesystem>
+
 namespace Zappy
 {
     Sfml::Sfml() : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
         resetViewPos();
         _window.setFramerateLimit(60);
-        _font.loadFromFile("assets/Type Machine.ttf");
+        if (std::filesystem::exists("assets"))
+            _font.loadFromFile("assets/Type Machine.ttf");
+        else if (std::filesystem::exists("gui/assets"))
+            _font.loadFromFile("gui/assets/Type Machine.ttf");
+        else
+            throw std::runtime_error("Assets not found");
 
         _tileSelector.setFillColor(sf::Color::Transparent);
         _tileSelector.setOutlineColor(sf::Color::Red);
@@ -44,6 +51,8 @@ namespace Zappy
         _playerLevelText.setFont(_font);
         _playerLevelText.setCharacterSize(20);
         _playerLevelText.setFillColor(sf::Color::White);
+        _playerLevelText.setOutlineThickness(2);
+        _playerLevelText.setOutlineColor(sf::Color::Black);
 
         _shellText.setFont(_font);
         _shellText.setCharacterSize(20);
@@ -63,11 +72,11 @@ namespace Zappy
     {
         _window.clear();
         drawTiles(world.getTiles());
-        for (auto &player : world.getPlayers()) {
-            drawEntity(player);
-        }
         for (auto &egg : world.getEggs()) {
             drawEntity(egg);
+        }
+        for (auto &player : world.getPlayers()) {
+            drawEntity(player);
         }
 
         _window.draw(_tileSelector);
@@ -91,7 +100,7 @@ namespace Zappy
     size_t Sfml::getEntityPointCount(const std::shared_ptr<IEntity> entity)
     {
         for (auto &playerGraphics : _entityGraphics) {
-            if (playerGraphics.first.first != entity->getType() &&
+            if (playerGraphics.first.first != entity->getType() ||
             playerGraphics.first.second != entity->getId())
                 continue;
             return playerGraphics.second.pointCount;

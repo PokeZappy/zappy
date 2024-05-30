@@ -57,6 +57,8 @@ namespace Zappy
             std::shared_ptr<Player> player = getPlayer(id);
             player->setPos(x, y, orientation);
 
+
+            // todo : Uncomment to have player movements in the shell
             // addShellCommand("T" + std::to_string(id) + " moved to {x: " +
             //     std::to_string(x) + ", y: " + std::to_string(y) + ", o: " +
             //     getOrientationString(orientation) + "}", player);
@@ -75,7 +77,8 @@ namespace Zappy
             getPlayer(id)->setInventory(inventory);
         }
         else if (commandName == "pex") { // expulsion
-
+            ss >> id;
+            addShellCommand("T" + std::to_string(id) + " was expelled", getPlayer(id));
         }
         else if (commandName == "pbc") { // broadcast
             std::string message;
@@ -91,10 +94,10 @@ namespace Zappy
         else if (commandName == "pie") { // end of an incantation
             std::string result;
             ss >> x >> y >> result;
+            for (auto player : getPlayers(x, y)) {
+                player->setIncanting(false);
+            }
             if (result == "ok") {
-                for (auto player : getPlayers(x, y)) {
-                    player->setIncanting(false);
-                }
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} succeeded", getPlayer(id));
             }
@@ -107,17 +110,25 @@ namespace Zappy
 
         }
         else if (commandName == "pdr") { // resource dropping
-
+            size_t item;
+            ss >> id >> item;
+            // todo : Uncomment this to show the player dropped items in the shell
+            // addShellCommand("T" + std::to_string(id) + " dropped " + getItemString(static_cast<Item>(item)),
+            //     getPlayer(id));
         }
         else if (commandName == "pgt") { // resource collecting
-
+            size_t item;
+            ss >> id >> item;
+            // todo : Uncomment this to show the player collected items in the shell
+            // addShellCommand("T" + std::to_string(id) + " collected " + getItemString(static_cast<Item>(item)),
+            //     getPlayer(id));
         }
         else if (commandName == "pdi") { // death of a player
             ss >> id;
             addShellCommand("T" + std::to_string(id) + " died", getPlayer(id));
             killPlayer(id);
         }
-        else if (commandName == "enw") {
+        else if (commandName == "enw") { // an egg was laid by a player
             int idPlayer;
             ss >> id >> idPlayer >> x >> y;
             std::shared_ptr<Egg> egg;
@@ -133,7 +144,9 @@ namespace Zappy
 
         }
         else if (commandName == "edi") { // death of an egg
-
+            ss >> id;
+            addShellCommand("E" + std::to_string(id) + " died", getEgg(id));
+            killEgg(id);
         }
         else if (commandName == "sgt") { // time unit request
 
