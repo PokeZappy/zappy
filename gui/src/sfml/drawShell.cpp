@@ -12,7 +12,7 @@ namespace Zappy
 {
     void Sfml::drawShell(const std::vector<ShellCommand> &shellCommands)
     {
-        int defaultWidth = 900;
+        int defaultWidth = 1200;
         int defaultHeight = GUI_HEIGHT - 280;
 
         unsigned char alpha = 255;
