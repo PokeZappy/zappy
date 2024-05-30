@@ -15,20 +15,24 @@ def main():
     try:
         if len(sys.argv) == 2 and sys.argv[1] == '--help':
             return display_help()
-        if (len(sys.argv) != 5 and len(sys.argv) != 7):
-            raise ValueError
         name = ""
         port = ""
         machine = ""
-        for i in range(1, len(sys.argv), 2):
+        debug = False
+        for i in range(1, len(sys.argv)):
             if sys.argv[i] == '-p':
                 port = sys.argv[i + 1]
-            if sys.argv[i] == '-n':
+            elif sys.argv[i] == '-n':
                 name = sys.argv[i + 1]
-            if sys.argv[i] == '-h':
+            elif sys.argv[i] == '-h':
                 machine = sys.argv[i + 1]
+            elif sys.argv[i] == '-d':
+                debug = True
+            elif sys.argv[i - 1] != '-p' and sys.argv[i - 1] != '-n' and sys.argv[i - 1] != '-h':
+                raise ValueError("Invalid argument")
         server_info, cli_socket = connexion.connect(port, name, machine)
-        mybot = Role(server_info, cli_socket)
+        print(f"Connected to {machine}:{port}")
+        mybot = Role(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

@@ -9,8 +9,8 @@ from src.gameplay.enum_gameplay import Ressources as res
 
 
 class Player(zappy_ai.Bot):
-    def __init__(self, serv_info: list[int], cli_socket: socket):
-        super().__init__(serv_info, cli_socket)
+    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
+        super().__init__(serv_info, cli_socket, debug_mode)
         self.limit = self.dimensions
         self.pos = (0, 0)
         self.goal = {}

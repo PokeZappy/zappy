@@ -10,8 +10,7 @@ SRC	=	./src/main.py
 NAME =	zappy_ai
 
 $(NAME)	:
-			cp $(SRC) ./
-			mv main.py zappy_ai
+			cp $(SRC) ./zappy_ai
 
 all: $(NAME)
 

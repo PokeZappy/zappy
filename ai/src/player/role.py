@@ -8,8 +8,8 @@ from src.gameplay.utils import is_all_val0
 
 class Role(Player):
 
-    def __int__(self, serv_info: list[int], cli_socket: socket):
-        super().__int__(serv_info, cli_socket)
+    def __int__(self, serv_info: list[int], cli_socket: socket, debug: bool = False):
+        super().__int__(serv_info, cli_socket, debug)
         self.goal = evolution()
         self.mvt = held_krap(self.limit, self.pos, self.inv, self.goal)
         self.vitals = {"food": 1}
