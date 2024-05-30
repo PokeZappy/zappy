@@ -36,7 +36,15 @@ void cmd_left(server_t *server, client_socket_t *client)
 
 void cmd_look(server_t *server, char *args, client_socket_t *client)
 {
+    char *response;
+
+    if (!client || !client->player)
+        return;
+    response = player_look(server, client->player);
+    dprintf(client->socket, "%s\n", response);
+    free(response);
     printf("look\n");
+
 }
 
 void cmd_inventory(server_t *server, client_socket_t *client)
