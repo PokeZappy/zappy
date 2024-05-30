@@ -20,13 +20,6 @@ namespace Zappy {
 
     class Player : public AEntity {
         public:
-        // Player(std::istringstream &ss) {
-        //     size_t newOrientation;
-        //     std::string teamName;
-        //     ss >> _id >> _posX >> _posY >> newOrientation >> _level >> teamName;
-        //     if (newOrientation > 0 && newOrientation < 5)
-        //         _orientation = static_cast<Orientation>(newOrientation);
-        // }
         Player(size_t id, size_t _posX, size_t _posY, Orientation orientation,
         size_t level, Team &team) :
             AEntity(id, _posX, _posY, team), _orientation(orientation),

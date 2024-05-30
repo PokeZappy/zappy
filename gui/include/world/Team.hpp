@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Tools.hpp"
-#include "Player.hpp"
 
 namespace Zappy {
     class Eggs {

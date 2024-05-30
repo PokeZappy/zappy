@@ -120,7 +120,7 @@ namespace Zappy
             ss >> id >> idPlayer >> x >> y;
             std::shared_ptr<Egg> egg = std::make_shared<Egg>(id, idPlayer, x, y);
             addEgg(egg);
-            addShellCommand("New egg E" + std::to_string(id) + " laid by player", player);
+            addShellCommand("New egg E" + std::to_string(id) + " laid by player", getPlayer(idPlayer));
 
         }
         else if (commandName == "ebo") {
