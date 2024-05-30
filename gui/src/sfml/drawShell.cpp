@@ -12,8 +12,8 @@ namespace Zappy
 {
     void Sfml::drawShell(const std::vector<ShellCommand> &shellCommands)
     {
-        int defaultWidth = 1200;
-        int defaultHeight = GUI_HEIGHT - 280;
+        int defaultOffsetX = 30;
+        int defaultOffsetY = GUI_HEIGHT - 280;
 
         unsigned char alpha = 255;
 
@@ -21,7 +21,7 @@ namespace Zappy
             sf::Color textColor = sf::Color::White;
             if (command.getPlayer() != nullptr) {
                 _shellTextTeamColor.setFillColor(getTeamColor(command.getPlayer()->getTeam().getType()));
-                _shellTextTeamColor.setPosition(defaultWidth - 20, defaultHeight + 5);
+                _shellTextTeamColor.setPosition(defaultOffsetX - 20, defaultOffsetY + 5);
                 _window.draw(_shellTextTeamColor);
                 textColor = getPlayerColor(command.getPlayer());
             }
@@ -29,8 +29,8 @@ namespace Zappy
             alpha -= 4;
             _shellText.setColor(textColor);
             _shellText.setString(command.text);
-            _shellText.setPosition(defaultWidth, defaultHeight);
-            defaultHeight -= 20;
+            _shellText.setPosition(defaultOffsetX, defaultOffsetY);
+            defaultOffsetY -= 20;
             _window.draw(_shellText);
         }
     }

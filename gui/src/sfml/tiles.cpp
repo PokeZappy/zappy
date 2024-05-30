@@ -30,8 +30,7 @@ namespace Zappy
     {
         sf::Vector2f tileCenter(player->getX() * _tileWidth + _tileWidth / 2,
             player->getY() * _tileHeight + _tileHeight / 2);
-        _playerTriangle.setPosition(tileCenter);
-        // _playerTriangle.setRotation(90 * 0);
+        _playerTriangle.setPosition(tileCenter + getPlayerOffset(player));
         // _playerTriangle.setRotation((player->getOrientation() - 1) * 90);
         switch (player->getOrientation()) {
         case Orientation::NORTH: _playerTriangle.setRotation(180); break;
@@ -44,7 +43,7 @@ namespace Zappy
         _playerTriangle.setFillColor(getTeamColor(player->getTeam().getType()));
         _playerTriangle.setOutlineColor(getPlayerColor(player));
         _playerLevelText.setString(std::to_string(player->getLevel()));
-        _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10));
+        _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10) + getPlayerOffset(player));
         _window.draw(_playerTriangle);
         _window.draw(_playerLevelText);
     }

@@ -13,6 +13,7 @@
 #include "ShellCommand.hpp"
 #include <algorithm>
 #include <memory>
+#include <algorithm>
 
 namespace Zappy {
     class World {
