@@ -34,4 +34,14 @@ namespace Zappy
         // return commands;
         return _shellCommands;
     }
+
+    std::string World::getOrientationString(Orientation orientation) {
+        switch (orientation) {
+            case Orientation::NORTH: return "NORTH";
+            case Orientation::EAST: return "EAST";
+            case Orientation::SOUTH: return "SOUTH";
+            case Orientation::WEST: return "WEST";
+            default: return "NONE";
+        }
+    }
 } // namespace Zappy

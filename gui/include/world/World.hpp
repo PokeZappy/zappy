@@ -40,6 +40,7 @@ namespace Zappy {
         const std::vector<ShellCommand> &getShellCommands(void) const;
         void addShellCommand(const std::string &text, std::shared_ptr<Player> player = nullptr);
     private:
+        std::string getOrientationString(Orientation orientation);
         int _mapX = -1;
         int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;
