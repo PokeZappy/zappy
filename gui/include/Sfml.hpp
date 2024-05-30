@@ -11,6 +11,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include "world/World.hpp"
+#include "sfml/PlayerGraphics.hpp"
 
 namespace Zappy {
     typedef struct mouse_pos_s {
@@ -34,14 +35,19 @@ namespace Zappy {
         void drawPlayer(const std::shared_ptr<Player> player);
         void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
+        void resetViewPos(void);
+
+        // Colors
         sf::Color getTeamColor(TeamType teamType);
         sf::Color getTextColor(const ShellCommand &command);
         sf::Color getEntityColor(const std::shared_ptr<IEntity> player);
+        sf::Vector2f getEntityOffset(const std::shared_ptr<IEntity> player);
         sf::Color getItemColor(Item itemType);
+
 
         sf::RenderWindow _window;
         sf::View _view;
-        double _viewSpeed = 1.0f;
+        double _viewSpeed = 15.0f;
         sf::Font _font;
         mouse_pos_t _mousePositions;
 
@@ -59,7 +65,8 @@ namespace Zappy {
         // Player
         sf::CircleShape _playerTriangle;
         sf::Text _playerLevelText;
-        std::map<size_t, sf::Color> _playerColors;
+        // std::map<size_t, sf::Color> _playerColors;
+        std::map<size_t, PlayerGraphics> _playersGraphics;
 
         // Shell
         sf::Text _shellText;

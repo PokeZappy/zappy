@@ -22,6 +22,9 @@ namespace Zappy {
                 AEntity(id, _posX, _posY, team), _idPlayer(idPlayer) {
             }
             ~Egg() = default;
+
+            EntityType getType(void)const override { return EntityType::EGG; }
+
             int getIdPlayer() { return (_idPlayer); }
         private:
             int _idPlayer;

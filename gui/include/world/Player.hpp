@@ -24,9 +24,10 @@ namespace Zappy {
         size_t level, const Team &team) :
             AEntity(id, _posX, _posY, team), _orientation(orientation),
             _level(level), _isIncanting(false) {
-
         }
         ~Player() = default;
+
+        EntityType getType(void) const override { return EntityType::PLAYER; }
 
         void setPos(size_t x, size_t y, Orientation orientation = Orientation::NONE) {
             _x = x;

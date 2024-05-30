@@ -10,8 +10,8 @@
 namespace Zappy
 {
     Sfml::Sfml() : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
-        _view.setSize(GUI_WIDTH, GUI_HEIGHT);
-        _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+        resetViewPos();
+        _window.setFramerateLimit(60);
         _font.loadFromFile("assets/Type Machine.ttf");
 
         _tileSelector.setFillColor(sf::Color::Transparent);
@@ -72,5 +72,21 @@ namespace Zappy
         _window.setView(_window.getDefaultView());
         drawShell(world.getShellCommands());
         _window.display();
+    }
+
+    sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> player)
+    {
+        if (_playersGraphics.contains(player->getId())) {
+            return _playersGraphics[player->getId()].offset;
+        }
+        return sf::Vector2f(0, 0);
+    }
+
+    void Sfml::resetViewPos(void)
+    {
+        _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+        _view.setRotation(0);
+        _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+        _view.move(-500, -30);
     }
 } // namespace Zappy

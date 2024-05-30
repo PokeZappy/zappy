@@ -33,15 +33,15 @@ namespace Zappy
 
     sf::Color Sfml::getEntityColor(const std::shared_ptr<IEntity> entity)
     {
-        size_t entityId = entity->getId();
-        if (_playerColors.contains(entityId)) {
+        size_t playerId = entity->getId();
+        if (_playersGraphics.contains(playerId)) {
             // if (player->isIncanting()) {
             //     return sf::Color(rand() % 255, rand() % 255, rand() % 255);
             // }
-            return _playerColors[entityId];
+            return _playersGraphics[playerId].color;
         }
         sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-        _playerColors[entityId] = color;
+        _playersGraphics[playerId] = PlayerGraphics(color);
         return color;
     }
 
