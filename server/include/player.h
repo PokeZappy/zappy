@@ -16,6 +16,9 @@
 #include "grid.h"
 #include "list.h"
 
+struct server_s;
+typedef struct server_s server_t;
+
 typedef struct player_s {
     int _id; // id of the player
     int _fd; // file descriptor of the player
@@ -40,8 +43,9 @@ char *print_player_inventory(player_t *player);
 char *get_player_inventory(player_t *player);
 
 // -- SERVER RELATED -- //
-player_t *add_player_to_team(char *team_name, struct server_s *server);
-list_t *get_player_on_tile(struct server_s *server, vector_t pos);
+player_t *add_player_to_team(char *team_name, server_t *server);
+void player_look(server_t *server, player_t *player);
+int nb_player_on_tile(server_t *server, vector_t tile_pos);
 
 // -- GRID RELATED -- //
 bool player_take_item(player_t *player, tiles_t *tile, int item);

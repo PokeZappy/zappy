@@ -10,7 +10,8 @@ SRC = 	$(wildcard src/*.c) \
 		$(wildcard src/**/**/*.c)
 
 OBJ = $(SRC:.c=.o)
-
+MAIN = main.c
+MY_MAIN = tests/my_main.c
 TESTS_SRC = $(SRC)
 TESTS_SRC += $(wildcard tests/*.c)
 
@@ -36,7 +37,7 @@ DEFAULT = "\033[0m"
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	@ $(CC) -o $(NAME) main.c $(OBJ) $(CXXFLAGS) && \
+	@ $(CC) -o $(NAME) $(MY_MAIN) $(OBJ) $(CXXFLAGS) && \
 	$(ECHO) $(GREEN) "ZAPPY_SERVER COMPILED" || \
 	$(ECHO) $(RED) "ZAPPY_SERVER NON COMPILED"
 
