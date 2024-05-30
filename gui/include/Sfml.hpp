@@ -32,7 +32,7 @@ namespace Zappy {
         void handleEvent(void);
 
         void drawTiles(const std::vector<std::vector<Tile>> &tiles);
-        void drawPlayer(const std::shared_ptr<Player> player);
+        void drawEntity(const std::shared_ptr<IEntity> entity);
         void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
         void resetViewPos(void);
@@ -42,6 +42,7 @@ namespace Zappy {
         sf::Color getTextColor(const ShellCommand &command);
         sf::Color getEntityColor(const std::shared_ptr<IEntity> player);
         sf::Vector2f getEntityOffset(const std::shared_ptr<IEntity> player);
+        size_t getEntityPointCount(const std::shared_ptr<IEntity> entity);
         sf::Color getItemColor(Item itemType);
 
 
@@ -63,9 +64,8 @@ namespace Zappy {
         sf::Text _resourcesText;
 
         // Player
-        sf::CircleShape _playerTriangle;
+        sf::CircleShape _entityTriangle;
         sf::Text _playerLevelText;
-        // std::map<size_t, sf::Color> _playerColors;
         std::map<std::pair<EntityType, size_t>, PlayerGraphics> _entityGraphics;
 
         // Shell

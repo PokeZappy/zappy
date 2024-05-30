@@ -44,4 +44,13 @@ namespace Zappy
             default: return "NONE";
         }
     }
+
+    std::shared_ptr<Egg> World::getEgg(size_t id)
+    {
+        for (auto egg : _eggs) {
+            if (egg->getId() == id)
+                return egg;
+        }
+        throw std::runtime_error("Egg not found");
+    }
 } // namespace Zappy

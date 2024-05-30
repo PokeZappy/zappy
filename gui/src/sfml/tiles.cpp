@@ -26,25 +26,33 @@ namespace Zappy
         }
     }
 
-    void Sfml::drawPlayer(const std::shared_ptr<Player> player)
+    void Sfml::drawEntity(const std::shared_ptr<IEntity> entity)
     {
-        sf::Vector2f tileCenter(player->getX() * _tileWidth + _tileWidth / 2,
-            player->getY() * _tileHeight + _tileHeight / 2);
-        _playerTriangle.setPosition(tileCenter + getEntityOffset(player));
-        // _playerTriangle.setRotation((player->getOrientation() - 1) * 90);
-        switch (player->getOrientation()) {
-        case Orientation::NORTH: _playerTriangle.setRotation(180); break;
-        case Orientation::EAST: _playerTriangle.setRotation(90); break;
-        case Orientation::SOUTH: _playerTriangle.setRotation(0); break;
-        case Orientation::WEST: _playerTriangle.setRotation(270); break;
-        default:
-            break;
+        sf::Vector2f tileCenter(entity->getX() * _tileWidth + _tileWidth / 2,
+            entity->getY() * _tileHeight + _tileHeight / 2);
+        _entityTriangle.setPosition(tileCenter + getEntityOffset(entity));
+        _entityTriangle.setPointCount(getEntityPointCount(entity));
+        _entityTriangle.setRotation(90);
+        if (entity->getType() == EntityType::PLAYER) {
+            Player *player = static_cast<Player *>(entity.get());
+            // _entityTriangle.setRotation((player->getOrientation() - 1) * 90);
+            switch (player->getOrientation()) {
+            case Orientation::NORTH: _entityTriangle.setRotation(180); break;
+            case Orientation::EAST: _entityTriangle.setRotation(90); break;
+            case Orientation::SOUTH: _entityTriangle.setRotation(0); break;
+            case Orientation::WEST: _entityTriangle.setRotation(270); break;
+            default:
+                break;
+            }
         }
-        _playerTriangle.setFillColor(getTeamColor(player->getTeam().getType()));
-        _playerTriangle.setOutlineColor(getEntityColor(player));
-        _playerLevelText.setString(std::to_string(player->getLevel()));
-        _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10) + getEntityOffset(player));
-        _window.draw(_playerTriangle);
-        _window.draw(_playerLevelText);
+        _entityTriangle.setFillColor(getTeamColor(entity->getTeam().getType()));
+        _entityTriangle.setOutlineColor(getEntityColor(entity));
+        _window.draw(_entityTriangle);
+        if (entity->getType() == EntityType::PLAYER) {
+            Player *player = static_cast<Player *>(entity.get());
+            _playerLevelText.setString(std::to_string(player->getLevel()));
+            _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10) + getEntityOffset(entity));
+            _window.draw(_playerLevelText);
+        }
     }
 } // namespace Zappy

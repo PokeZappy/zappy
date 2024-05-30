@@ -18,7 +18,7 @@ namespace Zappy {
             size_t getY() override { return (_y); }
             void setId(size_t id) override { _id = id; }
             void setPos(size_t x, size_t y) override { _x = x; _y = y; }
-            const Team &getTeam() const { return (_team); };
+            const Team &getTeam() const override { return (_team); };
         protected:
             size_t _id;
             size_t _x;

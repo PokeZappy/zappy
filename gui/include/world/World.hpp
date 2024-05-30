@@ -31,9 +31,11 @@ namespace Zappy {
 
         void addPlayer(std::shared_ptr<Player> player) { _players.push_back(player); }
         void addEgg(std::shared_ptr<Egg> egg) { _eggs.push_back(egg); }
+        std::shared_ptr<Egg> getEgg(size_t id);
         std::shared_ptr<Player> getPlayer(size_t id);
         const std::vector<std::shared_ptr<Player>> &getPlayers() const { return _players; }
         std::vector<std::shared_ptr<Player>> getPlayers(size_t x, size_t y);
+        const std::vector<std::shared_ptr<Egg>> &getEggs() const { return _eggs; }
         void killPlayer(size_t id);
 
         void addTeam(const std::string &teamName);
@@ -48,6 +50,7 @@ namespace Zappy {
         std::vector<std::vector<Tile>> _tiles;
         std::vector<Team> _teams;
         Team defaultTeam;
+        // todo: vector of IEntity ?
         std::vector<std::shared_ptr<Player>> _players;
         std::vector<std::shared_ptr<Egg>> _eggs;
         std::vector<ShellCommand> _shellCommands;

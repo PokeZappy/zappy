@@ -34,12 +34,12 @@ namespace Zappy
         _resourcesText.setFillColor(sf::Color::White);
         _resourcesText.setStyle(sf::Text::Bold);
 
-        _playerTriangle.setPointCount(3);
-        _playerTriangle.setRadius(25);
-        _playerTriangle.setFillColor(sf::Color::Green);
-        _playerTriangle.setOrigin(_playerTriangle.getRadius(), _playerTriangle.getRadius());
-        _playerTriangle.setOutlineThickness(8);
-        _playerTriangle.setScale(1, 0.5);
+        _entityTriangle.setPointCount(3);
+        _entityTriangle.setRadius(25);
+        _entityTriangle.setFillColor(sf::Color::Green);
+        _entityTriangle.setOrigin(_entityTriangle.getRadius(), _entityTriangle.getRadius());
+        _entityTriangle.setOutlineThickness(8);
+        _entityTriangle.setScale(1, 0.5);
 
         _playerLevelText.setFont(_font);
         _playerLevelText.setCharacterSize(20);
@@ -64,7 +64,10 @@ namespace Zappy
         _window.clear();
         drawTiles(world.getTiles());
         for (auto &player : world.getPlayers()) {
-            drawPlayer(player);
+            drawEntity(player);
+        }
+        for (auto &egg : world.getEggs()) {
+            drawEntity(egg);
         }
 
         _window.draw(_tileSelector);
@@ -74,12 +77,26 @@ namespace Zappy
         _window.display();
     }
 
-    sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> player)
+    sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> entity)
     {
-        if (_entityGraphics.contains(player->getId())) {
-            return _entityGraphics[player->getId()].offset;
+        for (auto &playerGraphics : _entityGraphics) {
+            if (playerGraphics.first.first != entity->getType() &&
+            playerGraphics.first.second != entity->getId())
+                continue;
+            return playerGraphics.second.offset;
         }
         return sf::Vector2f(0, 0);
+    }
+
+    size_t Sfml::getEntityPointCount(const std::shared_ptr<IEntity> entity)
+    {
+        for (auto &playerGraphics : _entityGraphics) {
+            if (playerGraphics.first.first != entity->getType() &&
+            playerGraphics.first.second != entity->getId())
+                continue;
+            return playerGraphics.second.pointCount;
+        }
+        return 3;
     }
 
     void Sfml::resetViewPos(void)

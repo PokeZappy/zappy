@@ -35,21 +35,18 @@ namespace Zappy
     {
         size_t entityId = entity->getId();
         EntityType entityType = entity->getType();
-        bool playerFound = false;
         for (auto &playerGraphics : _entityGraphics) {
             if (playerGraphics.first.second != entityId)
                 continue;
-            playerFound = true;
             switch (entityType) {
             case EntityType::PLAYER: {
-                Player *player = dynamic_cast<Player *>(entity.get());
+                Player *player = static_cast<Player *>(entity.get());
                 if (player->isIncanting()) {
                     return sf::Color(rand() % 255, rand() % 255, rand() % 255);
                 }
                 return _entityGraphics[std::pair(EntityType::PLAYER, entityId)].color;
             }
             case EntityType::EGG: {
-
                 return _entityGraphics[std::pair(EntityType::EGG, entityId)].color;
             }
             default: break;
@@ -57,7 +54,8 @@ namespace Zappy
         }
 
         sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-        _entityGraphics[std::pair(entityType, entityId)] = PlayerGraphics(color);
+        _entityGraphics[std::pair(entityType, entityId)] = PlayerGraphics(color,
+            entityType == EntityType::PLAYER ? 3 : 30);
         return color;
     }
 
