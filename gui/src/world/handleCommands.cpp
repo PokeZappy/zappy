@@ -142,6 +142,9 @@ namespace Zappy
         else if (commandName == "sbp") {
 
         }
+        else if (commandName == "eht") {
+            // DEPRECATED
+        }
         else {
             std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
         }
