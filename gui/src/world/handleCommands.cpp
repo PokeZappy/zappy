@@ -21,32 +21,36 @@ namespace Zappy
         // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
         //     std::cout << command << std::endl;
         // }
+        if (commandName != "bct") {
+            std::cout << command << std::endl;
+        }
 
-        if (commandName == "msz") {
+        if (commandName == "msz") { // map size
             ss >> x >> y;
             initTiles(x, y);
             addShellCommand("Map size : x " + std::to_string(x) + ", y " + std::to_string(y));
         }
-        else if (commandName == "bct") {
+        else if (commandName == "bct") { // content of a tile
             ss >> x >> y;
             Inventory inventory(ss);
             updateTileInventory(x, y, inventory);
         }
-        else if (commandName == "tna") {
+        else if (commandName == "tna") { // name of all the teams
             std::string teamName;
             ss >> teamName;
             addTeam(teamName);
         }
-        else if (commandName == "pnw") {
+        else if (commandName == "pnw") { // connection of a new player
             size_t orientation, level;
             std::string teamName;
             ss >> id >> x >> y >> orientation >> level >> teamName;
             std::shared_ptr<Player> player = std::make_shared<Player>(id, x, y,
                 static_cast<Orientation>(orientation), level, getTeam(teamName));
+            // player->setIncanting(true);
             addPlayer(player);
             addShellCommand("New player T" + std::to_string(id) + " joined the game", player);
         }
-        else if (commandName == "ppo") {
+        else if (commandName == "ppo") { // player’s position
             size_t o;
             ss >> id >> x >> y >> o;
             Orientation orientation = static_cast<Orientation>(o);
@@ -57,7 +61,7 @@ namespace Zappy
             //     std::to_string(x) + ", y: " + std::to_string(y) + ", o: " +
             //     getOrientationString(orientation) + "}", player);
         }
-        else if (commandName == "plv") {
+        else if (commandName == "plv") { // player’s level
             size_t level;
             ss >> level;
             std::shared_ptr<Player> player = getPlayer(id);
@@ -65,26 +69,26 @@ namespace Zappy
             addShellCommand("T" + std::to_string(id) + " is now level " +
                 std::to_string(level), player);
         }
-        else if (commandName == "pin") {
+        else if (commandName == "pin") { // player’s inventory
             ss >> id;
             Inventory inventory(ss);
             getPlayer(id)->setInventory(inventory);
         }
-        else if (commandName == "pex") {
+        else if (commandName == "pex") { // expulsion
 
         }
-        else if (commandName == "pbc") {
+        else if (commandName == "pbc") { // broadcast
             std::string message;
             ss >> id >> message;
             addShellCommand("T" + std::to_string(id) + " says: " + message, getPlayer(id));
         }
-        else if (commandName == "pic") {
+        else if (commandName == "pic") { // start of an incantation (by the first player)
             ss >> x >> y >> id;
             getPlayer(id)->setIncanting(true);
             addShellCommand("Incantation started at {x: " + std::to_string(x) + ", y: " +
                 std::to_string(y) + "} by T" + std::to_string(id), getPlayer(id));
         }
-        else if (commandName == "pie") {
+        else if (commandName == "pie") { // end of an incantation
             std::string result;
             ss >> x >> y >> result;
             if (result == "ok") {
@@ -99,47 +103,47 @@ namespace Zappy
                     std::to_string(y) + "} failed", getPlayer(id));
             std::cout << command << std::endl;
         }
-        else if (commandName == "pfk") {
+        else if (commandName == "pfk") { // egg laying by the player
 
         }
-        else if (commandName == "pdr") {
+        else if (commandName == "pdr") { // resource dropping
 
         }
-        else if (commandName == "pgt") {
+        else if (commandName == "pgt") { // resource collecting
 
         }
-        else if (commandName == "pdi") {
+        else if (commandName == "pdi") { // death of a player
             ss >> id;
             addShellCommand("T" + std::to_string(id) + " died", getPlayer(id));
             killPlayer(id);
         }
-        else if (commandName == "enw") {
+        else if (commandName == "enw") { // an egg was laid by a player
 
         }
-        else if (commandName == "ebo") {
+        else if (commandName == "ebo") { // player connection for an egg
 
         }
-        else if (commandName == "edi") {
+        else if (commandName == "edi") { // death of an egg
 
         }
-        else if (commandName == "sgt") {
+        else if (commandName == "sgt") { // time unit request
 
         }
-        else if (commandName == "sst") {
+        else if (commandName == "sst") { // time unit modification
 
         }
-        else if (commandName == "seg") {
+        else if (commandName == "seg") { // end of game
 
         }
-        else if (commandName == "smg") {
+        else if (commandName == "smg") { // message from the server
             std::string message;
             ss >> message;
             addShellCommand("Server : " + message);
         }
-        else if (commandName == "suc") {
+        else if (commandName == "suc") { // unknown command
 
         }
-        else if (commandName == "sbp") {
+        else if (commandName == "sbp") { // command parameter
 
         }
         else if (commandName == "eht") {

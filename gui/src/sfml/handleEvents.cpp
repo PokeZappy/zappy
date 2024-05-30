@@ -21,13 +21,13 @@ namespace Zappy
                 default: break;
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
             _view.move(0.f, -_viewSpeed);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             _view.move(0.f, _viewSpeed);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             _view.move(-_viewSpeed, 0.f);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
