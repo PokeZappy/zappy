@@ -53,7 +53,7 @@ void print_looked_items_on_tile(char *result, tiles_t *tile)
     }
 }
 
-void player_look(server_t *server, player_t *player)
+char *player_look(server_t *server, player_t *player)
 {
     char *result = (char *)malloc(sizeof(char) * 4096);
     vector_t current;
@@ -71,5 +71,5 @@ void player_look(server_t *server, player_t *player)
         }
     }
     sprintf(result, "%s]", result);
-    printf("%s\n", result);
+    return result;
 }
