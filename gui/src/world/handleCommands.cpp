@@ -118,7 +118,11 @@ namespace Zappy
         else if (commandName == "enw") {
             int idPlayer;
             ss >> id >> idPlayer >> x >> y;
-            std::shared_ptr<Egg> egg = std::make_shared<Egg>(id, idPlayer, x, y);
+            std::shared_ptr<Egg> egg;
+            if (idPlayer < 0)
+                egg = std::make_shared<Egg>(id, idPlayer, x, y, defaultTeam);
+            else
+                egg = std::make_shared<Egg>(id, idPlayer, x, y, getPlayer(idPlayer)->getTeam());
             addEgg(egg);
             addShellCommand("New egg E" + std::to_string(id) + " laid by player",
                 idPlayer < 0 ? nullptr : getPlayer(idPlayer));

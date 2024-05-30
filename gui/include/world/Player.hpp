@@ -21,7 +21,7 @@ namespace Zappy {
     class Player : public AEntity {
         public:
         Player(size_t id, size_t _posX, size_t _posY, Orientation orientation,
-        size_t level, Team &team) :
+        size_t level, const Team &team) :
             AEntity(id, _posX, _posY, team), _orientation(orientation),
             _level(level), _isIncanting(false) {
 

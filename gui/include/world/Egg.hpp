@@ -18,7 +18,7 @@
 namespace Zappy {
     class Egg : public AEntity {
         public:
-            Egg(size_t id, int idPlayer, size_t _posX, size_t _posY, Team &team) :
+            Egg(size_t id, int idPlayer, size_t _posX, size_t _posY, const Team &team) :
                 AEntity(id, _posX, _posY, team), _idPlayer(idPlayer) {
             }
             ~Egg() = default;

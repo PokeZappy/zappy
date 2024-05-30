@@ -10,7 +10,7 @@
 
 namespace Zappy {
 
-    AEntity::AEntity(size_t id, size_t x, size_t y, Team &team) : _id(id), _x(x), _y(y), _team(team) {
+    AEntity::AEntity(size_t id, size_t x, size_t y, const Team &team) : _id(id), _x(x), _y(y), _team(team) {
 
     }
 };

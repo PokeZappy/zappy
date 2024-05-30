@@ -12,7 +12,7 @@
 namespace Zappy {
     class AEntity : public IEntity {
         public:
-            AEntity(size_t id, size_t x, size_t y, Team &team);
+            AEntity(size_t id, size_t x, size_t y, const Team &team);
             size_t getId() override { return (_id); }
             size_t getX() override { return (_x); }
             size_t getY() override { return (_y); }
@@ -23,6 +23,6 @@ namespace Zappy {
             size_t _id;
             size_t _x;
             size_t _y;
-            Team &_team;
+            const Team &_team;
     };
 }
