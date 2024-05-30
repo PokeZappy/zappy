@@ -11,6 +11,7 @@
 #include "world/Player.hpp"
 #include "world/Team.hpp"
 #include "ShellCommand.hpp"
+#include <memory>
 
 namespace Zappy {
     class World {

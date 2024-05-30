@@ -10,7 +10,8 @@
 #include "Inventory.hpp"
 #include "Tools.hpp"
 #include "world/Team.hpp"
-
+#include <memory>
+#include <vector>
 #include <sstream>
 
 namespace Zappy {
