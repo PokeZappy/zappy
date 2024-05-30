@@ -9,9 +9,9 @@
 
 namespace Zappy
 {
-    void World::addShellCommand(const std::string &text, std::shared_ptr<Player> player)
+    void World::addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity)
     {
-        _shellCommands.insert(_shellCommands.begin(), ShellCommand(text, player));
+        _shellCommands.insert(_shellCommands.begin(), ShellCommand(text, entity));
         if (_shellCommands.size() > 42)
             _shellCommands.pop_back();
     }

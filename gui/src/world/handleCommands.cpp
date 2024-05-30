@@ -18,9 +18,11 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
+        if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
+            std::cout << command << std::endl;
+        }
+        // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
         //     std::cout << command << std::endl;
-        // }
 
         if (commandName == "msz") {
             ss >> x >> y;
@@ -114,6 +116,11 @@ namespace Zappy
             killPlayer(id);
         }
         else if (commandName == "enw") {
+            int idPlayer;
+            ss >> id >> idPlayer >> x >> y;
+            std::shared_ptr<Egg> egg = std::make_shared<Egg>(id, idPlayer, x, y);
+            addEgg(egg);
+            addShellCommand("New egg E" + std::to_string(id) + " laid by player", player);
 
         }
         else if (commandName == "ebo") {
@@ -143,7 +150,7 @@ namespace Zappy
 
         }
         else {
-            std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
+            // std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
         }
     }
 } // namespace Zappy

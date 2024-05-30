@@ -19,11 +19,11 @@ namespace Zappy
 
         for (auto &command : shellCommands) {
             sf::Color textColor = sf::Color::White;
-            if (command.getPlayer() != nullptr) {
-                _shellTextTeamColor.setFillColor(getTeamColor(command.getPlayer()->getTeam().getType()));
+            if (command.getEntity() != nullptr) {
+                _shellTextTeamColor.setFillColor(getTeamColor(command.getEntity()->getTeam().getType()));
                 _shellTextTeamColor.setPosition(defaultWidth - 20, defaultHeight + 5);
                 _window.draw(_shellTextTeamColor);
-                textColor = getPlayerColor(command.getPlayer());
+                textColor = getEntityColor(command.getEntity());
             }
             textColor.a = alpha;
             alpha -= 4;

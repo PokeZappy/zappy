@@ -14,14 +14,14 @@
 namespace Zappy {
     class ShellCommand {
     public:
-        ShellCommand(const std::string &text, std::shared_ptr<Player> player = nullptr)
-            : text(text), _player(player) {};
+        ShellCommand(const std::string &text, std::shared_ptr<IEntity> entity = nullptr)
+            : text(text), _entity(entity) {};
         ~ShellCommand() = default;
 
-        const std::shared_ptr<Player> getPlayer() const { return _player; }
+        const std::shared_ptr<IEntity> getEntity() const { return _entity; }
 
         std::string text;
     private:
-        std::shared_ptr<Player> _player;
+        std::shared_ptr<IEntity> _entity;
     };
 } // namespace Zappy

@@ -42,7 +42,7 @@ namespace Zappy
             break;
         }
         _playerTriangle.setFillColor(getTeamColor(player->getTeam().getType()));
-        _playerTriangle.setOutlineColor(getPlayerColor(player));
+        _playerTriangle.setOutlineColor(getEntityColor(player));
         _playerLevelText.setString(std::to_string(player->getLevel()));
         _playerLevelText.setPosition(tileCenter - sf::Vector2f(5, 10));
         _window.draw(_playerTriangle);

@@ -36,7 +36,7 @@ namespace Zappy {
     private:
         sf::Color getTeamColor(TeamType teamType);
         sf::Color getTextColor(const ShellCommand &command);
-        sf::Color getPlayerColor(const std::shared_ptr<Player> player);
+        sf::Color getEntityColor(const std::shared_ptr<IEntity> player);
         sf::Color getItemColor(Item itemType);
 
         sf::RenderWindow _window;

@@ -24,24 +24,24 @@ namespace Zappy
 
     sf::Color Sfml::getTextColor(const ShellCommand &command)
     {
-        auto player = command.getPlayer();
-        if (player != nullptr) {
-            return getTeamColor(player->getTeam().getType());
+        auto entity = command.getEntity();
+        if (entity != nullptr) {
+            return getTeamColor(entity->getTeam().getType());
         }
         return sf::Color::White;
     }
 
-    sf::Color Sfml::getPlayerColor(const std::shared_ptr<Player> player)
+    sf::Color Sfml::getEntityColor(const std::shared_ptr<IEntity> entity)
     {
-        size_t playerId = player->getId();
-        if (_playerColors.contains(playerId)) {
-            if (player->isIncanting()) {
-                return sf::Color(rand() % 255, rand() % 255, rand() % 255);
-            }
-            return _playerColors[playerId];
+        size_t entityId = entity->getId();
+        if (_playerColors.contains(entityId)) {
+            // if (player->isIncanting()) {
+            //     return sf::Color(rand() % 255, rand() % 255, rand() % 255);
+            // }
+            return _playerColors[entityId];
         }
         sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-        _playerColors[playerId] = color;
+        _playerColors[entityId] = color;
         return color;
     }
 
