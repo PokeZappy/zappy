@@ -76,8 +76,8 @@ namespace Zappy
 
     sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> player)
     {
-        if (_playersGraphics.contains(player->getId())) {
-            return _playersGraphics[player->getId()].offset;
+        if (_entityGraphics.contains(player->getId())) {
+            return _entityGraphics[player->getId()].offset;
         }
         return sf::Vector2f(0, 0);
     }

@@ -20,5 +20,6 @@ namespace Zappy {
 
         sf::Color color;
         sf::Vector2f offset;
+        size_t pointCount = 30;
     };
 } // namespace Zappy

@@ -66,7 +66,7 @@ namespace Zappy {
         sf::CircleShape _playerTriangle;
         sf::Text _playerLevelText;
         // std::map<size_t, sf::Color> _playerColors;
-        std::map<size_t, PlayerGraphics> _playersGraphics;
+        std::map<std::pair<EntityType, size_t>, PlayerGraphics> _entityGraphics;
 
         // Shell
         sf::Text _shellText;
