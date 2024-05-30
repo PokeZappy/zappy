@@ -18,12 +18,12 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-        //     std::cout << command << std::endl;
-        // }
-        if (commandName != "bct") {
+        if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
             std::cout << command << std::endl;
         }
+        // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
+        //     std::cout << command << std::endl;
+        // }
 
         if (commandName == "msz") { // map size
             ss >> x >> y;
@@ -57,6 +57,8 @@ namespace Zappy
             std::shared_ptr<Player> player = getPlayer(id);
             player->setPos(x, y, orientation);
 
+
+            // todo : Uncomment to have player movements in the shell
             // addShellCommand("T" + std::to_string(id) + " moved to {x: " +
             //     std::to_string(x) + ", y: " + std::to_string(y) + ", o: " +
             //     getOrientationString(orientation) + "}", player);
@@ -75,7 +77,8 @@ namespace Zappy
             getPlayer(id)->setInventory(inventory);
         }
         else if (commandName == "pex") { // expulsion
-
+            ss >> id;
+            addShellCommand("T" + std::to_string(id) + " was expelled", getPlayer(id));
         }
         else if (commandName == "pbc") { // broadcast
             std::string message;
@@ -91,10 +94,10 @@ namespace Zappy
         else if (commandName == "pie") { // end of an incantation
             std::string result;
             ss >> x >> y >> result;
+            for (auto player : getPlayers(x, y)) {
+                player->setIncanting(false);
+            }
             if (result == "ok") {
-                for (auto player : getPlayers(x, y)) {
-                    player->setIncanting(false);
-                }
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} succeeded", getPlayer(id));
             }
@@ -107,10 +110,18 @@ namespace Zappy
 
         }
         else if (commandName == "pdr") { // resource dropping
-
+            size_t item;
+            ss >> id >> item;
+            // todo : Uncomment this to show the player dropped items in the shell
+            // addShellCommand("T" + std::to_string(id) + " dropped " + getItemString(static_cast<Item>(item)),
+            //     getPlayer(id));
         }
         else if (commandName == "pgt") { // resource collecting
-
+            size_t item;
+            ss >> id >> item;
+            // todo : Uncomment this to show the player collected items in the shell
+            // addShellCommand("T" + std::to_string(id) + " collected " + getItemString(static_cast<Item>(item)),
+            //     getPlayer(id));
         }
         else if (commandName == "pdi") { // death of a player
             ss >> id;
@@ -118,13 +129,24 @@ namespace Zappy
             killPlayer(id);
         }
         else if (commandName == "enw") { // an egg was laid by a player
-
+            int idPlayer;
+            ss >> id >> idPlayer >> x >> y;
+            std::shared_ptr<Egg> egg;
+            if (idPlayer < 0)
+                egg = std::make_shared<Egg>(id, idPlayer, x, y, defaultTeam);
+            else
+                egg = std::make_shared<Egg>(id, idPlayer, x, y, getPlayer(idPlayer)->getTeam());
+            addEgg(egg);
+            addShellCommand("New egg E" + std::to_string(id) + " laid by player",
+                getEgg(id));
         }
         else if (commandName == "ebo") { // player connection for an egg
 
         }
         else if (commandName == "edi") { // death of an egg
-
+            ss >> id;
+            addShellCommand("E" + std::to_string(id) + " died", getEgg(id));
+            killEgg(id);
         }
         else if (commandName == "sgt") { // time unit request
 
@@ -150,7 +172,7 @@ namespace Zappy
             // DEPRECATED
         }
         else {
-            std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
+            // std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
         }
     }
 } // namespace Zappy

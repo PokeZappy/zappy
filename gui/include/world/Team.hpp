@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Tools.hpp"
-#include "Player.hpp"
 
 namespace Zappy {
     class Eggs {
@@ -34,6 +33,6 @@ namespace Zappy {
         TeamType getType() const { return _type; }
     private:
         std::string _name;
-        TeamType _type;
+        TeamType _type = TeamType::NONE;
     };
 } // namespace Zappy

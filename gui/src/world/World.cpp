@@ -9,9 +9,9 @@
 
 namespace Zappy
 {
-    void World::addShellCommand(const std::string &text, std::shared_ptr<Player> player)
+    void World::addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity)
     {
-        _shellCommands.insert(_shellCommands.begin(), ShellCommand(text, player));
+        _shellCommands.insert(_shellCommands.begin(), ShellCommand(text, entity));
         if (_shellCommands.size() > 42)
             _shellCommands.pop_back();
     }
@@ -33,5 +33,37 @@ namespace Zappy
         // }
         // return commands;
         return _shellCommands;
+    }
+
+    std::string World::getOrientationString(Orientation orientation) {
+        switch (orientation) {
+            case Orientation::NORTH: return "NORTH";
+            case Orientation::EAST: return "EAST";
+            case Orientation::SOUTH: return "SOUTH";
+            case Orientation::WEST: return "WEST";
+            default: return "NONE";
+        }
+    }
+
+    std::string World::getItemString(Item item) {
+        switch (item) {
+            case Item::FOOD: return "food";
+            case Item::LINEMATE: return "linemate";
+            case Item::DERAUMERE: return "deraumere";
+            case Item::SIBUR: return "sibur";
+            case Item::MENDIANE: return "mendiane";
+            case Item::PHIRAS: return "phiras";
+            case Item::THYSTAME: return "thystame";
+            default: return "none";
+        }
+    }
+
+    std::shared_ptr<Egg> World::getEgg(size_t id)
+    {
+        for (auto egg : _eggs) {
+            if (egg->getId() == id)
+                return egg;
+        }
+        throw std::runtime_error("Egg not found");
     }
 } // namespace Zappy

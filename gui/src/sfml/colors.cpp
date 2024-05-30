@@ -24,24 +24,38 @@ namespace Zappy
 
     sf::Color Sfml::getTextColor(const ShellCommand &command)
     {
-        auto player = command.getPlayer();
-        if (player != nullptr) {
-            return getTeamColor(player->getTeam().getType());
+        auto entity = command.getEntity();
+        if (entity != nullptr) {
+            return getTeamColor(entity->getTeam().getType());
         }
         return sf::Color::White;
     }
 
-    sf::Color Sfml::getPlayerColor(const std::shared_ptr<Player> player)
+    sf::Color Sfml::getEntityColor(const std::shared_ptr<IEntity> entity)
     {
-        size_t playerId = player->getId();
-        if (_playersGraphics.contains(playerId)) {
-            if (player->isIncanting()) {
-                return sf::Color(rand() % 255, rand() % 255, rand() % 255);
+        size_t entityId = entity->getId();
+        EntityType entityType = entity->getType();
+        for (auto &playerGraphics : _entityGraphics) {
+            if (playerGraphics.first.first != entityType || playerGraphics.first.second != entityId)
+                continue;
+            switch (entityType) {
+            case EntityType::PLAYER: {
+                Player *player = static_cast<Player *>(entity.get());
+                if (player->isIncanting()) {
+                    return sf::Color(rand() % 255, rand() % 255, rand() % 255);
+                }
+                return _entityGraphics[std::pair(EntityType::PLAYER, entityId)].color;
             }
-            return _playersGraphics[playerId].color;
+            case EntityType::EGG: {
+                return _entityGraphics[std::pair(EntityType::EGG, entityId)].color;
+            }
+            default: break;
+            }
         }
-        sf::Color color = sf::Color(rand() % 255, rand() % 255, rand() % 255);
-        _playersGraphics[playerId] = PlayerGraphics(color);
+
+        sf::Color color = getRandomColor();
+        _entityGraphics[std::pair(entityType, entityId)] = PlayerGraphics(color,
+            entityType == EntityType::PLAYER ? 3 : 30);
         return color;
     }
 

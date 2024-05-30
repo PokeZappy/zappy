@@ -7,12 +7,19 @@
 
 #include "Sfml.hpp"
 
+#include <filesystem>
+
 namespace Zappy
 {
     Sfml::Sfml() : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
         resetViewPos();
         _window.setFramerateLimit(60);
-        _font.loadFromFile("assets/Type Machine.ttf");
+        if (std::filesystem::exists("assets"))
+            _font.loadFromFile("assets/Type Machine.ttf");
+        else if (std::filesystem::exists("gui/assets"))
+            _font.loadFromFile("gui/assets/Type Machine.ttf");
+        else
+            throw std::runtime_error("Assets not found");
 
         _tileSelector.setFillColor(sf::Color::Transparent);
         _tileSelector.setOutlineColor(sf::Color::Red);
@@ -34,16 +41,18 @@ namespace Zappy
         _resourcesText.setFillColor(sf::Color::White);
         _resourcesText.setStyle(sf::Text::Bold);
 
-        _playerTriangle.setPointCount(3);
-        _playerTriangle.setRadius(25);
-        _playerTriangle.setFillColor(sf::Color::Green);
-        _playerTriangle.setOrigin(_playerTriangle.getRadius(), _playerTriangle.getRadius());
-        _playerTriangle.setOutlineThickness(8);
-        _playerTriangle.setScale(1, 0.5);
+        _entityTriangle.setPointCount(3);
+        _entityTriangle.setRadius(25);
+        _entityTriangle.setFillColor(sf::Color::Green);
+        _entityTriangle.setOrigin(_entityTriangle.getRadius(), _entityTriangle.getRadius());
+        _entityTriangle.setOutlineThickness(8);
+        _entityTriangle.setScale(1, 0.5);
 
         _playerLevelText.setFont(_font);
         _playerLevelText.setCharacterSize(20);
         _playerLevelText.setFillColor(sf::Color::White);
+        _playerLevelText.setOutlineThickness(2);
+        _playerLevelText.setOutlineColor(sf::Color::Black);
 
         _shellText.setFont(_font);
         _shellText.setCharacterSize(20);
@@ -63,8 +72,11 @@ namespace Zappy
     {
         _window.clear();
         drawTiles(world.getTiles());
+        for (auto &egg : world.getEggs()) {
+            drawEntity(egg);
+        }
         for (auto &player : world.getPlayers()) {
-            drawPlayer(player);
+            drawEntity(player);
         }
 
         _window.draw(_tileSelector);
@@ -74,12 +86,26 @@ namespace Zappy
         _window.display();
     }
 
-    sf::Vector2f Sfml::getPlayerOffset(const std::shared_ptr<Player> player)
+    sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> entity)
     {
-        if (_playersGraphics.contains(player->getId())) {
-            return _playersGraphics[player->getId()].offset;
+        for (auto &playerGraphics : _entityGraphics) {
+            if (playerGraphics.first.first != entity->getType() &&
+            playerGraphics.first.second != entity->getId())
+                continue;
+            return playerGraphics.second.offset;
         }
         return sf::Vector2f(0, 0);
+    }
+
+    size_t Sfml::getEntityPointCount(const std::shared_ptr<IEntity> entity)
+    {
+        for (auto &playerGraphics : _entityGraphics) {
+            if (playerGraphics.first.first != entity->getType() ||
+            playerGraphics.first.second != entity->getId())
+                continue;
+            return playerGraphics.second.pointCount;
+        }
+        return 3;
     }
 
     void Sfml::resetViewPos(void)

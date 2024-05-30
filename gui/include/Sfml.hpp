@@ -32,7 +32,7 @@ namespace Zappy {
         void handleEvent(void);
 
         void drawTiles(const std::vector<std::vector<Tile>> &tiles);
-        void drawPlayer(const std::shared_ptr<Player> player);
+        void drawEntity(const std::shared_ptr<IEntity> entity);
         void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
         void resetViewPos(void);
@@ -40,9 +40,13 @@ namespace Zappy {
         // Colors
         sf::Color getTeamColor(TeamType teamType);
         sf::Color getTextColor(const ShellCommand &command);
-        sf::Color getPlayerColor(const std::shared_ptr<Player> player);
-        sf::Vector2f getPlayerOffset(const std::shared_ptr<Player> player);
+        sf::Color getEntityColor(const std::shared_ptr<IEntity> player);
+        sf::Vector2f getEntityOffset(const std::shared_ptr<IEntity> player);
+        size_t getEntityPointCount(const std::shared_ptr<IEntity> entity);
         sf::Color getItemColor(Item itemType);
+        sf::Color getRandomColor(void) {
+            return sf::Color(50 + rand() % 205, 50 + rand() % 205, 50 + rand() % 205);
+        }
 
 
         sf::RenderWindow _window;
@@ -63,10 +67,9 @@ namespace Zappy {
         sf::Text _resourcesText;
 
         // Player
-        sf::CircleShape _playerTriangle;
+        sf::CircleShape _entityTriangle;
         sf::Text _playerLevelText;
-        // std::map<size_t, sf::Color> _playerColors;
-        std::map<size_t, PlayerGraphics> _playersGraphics;
+        std::map<std::pair<EntityType, size_t>, PlayerGraphics> _entityGraphics;
 
         // Shell
         sf::Text _shellText;
