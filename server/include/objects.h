@@ -16,3 +16,13 @@ typedef enum {
     PHIRAS,
     THYSTAME
 } object_type_t;
+
+static const char *object_names[] = {
+    "food",
+    "linemate",
+    "deraumere",
+    "sibur",
+    "mendiane",
+    "phiras",
+    "thystame"
+};
