@@ -17,6 +17,14 @@ typedef struct server_s server_t;
 struct client_socket_s;
 typedef struct client_socket_s client_socket_t;
 
+typedef struct delayed_command_s {
+    void *_func;
+    char **_args;
+    client_socket_t *_client;
+    int _delay;
+    TAILQ_ENTRY(delayed_command_s) entries;
+} delayed_command_t;
+
 typedef struct command_s {
     char *name;
     void (*ptr)(server_t *server, char *args, client_socket_t *client);

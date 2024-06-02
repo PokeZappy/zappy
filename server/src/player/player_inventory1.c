@@ -24,7 +24,7 @@ char *print_player_inventory(player_t *player)
     char *result = (char *)malloc(sizeof(char) * 1024);
 
     sprintf(result, "[");
-    for (int i = 0; i < ITEM_PER_TILE; i++) {
+    for (int i = 1; i < ITEM_PER_TILE; i++) {
         sprintf(result, "%s%s %d", result, items[i], player->_inventory[i]);
         if (i != 6)
             sprintf(result, "%s, ", result);

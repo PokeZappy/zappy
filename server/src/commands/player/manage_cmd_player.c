@@ -31,6 +31,7 @@ static void m_cmd_2(char *command, client_socket_t *client, server_t *server)
 
 void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
 {
+    printf("command: %s\n", command);
     if (strcmp(command, "EXIT") == 0)
         return exit_command(client, server);
     if (strcmp(command, "CLIENT_LIST") == 0)
@@ -41,7 +42,7 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
         return cmd_right(server, client);
     if (strncmp(command, "left", 4) == 0)
         return cmd_left(server, client);
-    if (strncmp(command, "look ", 5) == 0)
+    if (strncmp(command, "look", 4) == 0)
         return cmd_look(server, command, client);
     if (strncmp(command, "inventory", 9) == 0)
         return cmd_inventory(server, client);

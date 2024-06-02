@@ -10,3 +10,4 @@ zappy_gui
 .vscode/
 vgcore*
 storage/
+my_main.c

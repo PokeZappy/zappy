@@ -45,6 +45,7 @@ char *get_player_inventory(player_t *player);
 // -- SERVER RELATED -- //
 player_t *add_player_to_team(char *team_name, server_t *server);
 char *player_look(server_t *server, player_t *player);
+void player_look_loop(server_t *server, player_t *p, int i, char *result);
 int nb_player_on_tile(server_t *server, vector_t tile_pos);
 
 // -- GRID RELATED -- //
