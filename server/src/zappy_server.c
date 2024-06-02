@@ -47,6 +47,7 @@ static int init_server(server_t *server, server_arg_t *arguments)
     server->grid = init_grid(arguments->_x, arguments->_y);
     init_all_teams(server);
     TAILQ_INIT(&server->_head_client_sockets);
+    TAILQ_INIT(&server->_head_delayed_commands);
     server->socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket == -1) {
         fprintf(stderr, "zappy_server: Socket creation failed.\n");

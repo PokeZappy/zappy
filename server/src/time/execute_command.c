@@ -9,15 +9,32 @@
 
 void execute_command(server_t *server)
 {
+    delayed_command_t *delayed_command;
+
+    TAILQ_FOREACH(delayed_command, &server->_head_delayed_commands, entries) {
+        if (delayed_command->_delay <= 0) {
+            delayed_command->_func(server, delayed_command->_args,
+            delayed_command->_client);
+            TAILQ_REMOVE(&server->_head_delayed_commands, delayed_command,
+            entries);
+            free(delayed_command);
+        } else {
+            delayed_command->_delay--;
+        }
+    }
     return;
 }
 
-/*void add_command_to_list(void (*ptr)(server_t *server, char *args,
-client_socket_t *client), char **args, client_socket_t *client, int delay)
+void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args)
 {
-    delayed_command_t *delayed_command = malloc(sizeof(delayed_command_t));
-    delayed_command->_func = ptr;
+    delayed_command_t *delayed_command = (delayed_command_t *)
+    malloc(sizeof(delayed_command_t));
+
+    delayed_command->_func = cmd->ptr;
     delayed_command->_args = args;
-    delayed_command->_client = client;
-    delayed_command->_delay = delay;
-}*/
+    delayed_command->_client = c;
+    delayed_command->_delay = cmd->time;
+    TAILQ_INSERT_TAIL(&server->_head_delayed_commands, delayed_command,
+    entries);
+    free(cmd);
+}

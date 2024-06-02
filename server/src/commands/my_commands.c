@@ -28,7 +28,7 @@ void print_client_list(server_t *server, char *args, client_socket_t *client)
     }
 }
 
-void exit_command(server_t *server, char *args,client_socket_t *client)
+void exit_command(server_t *server, char *args, client_socket_t *client)
 {
     printf("Client requested exit {%d}\n", client->_id);
     close(client->socket);
@@ -36,7 +36,7 @@ void exit_command(server_t *server, char *args,client_socket_t *client)
     free_client(client);
 }
 
-void hack_player_pos(server_t *server, char *args,client_socket_t *client)
+void hack_player_pos(server_t *server, char *args, client_socket_t *client)
 {
     int x = 0;
     int y = 0;
@@ -47,7 +47,7 @@ void hack_player_pos(server_t *server, char *args,client_socket_t *client)
     }
 }
 
-void hack_player_dir(server_t *server, char *args,client_socket_t *client)
+void hack_player_dir(server_t *server, char *args, client_socket_t *client)
 {
     if (strcmp(args, "UP") == 0)
         client->player->_direction = UP;

@@ -18,8 +18,8 @@ struct client_socket_s;
 typedef struct client_socket_s client_socket_t;
 
 typedef struct delayed_command_s {
-    void *_func;
-    char **_args;
+    void (*_func)(server_t *server, char *args, client_socket_t *client);
+    char *_args;
     client_socket_t *_client;
     int _delay;
     TAILQ_ENTRY(delayed_command_s) entries;
@@ -39,13 +39,13 @@ void cmd_forward(server_t *server, char *args, client_socket_t *client);
 void cmd_right(server_t *server, char *args, client_socket_t *client);
 void cmd_left(server_t *server, char *args, client_socket_t *client);
 void cmd_look(server_t *server, char *args, client_socket_t *client);
-void cmd_inventory(server_t *server, char *args,client_socket_t *client);
-void cmd_broadcast(server_t *server, char *args,client_socket_t *client);
+void cmd_inventory(server_t *server, char *args, client_socket_t *client);
+void cmd_broadcast(server_t *server, char *args, client_socket_t *client);
 void cmd_slot(server_t *server, char *args, client_socket_t *client);
 void cmd_fork(server_t *server, char *args, client_socket_t *client);
 void cmd_eject(server_t *server, char *args, client_socket_t *client);
 void cmd_dead(server_t *server, char *args, client_socket_t *client);
-void cmd_connect_nbr(server_t *server, char *args,client_socket_t *client);
+void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client);
 void cmd_take(server_t *server, char *args, client_socket_t *client);
 void cmd_set(server_t *server, char *args, client_socket_t *client);
 void cmd_incantation(server_t *server, char *args, client_socket_t *client);
@@ -66,7 +66,12 @@ void cmd_sst(server_t *server, char *args, client_socket_t *client);
 void cmd_unknown(server_t *server, char *args, client_socket_t *client);
 
 // -- MY_CMD -- //
-void print_client_list(server_t *server, char *args,client_socket_t *client);
-void exit_command(server_t *server, char *args,client_socket_t *client);
-void hack_player_pos(server_t *server, char *args,client_socket_t *client);
-void hack_player_dir(server_t *server, char *args,client_socket_t *client);
+void print_client_list(server_t *server, char *args, client_socket_t *client);
+void exit_command(server_t *server, char *args, client_socket_t *client);
+void hack_player_pos(server_t *server, char *args, client_socket_t *client);
+void hack_player_dir(server_t *server, char *args, client_socket_t *client);
+
+// -- DELAYED -- //
+// Add Command to List
+void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args);
+void execute_command(server_t *server);
