@@ -22,7 +22,7 @@ void cmd_dead(server_t *server, char *args, client_socket_t *client)
     printf("dead\n");
 }
 
-void cmd_connect_nbr(server_t *server, client_socket_t *client)
+void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
 

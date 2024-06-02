@@ -8,7 +8,7 @@
 #include "../../include/commands.h"
 #include "../../include/utils.h"
 
-void print_client_list(client_socket_t *client, server_t *server)
+void print_client_list(server_t *server, char *args, client_socket_t *client)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
@@ -28,7 +28,7 @@ void print_client_list(client_socket_t *client, server_t *server)
     }
 }
 
-void exit_command(client_socket_t *client, server_t *server)
+void exit_command(server_t *server, char *args,client_socket_t *client)
 {
     printf("Client requested exit {%d}\n", client->_id);
     close(client->socket);
@@ -36,7 +36,7 @@ void exit_command(client_socket_t *client, server_t *server)
     free_client(client);
 }
 
-void hack_player_pos(client_socket_t *client, server_t *server, char *args)
+void hack_player_pos(server_t *server, char *args,client_socket_t *client)
 {
     int x = 0;
     int y = 0;
@@ -47,7 +47,7 @@ void hack_player_pos(client_socket_t *client, server_t *server, char *args)
     }
 }
 
-void hack_player_dir(client_socket_t *client, server_t *server, char *args)
+void hack_player_dir(server_t *server, char *args,client_socket_t *client)
 {
     if (strcmp(args, "UP") == 0)
         client->player->_direction = UP;

@@ -7,7 +7,7 @@
 
 #include "../../../include/commands.h"
 
-void cmd_forward(server_t *server, client_socket_t *client)
+void cmd_forward(server_t *server, char *args, client_socket_t *client)
 {
     if (!client || !client->player)
         return;
@@ -16,7 +16,7 @@ void cmd_forward(server_t *server, client_socket_t *client)
     printf("forward\n");
 }
 
-void cmd_right(server_t *server, client_socket_t *client)
+void cmd_right(server_t *server, char *args, client_socket_t *client)
 {
     if (!client || !client->player)
         return;
@@ -25,7 +25,7 @@ void cmd_right(server_t *server, client_socket_t *client)
     printf("right\n");
 }
 
-void cmd_left(server_t *server, client_socket_t *client)
+void cmd_left(server_t *server, char *args, client_socket_t *client)
 {
     if (!client || !client->player)
         return;
@@ -45,7 +45,7 @@ void cmd_look(server_t *server, char *args, client_socket_t *client)
     free(response);
 }
 
-void cmd_inventory(server_t *server, client_socket_t *client)
+void cmd_inventory(server_t *server, char *args, client_socket_t *client)
 {
     char *response;
 

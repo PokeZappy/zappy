@@ -20,9 +20,9 @@ static void m_cmd_2(char *command, client_socket_t *client, server_t *server)
 void manage_cmd_gui(char *command, client_socket_t *client, server_t *server)
 {
     if (strcmp(command, "EXIT") == 0)
-        return exit_command(client, server);
+        return exit_command(server, command, client);
     if (strcmp(command, "CLIENT_LIST") == 0)
-        return print_client_list(client, server);
+        return print_client_list(server, command, client);
     if (strncmp(command, "msz ", 4) == 0)
         return cmd_msz(server, command, client);
     if (strncmp(command, "bct ", 4) == 0)

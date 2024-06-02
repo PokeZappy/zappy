@@ -6,13 +6,13 @@
 */
 
 #include "../../include/commands.h"
-/*
+
 void execute_command(server_t *server)
 {
     return;
 }
 
-void add_command_to_list(void (*ptr)(server_t *server, char *args,
+/*void add_command_to_list(void (*ptr)(server_t *server, char *args,
 client_socket_t *client), char **args, client_socket_t *client, int delay)
 {
     delayed_command_t *delayed_command = malloc(sizeof(delayed_command_t));
