@@ -3,8 +3,15 @@ from dataclasses import dataclass
 
 @dataclass
 class Latin(object):
+    """
+    The Latin class initializes a dictionary named verbum that maps French phrases to their Latin translations. This
+    dictionary is used to store and retrieve Latin translations for specific French terms.
+    """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialize the Latin class with a dictionary of Latin phrases and their translations.
+        """
         self.verbum: dict[str, str] = {'point de ralliment': 'collectio militum : ',
                                        'point de dépot': 'collectio rerum : ',
                                        'évo de niveau:': 'nobilis incantatio',
