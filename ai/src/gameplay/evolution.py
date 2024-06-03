@@ -3,16 +3,16 @@ from src.gameplay.enum_gameplay import Ressources as res
 def evolution(level : int = 1):
     match level:
         case 1:
-            return {"PLAYER": 1, "LINEMATE": 1}
+            return {"player": 1, "linemate": 1}
         case 2:
-            return {"PLAYER": 2, "LINEMATE": 1, "SIBUR": 1, "PHIRAS": 2}
+            return {"player": 2, "linemate": 1, "sibur": 1, "phiras": 2}
         case 3:
-            return {"PLAYER": 2, "LINEMATE": 2, "DERAUMERE": 1, "SIBUR": 1, "MENDIANE": 3}
+            return {"player": 2, "linemate": 2, "deraumere": 1, "sibur": 1, "mendiane": 3}
         case 4:
-            return {"PLAYER": 4, "LINEMATE": 1, "DERAUMERE": 1, "SIBUR": 2, "PHIRAS": 1}
+            return {"player": 4, "linemate": 1, "deraumere": 1, "sibur": 2, "phiras": 1}
         case 5:
-            return {"PLAYER": 4, "LINEMATE": 1, "DERAUMERE": 2, "SIBUR": 1, "MENDIANE": 3}
+            return {"player": 4, "linemate": 1, "deraumere": 2, "sibur": 1, "mendiane": 3}
         case 6:
-            return {"PLAYER": 6, "LINEMATE": 1, "DERAUMERE": 2, "SIBUR": 3, "PHIRAS": 1}
+            return {"player": 6, "linemate": 1, "deraumere": 2, "sibur": 3, "phiras": 1}
         case 7:
-            return {"PLAYER": 6, "LINEMATE": 2, "DERAUMERE": 2, "SIBUR": 2, "MENDIANE": 2, "PHIRAS": 2, "THYSTAME": 1}
+            return {"player": 6, "linemate": 2, "deraumere": 2, "sibur": 2, "mendiane": 2, "phiras": 2, "thystame": 1}

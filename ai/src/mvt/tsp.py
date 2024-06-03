@@ -1,117 +1,75 @@
 from src.mvt.path import Path
 
-"""
-obj : [(position : tuple, type : int, number : int)]
-"""
-type object = [(tuple, int)]
+type actions = tuple[int, int] | list[str, list] | list[actions]
 
-class held_krap():
-    def __init__(self, limit : tuple, pos_player : tuple, obj : object, goal : list):
-        """
-        limit : (int, int) -> (size map x, size map y)
-        pos_plaer : (int, int) -> (x player, y player)
-        obj : [(position : tuple, type : int, number : int)]
-        goal : [(type, number)] -> [(type goal, number required)]
-        """
+class Held_krap:
+    def __init__(self, limit: tuple[int, int], pos: tuple[int, int]) -> None:
         self.limit = limit
-        self.pos = pos_player
-        self.obj = obj
+        self.pos = pos
+
+    def research_obj_in_map(self) -> [[[]]]:
+        """
+        This method researches all the nessessary objects in the map.
+        """
+        objs = [[[] for _ in range(len(self.map[i]))] for i in range(len(self.map))]
+        for i in range(len(self.map)):
+            for j in range(len(self.map[i])):
+                for obj in self.map[i][j]:
+                    if self.goal.get(obj) and self.goal[obj] > 0:
+                        objs[i][j].append(obj)
+        return objs
+
+    def road(self, map_necessary_obj: [[[]]]) -> actions:
+        """
+        The road designer to all goals.
+        TODO: Algo of path finding + scores
+        """
+        road = []
+        for i in range(len(map_necessary_obj)):
+            for j in range(len(map_necessary_obj[i])):
+                if map_necessary_obj[i][j]:
+                    if i != self.pos[0] and j != self.pos[1]:
+                        if 'player' in map_necessary_obj[i][j].keys():
+                            del map_necessary_obj[i][j]['player']
+                        road.append((i, j))
+                    road.append(['Take', map_necessary_obj[i][j]])
+        return road
+
+    def update_goal(self, goal: dict) -> None:
+        """
+        This method updates the goal.
+        """
         self.goal = goal
-        self.path = []
 
-    def set_goal(self, goal):
-        self.goal = goal
-    def get_paths(self):
-        nb_ele = 0
-        for i in range(len(self.obj)):
-            if self.obj[i][1] == self.goal[0][0]:
-                nb_ele += self.obj[i][2]
-            if nb_ele >= self.goal[0][1]:
-                break
+    def detailed_road(self, road: actions) -> actions:
+        pos = self.pos
+        action = []
+        valid_road = False
+        for ele in road:
+            print(f"ele tsp: {ele}")
+            if ele[0] != 'Take':
+                action.append(Path(self.limit, pos, ele).opti_path()[0])
+                pos = ele
+            else:
+                if len(ele[1].keys()) > 1 or 'player' not in ele[1].keys():
+                    for elem in ele[1]:
+                        if elem != 'player':
+                            for _ in range(ele[1][elem]):
+                                action.append(['Take', elem])
+                    valid_road = True
+        if valid_road:
+            return action
+        return None
+
+    def algo(self, map) -> actions:
         """
-        In case there isn't enough elements to reach the goal,
-        the player will go to the object with the most elements
+        This method is the main algorithm to find the best path to the goal.
         """
-        if nb_ele < self.goal[0][1]:
-            if len(self.obj) == 0:
-                return []
-            greater = self.obj[0]
-            for i in range(len(self.obj)):
-                if self.obj[i][2] > greater[2]:
-                    greater = self.obj[i]
-            return [Path(self.limit, self.pos, greater[0]).opti_path()]
-        """
-        In case there are enough elements to reach the goal,
-        the play will take the shortest path to reach the goal
-        """
-        self.algo()
-        return self.path
-
-
-    def sort_obj(self):
-        for i in range(len(self.obj)):
-            for j in range(len(self.obj) - 1):
-                if self.obj[j][2] > self.obj[j + 1][2]:
-                    self.obj[j], self.obj[j + 1] = self.obj[j + 1], self.obj[j]
-
-    def euclidean_distance(self, a, b):
-        return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
-    def held_krap(self, nodes):
-            n = len(nodes)
-            all_nodes = [self.pos] + nodes
-            dist = [[self.euclidean_distance(all_nodes[i], all_nodes[j]) for j in range(n + 1)] for i in range(n + 1)]
-
-            # Initialize DP table
-            dp = [[float('inf')] * (1 << (n + 1)) for _ in range(n + 1)]
-            parent = [[-1] * (1 << (n + 1)) for _ in range(n + 1)]
-            dp[0][1] = 0
-
-            # Iterate over all subsets of nodes
-            for mask in range(1 << (n + 1)):
-                for u in range(n + 1):
-                    if mask & (1 << u):
-                        for v in range(n + 1):
-                            if mask & (1 << v) == 0:
-                                new_mask = mask | (1 << v)
-                                new_cost = dp[u][mask] + dist[u][v]
-                                if new_cost < dp[v][new_mask]:
-                                    dp[v][new_mask] = new_cost
-                                    parent[v][new_mask] = u
-
-            # Find the minimum cost path that ends at any node
-            min_cost = float('inf')
-            last_node = -1
-            for i in range(1, n + 1):
-                if dp[i][(1 << (n + 1)) - 1] < min_cost:
-                    min_cost = dp[i][(1 << (n + 1)) - 1]
-                    last_node = i
-
-            # Reconstruct the path
-            path = []
-            mask = (1 << (n + 1)) - 1
-            while last_node != -1:
-                path.append(last_node)
-                temp = last_node
-                last_node = parent[last_node][mask]
-                mask ^= (1 << temp)
-
-            path.reverse()
-
-            # Convert node indices to actual coordinates
-            final_path = [self.pos] + [nodes[i - 1] for i in path[1:]]
-
-            return final_path
-
-
-    def algo(self):
-        dist = 0
-        need = 0
-        self.obj.sort(key=lambda x: x[2], reverse=True)
-        for i in range(len(self.obj)):
-            if self.obj[i][1] == self.goal[0][0]:
-                need += self.obj[i][2]
-            if need >= self.goal[0][1]:
-                dist = i
-                break
-        self.path = self.held_krap([self.obj[i][0] for i in range(dist + 1) if self.obj[i][1] == self.goal[0][0]])
-        return self.path
+        self.map = map
+        # map_necessary_obj = self.research_obj_in_map()
+        road = self.road(self.map)
+        detailed_road = self.detailed_road(road)
+        if detailed_road is None:
+            detailed_road = []
+            detailed_road.append([[[self.pos[0] + 1, self.pos[1]]]])
+        return detailed_road
