@@ -3,6 +3,15 @@ import math
 
 
 def calc_encryption_key(key: str) -> [[int]]:
+    """
+    Calculate the encryption key matrix from the given key string.
+
+    Parameters:
+        key (str): The key string used to generate the encryption key matrix.
+
+    Returns:
+        [[int]]: The encryption key matrix derived from the key string.
+    """
     key_len = len(key)
     matrix_size = int(np.ceil(np.sqrt(key_len)))
     print(matrix_size)
@@ -14,12 +23,30 @@ def calc_encryption_key(key: str) -> [[int]]:
 
 
 class Cipher(object):
+    """
+    The Cipher class provides methods for encrypting and decrypting messages using a key matrix derived from a given
+    key string. It converts messages into matrices, performs matrix multiplication for encryption, and uses the
+    inverse of the key matrix for decryption.
+    """
 
-    def __init__(self, key_str):
-        self.key: [[int]] = calc_encryption_key(key_str)
-        self.key_inv = np.linalg.inv(self.key)
+    def __init__(self, encryption_key: str) -> None:
+        """
+        The __init__ method initializes an instance of the Cipher class by calculating the encryption key matrix from
+        the provided encryption key string and then computing its inverse for decryption purposes.
+        """
+        self.key: [[int]] = calc_encryption_key(encryption_key)
+        self.key_inv: np.ndarray = np.linalg.inv(self.key)
 
-    def message_matrix(self, message) -> list[list[int]]:
+    def message_matrix(self, message: str) -> list[list[int]]:
+        """
+        Convert a message into a matrix of ASCII values based on the encryption key matrix size.
+
+        Parameters:
+            message (str): The input message to be converted into a matrix.
+
+        Returns:
+            list[list[int]]: A matrix of ASCII values representing the input message.
+        """
         matrix_size = len(self.key)
         msg_len = len(message)
         matrix = [
@@ -28,7 +55,16 @@ class Cipher(object):
         ]
         return matrix
 
-    def calc_result_matrix(self, message_matrix) -> list[int]:
+    def calc_result_matrix(self, message_matrix: list[list[int]]) -> list[int]:
+        """
+        Calculate the result matrix by multiplying the message matrix with the encryption key matrix.
+
+        Parameters:
+            message_matrix (list[list[int]]): The matrix representing the message to be encrypted.
+
+        Returns:
+            list[int]: The result matrix after the multiplication operation.
+        """
         result_matrix = [
             sum(message_matrix[i][k] * self.key[k][j] for k in range(len(self.key)))
             for i in range(len(message_matrix))
@@ -36,14 +72,35 @@ class Cipher(object):
         ]
         return result_matrix
 
-    def encryption(self, message) -> list[int]:
-        matrix_msg = self.message_matrix(message)
-        resulting_matrix = self.calc_result_matrix(matrix_msg)
-        return resulting_matrix
+    def encryption(self, message: str) -> str:
+        """
+        Encrypts the input message using the encryption key matrix.
+
+        Parameters:
+            message (str): The message to be encrypted.
+
+        Returns:
+            list[int]: The encrypted message as a list of integers.
+        """
+        matrix_msg: list[[int]] = self.message_matrix(message)
+        resulting_matrix: list[int] = self.calc_result_matrix(matrix_msg)
+        resulting_msg: str = '#'.join(str(x) for x in resulting_matrix)
+        return resulting_msg
 
     def decryption(self, message: list[int]) -> str:
-        message_matrix = np.array(message).reshape(-1, 10)
-        decrypted_matrix = np.dot(message_matrix, self.key_inv)
+        """
+        Decrypts an encrypted message using the decryption key matrix.
+
+        Parameters:
+            message (list[int]): The encrypted message to be decrypted as a list of integers.
+
+        Returns:
+            str: The decrypted message as a string.
+
+        """
+        matrix_size: int = len(self.key)
+        reversed_message_matrix = np.array(message).reshape(-1, matrix_size)
+        decrypted_matrix = np.dot(reversed_message_matrix, self.key_inv)
         decrypted_matrix = np.round(decrypted_matrix).astype(int)
         decrypted_message = ''.join(chr(num) for row in decrypted_matrix for num in row if 32 <= num <= 126)
         return decrypted_message
