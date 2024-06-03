@@ -76,20 +76,6 @@ class Role(Player):
                         self.queue.append(elem)
             else:
                 self.queue.append(ele)
-
-    def apply_action(self) -> None:
-        """
-        This method applies the action to the player.
-
-        :return: None
-        """
-        action = self.actions[-1]
-        if action[0] == 'Take':
-            self.take_obj(action[1])
-        elif action == 'Elevation':
-            self.incantation()
-        elif type(action) == tuple:
-            self.move(action, self.dir)
                 
 
     def empty_queue(self) -> None:

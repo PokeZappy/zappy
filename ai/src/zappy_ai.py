@@ -24,7 +24,6 @@ class Bot(object):
         self.dimensions = serv_info[1:]
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
-        self.queue = []
         self.inout = [cli_socket]
         print(self.cli_num)
         print(self.dimensions)
@@ -39,8 +38,6 @@ class Bot(object):
         """
         if self.debug_mode:
             print(f"Sending action: {action}")
-        if action != 'Forward\n' and action != 'Right\n' and action != 'Left\n':
-            self.queue.append(action)
         self.cli_socket.send(action.encode())
 
     def recv_action(self) -> str:

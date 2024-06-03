@@ -2,7 +2,7 @@
 
 import sys
 from src.server import connexion
-from src.player.role import Role
+from src.player.progenitor import Progenitor
 
 from src.zappy_ai import display_help
 
@@ -32,7 +32,7 @@ def main():
                 raise ValueError("Invalid argument")
         server_info, cli_socket = connexion.connect(port, name, machine)
         print(f"Connected to {machine}:{port}")
-        mybot = Role(server_info, cli_socket, debug)
+        mybot = Progenitor(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

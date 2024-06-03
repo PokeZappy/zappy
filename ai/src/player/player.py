@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import src.mvt.tsp as tsp
 import src.zappy_ai as zappy_ai
 import socket
@@ -6,6 +7,7 @@ from src.gameplay.enum_gameplay import Directions as dir
 from datetime import datetime
 from src.mvt.path import Path
 from src.gameplay.enum_gameplay import Ressources as res
+import select
 
 
 class Player(zappy_ai.Bot):
@@ -20,17 +22,25 @@ class Player(zappy_ai.Bot):
         super().__init__(serv_info, cli_socket, debug_mode)
         self.limit = self.dimensions
         self.pos = (0, 0)
-        self.goal = {}
         self.inv = {}
-        self.view = []
         self.map_knowledge = [[{} for _ in range(self.limit[0])] for _ in range(self.limit[1])]
         self.parent = None
-        random.seed(datetime.now().timestamp())
-        self.id = random
-        self.life = 1260
-        self.dir = dir.NORTH
         self.level = 1
         self.actions = []
+        self.queue = []
+        self.LIMIT_QUEUE = 10
+        self.LEVEL_MAX = 8
+    
+        #TODO: seed is it necessary?
+        random.seed(datetime.now().timestamp())
+        self.id = random
+
+        #TODO: improve the life system
+        self.life = 1260
+    
+        #TODO: improve the direction system
+        self.dir = dir.NORTH
+
 
     def speak(self, message: str) -> None:
         """
@@ -118,6 +128,18 @@ class Player(zappy_ai.Bot):
         self.send_action("Incantation\n")
         return False
 
+    def move_to(self, pos: tuple[int, int]) -> None:
+        """
+        This method makes the player move to a position.
+
+        :param pos: tuple[int, int] - The position to move to.
+        :return: None
+        """
+        path = Path(self.limit, self.pos, pos).opti_path()
+        for mvt in path:
+            self.queue.append(mvt)
+        
+
     def pos_view(self, axis: str, i: int, dire: dir) -> int:
         """
         This method returns the position of the view.
@@ -159,3 +181,55 @@ class Player(zappy_ai.Bot):
                         if obj not in self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]]:
                             self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] = 0
                         self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] += 1
+
+    def apply_action(self) -> None:
+        """
+        This method applies the action to the player.
+
+        :return: None
+        """
+        self.actions.append(self.queue[0])
+        self.queue.pop(0)
+        action = self.actions[-1]
+        if action[0] == 'Take':
+            self.take_obj(action[1])
+        elif action == 'Incantation':
+            self.incantation()
+        elif action[0] == 'Set':
+            self.set_obj(action[1])
+        elif action == 'Look':
+            self.look_around()
+        elif action == 'Fork':
+            self.create_egg()
+        elif type(action) == tuple:
+            self.move(action, self.dir)
+
+    @abstractmethod
+    def recv_treatment(self, buf) -> None:
+        pass
+
+    @abstractmethod
+    def make_action(self) -> None:
+        pass
+
+    def run(self) -> None:
+        """
+        This method is the main loop of the ai.
+
+        :return: None
+        """
+        while self.level < self.LEVEL_MAX:
+            infds, outfds, _ = select.select(self.inout, self.inout, [])
+
+            """
+            infds: list[socket] - The list of sockets to read from.
+            """
+            if len(infds) != 0:
+                buf = self.recv_action()
+                self.recv_treatment(buf)
+
+            """
+            outfds: list[socket] - The list of sockets to write to.
+            """
+            if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
+                self.make_action()
