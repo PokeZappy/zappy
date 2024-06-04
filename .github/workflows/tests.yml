@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - dev-ia
+#      - dev-ia
 
 jobs:
   build:
