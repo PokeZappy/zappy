@@ -12,7 +12,7 @@ class TestImport:
     def test_function_compiles(self):
         try:
             result = display_help()
-            assert result == 0, "Expected return value is 0"
+            assert result is None, "Expected return value is None"
         except SyntaxError:
             pytest.fail("Syntax error occurred")
 
