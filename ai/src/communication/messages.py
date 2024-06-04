@@ -18,6 +18,16 @@ class Messages(object):
         self.cipher: Cipher = cipher
         self.language: Latin = language
 
+    def send_coord(self, message: str, pos: (int, int)):
+        new_uuid: str = ""
+        while new_uuid in self.uuid_used:
+            new_uuid = uuid.uuid4().__str__()
+        if new_uuid not in self.uuid_used:
+            self.uuid_used.append(new_uuid)
+        message += f'#{pos[0]},{pos[1]}'
+        encrypted_msg = self.cipher.encryption(message)
+        return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
+
     def send(self, message: str) -> str:
         """
         Send an encrypted message.
@@ -36,7 +46,7 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def receive(self, message: str) -> str:
+    def receive(self, message: str) -> str | list[str]:
         """
         Receive and decrypt a message.
 
@@ -45,18 +55,20 @@ class Messages(object):
 
         Returns:
             str: The decrypted message.
+             list[str]: The decrypted message and the coords
         """
         match = re.search(r'\d+, ', message)
         if match and len(message) > 4:
             message = message[match.end() + 1:-2]
-            words = message.split()
-            if words[0] != 'ACCMST' or words[2] in self.uuid_used:
+            parts = message.split()
+            if parts[0] != 'ACCMST' or parts[2] in self.uuid_used:
                 return 'ko'
-            self.uuid_used.append(words[2])
-            message = words[3].split('#')
+            self.uuid_used.append(parts[2])
+            message = parts[3].split('#')
             message = self.cipher.decryption([int(i) for i in message])
-            if message in self.language.verbum.values():
-                return message
+            message = message.split('#')
+            if message[0] in self.language.verbum.values():
+                return message if len(message) > 1 else message[0]
             else:
                 return 'ko'
         return message
