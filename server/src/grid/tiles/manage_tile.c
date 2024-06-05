@@ -8,17 +8,32 @@
 #include "../../../include/tile.h"
 #include "stdlib.h"
 
-tiles_t *init_tile(void)
+static int random_chance(int density, int case_nbr, int current_case)
+{
+    int rand_chance = 0;
+    int case_left = case_nbr - current_case;
+
+    if (case_left == density)
+        return 1;
+    rand_chance = rand() % 2;
+    return rand_chance;
+}
+
+tiles_t *init_tile(double *density, int case_nbr, int current_case)
 {
     tiles_t *tile = (tiles_t *)malloc(sizeof(tiles_t));
-    double random_number;
-    double densities[ITEM_PER_TILE] = {DENSITY_FOOD, DENSITY_LINEMATE,
-    DENSITY_DERAUMERE, DENSITY_SIBUR, DENSITY_MENDIANE, DENSITY_PHIRAS,
-    DENSITY_THYSTAME};
 
     for (int i = 0; i < ITEM_PER_TILE; i++) {
-        random_number = rand() % 101;
-        tile->_items[i] = random_number <= (densities[i] * 100) ? 1 : 0;
+        if (density[i] < 1) {
+            tile->_items[i] = 0;
+            continue;
+        }
+        if (random_chance(density[i], case_nbr, current_case)) {
+            tile->_items[i] = 1;
+            density[i] -= 1;
+        } else {
+            tile->_items[i] = 0;
+        }
     }
     return tile;
 }

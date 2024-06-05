@@ -24,6 +24,7 @@ static const command_t commands[] = {
     {"EXIT", exit_command, 0},
     {"HACK_DIR", hack_player_dir, 7},
     {"HACK_POS", hack_player_pos, 7},
+    {"CLIENT_LIST", print_client_list, 0},
     {NULL, NULL, 0}
 };
 

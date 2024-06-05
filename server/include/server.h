@@ -29,7 +29,7 @@ typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
     int socket; // socket of the server
     struct sockaddr_in sock_in; // address of the server
-    fd_set read_fds; // read file descriptor
+    fd_set read_fds; // read file descriptortypedef struct tiles_s
     fd_set write_fds; // write file descriptor
     grid_t *grid; // grid of the server
     TAILQ_HEAD(, team_s) _head_team; // list of teams

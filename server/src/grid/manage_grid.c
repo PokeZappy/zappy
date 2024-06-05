@@ -9,9 +9,27 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+double *create_density(int tile_nbr)
+{
+    double *densities = (double *)malloc(ITEM_PER_TILE * sizeof(double));
+
+    if (densities == NULL)
+        return NULL;
+    densities[0] = DENSITY_FOOD * tile_nbr;
+    densities[1] = DENSITY_LINEMATE * tile_nbr;
+    densities[2] = DENSITY_DERAUMERE * tile_nbr;
+    densities[3] = DENSITY_SIBUR * tile_nbr;
+    densities[4] = DENSITY_MENDIANE * tile_nbr;
+    densities[5] = DENSITY_PHIRAS * tile_nbr;
+    densities[6] = DENSITY_THYSTAME * tile_nbr;
+    return densities;
+}
+
 grid_t *init_grid(int width, int height)
 {
+    int case_nbr = width * height;
     grid_t *grid = (grid_t *)malloc(sizeof(grid_t));
+    double *densities = create_density(case_nbr);
 
     grid->_width = width;
     grid->_height = height;
@@ -19,8 +37,10 @@ grid_t *init_grid(int width, int height)
     for (int i = 0; i < height; i++) {
         grid->_tiles[i] = (tiles_t **)malloc(sizeof(tiles_t *) * width);
         for (int j = 0; j < width; j++)
-            grid->_tiles[i][j] = init_tile();
+            grid->_tiles[i][j] =
+                init_tile(densities, case_nbr, i * width + j + 1);
     }
+    free(densities);
     return grid;
 }
 

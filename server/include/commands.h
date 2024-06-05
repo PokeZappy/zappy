@@ -26,7 +26,7 @@ typedef struct delayed_command_s {
 } delayed_command_t;
 
 typedef struct command_s {
-    char *name;
+    const char *name;
     void (*ptr)(server_t *server, char *args, client_socket_t *client);
     int time;
 } command_t;

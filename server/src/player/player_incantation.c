@@ -29,5 +29,3 @@ bool check_incantation(server_t *server, player_t *player)
         return false;
     return true;
 }
-
-
