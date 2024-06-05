@@ -39,9 +39,11 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
             cmd->time = commands[i].time;
             break;
         }
+        if (commands[i + 1].name == NULL) {
+            free(cmd);
+            return;
+        }
     }
-    if (!cmd->ptr)
-        return;
     if (cmd->time == 0) {
         cmd->ptr(server, command, client);
         return;
