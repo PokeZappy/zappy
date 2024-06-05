@@ -92,6 +92,10 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
         }
         i = temp;
     }
+    if (args->_x < 10 || args->_x > 30 || args->_y < 10 || args->_y > 30) {
+        free_server_arg(args);
+        return 84;
+    }
     return 0;
 }
 
