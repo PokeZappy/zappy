@@ -41,14 +41,14 @@ void cmd_left(server_t *server, char *args, client_socket_t *client);
 void cmd_look(server_t *server, char *args, client_socket_t *client);
 void cmd_inventory(server_t *server, char *args, client_socket_t *client);
 void cmd_broadcast(server_t *server, char *args, client_socket_t *client);
-void cmd_slot(server_t *server, char *args, client_socket_t *client);
 void cmd_fork(server_t *server, char *args, client_socket_t *client);
 void cmd_eject(server_t *server, char *args, client_socket_t *client);
 void cmd_dead(server_t *server, char *args, client_socket_t *client);
 void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client);
 void cmd_take(server_t *server, char *args, client_socket_t *client);
 void cmd_set(server_t *server, char *args, client_socket_t *client);
-void cmd_incantation(server_t *server, char *args, client_socket_t *client);
+void cmd_pre_incant(server_t *server, char *args, client_socket_t *client);
+void cmd_post_incant(server_t *server, char *args, client_socket_t *client);
 
 // -- GUI -- //
 void cmd_msz(server_t *server, char *args, client_socket_t *client);

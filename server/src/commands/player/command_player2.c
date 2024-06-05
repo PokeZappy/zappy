@@ -54,8 +54,3 @@ void cmd_set(server_t *server, char *args, client_socket_t *client)
     free_str_array(parse_args);
     printf("set\n");
 }
-
-void cmd_incantation(server_t *server, char *args, client_socket_t *client)
-{
-    printf("incantation\n");
-}

@@ -47,6 +47,7 @@ player_t *add_player_to_team(char *team_name, server_t *server);
 char *player_look(server_t *server, player_t *player);
 void player_look_loop(server_t *server, player_t *p, int i, char *result);
 int nb_player_on_tile(server_t *server, vector_t tile_pos);
+bool check_incantation(server_t *server, player_t *player);
 
 // -- GRID RELATED -- //
 bool player_take_item(player_t *player, tiles_t *tile, int item);
