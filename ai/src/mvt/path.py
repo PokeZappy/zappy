@@ -1,11 +1,22 @@
 from math import floor
-from typing import Tuple
 
 from src.gameplay.enum_gameplay import Directions as face
 
 
 class Path(object):
-    def __init__(self, limit, start, end, facing):
+    """
+    A class to calculate paths from start to end points.
+    """
+    def __init__(self, limit: tuple[int, int], start: tuple[int, int], end: tuple[int, int], facing: int) -> None:
+        """
+        Initialize the Path object with limit, start, end points, and facing direction.
+
+        Args:
+        - limit: A tuple representing the limits of the path.
+        - start: A tuple representing the starting point.
+        - end: A tuple representing the end point.
+        - facing: An integer representing the initial facing direction.
+        """
         self.limit = limit
         self.start = start
         self.end = end
@@ -16,9 +27,6 @@ class Path(object):
     def calculate_paths(self) -> tuple[bool, bool, int, int, int, int]:
         """
         Calculate the paths to reach the end point from the start point.
-
-        Parameters:
-        - None
 
         Returns:
         - A tuple containing information about the directions to move (west, north, northward, eastward, southward, westward).
@@ -44,47 +52,71 @@ class Path(object):
             north = True
         return west, north, northward, eastward, southward, westward
 
-    def get_path(self) -> list[any]:
+    def get_path(self) -> list[str]:
         """
         Calculate the path to move from the start point to the end point based on the current facing direction.
 
         Returns:
         - A list of strings representing the directions to move.
         """
-        if self.end == self.start:
-            return []
         west, north, northward, eastward, southward, westward = self.calculate_paths()
         if self.facing == face.EAST.value or self.facing == face.WEST.value:
-            if west and eastward - 1 <= westward or not west:
-                self.path = [['Forward' * eastward]]
-                self.path_facing = [face.EAST.value]
-            else:
-                self.path = [['Forward' * westward]]
-                self.path_facing = [face.WEST.value]
-                print(self.path)
-            if north:
-                self.path += [['Forward'] * northward]
-                self.path_facing += [face.NORTH.value]
-            else:
-                self.path += [['Forward'] * southward]
-                self.path_facing += [face.SOUTH.value]
-        if self.facing == face.NORTH.value or self.facing == face.SOUTH.value:
-            if north and southward - 1 <= northward or not north:
-                self.path_facing = [face.SOUTH.value]
-                self.path = [['Forward'] * southward]
-            else:
-                self.path = [['Forward'] * northward]
-                self.path_facing = [face.NORTH.value]
-            if west:
-                self.path += [['Forward'] * westward]
-                self.path_facing += [face.WEST.value]
-            else:
-                self.path += [['Forward'] * eastward]
-                self.path_facing += [face.EAST.value]
-
+            self.calculate_horizontal_path(west, north, northward, eastward, southward, westward)
+        elif self.facing == face.NORTH.value or self.facing == face.SOUTH.value:
+            self.calculate_vertical_path(west, north, northward, eastward, southward, westward)
         return self.turns()
 
-    def turns(self):
+    def calculate_horizontal_path(self, west, north, northward, eastward, southward, westward):
+        """
+        Calculate the horizontal path based on the provided directions.
+
+        Args:
+        - west: A boolean indicating if the path is towards the west.
+        - north: A boolean indicating if the path is towards the north.
+        - northward: An integer representing the distance to move northward.
+        - eastward: An integer representing the distance to move eastward.
+        - southward: An integer representing the distance to move southward.
+        - westward: An integer representing the distance to move westward.
+        """
+        if west and eastward - 1 <= westward or not west:
+            self.path = [['Forward' * eastward]]
+            self.path_facing = [face.EAST.value]
+        else:
+            self.path = [['Forward' * westward]]
+            self.path_facing = [face.WEST.value]
+        if north:
+            self.path += [['Forward'] * northward]
+            self.path_facing += [face.NORTH.value]
+        else:
+            self.path += [['Forward'] * southward]
+            self.path_facing += [face.SOUTH.value]
+
+    def calculate_vertical_path(self, west, north, northward, eastward, southward, westward):
+        """
+        Calculate the vertical path based on the provided directions.
+
+        Args:
+        - west: A boolean indicating if the path is towards the west.
+        - north: A boolean indicating if the path is towards the north.
+        - northward: An integer representing the distance to move northward.
+        - eastward: An integer representing the distance to move eastward.
+        - southward: An integer representing the distance to move southward.
+        - westward: An integer representing the distance to move westward.
+        """
+        if north and southward - 1 <= northward or not north:
+            self.path_facing = [face.SOUTH.value]
+            self.path = [['Forward'] * southward]
+        else:
+            self.path = [['Forward'] * northward]
+            self.path_facing = [face.NORTH.value]
+        if west:
+            self.path += [['Forward'] * westward]
+            self.path_facing += [face.WEST.value]
+        else:
+            self.path += [['Forward'] * eastward]
+            self.path_facing += [face.EAST.value]
+
+    def turns(self) -> list[str]:
         """
         Determine the necessary turns to align with the path direction.
 
@@ -115,5 +147,4 @@ class Path(object):
                 self.path.insert(len(self.path) - 1, 'Left')
             else:
                 self.path.insert(len(self.path) - 1, 'Right')
-        print(self.path_facing)
         return self.path
