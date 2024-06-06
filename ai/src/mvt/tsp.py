@@ -2,7 +2,8 @@ from src.mvt.path import Path
 
 type actions = tuple[int, int] | list[str, list] | list[actions]
 
-class Held_krap:
+
+class HeldKrap(object):
     def __init__(self, limit: tuple[int, int], pos: tuple[int, int]) -> None:
         self.limit = limit
         self.pos = pos

@@ -1,5 +1,8 @@
 from enum import Enum
+from dataclasses import dataclass
 
+
+@dataclass
 class Ressources(Enum):
     NONE = 0
     LINEMATE = 1
@@ -11,6 +14,8 @@ class Ressources(Enum):
     FOOD = 7
     PLAYER = 8
 
+
+@dataclass
 class Directions(Enum):
     NORTH = 0
     EAST = 1

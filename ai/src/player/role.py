@@ -27,6 +27,7 @@ class Role(Player):
         self.is_watching = False
         self.update_actions = False
         self.allow_action = False
+        self.dir = None
 
     def set_goal(self) -> None:
         """

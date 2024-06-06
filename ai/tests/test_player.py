@@ -1,6 +1,6 @@
 import sys
 import os
-from src.gameplay.enum_gameplay import directions as dir
+from src.gameplay.enum_gameplay import Directions as dir
 import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

@@ -1,61 +1,119 @@
-class Path() :
-    def __init__(self, limit, start, end):
+from math import floor
+from typing import Tuple
+
+from src.gameplay.enum_gameplay import Directions as face
+
+
+class Path(object):
+    def __init__(self, limit, start, end, facing):
         self.limit = limit
         self.start = start
         self.end = end
         self.path = []
+        self.facing = facing
+        self.path_facing = []
 
-    def best_path(self):
-        dir = []
-        if self.end[0] - self.start[0] == 0:
-            dir.append(0)
-        elif self.end[0] - self.start[0] > 0:
-            if (self.end[0] - self.start[0])**2 >= (self.start[0])**2 + (self.limit[0] - self.end[0]**2):
-                dir.append(-1)
-            else:
-                dir.append(1)
+    def calculate_paths(self) -> tuple[bool, bool, int, int, int, int]:
+        """
+        Calculate the paths to reach the end point from the start point.
+
+        Parameters:
+        - None
+
+        Returns:
+        - A tuple containing information about the directions to move (west, north, northward, eastward, southward, westward).
+        """
+        west: bool = False
+        if self.end[0] - self.start[0] >= 0:
+            westward = self.end[0] - self.start[0]
+            eastward = self.start[0] + self.limit[0] - self.end[0]
         else:
-            if (self.end[0] - self.start[0])**2 >= ((self.limit[0] - self.start[0])**2 + self.end[0]**2):
-                dir.append(1)
-            else:
-                dir.append(-1)
-
-        if self.end[1] - self.start[1] == 0:
-            dir.append(0)
-        elif self.end[1] - self.start[1] > 0:
-            if (self.end[1] - self.start[1])**2 >= (self.start[1])**2 + (self.limit[1] - self.end[1]**2):
-                dir.append(-1)
-            else:
-                dir.append(1)
+            westward = self.limit[0] - self.start[0] + self.end[0]
+            eastward = self.start[0] - self.end[0]
+        north: bool = False
+        if self.end[1] - self.start[1] > 0:
+            northward = self.end[1] - self.start[1]
+            southward = self.start[1] + self.limit[1] - self.end[1]
         else:
-            if (self.end[1] - self.start[1])**2 >= ((self.limit[1] - self.start[1])**2 + self.end[1]**2):
-                dir.append(1)
-            else:
-                dir.append(-1)
-        return dir
+            northward = self.end[1] + self.limit[1] - self.start[1]
+            southward = self.start[1] - self.end[1]
 
-    def opti_path(self):
-        dir = self.best_path()
-        path = []
-        x = self.start[0]
-        y = self.start[1]
-        while x % self.limit[0] != self.end[0]:
-            x += dir[0]
-            path.append((x % self.limit[0], y))
-        x %= self.limit[0]
-        while y % self.limit[1] != self.end[1]:
-            y += dir[1]
-            path.append((x, y % self.limit[1]))
-        self.path.append(path)
-        x = self.start[0]
-        y = self.start[1]
-        path = []
-        while y % self.limit[1] != self.end[1]:
-            y += dir[1]
-            path.append((x, y % self.limit[1]))
-        y %= self.limit[1]
-        while x % self.limit[0] != self.end[0]:
-            x += dir[0]
-            path.append((x % self.limit[0], y))
-        self.path.append(path)
+        if westward < eastward:
+            west = True
+        if northward < southward:
+            north = True
+        return west, north, northward, eastward, southward, westward
+
+    def get_path(self) -> list[any]:
+        """
+        Calculate the path to move from the start point to the end point based on the current facing direction.
+
+        Returns:
+        - A list of strings representing the directions to move.
+        """
+        if self.end == self.start:
+            return []
+        west, north, northward, eastward, southward, westward = self.calculate_paths()
+        if self.facing == face.EAST.value or self.facing == face.WEST.value:
+            if west and eastward - 1 <= westward or not west:
+                self.path = [['Forward' * eastward]]
+                self.path_facing = [face.EAST.value]
+            else:
+                self.path = [['Forward' * westward]]
+                self.path_facing = [face.WEST.value]
+                print(self.path)
+            if north:
+                self.path += [['Forward'] * northward]
+                self.path_facing += [face.NORTH.value]
+            else:
+                self.path += [['Forward'] * southward]
+                self.path_facing += [face.SOUTH.value]
+        if self.facing == face.NORTH.value or self.facing == face.SOUTH.value:
+            if north and southward - 1 <= northward or not north:
+                self.path_facing = [face.SOUTH.value]
+                self.path = [['Forward'] * southward]
+            else:
+                self.path = [['Forward'] * northward]
+                self.path_facing = [face.NORTH.value]
+            if west:
+                self.path += [['Forward'] * westward]
+                self.path_facing += [face.WEST.value]
+            else:
+                self.path += [['Forward'] * eastward]
+                self.path_facing += [face.EAST.value]
+
+        return self.turns()
+
+    def turns(self):
+        """
+        Determine the necessary turns to align with the path direction.
+
+        Returns:
+        - A list of strings representing the turns to be made.
+        """
+        if self.facing in self.path_facing:
+            return
+        self.path = self.path[::-1]
+        self.path_facing = self.path_facing[::-1]
+        if self.facing not in self.path_facing and 0 < self.facing < 3:
+            if self.path_facing[0] > self.facing:
+                self.path = ['Right'] + self.path
+            else:
+                self.path = ['Left'] + self.path
+        elif self.facing not in self.path_facing and self.facing == 0 or self.facing == 3:
+            if self.path_facing[0] > self.facing:
+                self.path = ['Left'] + self.path
+            else:
+                self.path = ['Right'] + self.path
+        if 0 < self.path_facing[0] < 3:
+            if self.path_facing[1] > self.path_facing[0]:
+                self.path.insert(len(self.path) - 1, 'Right')
+            else:
+                self.path.insert(len(self.path) - 1, 'Left')
+        elif self.path_facing[0] == 0 or self.path_facing[0] == 3:
+            if self.path_facing[1] > self.path_facing[0]:
+                self.path.insert(len(self.path) - 1, 'Left')
+            else:
+                self.path.insert(len(self.path) - 1, 'Right')
+        print(self.path_facing)
         return self.path

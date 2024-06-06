@@ -4,8 +4,8 @@ import sys
 
 import socket
 import time
-
 import select
+
 from src.server import connexion
 from src.communication import cipher, messages, latin
 
@@ -188,28 +188,3 @@ def display_help() -> None:
     """
     print('USAGE: ./zappy_ai.py -p port -n name -h machine')
 
-
-def main():
-    """
-    The main function is the entry point of the program.
-
-    :return: sys.exit 0 or 84(error)
-    """
-    try:
-        if len(sys.argv) == 2 and sys.argv[1] == '--help':
-            return display_help()
-        if len(sys.argv) != 7:
-            raise ValueError
-        if sys.argv[1] != '-p' or sys.argv[3] != '-n' or sys.argv[5] != '-h':
-            raise ValueError
-        server_info, cli_socket = connexion.connect(sys.argv[2], sys.argv[4], sys.argv[6])
-        mybot = Bot(server_info, cli_socket)
-        mybot.run()
-    except (ValueError, AssertionError) as e:
-        print(f"NOP: {e}")
-        return 84
-    return 0
-
-
-if __name__ == "__main__":
-    main()
