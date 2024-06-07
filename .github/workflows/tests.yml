@@ -14,6 +14,7 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-    - name: Build & do test
-      run: |
-        make tests_run
+    - name: Install dependencies
+      run: pip install pytest pytest-cov
+    - name: Run tests
+      run: make tests_run
