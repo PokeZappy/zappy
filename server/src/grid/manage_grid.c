@@ -27,9 +27,7 @@ double *create_density(int tile_nbr)
 
 grid_t *init_grid(int width, int height)
 {
-    int case_nbr = width * height;
     grid_t *grid = (grid_t *)malloc(sizeof(grid_t));
-    double *densities = create_density(case_nbr);
 
     grid->_width = width;
     grid->_height = height;
@@ -38,9 +36,9 @@ grid_t *init_grid(int width, int height)
         grid->_tiles[i] = (tiles_t **)malloc(sizeof(tiles_t *) * width);
         for (int j = 0; j < width; j++)
             grid->_tiles[i][j] =
-                init_tile(densities, case_nbr, i * width + j + 1);
+                init_tile();
     }
-    free(densities);
+    generate_resource(grid);
     return grid;
 }
 
