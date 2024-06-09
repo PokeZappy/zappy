@@ -41,6 +41,7 @@ void player_move(player_t *player, int map_width, int map_height);
 void player_orientation(player_t *player, bool right);
 char *print_player_inventory(player_t *player);
 char *get_player_inventory(player_t *player);
+bool player_eject(server_t *server, player_t *player);
 
 // -- SERVER RELATED -- //
 player_t *add_player_to_team(char *team_name, server_t *server);

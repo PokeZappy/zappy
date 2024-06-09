@@ -10,6 +10,16 @@
 
 void cmd_eject(server_t *server, char *args, client_socket_t *client)
 {
+    player_t *player = client->player;
+    bool pushed = false;
+
+    if (!player)
+        return;
+    pushed = player_eject(server, player);
+    if (pushed == true)
+        dprintf(client->socket, "ok\n");
+    else
+        dprintf(client->socket, "ko\n");
     printf("eject\n");
 }
 
