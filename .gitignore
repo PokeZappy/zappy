@@ -5,8 +5,12 @@ a.out
 zappy_ai
 zappy_server
 zappy_gui
+binaries
+__pycache__
 zappy_ref-2-0-2
 *.log
 *.elf
 *.coverage
 __pycache__/
+zappy_test/
+*.d

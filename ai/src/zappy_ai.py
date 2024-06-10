@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+import socket
 import sys
 
 import socket
 import time
+import select
 
 from src.server import connexion
 from src.communication import cipher, messages, latin
@@ -13,7 +15,7 @@ class Bot(object):
     The Bot class is designed to interact with a server by sending specific action commands and managing the bot's state based on server information.
     """
 
-    def __init__(self, serv_info: list[int], cli_socket: socket):
+    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
         Initialize the Bot object with the client number and dimensions.
 
@@ -26,6 +28,8 @@ class Bot(object):
         self.cli_num = serv_info[0]
         self.dimensions = serv_info[1:]
         self.cli_socket = cli_socket
+        self.debug_mode = debug_mode
+        self.inout = [cli_socket]
         self.cipher = cipher.Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu") #m. Donec fringilla lectus et imperdiet hendrerit. Morbi eget risus volutpat, tincidunt tellus quis, maximus augue. Proin ac hendrerit mauris. Sed egestas sapien ac tellus sagittis laoreet. Cras sed pretium erat. Etiam ac aliquet ante. Vivamus ornare tellus quis ante eleifend, egestas fringilla velit suscipit. Nulla sollicitudin, erat non eleifend lobortis, lacus tortor luctus mi, at volutpat neque arcu facilisis dolor. Pellentesque eros sapien, dapibus eget mauris at, rhoncus gravida odio. Integer viverra velit eu mi tincidunt efficitur. Aenean vitae sem ipsum. Integer quam nibh, semper eu venenatis a, egestas et sem.")
         self.language = latin.Latin()
         self.message = messages.Messages(self.cipher, self.cli_num, self.language)
@@ -40,6 +44,8 @@ class Bot(object):
         :param action: The action command to be sent after validation.
         :return: None
         """
+        if self.debug_mode:
+            print(f"Sending action: {action}")
         self.cli_socket.send(action.encode())
 
     def recv_action(self) -> str:
@@ -48,8 +54,13 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        message_recv: str = self.cli_socket.recv(1024).decode()
-        return self.message.receive(message_recv)
+        if self.debug_mode:
+            print("Receiving action...")
+        rec: str = self.cli_socket.recv(1024).decode()
+        message = self.message.receive(rec)
+        if self.debug_mode:
+            print(f"Received action: {message}")
+        return message
 
     def forward(self) -> None:
         """
@@ -131,7 +142,7 @@ class Bot(object):
         """
         self.send_action("Eject\n")
 
-    def take_obj(self) -> None:
+    def take_obj(self, obj: str) -> None:
         """
         Take an object from the current tile.
 
@@ -139,15 +150,15 @@ class Bot(object):
 
         :return: None
         """
-        self.send_action("Take object\n")
+        self.send_action(f"Take {obj}\n")
 
-    def set_obj(self) -> None:
+    def set_obj(self, obj: str) -> None:
         """
         Set the specified object on the current tile.
 
         :return: None
         """
-        self.send_action("Set object\n")
+        self.send_action(f"Set {obj}\n")
 
     def incantation(self) -> None:
         """
@@ -177,28 +188,3 @@ def display_help() -> None:
     """
     print('USAGE: ./zappy_ai.py -p port -n name -h machine')
 
-
-def main():
-    """
-    The main function is the entry point of the program.
-
-    :return: sys.exit 0 or 84(error)
-    """
-    try:
-        if len(sys.argv) == 2 and sys.argv[1] == '--help':
-            return display_help()
-        if len(sys.argv) != 7:
-            raise ValueError
-        if sys.argv[1] != '-p' or sys.argv[3] != '-n' or sys.argv[5] != '-h':
-            raise ValueError
-        server_info, cli_socket = connexion.connect(sys.argv[2], sys.argv[4], sys.argv[6])
-        mybot = Bot(server_info, cli_socket)
-        mybot.run()
-    except (ValueError, AssertionError) as e:
-        print(f"NOP: {e}")
-        return 84
-    return 0
-
-
-if __name__ == "__main__":
-    main()
