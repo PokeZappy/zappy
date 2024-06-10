@@ -25,7 +25,7 @@ NAME			=	zappy_gui
 
 INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
 DBGFLAGS		=	-g3 -O0
-CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
+CXXFLAGS		=	-std=c++2a -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
 DEPSFLAGS		=	-MMD -MP
 
