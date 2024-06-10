@@ -28,7 +28,8 @@ bool player_eject(server_t *server, player_t *player)
     TAILQ_FOREACH(client, &server->_head_client_sockets, entries) {
         if (!client->player)
             continue;
-        if (client->player->_pos._x == player->_pos._x && client->player->_pos._y == player->_pos._y) {
+        if (client->player->_pos._x == player->_pos._x &&
+        client->player->_pos._y == player->_pos._y) {
             push_player(client, player);
             pushed = true;
         }

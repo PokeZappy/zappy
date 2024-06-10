@@ -75,3 +75,7 @@ void hack_player_dir(server_t *server, char *args, client_socket_t *client);
 // Add Command to List
 void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args);
 void execute_command(server_t *server);
+delayed_command_t *last_client_command(server_t *server, client_socket_t *c);
+int how_many_in_queue(server_t *server, client_socket_t *c);
+int calc_delay(server_t *server, client_socket_t *c, int time);
+void delete_last_cmd(server_t *server, client_socket_t *c);

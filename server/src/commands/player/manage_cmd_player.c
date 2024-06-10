@@ -22,9 +22,10 @@ static const command_t commands[] = {
     {"set", cmd_set, 7},
     {"incantation", cmd_pre_incant, 0},
     {"EXIT", exit_command, 0},
-    {"HACK_DIR", hack_player_dir, 7},
-    {"HACK_POS", hack_player_pos, 7},
+    {"HACK_DIR", hack_player_dir, 0},
+    {"HACK_POS", hack_player_pos, 0},
     {"CLIENT_LIST", print_client_list, 0},
+    {"test", cmd_forward, 300},
     {NULL, NULL, 0}
 };
 
@@ -43,10 +44,6 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
             free(cmd);
             return;
         }
-    }
-    if (cmd->time == 0) {
-        cmd->ptr(server, command, client);
-        return;
     }
     actl(server, client, cmd, command);
 }
