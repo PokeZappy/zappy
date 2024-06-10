@@ -16,6 +16,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
     - name: Install pytest
-      run: pip install pytest pytest-cov
+      run: pip install pytest pytest-cov pytest-mock
     - name: Make unit tests
       run: make tests_run
