@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-#      - dev-ia
+      - dev-ia
 
 jobs:
   build:
@@ -15,6 +15,7 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-    - name: Build & do test
-      run: |
-        make tests_run
+    - name: Install pytest
+      run: pip install pytest pytest-cov
+    - name: Make unit tests
+      run: make tests_run
