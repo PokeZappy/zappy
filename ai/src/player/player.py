@@ -197,6 +197,8 @@ class Player(zappy_ai.Bot):
             self.look_around()
         elif action == 'Fork':
             self.create_egg()
+        elif action == 'Slots':
+            self.nbr_of_slot()
         elif isinstance(action, tuple):
             self.move(action, self.dir)
 
@@ -220,31 +222,24 @@ class Player(zappy_ai.Bot):
         pass
 
     def run(self) -> None:
+        #TODO: implement death
         """
         This method is the main loop of the ai.
 
         :return: None
         """
-        # while self.level < self.LEVEL_MAX:
-        #     infds, outfds, _ = select.select(self.inout, self.inout, [])
-        #
-        #     """
-        #     infds: list[socket] - The list of sockets to read from.
-        #     """
-        #     if len(infds) != 0:
-        #         buf = self.recv_action()
-        #         self.recv_treatment(buf)
-        #
-        #     """
-        #     outfds: list[socket] - The list of sockets to write to.
-        #     """
-        #     if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
-        #         self.make_action()
-        for _ in range(10):
-            self.forward()
-            print(self.recv_action())
-        # message = self.message.send("collectio militum : ")
-        # print(message)
-        # self.broadcast('collection militum : ')
-        print(self.recv_action())
-        print(self.recv_action())
+        while self.level < self.LEVEL_MAX:
+            infds, outfds, _ = select.select(self.inout, self.inout, [])
+        
+            """
+            infds: list[socket] - The list of sockets to read from.
+            """
+            if len(infds) != 0:
+                buf = self.recv_action()
+                self.recv_treatment(buf)
+        
+            """
+            outfds: list[socket] - The list of sockets to write to.
+            """
+            if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
+                self.make_action()

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import sys
 from src.server import connexion
-from src.player.progenitor import Progenitor
+from src.player.parent_ai import ParentAI
 
-from src.zappy_ai import display_help
+from src.zappy_ai import display_help, connection
 
 
 def main():
@@ -30,9 +30,8 @@ def main():
                 debug = True
             elif sys.argv[i - 1] != '-p' and sys.argv[i - 1] != '-n' and sys.argv[i - 1] != '-h':
                 raise ValueError("Invalid argument")
-        server_info, cli_socket = connexion.connect(port, name, machine)
-        print(f"Connected to {machine}:{port}")
-        mybot = Progenitor(server_info, cli_socket, debug)
+        server_info, cli_socket = connection(port, name, machine)
+        mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")
