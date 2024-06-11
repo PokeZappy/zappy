@@ -6,3 +6,4 @@ def is_all_val0(dict, not_contains = []):
         if val != 0 and val not in not_contains:
             return False
     return True
+

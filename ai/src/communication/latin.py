@@ -40,5 +40,8 @@ class Latin(object):
                                        'strat ressources': 'omnis venite ut',
 
                                        'divertis-moi (peroquet)': 'oblectas',
-                                       'pousse les autres': 'officium tuum est ad ventilabis inimicos'
+                                       'pousse les autres': 'officium tuum est ad ventilabis inimicos',
+
+                                       'qui est le mastermind ?': 'quis est dominus mentis',
+                                       'c\'est moi': 'ego sum',
                                        }

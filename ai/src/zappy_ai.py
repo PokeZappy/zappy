@@ -14,6 +14,10 @@ class Bot(object):
     """
     The Bot class is designed to interact with a server by sending specific action commands and managing the bot's state based on server information.
     """
+    INCANTATION = 300
+    FORK = 42
+    INVENTORY = 1
+    ACTION = 7
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
@@ -33,6 +37,7 @@ class Bot(object):
         self.cipher = cipher.Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu") #m. Donec fringilla lectus et imperdiet hendrerit. Morbi eget risus volutpat, tincidunt tellus quis, maximus augue. Proin ac hendrerit mauris. Sed egestas sapien ac tellus sagittis laoreet. Cras sed pretium erat. Etiam ac aliquet ante. Vivamus ornare tellus quis ante eleifend, egestas fringilla velit suscipit. Nulla sollicitudin, erat non eleifend lobortis, lacus tortor luctus mi, at volutpat neque arcu facilisis dolor. Pellentesque eros sapien, dapibus eget mauris at, rhoncus gravida odio. Integer viverra velit eu mi tincidunt efficitur. Aenean vitae sem ipsum. Integer quam nibh, semper eu venenatis a, egestas et sem.")
         self.language = latin.Latin()
         self.message = messages.Messages(self.cipher, self.cli_num, self.language)
+        self.life = 1260
         print(self.cli_num)
         print(self.dimensions)
         print(self.cli_socket)
@@ -67,6 +72,7 @@ class Bot(object):
         Sends a 'Forward' command to the server to move up one tile.
         :return: None
         """
+        self.life -= self.Action
         self.send_action("Forward\n")
 
     def right(self) -> None:
@@ -75,6 +81,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.Action
         self.send_action("Right\n")
 
     def left(self) -> None:
@@ -83,6 +90,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.Action
         self.send_action("Left\n")
 
     def look_around(self) -> None:
@@ -91,6 +99,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.Action
         self.send_action("Look\n")
 
     def inventory(self) -> None:
@@ -99,6 +108,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.INVENTORY
         self.send_action("Inventory\n")
 
     def broadcast(self, msg: str, coord: tuple[int, int] = None) -> None:
@@ -109,6 +119,7 @@ class Bot(object):
          :param coord: (int, int) - The coordinates of the message. Defaults to None.
          :return: None
          """
+        self.life -= self.Action
         if coord is None:
             self.send_action(f'{self.message.send(msg)}\n')
         else:
@@ -130,6 +141,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.FORK
         self.send_action("Fork\n")
 
     def eject(self) -> None:
@@ -150,6 +162,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.Action
         self.send_action(f"Take {obj}\n")
 
     def set_obj(self, obj: str) -> None:
@@ -158,6 +171,7 @@ class Bot(object):
 
         :return: None
         """
+        self -= self.Action
         self.send_action(f"Set {obj}\n")
 
     def incantation(self) -> None:
@@ -168,6 +182,7 @@ class Bot(object):
 
         :return: None
         """
+        self.life -= self.INCANTATION
         self.send_action("Incantation\n")
 
     def run(self) -> None:

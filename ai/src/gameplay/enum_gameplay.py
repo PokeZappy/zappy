@@ -27,3 +27,4 @@ class Directions(Enum):
 
 class RoleInGame(Enum):
     PROGENITOR = 0
+    MASTERMIND = 1

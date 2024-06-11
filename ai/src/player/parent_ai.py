@@ -9,11 +9,11 @@ class ParentAI(Player):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False,
                  machine: str = None, port: str = None, name: str = None):
         super().__init__(serv_info, cli_socket, debug_mode)
-        # TODO: put away the 642 by a constant 2 constant and separtate the 42 from the 600
         self.serv_info = serv_info
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
-        self.counter = 642
+        self.counter = self.INCUBATION_TIME + self.FORK_ACTION
+        self.gave_birth = 0
         self.role = RoleInGame.PROGENITOR
         self.machine = machine
         self.port = port
@@ -41,6 +41,7 @@ class ParentAI(Player):
         elif pid == 0:
             self.fork(role)
         else:
+            self.gave_birth += 1
             return
 
     # def apply_action(self, buf: str) -> None:
@@ -53,27 +54,74 @@ class ParentAI(Player):
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
         print(buf)
-        if buf == 'ok':
-            # TODO: make brodacast with cyprien
+        if self.role == RoleInGame.PROGENITOR:
+            if buf == 'ok':
+                # TODO: make brodacast with cyprien
 
-            # if self.is_broadcast(buf):
-            #     self.apply_broadcast(buf)
-            #     return
-            # self.apply_action(buf)
-            l = 1
-        elif buf.isnumeric() and int(buf) > 0:
-            self.real_fork()
+                # if self.is_broadcast(buf):
+                #     self.apply_broadcast(buf)
+                #     return
+                # self.apply_action(buf)
+                l = 1
+            elif buf.isnumeric() and int(buf) > 0:
+                counter = int(buf)
+                for _ in range(counter, 0, -1):
+                    self.real_fork()
+            else:
+                #TODO: communication broadcast
+                return
+        elif RoleInGame.MASTERMIND:
+            if buf == 'ok':
+                self.update_ok()
+            elif buf.isnumeric() and int(buf) > 0:
+                counter = int(buf)
+                for _ in range(counter, 0, -1):
+                    self.real_fork()
+            else:
+                #TODO: communication broadcast
+                return
         self.actions.pop(0)
+
+    def action_as_progenitor(self) -> None:
+        """
+        This is being used when parent_ai is a progenitor
+        """
+        if self.counter >= 0:
+            self.counter -= self.FORK_ACTION
+        self.queue.append('Fork')
+        if self.counter <= 0:
+            self.give_birth()
+        if self.gave_birth == 2:
+            self.queue.append('Forward')
+            self.role = RoleInGame.MASTERMIND
+
+
+    def communicate_orders(self) -> None:
+        """
+        This method communicates the orders to the mastermind.
+        """
+        #TODO: implement the communication between the mastermind and the putas
+        pass
+
+    def action_as_mastermind(self) -> None:
+        """
+        This is being used when parent_ai is a mastermind
+        """
+        if len(self.queue) > 0:
+            return
+        self.queue.append('Slots')
+        if self.life <= self.HUNGRY and self.nbr_food > 0:
+            self.queue.append('Take food')
+        else:
+            self.communicate_orders()
+        self.apply_action()
 
     def make_action(self) -> None:
         """
-        TODO: put away the 42 by a constant
+        This method makes the action of the player.
         """
-        if len(self.actions) > 10:
-            return
-        if self.role == RoleInGame.PROGENITOR and self.counter >= 0:
-            self.counter -= 42
-        self.queue.append('Fork')
-        if self.role == RoleInGame.PROGENITOR and self.counter <= 0:
-            self.give_birth()
+        if self.role == RoleInGame.PROGENITOR:
+            self.action_as_progenitor()
+        elif self.role == RoleInGame.MASTERMIND:
+            self.action_as_mastermind()
         self.apply_action()
