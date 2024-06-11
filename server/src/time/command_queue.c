@@ -10,18 +10,22 @@
 void execute_command(server_t *server)
 {
     delayed_command_t *delayed_command;
+    delayed_command_t *tmp;
 
-    TAILQ_FOREACH(delayed_command, &server->_head_delayed_commands, entries) {
+    delayed_command = TAILQ_FIRST(&server->_head_delayed_commands);
+    while (delayed_command != NULL) {
+        tmp = TAILQ_NEXT(delayed_command, entries);
         if (delayed_command->_delay <= 0) {
             delayed_command->_func(server, delayed_command->_args,
-            delayed_command->_client);
-            TAILQ_REMOVE(&server->_head_delayed_commands, delayed_command,
-            entries);
+                delayed_command->_client);
+            TAILQ_REMOVE(&server->_head_delayed_commands,
+                delayed_command, entries);
             free(delayed_command->_args);
             free(delayed_command);
         } else {
             delayed_command->_delay--;
         }
+        delayed_command = tmp;
     }
     return;
 }
