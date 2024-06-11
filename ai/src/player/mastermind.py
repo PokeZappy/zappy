@@ -1,0 +1,3 @@
+class mastermind():
+
+    pass

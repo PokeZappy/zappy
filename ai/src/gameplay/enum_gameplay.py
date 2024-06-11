@@ -19,3 +19,6 @@ class Directions(Enum):
 
     def __add__(self, other):
         return (self.value + other) % 4
+
+class RoleInGame(Enum):
+    PROGENITOR = 0
