@@ -1,13 +1,14 @@
+import socket
+import select
+import random
 from abc import abstractmethod
+from datetime import datetime
+
 import src.mvt.tsp as tsp
 import src.zappy_ai as zappy_ai
-import socket
-import random
 from src.gameplay.enum_gameplay import Directions as dir
-from datetime import datetime
 from src.mvt.path import Path
 from src.gameplay.enum_gameplay import Ressources as res
-import select
 
 
 class Player(zappy_ai.Bot):
@@ -20,36 +21,33 @@ class Player(zappy_ai.Bot):
         :param debug_mode: bool - The debug mode.
         """
         super().__init__(serv_info, cli_socket, debug_mode)
-        self.limit = self.dimensions
-        self.pos = (0, 0)
+        self.limit: list[int] = self.dimensions
+        self.pos: tuple[int, int] = (0, 0)
         self.inv = {}
-        self.map_knowledge = [[{} for _ in range(self.limit[0])] for _ in range(self.limit[1])]
+        self.map_knowledge: list[list[dict]] = [[{} for _ in range(self.limit[0])] for _ in range(self.limit[1])]
         self.parent = None
-        self.level = 1
+        self.level: int = 1
         self.actions = []
         self.queue = []
-        self.LIMIT_QUEUE = 10
-        self.LEVEL_MAX = 8
-    
+        self.LIMIT_QUEUE: int = 10
+        self.LEVEL_MAX: int = 8
+        self.inventory: dict[str: int] = {'food': 10,
+                                          'linemate': 0,
+                                          'deraumere': 0,
+                                          'sibur': 0,
+                                          'mendiane': 0,
+                                          'phiras': 0,
+                                          'thystame': 0
+                                          }
+
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
         self.id = random
 
-        #TODO: improve the life system
-        self.life = 1260
+        self.life = 126 * self.inventory['food']
     
         #TODO: improve the direction system
         self.dir = dir.NORTH
-
-
-    def speak(self, message: str) -> None:
-        """
-        This method makes the player speak.
-
-        :param message: str - The message to be sent.
-        :return: None
-        """
-        self.send_action(f"Broadcast {message}\n")
 
     def create_egg(self) -> None:
         """
@@ -92,8 +90,7 @@ class Player(zappy_ai.Bot):
         self.forward()
         self.actions.append('Forward\n')
 
-
-    def move(self, mvt: list, dire: dir) -> None:
+    def move(self, mvt: list | tuple, dire: dir) -> None:
         """
         This method makes the player move.
 
@@ -101,7 +98,7 @@ class Player(zappy_ai.Bot):
         :param dire: dir - The direction to move.
         :return: None
         """
-        if mvt == []:
+        if not mvt:
             return
         if self.pos[0] == mvt[0]:
             if self.pos[1] < mvt[1]:
@@ -121,7 +118,7 @@ class Player(zappy_ai.Bot):
         :return: bool - True if the incantation is done, False otherwise.
         """
         for i in self.goal:
-            Path(self.limit, self.pos, (0, 0)).opti_path()
+            Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
             for j in self.inv:
                 if i[0] == j[0]:
                     self.send_action(f"Set {i[0]}\n")
@@ -135,10 +132,9 @@ class Player(zappy_ai.Bot):
         :param pos: tuple[int, int] - The position to move to.
         :return: None
         """
-        path = Path(self.limit, self.pos, pos).opti_path()
+        path = Path(self.limit, self.pos, pos, self.dir).opti_path()
         for mvt in path:
             self.queue.append(mvt)
-        
 
     def pos_view(self, axis: str, i: int, dire: dir) -> int:
         """
@@ -159,7 +155,7 @@ class Player(zappy_ai.Bot):
             sense = -1
         if axis == 'x':
             for j in range(0, 9):
-                if i >= j * (j + 1) - j and i <= j * (j + 1) + j:
+                if j * (j + 1) - j <= i <= j * (j + 1) + j:
                     return sense * (i - j * (j + 1))
         elif axis == 'y':
             return sense * int(i ** 0.5)
@@ -201,7 +197,7 @@ class Player(zappy_ai.Bot):
             self.look_around()
         elif action == 'Fork':
             self.create_egg()
-        elif type(action) == tuple:
+        elif isinstance(action, tuple):
             self.move(action, self.dir)
 
     @abstractmethod
@@ -212,24 +208,43 @@ class Player(zappy_ai.Bot):
     def make_action(self) -> None:
         pass
 
+    def update_inventory(self, new_object: str, action: bool) -> None:
+        """
+        TODO - doit être appelé quand on vient récup un obt
+        """
+        if action:
+            self.inventory[new_object] += 1
+        else:
+            self.inventory[new_object] -= 1
+
+        pass
+
     def run(self) -> None:
         """
         This method is the main loop of the ai.
 
         :return: None
         """
-        while self.level < self.LEVEL_MAX:
-            infds, outfds, _ = select.select(self.inout, self.inout, [])
-
-            """
-            infds: list[socket] - The list of sockets to read from.
-            """
-            if len(infds) != 0:
-                buf = self.recv_action()
-                self.recv_treatment(buf)
-
-            """
-            outfds: list[socket] - The list of sockets to write to.
-            """
-            if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
-                self.make_action()
+        # while self.level < self.LEVEL_MAX:
+        #     infds, outfds, _ = select.select(self.inout, self.inout, [])
+        #
+        #     """
+        #     infds: list[socket] - The list of sockets to read from.
+        #     """
+        #     if len(infds) != 0:
+        #         buf = self.recv_action()
+        #         self.recv_treatment(buf)
+        #
+        #     """
+        #     outfds: list[socket] - The list of sockets to write to.
+        #     """
+        #     if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
+        #         self.make_action()
+        for _ in range(10):
+            self.forward()
+            print(self.recv_action())
+        # message = self.message.send("collectio militum : ")
+        # print(message)
+        # self.broadcast('collection militum : ')
+        print(self.recv_action())
+        print(self.recv_action())

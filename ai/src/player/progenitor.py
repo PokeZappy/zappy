@@ -1,5 +1,7 @@
-from src.player.player import Player
 import socket
+
+from src.player.player import Player
+
 
 class Progenitor(Player):
 

@@ -1,10 +1,10 @@
-#!/bin/python3
-
+#!/usr/bin/env python3
 import sys
 from src.server import connexion
 from src.player.progenitor import Progenitor
 
 from src.zappy_ai import display_help
+
 
 def main():
     """

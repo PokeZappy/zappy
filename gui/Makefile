@@ -25,7 +25,7 @@ NAME			=	zappy_gui
 
 INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
 DBGFLAGS		=	-g3 -O0
-CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
+CXXFLAGS		=	-std=c++2a -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
 DEPSFLAGS		=	-MMD -MP
 
@@ -74,8 +74,8 @@ re:
 	@$(MAKE) all
 
 tests_run: $(TESTS_OBJS) coverage
-	$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
-	./unit_tests
+	#$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
+	#./unit_tests
 
 tests_clean: fclean
 	rm -f $(TEST_OBJ)

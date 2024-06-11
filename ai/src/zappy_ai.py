@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 import socket
 import sys
+
+import socket
+import time
 import select
+
 from src.server import connexion
+from src.communication import cipher, messages, latin
 
 
 class Bot(object):
@@ -25,6 +30,9 @@ class Bot(object):
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
         self.inout = [cli_socket]
+        self.cipher = cipher.Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu") #m. Donec fringilla lectus et imperdiet hendrerit. Morbi eget risus volutpat, tincidunt tellus quis, maximus augue. Proin ac hendrerit mauris. Sed egestas sapien ac tellus sagittis laoreet. Cras sed pretium erat. Etiam ac aliquet ante. Vivamus ornare tellus quis ante eleifend, egestas fringilla velit suscipit. Nulla sollicitudin, erat non eleifend lobortis, lacus tortor luctus mi, at volutpat neque arcu facilisis dolor. Pellentesque eros sapien, dapibus eget mauris at, rhoncus gravida odio. Integer viverra velit eu mi tincidunt efficitur. Aenean vitae sem ipsum. Integer quam nibh, semper eu venenatis a, egestas et sem.")
+        self.language = latin.Latin()
+        self.message = messages.Messages(self.cipher, self.cli_num, self.language)
         print(self.cli_num)
         print(self.dimensions)
         print(self.cli_socket)
@@ -48,10 +56,11 @@ class Bot(object):
         """
         if self.debug_mode:
             print("Receiving action...")
-        rec = self.cli_socket.recv(1024).decode()
+        rec: str = self.cli_socket.recv(1024).decode()
+        message = self.message.receive(rec)
         if self.debug_mode:
-            print(f"Received action: {rec}")
-        return rec
+            print(f"Received action: {message}")
+        return message
 
     def forward(self) -> None:
         """
@@ -76,16 +85,15 @@ class Bot(object):
         """
         self.send_action("Left\n")
 
-    def look_around(self):
+    def look_around(self) -> None:
         """
         Send a 'Look' command to look around.
 
-        :return: The view of the bot after looking around.
+        :return: None
         """
         self.send_action("Look\n")
 
-
-    def inventory(self):
+    def inventory(self) -> None:
         """
         Send a 'Inventory' command to check the inventory.
 
@@ -93,14 +101,18 @@ class Bot(object):
         """
         self.send_action("Inventory\n")
 
-    def broadcast(self, msg: str) -> None:
+    def broadcast(self, msg: str, coord: tuple[int, int] = None) -> None:
         """
          Send a broadcast message to all bots.
 
          :param msg: str - The message to broadcast.
+         :param coord: (int, int) - The coordinates of the message. Defaults to None.
          :return: None
          """
-        self.send_action(f"Broadcast {msg}\n")
+        if coord is None:
+            self.send_action(f'{self.message.send(msg)}\n')
+        else:
+            self.send_action(f'{self.message.send_coord(msg, coord)}\n')
 
     def nbr_of_slot(self) -> None:
         """
@@ -158,11 +170,21 @@ class Bot(object):
         """
         self.send_action("Incantation\n")
 
+    def run(self) -> None:
+        for _ in range(10):
+            self.forward()
+            print(self.recv_action())
+        # message = self.message.send("collectio militum : ")
+        # print(message)
+        # self.broadcast('collection militum : ')
+        print(self.recv_action())
+        print(self.recv_action())
 
-def display_help() -> 0:
+
+def display_help() -> None:
     """
 
     :return:
     """
-    print(f"USAGE: ./zappy_ai.py -p port -n name -h machine")
-    return 0
+    print('USAGE: ./zappy_ai.py -p port -n name -h machine')
+
