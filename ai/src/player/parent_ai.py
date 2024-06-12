@@ -18,6 +18,7 @@ class ParentAI(Player):
         self.machine = machine
         self.port = port
         self.name = name
+        self.first_round = [True, True]
     
     def fork(self, role: RoleInGame) -> None:
         match role:
@@ -51,9 +52,18 @@ class ParentAI(Player):
     #     elif buf.__contains__('death'):
     #         self.actions.append()
 
+    def real_fork_addaptativ(self) -> None:
+        #TODO: implement the real_fork_addaptativ with cyprien
+        #TODO: see how we handle the strategy with him
+        pass
+
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
         print(buf)
+        if self.first_round[1] and buf.isnumeric():
+            for _ in range(int(buf), 0, -1):
+                self.real_fork_addaptativ()
+            self.first_round[1] = False
         if self.role == RoleInGame.PROGENITOR:
             if buf == 'ok':
                 # TODO: make brodacast with cyprien
@@ -120,6 +130,11 @@ class ParentAI(Player):
         """
         This method makes the action of the player.
         """
+        if self.first_round[0]:
+            self.queue.append('Slots')
+            self.first_round[0] = False
+        if self.first_round[1]:
+            return
         if self.role == RoleInGame.PROGENITOR:
             self.action_as_progenitor()
         elif self.role == RoleInGame.MASTERMIND:
