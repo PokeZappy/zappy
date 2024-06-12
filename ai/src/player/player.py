@@ -5,13 +5,14 @@ from abc import abstractmethod
 from datetime import datetime
 
 import src.mvt.tsp as tsp
-import src.zappy_ai as zappy_ai
+from src.zappy_ai import Bot
 from src.gameplay.enum_gameplay import Directions as dir
 from src.mvt.path import Path
 from src.gameplay.enum_gameplay import Ressources as res
 from src.utils.info_look import look_ressources
 
-class Player(zappy_ai.Bot):
+
+class Player(Bot):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
         This class is the player class.

@@ -91,7 +91,7 @@ class Messages(object):
         print(f'result :\n{result}')
         return result
 
-    def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None ) -> None:
+    def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None) -> None:
         if coord is None:
             self.buf_msg_without_coord(message, receiver_id)
         else:

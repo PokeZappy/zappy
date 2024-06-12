@@ -2,7 +2,7 @@ import socket
 from abc import ABC
 
 from src.player.player import Player
-from src.utils.info_look import look_ressources, only_forward_resources
+from src.utils.info_look import look_resources, only_forward_resources
 
 
 class Collector(Player):
@@ -46,47 +46,47 @@ class Collector(Player):
         for _ in range(self.limit[0] + 1):
             self.look_around()
             tiles = self.recv_action()
-            tiles = look_ressources(tiles, focus)
+            tiles = look_resources(tiles, focus)
             tiles = only_forward_resources(tiles)
             self.raids_resources(tiles, focus)
     #         TODO - check if food needed -> search_food()
 
     def search_lvl_1(self, focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']) -> None:
-        # TODO : regarde puis tourne dans l'angle avec le plus de ressources (sinon) par défaut droite
+        # TODO : regarde puis tourne dans l'angle avec le plus de resources (sinon) par défaut droite
         #  regarde pour savoir s'il a un truc sur la case puis avance tourne avance ramasse avance ramasse, etc
-        #  sortie de la boucle quand les ressources sont toutes récup et pas besoin de chercher la nourriture.
+        #  sortie de la boucle quand les resources sont toutes récup et pas besoin de chercher la nourriture.
         while True:
             self.check_inventory()
             self.recv_action()
             self.look_around()
             around: str = self.recv_action()
-            vision_ressources = look_ressources(around, focus)
-            print(vision_ressources)
-            for i in vision_ressources[0]:
+            vision_resources = look_resources(around, focus)
+            print(vision_resources)
+            for i in vision_resources[0]:
                 if i in focus:
                     self.take_obj(i)
                     result = self.recv_action()
                     if result == 'ok':
                         self.inventory[i] += 1
-        #     TODO : savoir si plus de ressources à gauche qu'à droite
-            if len(vision_ressources[1]) == len(vision_ressources[:-1]) == 0:
+        #     TODO : savoir si plus de resources à gauche qu'à droite
+            if len(vision_resources[1]) == len(vision_resources[:-1]) == 0:
         #     tout droit
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[2]:
+                for i in vision_resources[2]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
                         if result == 'ok':
                             self.inventory[i] += 1
-            elif len(vision_ressources[1]) < len(vision_ressources[-1]):
+            elif len(vision_resources[1]) < len(vision_resources[-1]):
                 self.left()
                 self.recv_action()
                 self.forward()
                 self.recv_action()
                 self.look_around()
                 around = self.recv_action()
-                tile = look_ressources(around, focus)
+                tile = look_resources(around, focus)
                 for i in tile[0]:
                     if i in focus:
                         self.take_obj(i)
@@ -97,7 +97,7 @@ class Collector(Player):
                 self.recv_action()
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[-1]:
+                for i in vision_resources[-1]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
@@ -105,7 +105,7 @@ class Collector(Player):
                             self.inventory[i] += 1
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[2]:
+                for i in vision_resources[2]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
@@ -113,7 +113,7 @@ class Collector(Player):
                             self.inventory[i] += 1
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[1]:
+                for i in vision_resources[1]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
@@ -127,7 +127,7 @@ class Collector(Player):
                 self.recv_action()
                 self.look_around()
                 around = self.recv_action()
-                tile = look_ressources(around, focus)
+                tile = look_resources(around, focus)
                 for i in tile[0]:
                     if i in focus:
                         self.take_obj(i)
@@ -138,7 +138,7 @@ class Collector(Player):
                 self.recv_action()
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[1]:
+                for i in vision_resources[1]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
@@ -146,7 +146,7 @@ class Collector(Player):
                             self.inventory[i] += 1
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[2]:
+                for i in vision_resources[2]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()
@@ -154,7 +154,7 @@ class Collector(Player):
                             self.inventory[i] += 1
                 self.forward()
                 self.recv_action()
-                for i in vision_ressources[-1]:
+                for i in vision_resources[-1]:
                     if i in focus:
                         self.take_obj(i)
                         result = self.recv_action()

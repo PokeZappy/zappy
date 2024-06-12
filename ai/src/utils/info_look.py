@@ -1,20 +1,20 @@
 
-ressources = {'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, 'food': 0, 'player': 0}
+resources = {'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, 'food': 0, 'player': 0}
 
 
-def look_ressources(around: str, focus: list[str]) -> list[list[str]]:
+def look_resources(around: str, focus: list[str]) -> list[list[str]]:
     if len(around) < 8:
         return []
     my_list = around[8:-2].split(',')
-    world_ressources = [tile.split() for tile in my_list]
-    focus_ressources = []
-    for tile in world_ressources:
+    world_resources = [tile.split() for tile in my_list]
+    focus_resources = []
+    for tile in world_resources:
         new_tile= []
         for items in tile:
             if items in focus:
                 new_tile.append(items)
-        focus_ressources.append(new_tile)
-    return focus_ressources
+        focus_resources.append(new_tile)
+    return focus_resources
 
 
 def only_forward_resources(tiles: list[list[str]]) -> list[list[str]]:

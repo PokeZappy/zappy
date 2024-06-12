@@ -18,6 +18,7 @@ class Latin(object):
 
                                        'inventaire des explorateur': 'quid habes ut nobis offerat',
                                        'etat ressources': 'ut inventarium rerum',
+                                       'ressources placés pour l\'incantation': 'facultates positas carmina',
 
                                        'assignation rôles': 'assignationem partium : ',
                                        'nouvelle tâche': 'habes novum negotium : ',
