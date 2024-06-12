@@ -166,7 +166,8 @@ class Collector(Player):
         self.search_lvl_1('food')
 
     def run(self) -> None:
-        # self.check_inventory()
+        self.check_inventory()
+        print(f'"{self.recv_action()}"')
         # self.recv_action()
         # self.search_lvl_1()
-        self.mouving_straight(0)
+        # self.mouving_straight(0)

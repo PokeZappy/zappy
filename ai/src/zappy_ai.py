@@ -102,18 +102,13 @@ class Bot(object):
         """
         self.send_action('Inventory\n')
 
-    def broadcast(self, msg: str, coord: tuple[int, int] = None) -> None:
+    def broadcast(self) -> None:
         """
          Send a broadcast message to all bots.
 
-         :param msg: str - The message to broadcast.
-         :param coord: (int, int) - The coordinates of the message. Defaults to None.
          :return: None
          """
-        if coord is None:
-            self.send_action(f'{self.message.send(msg)}\n')
-        else:
-            self.send_action(f'{self.message.send_coord(msg, coord)}\n')
+        self.send_action(f'{self.message.send_buf()}\n')
 
     def nbr_of_slot(self) -> None:
         """
