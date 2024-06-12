@@ -1,6 +1,7 @@
 from src.gameplay.enum_gameplay import Ressources as res
 
-def evolution(level : int = 1):
+
+def evolution(level: int = 1):
     match level:
         case 1:
             return {"player": 1, "linemate": 1}

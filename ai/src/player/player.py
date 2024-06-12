@@ -9,7 +9,7 @@ import src.zappy_ai as zappy_ai
 from src.gameplay.enum_gameplay import Directions as dir
 from src.mvt.path import Path
 from src.gameplay.enum_gameplay import Ressources as res
-
+from src.utils.info_look import look_ressources
 
 class Player(zappy_ai.Bot):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
@@ -111,19 +111,19 @@ class Player(zappy_ai.Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    def incantation(self) -> bool:
-        """
-        This method makes the player do an incantation.
-
-        :return: bool - True if the incantation is done, False otherwise.
-        """
-        for i in self.goal:
-            Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
-            for j in self.inv:
-                if i[0] == j[0]:
-                    self.send_action(f"Set {i[0]}\n")
-        self.send_action("Incantation\n")
-        return False
+    # def incantation(self) -> bool:
+    #     """
+    #     This method makes the player do an incantation.
+    #
+    #     :return: bool - True if the incantation is done, False otherwise.
+    #     """
+    #     for i in self.goal:
+    #         Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
+    #         for j in self.inv:
+    #             if i[0] == j[0]:
+    #                 self.send_action(f"Set {i[0]}\n")
+    #     self.send_action("Incantation\n")
+    #     return False
 
     def move_to(self, pos: tuple[int, int]) -> None:
         """
@@ -217,34 +217,11 @@ class Player(zappy_ai.Bot):
         else:
             self.inventory[new_object] -= 1
 
-        pass
-
     def run(self) -> None:
         """
         This method is the main loop of the ai.
 
         :return: None
         """
-        # while self.level < self.LEVEL_MAX:
-        #     infds, outfds, _ = select.select(self.inout, self.inout, [])
-        #
-        #     """
-        #     infds: list[socket] - The list of sockets to read from.
-        #     """
-        #     if len(infds) != 0:
-        #         buf = self.recv_action()
-        #         self.recv_treatment(buf)
-        #
-        #     """
-        #     outfds: list[socket] - The list of sockets to write to.
-        #     """
-        #     if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
-        #         self.make_action()
-        for _ in range(10):
-            self.forward()
-            print(self.recv_action())
-        # message = self.message.send("collectio militum : ")
-        # print(message)
-        # self.broadcast('collection militum : ')
-        print(self.recv_action())
-        print(self.recv_action())
+        pass
+

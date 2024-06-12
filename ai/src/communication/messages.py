@@ -62,7 +62,8 @@ class Messages(object):
             message = message[match.end() + 1:-2]
             parts = message.split()
             if parts[0] != 'ACCMST' or parts[2] in self.uuid_used:
-                return 'ko'
+                # TODO - revoir look inventory pour qu'il passe la sécurité mais pas le reste
+                return message
             self.uuid_used.append(parts[2])
             message = parts[3].split('#')
             message = self.cipher.decryption([int(i) for i in message])

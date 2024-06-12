@@ -5,6 +5,7 @@ import sys
 import socket
 import time
 import select
+from abc import abstractmethod
 
 from src.server import connexion
 from src.communication import cipher, messages, latin
@@ -59,7 +60,7 @@ class Bot(object):
         rec: str = self.cli_socket.recv(1024).decode()
         message = self.message.receive(rec)
         if self.debug_mode:
-            print(f"Received action: {message}")
+            print(f"Received action: {rec}")
         return message
 
     def forward(self) -> None:
@@ -93,13 +94,13 @@ class Bot(object):
         """
         self.send_action("Look\n")
 
-    def inventory(self) -> None:
+    def check_inventory(self) -> None:
         """
         Send a 'Inventory' command to check the inventory.
 
         :return: None
         """
-        self.send_action("Inventory\n")
+        self.send_action('Inventory\n')
 
     def broadcast(self, msg: str, coord: tuple[int, int] = None) -> None:
         """
@@ -170,15 +171,9 @@ class Bot(object):
         """
         self.send_action("Incantation\n")
 
+    @abstractmethod
     def run(self) -> None:
-        for _ in range(10):
-            self.forward()
-            print(self.recv_action())
-        # message = self.message.send("collectio militum : ")
-        # print(message)
-        # self.broadcast('collection militum : ')
-        print(self.recv_action())
-        print(self.recv_action())
+        pass
 
 
 def display_help() -> None:
