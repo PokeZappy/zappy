@@ -8,8 +8,8 @@ import src.mvt.tsp as tsp
 from src.zappy_ai import Bot
 from src.gameplay.enum_gameplay import Directions as dir
 from src.mvt.path import Path
-from src.gameplay.enum_gameplay import Ressources as res
-from src.utils.info_look import look_ressources
+from src.gameplay.enum_gameplay import Resources as res
+from src.utils.info_look import look_resources
 
 
 class Player(Bot):

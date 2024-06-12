@@ -19,7 +19,7 @@ class Messages(object):
         self.language: Latin = language
         self.msg: str = 'Broadcast "'
 
-    def send_coord(self, message: str, pos: (int, int)) -> None:
+    def send_coord(self, message: str, pos: (int, int)) -> str:
         new_uuid: str = ""
         while new_uuid in self.uuid_used:
             new_uuid = uuid.uuid4().__str__()
@@ -47,10 +47,13 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def validate_string(self, s):
+    def validate_look_pattern(self, s):
         pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
         return 1 if re.match(pattern, s) else 0
 
+    def validate_encryption_pattern(self, s):
+        pattern = r'^(?:\d+#){9}\d+(?:#(?:\d+#){9}\d+)*$'
+        return 0 if re.fullmatch(pattern, s) else 1
 
     def receive(self, message: str) -> str | list[dict[str, str | int | tuple[int, int]]]:
         """
@@ -62,7 +65,9 @@ class Messages(object):
         Returns:
             str | list[dict[str, str | int | tuple[int, int]]]: Either the processed message or a list of dictionaries containing message details.
         """
-        if self.validate_string(message):
+        if self.validate_look_pattern(message):
+            return message
+        if message == 'ok\n' or message == 'ko\n':
             return message
         match = re.search(r'\d+, ', message)
         result: list[dict[str, str | int]] = []
@@ -71,24 +76,21 @@ class Messages(object):
             messages = messages.split('|')
             for msg in messages:
                 parts = msg.split()
-                if parts[0] != 'ACCMST' or parts[2] in self.uuid_used:
+                if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or self.validate_encryption_pattern(parts[3]):
                     return 'ko'
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
                 text = text.split('#')
                 if text[0] in self.language.verbum.values():
-                    # result.append({'id': int(parts[1]), 'msg': text if len(text) > 1 else text[0]})
                     result.append({
                         'id': int(parts[1]),
                         'msg': text[0],
                         **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 else {})
                     })
-                    # result.append(text if len(text) > 1 else text[0])
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
 
-        print(f'result :\n{result}')
         return result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None) -> None:

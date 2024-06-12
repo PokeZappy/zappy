@@ -48,8 +48,7 @@ class Depot(Player):
         tiles = self.recv_action()
         self.raids_resources(tiles[0])
 
-    def raids_resources(self, tile, focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']) -> None:
-        # TODO duplaction de la methode de la classe Collector mais modifiée
+    def raids_resources(self, tile: list[str], focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']) -> None:
         """
         Raids resources from a given tile based on the specified focus.
 
@@ -68,6 +67,8 @@ class Depot(Player):
                 result = self.recv_action()
                 if result == 'ok':
                     self.inventory[resource] += 1
+                if result != 'ok':
+                    print(f"Error: Failed to take {resource}")
 
     def give_incantation_resources(self, focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame']) -> None:
         """
@@ -80,7 +81,7 @@ class Depot(Player):
         - None
         """
         for resource in self.inventory:
-            if resource in focus:
+            if resource in focus and self.inventory[resource] > 0:
                 self.set_obj(resource)
         self.message.buf_messages('facultates positas carmina')
         self.broadcast()

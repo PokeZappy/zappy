@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Ressources(Enum):
+class Resources(Enum):
     NONE = 0
     LINEMATE = 1
     DERAUMERE = 2
