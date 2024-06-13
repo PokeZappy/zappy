@@ -19,6 +19,7 @@ typedef struct tiles_s {
 
 tiles_t *init_tile(void);
 void free_tile(tiles_t *tile);
+void free_all_egg(tiles_t *tile);
 void add_item_to_tile(tiles_t *tile, int item, int quantity);
 void remove_item_from_tile(tiles_t *tile, int item, int quantity);
 int get_item_count(tiles_t *tile, int item);

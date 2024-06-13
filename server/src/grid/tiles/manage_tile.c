@@ -23,7 +23,7 @@ tiles_t *init_tile(void)
     return tile;
 }
 
-static void free_all_egg(tiles_t *tile)
+void free_all_egg(tiles_t *tile)
 {
     egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
 
