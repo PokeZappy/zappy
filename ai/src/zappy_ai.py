@@ -18,6 +18,7 @@ class Bot(object):
     FORK = 42
     INVENTORY = 1
     ACTION = 7
+    FOOD = 126
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
