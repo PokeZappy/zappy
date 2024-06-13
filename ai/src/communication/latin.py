@@ -12,36 +12,47 @@ class Latin(object):
         """
         Initialize the Latin class with a dictionary of Latin phrases and their translations.
         """
-        self.verbum: dict[str, str] = {'point de ralliment': 'collectio militum : ',
-                                       'point de dépot': 'collectio rerum : ',
-                                       'évo de niveau:': 'nobilis incantatio',
+        self.verbum: dict[str, str] = { 'point de ralliment': 'collectio militum : ',
+                                        'point de dépot': 'collectio rerum : ',
+                                        'évo de niveau': 'nobilis incantatio',
 
-                                       'inventaire des explorateur': 'quid habes ut nobis offerat',
-                                       'etat ressources': 'ut inventarium rerum',
+                                        'inventaire des explorateur': 'quid habes ut nobis offerat',
+                                        'etat ressources': 'ut inventarium rerum',
 
-                                       'assignation rôles': 'assignationem partium : ',
-                                       'nouvelle tâche': 'habes novum negotium : ',
+                                        'assignation rôles': 'assignationem partium : ',
+                                        'nouvelle tâche': 'habes novum negotium : ',
 
-                                       'changement de rôle': 'factus es : ',
-                                       'reconfiguration des rôles': 'omnis fit : ',
+                                        'changement de rôle': 'factus es : ',
+                                        'reconfiguration des rôles': 'omnis fit : ',
 
-                                       'presence ennemis': 'inimicos recta praemisit',
+                                        'presence ennemis': 'inimicos recta praemisit',
 
-                                       'temps restant incantation': 'quantum temporis reliquum est carminibus',
+                                        'temps restant incantation': 'quantum temporis reliquum est carminibus',
 
-                                       'besoin aide': 'auxilium postulo',
-                                       'identification': 'Quis es',
-                                       'demande de ressources': 'vade ad me aliquid : ',
+                                        'besoin aide': 'auxilium postulo',
+                                        'identification': 'Quis es',
+                                        'demande de ressources': 'vade ad me aliquid : ',
 
-                                       'confirmation id': 'sum socius senatus',
-                                       'confirmation action': 'hic servio tibi domino',
+                                        'confirmation id': 'sum socius senatus',
+                                        'confirmation action': 'hic servio tibi domino',
 
-                                       'plan de bataille': 'pugnae consilia',
-                                       'strat ressources': 'omnis venite ut',
+                                        'plan de bataille': 'pugnae consilia',
+                                        'strat ressources': 'omnis venite ut',
 
-                                       'divertis-moi (peroquet)': 'oblectas',
-                                       'pousse les autres': 'officium tuum est ad ventilabis inimicos',
+                                        'divertis-moi (peroquet)': 'oblectas',
+                                        'pousse les autres': 'officium tuum est ad ventilabis inimicos',
 
-                                       'qui est le mastermind ?': 'quis est dominus mentis',
-                                       'c\'est moi': 'ego sum',
+                                        'qui est le mastermind ?': 'quis est dominus mentis',
+                                        'c\'est moi': 'ego sum',
+
+                                        'zero': 'nulla',
+                                        'un': 'unum',
+                                        'deux': 'duo',
+                                        'trois': 'tres',
+                                        'quatre': 'quattuor',
+                                        'cinq': 'quinque',
+                                        'six': 'sex',
+                                        'sept': 'septem',
+                                        'huit': 'octo',
+                                        'neuf': 'novem',
                                        }
