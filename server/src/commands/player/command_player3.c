@@ -13,6 +13,11 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
     int y = client->player->_pos._y;
     egg_t *egg = (egg_t *)malloc(sizeof(egg_t));
 
+    if (client->player->_team->_max_clients >= 1024) {
+        free(egg);
+        printf("ko\n");
+        return;
+    }
     client->player->_team->_max_clients += 1;
     egg->_available = 0;
     egg->_team = client->player->_team;
