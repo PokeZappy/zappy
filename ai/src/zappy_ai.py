@@ -60,7 +60,7 @@ class Bot(object):
         rec: str = self.cli_socket.recv(1024).decode()
         message = self.message.receive(rec)
         if self.debug_mode:
-            print(f"Received action: {rec}")
+            print(f"Received action: {message}")
         return message
 
     def forward(self) -> None:

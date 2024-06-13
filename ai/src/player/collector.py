@@ -61,7 +61,6 @@ class Collector(Player):
             self.look_around()
             around: str = self.recv_action()
             vision_resources = look_resources(around, focus)
-            print(vision_resources)
             for i in vision_resources[0]:
                 if i in focus:
                     self.take_obj(i)
@@ -166,7 +165,7 @@ class Collector(Player):
         self.search_lvl_1('food')
 
     def run(self) -> None:
-        print(f'"{self.recv_action()}"')
+        # print(f'"{self.recv_action()}"')
         # self.recv_action()
         # self.search_lvl_1()
-        # self.mouving_straight(0)
+        self.mouving_straight(0)

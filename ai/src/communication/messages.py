@@ -47,13 +47,17 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def validate_look_pattern(self, s):
+    def validate_inventory_pattern(self, s):
         pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
         return 1 if re.match(pattern, s) else 0
 
     def validate_encryption_pattern(self, s):
         pattern = r'^(?:\d+#){9}\d+(?:#(?:\d+#){9}\d+)*$'
         return 0 if re.fullmatch(pattern, s) else 1
+
+    def validate_look_pattern(self, s):
+        pattern = r'^\[ player.*\]$'
+        return 1 if re.match(pattern, s) else 0
 
     def receive(self, message: str) -> str | list[dict[str, str | int | tuple[int, int]]]:
         """
@@ -65,6 +69,8 @@ class Messages(object):
         Returns:
             str | list[dict[str, str | int | tuple[int, int]]]: Either the processed message or a list of dictionaries containing message details.
         """
+        if self.validate_inventory_pattern(message):
+            return message
         if self.validate_look_pattern(message):
             return message
         if message == 'ok\n' or message == 'ko\n':

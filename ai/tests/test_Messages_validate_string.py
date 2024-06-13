@@ -13,7 +13,7 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         valid_string = "[ food 1, linemate 2, deraumere 3, sibur 4, mendiane 5, phiras 6, thystame 7 ]"
-        assert messages.validate_look_pattern(valid_string) == 1
+        assert messages.validate_inventory_pattern(valid_string) == 1
 
     #  returns 0 for string missing one or more required elements
     def test_missing_elements(self):
@@ -21,7 +21,7 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         invalid_string = "[ food 1, linemate 2, deraumere 3, sibur 4, mendiane 5, phiras 6 ]"
-        assert messages.validate_look_pattern(invalid_string) == 0
+        assert messages.validate_inventory_pattern(invalid_string) == 0
 
     #  returns 0 for string with elements in incorrect order
     def test_incorrect_order(self):
@@ -29,7 +29,7 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         invalid_string = "[ food 1, linemate 2, deraumere 3, mendiane 5, sibur 4, phiras 6, thystame 7 ]"
-        assert messages.validate_look_pattern(invalid_string) == 0
+        assert messages.validate_inventory_pattern(invalid_string) == 0
 
     #  returns 0 for empty string
     def test_empty_string(self):
@@ -37,7 +37,7 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         invalid_string = ""
-        assert messages.validate_look_pattern(invalid_string) == 0
+        assert messages.validate_inventory_pattern(invalid_string) == 0
 
     #  returns 0 for string with extra elements not specified in pattern
     def test_extra_elements(self):
@@ -45,7 +45,7 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         invalid_string = "[ food 1, linemate 2, deraumere 3, sibur 4, mendiane 5, phiras 6, thystame 7, extra 8 ]"
-        assert messages.validate_look_pattern(invalid_string) == 0
+        assert messages.validate_inventory_pattern(invalid_string) == 0
 
     #  returns 0 for string with negative quantities
     def test_negative_quantities(self):
@@ -53,4 +53,4 @@ class TestValidateLookPattern:
         language = Latin()
         messages = Messages(cipher, "123", language)
         invalid_string = "[ food -1, linemate -2, deraumere -3, sibur -4, mendiane -5, phiras -6, thystame -7 ]"
-        assert messages.validate_look_pattern(invalid_string) == 0
+        assert messages.validate_inventory_pattern(invalid_string) == 0
