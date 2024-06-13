@@ -12,6 +12,7 @@ tiles_t *init_tile(void)
 {
     tiles_t *tile = (tiles_t *)malloc(sizeof(tiles_t));
 
+    TAILQ_INIT(&tile->_head_egg);
     tile->_items[0] = 0;
     tile->_items[1] = 0;
     tile->_items[2] = 0;
@@ -22,7 +23,19 @@ tiles_t *init_tile(void)
     return tile;
 }
 
+static void free_all_egg(tiles_t *tile)
+{
+    egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+
+    while (egg != NULL) {
+        TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
+        free(egg);
+        egg = TAILQ_FIRST(&tile->_head_egg);
+    }
+}
+
 void free_tile(tiles_t *tile)
 {
+    free_all_egg(tile);
     free(tile);
 }

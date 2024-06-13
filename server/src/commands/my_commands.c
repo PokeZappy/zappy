@@ -58,3 +58,29 @@ void hack_player_dir(server_t *server, char *args, client_socket_t *client)
     if (strcmp(args, "LEFT") == 0)
         client->player->_direction = LEFT;
 }
+
+static void print_egg_tile(tiles_t *tile, int x, int y)
+{
+    egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+
+    if (egg != NULL) {
+        printf("{%d,%d}: ", x, y);
+        while (egg != NULL) {
+            printf("[%s | %d]", egg->_team->_name, egg->_available);
+            egg = TAILQ_NEXT(egg, _entries);
+        }
+        printf("\n");
+    }
+}
+
+void print_egg_list(server_t *server, char *args, client_socket_t *client)
+{
+    tiles_t ***tiles = server->grid->_tiles;
+    int x = server->grid->_height;
+    int y = server->grid->_width;
+
+    printf("Egg_list :\n");
+    for (int i = 0; i < x; i++)
+        for (int j = 0; j < y; j++)
+            print_egg_tile(tiles[i][j], i, j);
+}

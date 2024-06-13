@@ -7,10 +7,14 @@
 
 #pragma once
 
+#include <sys/queue.h>
+
 #include "constant.h"
+#include "egg.h"
 
 typedef struct tiles_s {
     int _items[ITEM_PER_TILE]; // list items on the tile
+    TAILQ_HEAD(, egg_s) _head_egg; // list of egg
 } tiles_t;
 
 tiles_t *init_tile(void);

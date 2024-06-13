@@ -25,6 +25,7 @@ static const command_t commands[] = {
     {"HACK_DIR", hack_player_dir, 0},
     {"HACK_POS", hack_player_pos, 0},
     {"CLIENT_LIST", print_client_list, 0},
+    {"EGG_LIST", print_egg_list, 0},
     {"test", cmd_forward, 300},
     {NULL, NULL, 0}
 };
