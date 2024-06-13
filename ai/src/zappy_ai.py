@@ -5,6 +5,7 @@ import sys
 import socket
 import time
 import select
+from abc import abstractmethod
 
 from src.server import connexion
 from src.communication import cipher, messages, latin
@@ -103,7 +104,7 @@ class Bot(object):
         self.life -= self.Action
         self.send_action("Look\n")
 
-    def inventory(self) -> None:
+    def check_inventory(self) -> None:
         """
         Send a 'Inventory' command to check the inventory.
 
@@ -112,19 +113,14 @@ class Bot(object):
         self.life -= self.INVENTORY
         self.send_action("Inventory\n")
 
-    def broadcast(self, msg: str, coord: tuple[int, int] = None) -> None:
+    def broadcast(self) -> None:
         """
          Send a broadcast message to all bots.
 
-         :param msg: str - The message to broadcast.
-         :param coord: (int, int) - The coordinates of the message. Defaults to None.
          :return: None
          """
         self.life -= self.Action
-        if coord is None:
-            self.send_action(f'{self.message.send(msg)}\n')
-        else:
-            self.send_action(f'{self.message.send_coord(msg, coord)}\n')
+        self.send_action(f'{self.message.send_buf()}\n')
 
     def nbr_of_slot(self) -> None:
         """
@@ -186,15 +182,9 @@ class Bot(object):
         self.life -= self.INCANTATION
         self.send_action("Incantation\n")
 
+    @abstractmethod
     def run(self) -> None:
-        for _ in range(10):
-            self.forward()
-            print(self.recv_action())
-        # message = self.message.send("collectio militum : ")
-        # print(message)
-        # self.broadcast('collection militum : ')
-        print(self.recv_action())
-        print(self.recv_action())
+        pass
 
 
 def display_help() -> None:

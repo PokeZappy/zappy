@@ -124,7 +124,7 @@ class Path(object):
         - A list of strings representing the turns to be made.
         """
         if self.facing in self.path_facing:
-            return
+            return []
         self.path = self.path[::-1]
         self.path_facing = self.path_facing[::-1]
         if self.facing not in self.path_facing and 0 < self.facing < 3:

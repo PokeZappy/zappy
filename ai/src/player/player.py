@@ -5,13 +5,14 @@ from abc import abstractmethod
 from datetime import datetime
 
 import src.mvt.tsp as tsp
-import src.zappy_ai as zappy_ai
+from src.zappy_ai import Bot
 from src.gameplay.enum_gameplay import Directions as dir
 from src.mvt.path import Path
-from src.gameplay.enum_gameplay import Ressources as res
+from src.gameplay.enum_gameplay import Resources as res
+from src.utils.info_look import look_resources
 
 
-class Player(zappy_ai.Bot):
+class Player(Bot):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
         This class is the player class.
@@ -113,19 +114,19 @@ class Player(zappy_ai.Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    def incantation(self) -> bool:
-        """
-        This method makes the player do an incantation.
-
-        :return: bool - True if the incantation is done, False otherwise.
-        """
-        for i in self.goal:
-            Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
-            for j in self.inv:
-                if i[0] == j[0]:
-                    self.send_action(f"Set {i[0]}\n")
-        self.send_action("Incantation\n")
-        return False
+    # def incantation(self) -> bool:
+    #     """
+    #     This method makes the player do an incantation.
+    #
+    #     :return: bool - True if the incantation is done, False otherwise.
+    #     """
+    #     for i in self.goal:
+    #         Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
+    #         for j in self.inv:
+    #             if i[0] == j[0]:
+    #                 self.send_action(f"Set {i[0]}\n")
+    #     self.send_action("Incantation\n")
+    #     return False
 
     def move_to(self, pos: tuple[int, int]) -> None:
         """
@@ -220,8 +221,6 @@ class Player(zappy_ai.Bot):
             self.inventory[new_object] += 1
         else:
             self.inventory[new_object] -= 1
-
-        pass
 
     def run(self) -> None:
         #TODO: implement death
