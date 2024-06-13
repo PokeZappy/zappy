@@ -42,6 +42,8 @@ class Player(Bot):
                                           'phiras': 0,
                                           'thystame': 0
                                           }
+        self.looked: bool = False
+        self.environment: str = ""
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -202,12 +204,39 @@ class Player(Bot):
             self.create_egg()
         elif action == 'Slots':
             self.nbr_of_slot()
+        elif action == 'Broadcast':
+            self.broadcast()
+        elif action == 'Forward':
+            self.forward()
+        elif action == 'Right':
+            self.right()
+        elif action == 'Left':
+            self.left()
+        elif action == 'Inventory':
+            self.check_inventory()
+        elif isinstance(action, tuple) and action[0] == 'Take':
+            self.take_obj(action[1])
         elif isinstance(action, tuple):
             self.move(action, self.dir)
 
-    @abstractmethod
     def recv_treatment(self, buf) -> None:
-        pass
+        print(buf)
+        if buf[-1] == '\n':
+            buf = buf[:-1]
+        print(buf)
+        if buf == 'ok':
+            if self.debug_mode:
+                print(f'ok: {self.actions[0]}')
+            # self.actions.pop(0)
+        elif buf == 'ko':
+            if self.debug_mode:
+                print(f'ko: {self.actions[0]}')
+            # self.actions.pop(0)
+        elif self.message.validate_look_pattern(buf):
+            self.looked = True
+            print("recieve look")
+            self.environment = buf
+        self.actions.pop(0)
 
     @abstractmethod
     def make_action(self) -> None:
@@ -223,7 +252,6 @@ class Player(Bot):
             self.inventory[new_object] -= 1
 
     def run(self) -> None:
-        #TODO: implement death
         """
         This method is the main loop of the ai.
 
@@ -231,14 +259,14 @@ class Player(Bot):
         """
         while self.level < self.LEVEL_MAX:
             infds, outfds, _ = select.select(self.inout, self.inout, [])
-        
+
             """
             infds: list[socket] - The list of sockets to read from.
             """
             if len(infds) != 0:
                 buf = self.recv_action()
                 self.recv_treatment(buf)
-        
+
             """
             outfds: list[socket] - The list of sockets to write to.
             """

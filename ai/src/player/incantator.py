@@ -1,6 +1,8 @@
 from socket import socket
 
-class incantator():
+from src.player.player import Player
+
+class Incantator(Player):
     """
     Incantator class
     """
@@ -53,19 +55,12 @@ class incantator():
             return
         if self.life <= 300:
             self.queue.append('Take food')
-        elif self.dir == None:
-            #TODO: ask for a direction to go to
-            pass
         elif self.goto != None:
             #TODO: ask for a direction to go to
             pass
-        elif not self.is_in_position:
-            self.queue.append('Position')
         elif self.allowed_incantation:
             self.queue.append('Incantation')
             self.allowed_incantation = False
         else:
             self.queue.append('Look')
             #TODO: commmunicate with the mastermind on the look
-
-        self.apply_action()

@@ -14,7 +14,7 @@ class ParentAI(Player):
         self.debug_mode = debug_mode
         self.counter = self.INCUBATION_TIME + self.FORK_ACTION
         self.gave_birth = 0
-        self.role = RoleInGame.PROGENITOR
+        self.role = RoleInGame.MASTERMIND
         self.machine = machine
         self.port = port
         self.name = name
@@ -57,10 +57,28 @@ class ParentAI(Player):
         #TODO: see how we handle the strategy with him
         pass
 
+    def mastermind_treatment(self, buf) -> bool:
+        """"
+        mastermind treatment informations
+
+        :return false: if he received a broadcast
+        :return true: else
+        """
+        if buf == 'ok':
+            self.update_ok()
+        elif isinstance(buf, str) and buf.isnumeric() and int(buf) > 0:
+            counter = int(buf)
+            for _ in range(counter, 0, -1):
+                self.real_fork()
+        else:
+            self.get_broadcast(buf)
+            # TODO: communication broadcast
+            return False
+
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
         print(buf)
-        if self.first_round[1] and buf.isnumeric():
+        if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
             for _ in range(int(buf), 0, -1):
                 self.real_fork_addaptativ()
             self.first_round[1] = False
@@ -73,7 +91,7 @@ class ParentAI(Player):
                 #     return
                 # self.apply_action(buf)
                 l = 1
-            elif buf.isnumeric() and int(buf) > 0:
+            elif isinstance(buf, str) and buf.isnumeric() and int(buf) > 0:
                 counter = int(buf)
                 for _ in range(counter, 0, -1):
                     self.real_fork()
@@ -81,14 +99,7 @@ class ParentAI(Player):
                 #TODO: communication broadcast
                 return
         elif RoleInGame.MASTERMIND:
-            if buf == 'ok':
-                self.update_ok()
-            elif buf.isnumeric() and int(buf) > 0:
-                counter = int(buf)
-                for _ in range(counter, 0, -1):
-                    self.real_fork()
-            else:
-                #TODO: communication broadcast
+            if not self.mastermind_treatment(buf):
                 return
         self.actions.pop(0)
 
@@ -111,20 +122,20 @@ class ParentAI(Player):
         This method communicates the orders to the mastermind.
         """
         #TODO: implement the communication between the mastermind and the putas
+
         pass
 
     def action_as_mastermind(self) -> None:
         """
         This is being used when parent_ai is a mastermind
         """
-        if len(self.queue) > 0:
+        if len(self.queue) > 1:
             return
         self.queue.append('Slots')
         if self.life <= self.HUNGRY and self.nbr_food > 0:
             self.queue.append('Take food')
         else:
             self.communicate_orders()
-        self.apply_action()
 
     def make_action(self) -> None:
         """
@@ -140,3 +151,6 @@ class ParentAI(Player):
         elif self.role == RoleInGame.MASTERMIND:
             self.action_as_mastermind()
         self.apply_action()
+
+    def get_broadcast(self, broadcast_recv: str):
+        print(broadcast_recv)

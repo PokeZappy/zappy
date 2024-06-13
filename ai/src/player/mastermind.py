@@ -1,6 +1,9 @@
 from socket import socket
 
-class mastermind():
+from src.player.player import Player
+
+
+class Mastermind(Player):
     """
     The Mastermind class initializes
     """

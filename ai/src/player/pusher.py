@@ -1,16 +1,16 @@
 from socket import socket
 
-from src.communication.messages import Messages
+from src.player.player import Player
 
 
-class Incantator():
+class Pusher(Player):
     """
-    Incantator class
+    Pusher class
     """
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         """
-        Incantator class constructor
+        Pusher class constructor
         """
         super().__init__(serv_info, cli_socket, debug_mode)
         self.you_should_not_pass = True
@@ -27,10 +27,10 @@ class Incantator():
         if buf[-1] == '\n':
             buf = buf[:-1]
         if buf == 'ok':
-            if self.action[0] == 'Take food':
+            if self.actions[0] == 'Take food':
                 self.life += self.FOOD
         elif buf == 'ko':
-            if self.action[0] == 'Take food':
+            if self.actions[0] == 'Take food':
                 #TODO: communication('Need food')
                 pass
         else:
@@ -44,14 +44,17 @@ class Incantator():
         """
         This method makes the action of the incantator.
         """
-        if len(self.action) > 1:
+        if len(self.actions) > 1:
             return
         if self.life <= 300:
+            print("life")
             self.queue.append('Take food')
-        elif self.goto != None:
-            self
-            #TODO: ask for a direction to go to
-            pass
+        elif self.goto is None:
+            self.message.buf_messages('Pusher')
+            self.message.buf_messages('Quo ego vado')
+            self.queue.append('Broadcast')
+            print("after_broadcast")
+            # self.goto = not None
         elif self.is_in_position == False:
             #TODO: ask for a direction to go to
             pass

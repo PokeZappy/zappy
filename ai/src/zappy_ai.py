@@ -74,7 +74,7 @@ class Bot(object):
         Sends a 'Forward' command to the server to move up one tile.
         :return: None
         """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action("Forward\n")
 
     def right(self) -> None:
@@ -83,7 +83,7 @@ class Bot(object):
 
         :return: None
         """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action("Right\n")
 
     def left(self) -> None:
@@ -92,7 +92,7 @@ class Bot(object):
 
         :return: None
         """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action("Left\n")
 
     def look_around(self) -> None:
@@ -101,7 +101,7 @@ class Bot(object):
 
         :return: None
         """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action("Look\n")
 
     def check_inventory(self) -> None:
@@ -119,7 +119,7 @@ class Bot(object):
 
          :return: None
          """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action(f'{self.message.send_buf()}\n')
 
     def nbr_of_slot(self) -> None:
@@ -159,7 +159,7 @@ class Bot(object):
 
         :return: None
         """
-        self.life -= self.Action
+        self.life -= self.ACTION
         self.send_action(f"Take {obj}\n")
 
     def set_obj(self, obj: str) -> None:
@@ -168,7 +168,7 @@ class Bot(object):
 
         :return: None
         """
-        self -= self.Action
+        self -= self.ACTION
         self.send_action(f"Set {obj}\n")
 
     def incantation(self) -> None:

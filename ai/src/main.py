@@ -2,6 +2,8 @@
 import sys
 from src.server import connexion
 from src.player.parent_ai import ParentAI
+from src.player.pusher import Pusher
+from src.player.collector import Collector
 
 from src.zappy_ai import display_help, connection
 

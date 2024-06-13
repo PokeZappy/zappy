@@ -25,14 +25,12 @@ class Collector(Player):
         for tile in tiles:
             for resource in tile:
                 if resource in focus:
-                    self.take_obj(resource)
-                    result = self.recv_action()
-                    if result == 'ok':
-                        self.inventory[resource] += 1
-            self.forward()
-            self.recv_action()
-        self.check_inventory()
-        self.recv_action()
+                    self.queue.append(("Take", resource))
+                    # if result == 'ok':
+                    #     self.inventory[resource] += 1
+            self.queue.append('Forward')
+            # self.forward()
+            # self.recv_action()
 
     def mouving_straight(self, index, focus: list[str] = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate', 'food']) -> None:
         """
@@ -43,12 +41,17 @@ class Collector(Player):
         - focus: list[str] - List of resources to focus on while moving straight.
         """
         self.go_to_start(index)
-        for _ in range(self.limit[0] + 1):
-            self.look_around()
-            tiles = self.recv_action()
-            tiles = look_resources(tiles, focus)
-            tiles = only_forward_resources(tiles)
-            self.raids_resources(tiles, focus)
+        # self.look_around()
+
+        # while self.look == "":
+        #     tiles = self.look
+        # tiles = self.recv_action()
+        tiles = look_resources(self.environment, focus)
+        self.looked = False
+        self.environment = ""
+        tiles = only_forward_resources(tiles)
+        print(f'FORWARD tiles {tiles}')
+        self.raids_resources(tiles, focus)
     #         TODO - check if food needed -> search_food()
 
     def search_lvl_1(self, focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']) -> None:
@@ -164,8 +167,18 @@ class Collector(Player):
     def search_food(self) -> None:
         self.search_lvl_1('food')
 
-    def run(self) -> None:
-        # print(f'"{self.recv_action()}"')
-        # self.recv_action()
-        # self.search_lvl_1()
-        self.mouving_straight(0)
+    def make_action(self) -> None:
+        if len(self.actions) >= 1:
+            return
+        print(self.looked)
+        # tamer = True
+        # for i in self.queue:
+            # if i == 'Look':
+            #     tamer = False
+        if not self.looked and 'Look' not in self.queue:
+            self.queue.append('Look')
+        if self.looked:
+            if len(self.queue) == 0:
+                self.mouving_straight(0)
+            self.looked = False
+        self.apply_action()
