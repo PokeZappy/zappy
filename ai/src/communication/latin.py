@@ -12,7 +12,18 @@ class Latin(object):
         """
         Initialize the Latin class with a dictionary of Latin phrases and their translations.
         """
-        self.verbum: dict[str, str] = { 'point de ralliment': 'collectio militum : ',
+        self.verbum: dict[str, str] = {
+                                        'Collector': 'Collector',
+                                        'Pusher': 'Pusher',
+                                        'Incantator': 'Incantator',
+                                        'Progenitor': 'Progenitor',
+
+                                        'Où vais-je': 'Quo ego vado',
+                                        'point de ralliment': 'collectio militum : ',
+
+                                        'identification': 'Quis es', # TODO - Collector - Pusher
+                                        'la voie est libre': 'patet via', # TODO - Pusher - Collector
+
                                         'point de dépot': 'collectio rerum : ',
                                         'évo de niveau': 'nobilis incantatio',
 
@@ -31,7 +42,6 @@ class Latin(object):
                                         'temps restant incantation': 'quantum temporis reliquum est carminibus',
 
                                         'besoin aide': 'auxilium postulo',
-                                        'identification': 'Quis es',
                                         'demande de ressources': 'vade ad me aliquid : ',
 
                                         'confirmation id': 'sum socius senatus',
