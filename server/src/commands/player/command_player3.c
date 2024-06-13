@@ -19,7 +19,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
         return;
     }
     client->player->_team->_max_clients += 1;
-    egg->_available = 0;
+    egg->_available = 600;
     egg->_team = client->player->_team;
     egg->_pos = client->player->_pos;
     TAILQ_INSERT_TAIL(&server->grid->_tiles[x][y]->_head_egg, egg, _entries);
