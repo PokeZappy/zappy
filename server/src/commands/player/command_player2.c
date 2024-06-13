@@ -11,14 +11,17 @@
 void cmd_eject(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
+    int x = player->_pos._x;
+    int y = player->_pos._y;
     bool pushed = false;
 
     if (!player)
         return;
     pushed = player_eject(server, player);
-    if (pushed == true)
+    if (pushed == true) {
+        free_all_egg(server->grid->_tiles[x][y]);
         dprintf(client->socket, "ok\n");
-    else
+    } else
         dprintf(client->socket, "ko\n");
     printf("eject\n");
 }
