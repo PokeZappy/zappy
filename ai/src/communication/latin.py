@@ -34,6 +34,8 @@ class Latin(object):
                                         'assignation rôles': 'assignationem partium : ',
                                         'nouvelle tâche': 'habes novum negotium : ',
 
+                                        'demande de nourriture': 'cibo opus est',
+
                                         'changement de rôle': 'factus es : ',
                                         'reconfiguration des rôles': 'omnis fit : ',
 

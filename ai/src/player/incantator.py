@@ -33,11 +33,10 @@ class Incantator(Player):
                 self.life += self.FOOD
         elif buf == 'ko':
             if self.action[0] == 'Incantation':
-                #TODO: communication('Incantation failed')
-                pass
+                self.message.buf_messages('nobilis incantatio')
             if self.action[0] == 'Take food':
-                #TODO: communication('Need food')
-                pass
+                self.message.buf_messages('cibo opus est')
+                self.queue.append('Broadcast')
         else:
             #TODO: communication(Look)
 
