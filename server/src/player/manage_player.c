@@ -22,8 +22,10 @@ static egg_t *check_egg_name(tiles_t *tile, char *team_name)
     egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
 
     while (egg != NULL) {
-        if (strcmp(egg->_team->_name, team_name) == 0 && egg->_available > 0)
+        if (strcmp(egg->_team->_name, team_name) == 0 && egg->_available > 0) {
+            TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
             return egg;
+        }
         egg = TAILQ_NEXT(egg, _entries);
     }
     return NULL;
@@ -70,6 +72,7 @@ static void check_for_pos(player_t *player, server_t *server)
     } else {
         player->_pos._x = rand_egg->_pos._x;
         player->_pos._y = rand_egg->_pos._y;
+        free(rand_egg);
     }
 }
 

@@ -14,7 +14,7 @@ static const command_t commands[] = {
     {"look", cmd_look, 7},
     {"inventory", cmd_inventory, 1},
     {"broadcast", cmd_broadcast, 7},
-    {"fork", cmd_fork, 0},
+    {"fork", cmd_fork, 42},
     {"eject", cmd_eject, 7},
     {"dead", cmd_dead, 0},
     {"connect_nbr", cmd_connect_nbr, 0},
