@@ -26,8 +26,6 @@ class Collector(Player):
             for resource in tile:
                 if resource in focus:
                     self.queue.append(("Take", resource))
-                    # if result == 'ok':
-                    #     self.inventory[resource] += 1
             self.queue.append('Forward')
             # self.forward()
             # self.recv_action()
@@ -182,3 +180,22 @@ class Collector(Player):
                 self.mouving_straight(0)
             self.looked = False
         self.apply_action()
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        if message['msg'] == 'quid habes ut nobis offerat':
+            # TODO: send all inventory
+            pass
+        if message['msg'] == 'focus in his opibus : ':
+        #     TODO - actualiser le focus sur ces ressources
+            pass
+        if message['msg'] == 'collectio rerum : ':
+            #TODO: point de dépot
+            pass
+        if message['msg'] == 'vade ad me aliquid : ':
+            #TODO: ask for a hard focus ressource RETURN TO depot after taking the obj
+            pass
+        if message['msg'] == 'Potes dominum facti':
+        #     TODO - validation passage pousseur pour aller au dépot
+            pass
+        self.global_message()
+

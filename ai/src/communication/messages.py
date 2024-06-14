@@ -9,7 +9,7 @@ class Messages(object):
     """
     This class handles sending and receiving messages using encryption.
     """
-    def __init__(self, cipher: Cipher, id_nbr: str, language: Latin) -> None:
+    def __init__(self, cipher: Cipher, id_nbr: str, language: Latin, debug: bool = False) -> None:
         """
         Initialize a Messages instance with a cipher and an ID number.
         """
@@ -18,6 +18,7 @@ class Messages(object):
         self.cipher: Cipher = cipher
         self.language: Latin = language
         self.msg: str = 'Broadcast "'
+        self.debug: bool = debug
 
     def send_coord(self, message: str, pos: (int, int)) -> str:
         new_uuid: str = ""
@@ -59,7 +60,7 @@ class Messages(object):
         pattern = r'^\[ player.*\]$'
         return 1 if re.match(pattern, s) else 0
 
-    def receive(self, message: str) -> str | list[dict[str, str | int | tuple[int, int]]]:
+    def receive(self, message: str, action: any) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
         """
         Receive and process encrypted messages.
 
@@ -70,11 +71,17 @@ class Messages(object):
             str | list[dict[str, str | int | tuple[int, int]]]: Either the processed message or a list of dictionaries containing message details.
         """
         if self.validate_inventory_pattern(message):
-            return message
+            return 'inventory', message
         if self.validate_look_pattern(message):
-            return message
-        if message == 'ok\n' or message == 'ko\n':
-            return message
+            return 'look', message
+        if message == 'ok\n':
+            if self.debug:
+                print(f'ok: {action}')
+            return 'ok', action
+        if message == 'ko\n':
+            if self.debug:
+                print(f'ko: {action}')
+            return 'ko', action
         match = re.search(r'\d+, ', message)
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
@@ -97,7 +104,7 @@ class Messages(object):
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
 
-        return result
+        return 'broadcast', result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None) -> None:
         if coord is None:

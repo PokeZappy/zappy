@@ -61,3 +61,15 @@ class Pusher(Player):
         elif self.you_should_not_pass == True:
             self.eject()
         self.apply_action()
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+            if message['msg'] == 'sum socius senatus':
+                # TODO: parler et dire 'Potes dominum facti' et ne pas pousser pendant X temps
+                pass
+            if message['msg'] == 'hic est prandium tuum':
+                # TODO: prendre la bouffe sur la case
+                pass
+            if message['msg'] == 'movere ad':
+                #TODO: GoTO
+                pass
+            self.global_message()
