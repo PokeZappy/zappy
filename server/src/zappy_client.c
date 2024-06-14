@@ -33,6 +33,18 @@ static void close_all_clients(struct server_s *server)
     }
 }
 
+static void handle_gui_client(client_socket_t *client, struct server_s *server)
+{
+    int x = server->grid->_width;
+    int y = server->grid->_height;
+
+    client->_is_gui = 1;
+    cmd_msz(server, NULL, client);
+    cmd_sgt(server, NULL, client);
+    cmd_mct(server, NULL, client);
+    cmd_tna(server, NULL, client);
+}
+
 static void handle_client_cmd(char *commands, client_socket_t *client,
     struct server_s *server)
 {
@@ -41,7 +53,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
 
     if (client->player == NULL && client->_is_gui == 0) {
         if (strcmp(commands, "GUI") == 0) {
-            client->_is_gui = 1;
+            handle_gui_client(client, server);
             return;
         }
         client->player = add_player_to_team(commands, server);
