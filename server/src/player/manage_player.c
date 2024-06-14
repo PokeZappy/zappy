@@ -19,14 +19,14 @@ static int generate_player_id(void)
 
 static egg_t *check_egg_name(tiles_t *tile, char *team_name)
 {
-    egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+    egg_t *e = TAILQ_FIRST(&tile->_head_egg);
 
-    while (egg != NULL) {
-        if (strcmp(egg->_team->_name, team_name) == 0 && egg->_available > 0) {
-            TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
-            return egg;
+    while (e != NULL) {
+        if (strcmp(e->_team->_name, team_name) == 0 && e->_available == 0) {
+            TAILQ_REMOVE(&tile->_head_egg, e, _entries);
+            return e;
         }
-        egg = TAILQ_NEXT(egg, _entries);
+        e = TAILQ_NEXT(e, _entries);
     }
     return NULL;
 }
