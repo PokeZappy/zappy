@@ -52,7 +52,7 @@ class Incantator(Player):
         """
         if len(self.action) > 1:
             return
-        if self.life <= 300:
+        if self.life <= 500:
             self.queue.append('Take food')
         elif self.goto != None:
             #TODO: ask for a direction to go to
@@ -63,3 +63,13 @@ class Incantator(Player):
         else:
             self.queue.append('Look')
             #TODO: commmunicate with the mastermind on the look
+
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        # if message['msg'] == 'dominus servivit : ':
+        #     # TODO: prendre X bouffes sur sa case pour se mettre à 4 bouffe
+        #     pass
+        if message['msg'] == 'facultates positas carmina':
+        #     TODO - lancer l'incantation
+            pass
+        self.global_message()

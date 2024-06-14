@@ -221,21 +221,20 @@ class Player(Bot):
 
     def recv_treatment(self, buf) -> None:
         print(buf)
-        if buf[-1] == '\n':
-            buf = buf[:-1]
-        print(buf)
-        if buf == 'ok':
-            if self.debug_mode:
-                print(f'ok: {self.actions[0]}')
-            # self.actions.pop(0)
-        elif buf == 'ko':
-            if self.debug_mode:
-                print(f'ko: {self.actions[0]}')
-            # self.actions.pop(0)
-        elif self.message.validate_look_pattern(buf):
+        recv_type, msg = self.message.receive(buf, self.actions[0])
+        if recv_type == 'ok':
+            if isinstance(msg, tuple) and msg[0] == 'Take':
+                self.inventory[msg[1]] += 1
+            if isinstance(msg, tuple) and msg[0] == 'Set':
+                self.inventory[msg[1]] -= 1
+        if recv_type == 'look':
             self.looked = True
             print("recieve look")
-            self.environment = buf
+            self.environment = msg
+        if recv_type == 'inventory':
+            print("inventory")
+        if recv_type == 'broadcast':
+            self.broadcast_traitement(msg)
         self.actions.pop(0)
 
     @abstractmethod
@@ -272,3 +271,11 @@ class Player(Bot):
             """
             if len(outfds) != 0 and len(self.actions) < self.LIMIT_QUEUE:
                 self.make_action()
+
+    @abstractmethod
+    def broadcast_traitement(self, msg: tuple | str) -> None:
+        pass
+
+    def global_message(self, msg) -> None:
+        # TODO - faire les messages globaux comme le changement de metier
+        pass

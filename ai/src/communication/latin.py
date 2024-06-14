@@ -13,6 +13,42 @@ class Latin(object):
         Initialize the Latin class with a dictionary of Latin phrases and their translations.
         """
         self.verbum: dict[str, str] = {
+                                        # MM to Collector
+                                        'focalisation sur ces ressources': 'focus in his opibus : ',
+                                        'point de dépot': 'collectio rerum : ',
+                                       'inventaire des explorateur': 'quid habes ut nobis offerat',
+                                        'demande de ressources': 'vade ad me aliquid : ',
+
+                                        #  Push to coll
+                                        'Vous pouvez passez maître': 'Potes dominum facti',
+
+                                        # Coock to ALL
+                                        # TODO - ajouter le nombre pour chaque avec l'id
+                                        'Vous êtes servi maître': 'dominus servivit : ',
+
+                                        # MM to Incant
+                                       'ressources placés pour l\'incantation': 'facultates positas carmina',
+
+                                        # Coll to MM
+                                        'ressources déposées': 'opes deposita',
+                                        # TODO - parse l'inventaire
+
+
+                                        # Incant to MM
+                                        'incantation raté': 'defecit carmen',
+                                        'j\'ai besoin de nourriture': 'cibo opus est',
+
+                                        # All to push
+                                        'confirmation id': 'sum socius senatus',
+
+                                        # COOCK to push
+                                        'voici votre repas': 'hic est prandium tuum',
+
+                                        # MM to push
+                                        'deplace-toi vers : ': 'movere ad',
+                                        'changement de rôle': 'factus es : ',
+
+                                        'évo de niveau': 'nobilis incantatio',
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
                                         'Incantator': 'Incantator',
@@ -21,15 +57,8 @@ class Latin(object):
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',
 
-                                        'identification': 'Quis es', # TODO - Collector - Pusher
-                                        'la voie est libre': 'patet via', # TODO - Pusher - Collector
 
-                                        'point de dépot': 'collectio rerum : ',
-                                        'évo de niveau': 'nobilis incantatio',
-
-                                       'inventaire des explorateur': 'quid habes ut nobis offerat',
                                        'etat ressources': 'ut inventarium rerum',
-                                       'ressources placés pour l\'incantation': 'facultates positas carmina',
 
                                         'assignation rôles': 'assignationem partium : ',
                                         'nouvelle tâche': 'habes novum negotium : ',
@@ -44,9 +73,7 @@ class Latin(object):
                                         'temps restant incantation': 'quantum temporis reliquum est carminibus',
 
                                         'besoin aide': 'auxilium postulo',
-                                        'demande de ressources': 'vade ad me aliquid : ',
 
-                                        'confirmation id': 'sum socius senatus',
                                         'confirmation action': 'hic servio tibi domino',
 
                                         'plan de bataille': 'pugnae consilia',

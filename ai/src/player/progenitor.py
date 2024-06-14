@@ -12,9 +12,6 @@ class Progenitor(Player):
         self.the_place_to_be = (0, 0)
         self.nbr_of_child_to_create = -1
 
-    def directives(self, buf: str) -> None:
-        #TODO: implement the directives recieved with the broadcast
-        pass
 
     def recv_treatment(self, buf: str) -> None:
         """
@@ -24,7 +21,7 @@ class Progenitor(Player):
         :return: None
         """
         if buf != 'ok\n':
-            self.directives(buf)
+            pass
         self.actions.pop(0)
     
     def make_action(self) -> None:
@@ -42,3 +39,6 @@ class Progenitor(Player):
         if len(self.queue) > 0:
             self.apply_action()
     
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        # TODO check si doit rajouter un truc
+        self.global_message()

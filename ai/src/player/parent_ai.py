@@ -85,7 +85,6 @@ class ParentAI(Player):
         if self.role == RoleInGame.PROGENITOR:
             if buf == 'ok':
                 # TODO: make brodacast with cyprien
-
                 # if self.is_broadcast(buf):
                 #     self.apply_broadcast(buf)
                 #     return
@@ -113,7 +112,6 @@ class ParentAI(Player):
         if self.counter <= 0:
             self.give_birth()
         if self.gave_birth == 2:
-            self.queue.append('Forward')
             self.role = RoleInGame.MASTERMIND
 
 

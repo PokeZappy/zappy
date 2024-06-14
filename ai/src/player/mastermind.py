@@ -18,3 +18,15 @@ class Mastermind(Player):
 
     def make_action(self) -> None:
         self.apply_action()
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        if message['msg'] == '':
+            # TODO: recieve all inventory from collector
+            pass
+        if message['msg'] == 'opes deposita':
+        #     TODO : faire lancer l'incantation si ressources ok
+            pass
+        if message['msg'] == 'defecit carmen':
+            #TODO: problem to make the incantation
+            pass
+        self.global_message()
