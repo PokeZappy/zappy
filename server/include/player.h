@@ -31,7 +31,7 @@ typedef struct player_s {
 } player_t;
 
 // -- PLAYER RELATED -- //
-player_t *init_player(struct team_s *team, int width, int height);
+player_t *init_player(struct team_s *team, server_t *server);
 void free_player(player_t *player);
 void add_item_to_player(player_t *player, int item, int quantity);
 void remove_item_from_player(player_t *player, int item, int quantity);

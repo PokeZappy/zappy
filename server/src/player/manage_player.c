@@ -17,7 +17,63 @@ static int generate_player_id(void)
     return id;
 }
 
-player_t *init_player(team_t *team, int width, int height)
+static egg_t *check_egg_name(tiles_t *tile, char *team_name)
+{
+    egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+
+    while (egg != NULL) {
+        if (strcmp(egg->_team->_name, team_name) == 0 && egg->_available > 0)
+            return egg;
+        egg = TAILQ_NEXT(egg, _entries);
+    }
+    return NULL;
+}
+
+static egg_t *loop_tile(server_t *server, char *team_name, int i)
+{
+    tiles_t ***tiles = server->grid->_tiles;
+    int y = server->grid->_width;
+    egg_t *tmp = NULL;
+
+    for (int j = 0; j < y; j++) {
+        tmp = check_egg_name(tiles[i][j], team_name);
+        if (tmp != NULL)
+            return tmp;
+    }
+    return tmp;
+}
+
+static egg_t *check_for_egg(server_t *server, char *team_name)
+{
+    tiles_t ***tiles = server->grid->_tiles;
+    int x = server->grid->_height;
+    int y = server->grid->_width;
+    egg_t *tmp = NULL;
+
+    for (int i = 0; i < x; i++) {
+        tmp = loop_tile(server, team_name, i);
+        if (tmp != NULL)
+            return tmp;
+    }
+    return tmp;
+}
+
+static void check_for_pos(player_t *player, server_t *server)
+{
+    int w = server->grid->_width;
+    int h = server->grid->_height;
+    egg_t *rand_egg = check_for_egg(server, player->_team->_name);
+
+    if (rand_egg == NULL) {
+        player->_pos._x = rand() % w;
+        player->_pos._y = rand() % h;
+    } else {
+        player->_pos._x = rand_egg->_pos._x;
+        player->_pos._y = rand_egg->_pos._y;
+    }
+}
+
+player_t *init_player(team_t *team, server_t *server)
 {
     player_t *player = (player_t *)malloc(sizeof(player_t));
 
@@ -27,13 +83,12 @@ player_t *init_player(team_t *team, int width, int height)
     }
     player->_id = generate_player_id();
     player->_level = 1;
-    player->_pos._x = rand() % width;
-    player->_pos._y = rand() % height;
     player->_direction = (direction_t)(rand() % 4);
     for (int i = 0; i < ITEM_PER_TILE; i++)
         player->_inventory[i] = 0;
     player->_team = team;
     team->_current_clients++;
+    check_for_pos(player, server);
     return player;
 }
 
@@ -43,7 +98,7 @@ player_t *add_player_to_team(char *team_name, server_t *server)
 
     if (team == NULL)
         return NULL;
-    return init_player(team, server->grid->_width, server->grid->_height);
+    return init_player(team, server);
 }
 
 void free_player(player_t *player)
