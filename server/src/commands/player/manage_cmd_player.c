@@ -33,12 +33,17 @@ static const command_t commands[] = {
 void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
 {
     command_t *cmd = (command_t *)malloc(sizeof(command_t));
+    timeval_t wait;
 
     for (int i = 0; commands[i].name != NULL; i++) {
         if (strncmp(command, commands[i].name,
         strlen(commands[i].name)) == 0) {
+            gettimeofday(&wait, NULL);
+            add_seconds(&wait, commands[i].time
+            / (float)server->arguments->_f);
             cmd->ptr = commands[i].ptr;
             cmd->time = commands[i].time;
+            cmd->delay = wait;
             break;
         }
         if (commands[i + 1].name == NULL) {

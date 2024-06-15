@@ -10,6 +10,7 @@
 #include "server.h"
 
 #include <math.h>
+#include <time.h>
 
 struct server_s;
 typedef struct server_s server_t;
@@ -17,18 +18,22 @@ typedef struct server_s server_t;
 struct client_socket_s;
 typedef struct client_socket_s client_socket_t;
 
+struct timeval;
+typedef struct timeval timeval_t;
+
 typedef struct delayed_command_s {
     void (*_func)(server_t *server, char *args, client_socket_t *client);
     char *_args;
     client_socket_t *_client;
-    int _delay;
+    timeval_t _delay;
     TAILQ_ENTRY(delayed_command_s) entries;
 } delayed_command_t;
 
 typedef struct command_s {
     const char *name;
     void (*ptr)(server_t *server, char *args, client_socket_t *client);
-    int time;
+    float time;
+    timeval_t delay;
 } command_t;
 
 void manage_cmd_play(char *command, client_socket_t *client, server_t *server);
@@ -78,5 +83,8 @@ void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args);
 void execute_command(server_t *server);
 delayed_command_t *last_client_command(server_t *server, client_socket_t *c);
 int how_many_in_queue(server_t *server, client_socket_t *c);
-int calc_delay(server_t *server, client_socket_t *c, int time);
+void calc_delay(server_t *server, client_socket_t *client, timeval_t delay);
 void delete_last_cmd(server_t *server, client_socket_t *c);
+void add_seconds(timeval_t *time, float seconds);
+bool compare_timeval(timeval_t *a, timeval_t *b);
+bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time);

@@ -5,7 +5,6 @@
 ** zappy_server.c
 */
 
-
 #include "../include/client.h"
 
 static void send_client_message(int socket, const char *msg)
@@ -137,8 +136,8 @@ int handle_client(struct server_s *server, int max_sd, fd_set readfds)
     int activity;
     char buffer[READ_SIZE];
 
-    timeout.tv_sec = 1;
-    timeout.tv_usec = 0;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 1;
     activity = select(max_sd + 1, &readfds, NULL, NULL, &timeout);
     if (activity < 0 && errno != EINTR) {
         fprintf(stderr, "select error: %s\n", strerror(errno));
