@@ -17,7 +17,7 @@ class TestBufMsgWithoutCoord:
     
         mocker.patch('uuid.uuid4', return_value=uuid.UUID('12345678123456781234567812345678'))
     
-        messages.buf_msg_without_coord("Test message", 6789)
+        messages.buf_msg_default("Test message", 6789)
     
         assert '12345678-1234-5678-1234-567812345678' in messages.uuid_used
 
@@ -29,7 +29,7 @@ class TestBufMsgWithoutCoord:
         language = mocker.Mock()
         messages = Messages(cipher, id_number, language)
     
-        messages.buf_msg_without_coord("Test message", 6789)
+        messages.buf_msg_default("Test message", 6789)
     
         cipher.encryption.assert_called_once_with("Test message")
 
@@ -43,7 +43,7 @@ class TestBufMsgWithoutCoord:
     
         mocker.patch('uuid.uuid4', return_value=uuid.UUID('12345678123456781234567812345678'))
     
-        messages.buf_msg_without_coord("Test message", 6789)
+        messages.buf_msg_default("Test message", 6789)
     
         expected_msg = 'Broadcast "ACCMST 6789 12345678-1234-5678-1234-567812345678 encrypted_message'
         assert messages.msg == expected_msg
@@ -58,7 +58,7 @@ class TestBufMsgWithoutCoord:
     
         assert messages.uuid_used == [""]
     
-        messages.buf_msg_without_coord("Test message", 6789)
+        messages.buf_msg_default("Test message", 6789)
     
         assert len(messages.uuid_used) == 2
 
@@ -74,7 +74,7 @@ class TestBufMsgWithoutCoord:
     
         mocker.patch('uuid.uuid4', return_value=uuid.UUID('12345678123456781234567812345678'))
     
-        messages.buf_msg_without_coord("Test message", 6789)
+        messages.buf_msg_default("Test message", 6789)
     
         assert '12345678-1234-5678-1234-567812345678' in messages.uuid_used
 
@@ -86,7 +86,7 @@ class TestBufMsgWithoutCoord:
         language = mocker.Mock()
         messages = Messages(cipher, id_number, language)
     
-        messages.buf_msg_without_coord("", 6789)
+        messages.buf_msg_default("", 6789)
     
         expected_msg = 'Broadcast "ACCMST 6789  encrypted_message'
 

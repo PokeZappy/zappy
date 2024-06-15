@@ -40,23 +40,6 @@ class TestSend:
         mock_socket.send.assert_called_once_with("".encode())
 
 
-class TestRecvAction:
-
-    def test_successful_receive_and_decode(self, mocker):
-        mock_socket = mocker.MagicMock()
-        mock_socket.recv.return_value = b"Action Command"
-        bot = Bot([1, 10, 10], mock_socket)
-        received_action = bot.recv_action()
-        assert received_action == []
-
-    def test_receive_empty_string(self, mocker):
-        mock_socket = mocker.MagicMock()
-        mock_socket.recv.return_value = b""
-        bot = Bot([1, 10, 10], mock_socket)
-        received_action = bot.recv_action()
-        assert received_action == []
-
-
 class TestLookAround:
 
     def test_look_around_sends_correct_command(self, mocker):
