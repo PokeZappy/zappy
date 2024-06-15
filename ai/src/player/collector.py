@@ -184,6 +184,7 @@ class Collector(Player):
             self.broadcast()
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
+            print(message)
         #     TODO - actualiser le focus sur ces ressources
         if message['msg'] == 'collectio rerum : ':
             self.depot = message['coord']

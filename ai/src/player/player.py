@@ -220,7 +220,6 @@ class Player(Bot):
             self.move(action, self.dir)
 
     def recv_treatment(self, buf) -> None:
-        print(buf)
         recv_type, msg = self.message.receive(buf, self.actions[0])
         if recv_type == 'ok':
             if isinstance(msg, tuple) and msg[0] == 'Take':

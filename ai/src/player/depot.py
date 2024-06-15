@@ -85,3 +85,9 @@ class Depot(Player):
                 self.set_obj(resource)
         self.message.buf_messages('facultates positas carmina')
         self.broadcast()
+
+    def make_action(self) -> None:
+        self.message.buf_messages('focus in his opibus : ', ['EHEHEHE', '5'])
+        message = self.message.send_buf()
+        self.queue.append(message)
+        self.apply_action()

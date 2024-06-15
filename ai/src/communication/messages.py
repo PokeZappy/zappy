@@ -13,7 +13,7 @@ class Messages(object):
         """
         Initialize a Messages instance with a cipher and an ID number.
         """
-        self.uuid_used: list[str] = ["",]
+        self.uuid_used: list[str] = ["", ]
         self.id: str = id_nbr
         self.cipher: Cipher = cipher
         self.language: Latin = language
@@ -48,7 +48,7 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def receive(self, message: str, action: any) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
+    def receive(self, message: str, action: any = None) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
         """
         Receive and process encrypted messages.
 
