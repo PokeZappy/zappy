@@ -10,9 +10,11 @@ class Collector(Player):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         super().__init__(serv_info, cli_socket, debug_mode)
         self.need_eat = 0
-        self.pos = (0, 0)
-        self.the_place_to_be = (0, 0)
-        self.lvl = 1
+        self.pos: tuple[int, int] = (0, 0)
+        self.the_place_to_be: tuple[int, int] = (0, 0)
+        self.focus = None
+        self.depot: tuple[int, int] = (0, 0)
+        self.hard_focus: bool = False
 
     def go_to_start(self, index):
         #  TODO - pour chaque index on vient se placer sur une case en particulier pour pas tomber sur une ligne sans rien
@@ -27,8 +29,6 @@ class Collector(Player):
                 if resource in focus:
                     self.queue.append(("Take", resource))
             self.queue.append('Forward')
-            # self.forward()
-            # self.recv_action()
 
     def mouving_straight(self, index, focus: list[str] = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate', 'food']) -> None:
         """
@@ -169,10 +169,6 @@ class Collector(Player):
         if len(self.actions) >= 1:
             return
         print(self.looked)
-        # tamer = True
-        # for i in self.queue:
-            # if i == 'Look':
-            #     tamer = False
         if not self.looked and 'Look' not in self.queue:
             self.queue.append('Look')
         if self.looked:
@@ -184,18 +180,23 @@ class Collector(Player):
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'quid habes ut nobis offerat':
             # TODO: send all inventory
-            pass
+            self.message.buf_messages(self.inventory)
+            self.broadcast()
         if message['msg'] == 'focus in his opibus : ':
+            self.focus = message['infos']
         #     TODO - actualiser le focus sur ces ressources
-            pass
         if message['msg'] == 'collectio rerum : ':
+            self.depot = message['coord']
             #TODO: point de dépot
-            pass
         if message['msg'] == 'vade ad me aliquid : ':
             #TODO: ask for a hard focus ressource RETURN TO depot after taking the obj
-            pass
+            # TODOO - Parser le infos pour extraire les données comme nom et nombre
+            self.focus = message['infos']
+            # self.nbr_focus =
+            self.hard_focus = True
         if message['msg'] == 'Potes dominum facti':
         #     TODO - validation passage pousseur pour aller au dépot
+            # TODO - Déposer les ressources sur la case de dépot
             pass
         self.global_message()
 
