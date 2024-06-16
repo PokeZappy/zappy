@@ -72,7 +72,9 @@ void cmd_pnw(server_t *server, char *args, client_socket_t *client)
     int o = client->player->_direction + 1;
     int l = client->player->_level;
     char *n = client->player->_team->_name;
-    int gui_socket = get_gui(server)->socket;
+    client_socket_t *gui_socket = get_gui(server);
 
-    dprintf(gui_socket, "pnw #%d %d %d %d %d %s\n", id, x, y, o, l, n);
+    if (gui_socket)
+        dprintf(gui_socket->socket,
+        "pnw #%d %d %d %d %d %s\n", id, x, y, o, l, n);
 }

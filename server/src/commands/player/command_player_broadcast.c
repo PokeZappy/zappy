@@ -70,14 +70,13 @@ void cmd_broadcast(server_t *server, char *args, client_socket_t *client)
     if (!check_for_ko(args, client))
         return;
     while (current != NULL) {
-        if (current->_id == client->_id) {
-            current = TAILQ_NEXT(client, entries);
-            continue;
-        }
-        dprintf(current->socket, "message %d, %s\n",
+        if (current->_id != client->_id && current->_is_gui != 1) {
+            dprintf(current->socket, "message %d, %s\n",
             get_sound_direction(server->grid->_width, server->grid->_height,
             current->player, client->player->_pos), text);
+        }
         current = TAILQ_NEXT(current, entries);
     }
+    dprintf(get_gui(server)->socket, "pbc #%d %s\n", client->_id, text);
     dprintf(client->socket, "ok\n");
 }
