@@ -62,6 +62,8 @@ void cmd_inventory(server_t *server, char *args, client_socket_t *client)
         return;
     response = print_player_inventory(client->player);
     dprintf(client->socket, "%s\n", response);
+    dprintf(get_gui(server)->socket, "pin #%d %d %d %s\n", client->_id,
+        client->player->_pos._x, client->player->_pos._y, response);
     free(response);
     printf("inventory\n");
 }
