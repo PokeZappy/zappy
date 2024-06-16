@@ -220,20 +220,23 @@ class Player(Bot):
             self.move(action, self.dir)
 
     def recv_treatment(self, buf) -> None:
-        recv_type, msg = self.message.receive(buf, self.actions[0])
+        recv_type, msgs = self.message.receive(buf, self.actions[0])
+        print(recv_type)
+        print(f'before distribution: {msgs}')
         if recv_type == 'ok':
-            if isinstance(msg, tuple) and msg[0] == 'Take':
-                self.inventory[msg[1]] += 1
-            if isinstance(msg, tuple) and msg[0] == 'Set':
-                self.inventory[msg[1]] -= 1
+            if isinstance(msgs, tuple) and msgs[0] == 'Take':
+                self.inventory[msgs[1]] += 1
+            if isinstance(msgs, tuple) and msgs[0] == 'Set':
+                self.inventory[msgs[1]] -= 1
         if recv_type == 'look':
             self.looked = True
             print("recieve look")
-            self.environment = msg
+            self.environment = msgs
         if recv_type == 'inventory':
             print("inventory")
         if recv_type == 'broadcast':
-            self.broadcast_traitement(msg)
+            for msg in msgs:
+                self.broadcast_traitement(msg)
         self.actions.pop(0)
 
     @abstractmethod
@@ -275,6 +278,6 @@ class Player(Bot):
     def broadcast_traitement(self, msg: tuple | str) -> None:
         pass
 
-    def global_message(self, msg) -> None:
+    def global_message(self) -> None:
         # TODO - faire les messages globaux comme le changement de metier
         pass

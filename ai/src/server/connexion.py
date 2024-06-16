@@ -10,6 +10,7 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     :param host: The hostname or IP address to connect to.
     :return: A tuple containing a list of integers and the socket object used for the connection.
     """
+    # TODO - add security when server not open
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect((host, int(port)))
     welcome_message = client_socket.recv(1024).decode().strip()

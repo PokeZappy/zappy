@@ -103,7 +103,7 @@ class Messages(object):
                         'msg': text[0],
                         **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and text[
                             1].isnumeric() else {}),
-                        **({'info': infos} if infos is not None else {}),
+                        **({'infos': infos} if infos is not None else {}),
                         **({'nbr': nbr} if infos is not None else {})
                     })
                 else:
@@ -111,7 +111,7 @@ class Messages(object):
         return 'broadcast', result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None,
-                     infos: list[str, str] = None) -> None:
+                     infos: list[list[str, str]] = None) -> None:
         """
         Append a message to the buffer for broadcasting.
 

@@ -87,7 +87,11 @@ class Depot(Player):
         self.broadcast()
 
     def make_action(self) -> None:
-        self.message.buf_messages('focus in his opibus : ', ['EHEHEHE', '5'])
-        message = self.message.send_buf()
-        self.queue.append(message)
+        if len(self.actions) >= 1:
+            return
+        self.message.buf_messages('focus in his opibus : ', infos=[['EHEHEHE', '5']])
+        # message = self.message.send_buf()
+        print(f'my msg: {self.message.msg}')
+        self.queue.append('Broadcast')
+        print('queue append')
         self.apply_action()

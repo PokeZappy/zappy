@@ -1,5 +1,4 @@
 import socket
-from abc import ABC
 
 from src.player.player import Player
 from src.utils.info_look import look_resources, only_forward_resources
@@ -200,4 +199,3 @@ class Collector(Player):
             # TODO - Déposer les ressources sur la case de dépot
             pass
         self.global_message()
-
