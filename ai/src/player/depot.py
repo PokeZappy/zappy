@@ -89,9 +89,6 @@ class Depot(Player):
     def make_action(self) -> None:
         if len(self.actions) >= 1:
             return
-        self.message.buf_messages('focus in his opibus : ', infos=[['EHEHEHE', '5']])
-        # message = self.message.send_buf()
-        print(f'my msg: {self.message.msg}')
+        self.message.buf_messages('collectio rerum : ', coord=(1, 103))
         self.queue.append('Broadcast')
-        print('queue append')
         self.apply_action()

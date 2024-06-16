@@ -11,7 +11,8 @@ class Collector(Player):
         self.need_eat = 0
         self.pos: tuple[int, int] = (0, 0)
         self.the_place_to_be: tuple[int, int] = (0, 0)
-        self.focus = None
+        self.focus: list[str] = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate', 'food']
+        self.nbr_focus: list[int] = [0]
         self.depot: tuple[int, int] = (0, 0)
         self.hard_focus: bool = False
 
@@ -19,37 +20,48 @@ class Collector(Player):
         #  TODO - pour chaque index on vient se placer sur une case en particulier pour pas tomber sur une ligne sans rien
         pass
 
-    def raids_resources(self, tiles, focus) -> None:
+    def raids_resources(self, tiles) -> None:
         """
+        Perform raids on resources based on the given tiles and focus.
 
+        Parameters:
+        - tiles: list - List of tiles to search for resources.
+
+        Returns:
+        - None
         """
         for tile in tiles:
             for resource in tile:
-                if resource in focus:
+                if resource in self.focus:
                     self.queue.append(("Take", resource))
             self.queue.append('Forward')
 
-    def mouving_straight(self, index, focus: list[str] = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate', 'food']) -> None:
+    def mouving_straight(self, index) -> None:
         """
         Move the player straight while focusing on specific resources.
 
         Parameters:
         - index: int - The index of the player.
-        - focus: list[str] - List of resources to focus on while moving straight.
         """
         self.go_to_start(index)
-        # self.look_around()
-
-        # while self.look == "":
-        #     tiles = self.look
-        # tiles = self.recv_action()
-        tiles = look_resources(self.environment, focus)
+        tiles = look_resources(self.environment, self.focus)
         self.looked = False
         self.environment = ""
         tiles = only_forward_resources(tiles)
         print(f'FORWARD tiles {tiles}')
-        self.raids_resources(tiles, focus)
-    #         TODO - check if food needed -> search_food()
+        self.raids_resources(tiles)
+        if self.hard_focus and self.nbr_focus[0] <= self.inventory[self.focus[0]]:
+            # TODO - go to depot à voir avec @Matthias
+            self.move_to(self.depot)
+        # TODO - check if food needed -> search_food()
+
+    def reset_focus(self) -> None:
+        """
+        Reset the focus of the player to default values.
+        """
+        self.focus = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']
+        self.hard_focus = False
+        self.nbr_focus = []
 
     def search_lvl_1(self, focus: list[str] = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']) -> None:
         # TODO : regarde puis tourne dans l'angle avec le plus de resources (sinon) par défaut droite
@@ -161,10 +173,23 @@ class Collector(Player):
                             self.inventory[i] += 1
         #         droite
 
-    def search_food(self) -> None:
-        self.search_lvl_1('food')
+    def deposits_resources(self):
+        """
+        Deposits the resources from the player's inventory.
+
+        This method adds the resources to the queue for depositing.
+        """
+        for resource in self.inventory:
+            if resource != 'food':
+                self.queue.append([('Set', resource) for _ in range(self.inventory[resource])])
+    #     TODO - @Matthias est-ce que je le fais sortir ici et comment tout droit ou avec un 180° ?
 
     def make_action(self) -> None:
+        """
+        Perform the next action based on the current state of the player.
+
+        This method checks if there are pending actions, looks around if needed, and applies the next action in the queue.
+        """
         if len(self.actions) >= 1:
             return
         print(self.looked)
@@ -177,25 +202,29 @@ class Collector(Player):
         self.apply_action()
 
     def broadcast_traitement(self, message: tuple | str) -> None:
+        """
+        Process the broadcast message and take appropriate actions.
+
+        Parameters:
+        - message: tuple | str - The message received for broadcast processing.
+        """
         if message['msg'] == 'quid habes ut nobis offerat':
-            # TODO: send all inventory
             self.message.buf_messages(self.inventory)
             self.broadcast()
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
-            print(message)
-        #     TODO - actualiser le focus sur ces ressources
+            self.nbr_focus = message['nbr']
+        #     TODO - @Matthias est-ce que je viens clear la queue pour recommencer le look etc.
         if message['msg'] == 'collectio rerum : ':
             self.depot = message['coord']
-            #TODO: point de dépot
         if message['msg'] == 'vade ad me aliquid : ':
-            #TODO: ask for a hard focus ressource RETURN TO depot after taking the obj
-            # TODOO - Parser le infos pour extraire les données comme nom et nombre
+        #     TODO - IDEM
+        #      @Matthias est-ce que je viens clear la queue pour recommencer le look etc.
             self.focus = message['infos']
-            # self.nbr_focus =
+            self.nbr_focus = message['nbr']
             self.hard_focus = True
         if message['msg'] == 'Potes dominum facti':
-        #     TODO - validation passage pousseur pour aller au dépot
-            # TODO - Déposer les ressources sur la case de dépot
-            pass
+            self.queue.append('Forward')
+            self.queue.append('Forward')
+            self.deposits_resources()
         self.global_message()

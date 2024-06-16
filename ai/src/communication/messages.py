@@ -102,12 +102,13 @@ class Messages(object):
                         'id': int(parts[1]),
                         'msg': text[0],
                         **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and text[
-                            1].isnumeric() else {}),
-                        **({'infos': infos} if infos is not None else {}),
-                        **({'nbr': nbr} if infos is not None else {})
+                            1][0].isnumeric() else {}),
+                        **({'infos': list(infos)} if infos is not None else {}),
+                        **({'nbr': list(nbr)} if infos is not None else {})
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
+        print(result)
         return 'broadcast', result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None,
@@ -169,7 +170,7 @@ def get_infos(text: list[str]) -> tuple[list] | None:
     - A tuple of lists containing parsed information.
     """
     if len(text) == 2 and text[1][0:1].isnumeric() or len(text) < 2:
-        return None
+        return None, None
     if len(text) > 2:
         return tuple(zip(*(infos.split(";") for infos in text[2].split('~'))))
     return tuple(zip(*(infos.split(";") for infos in text[1].split('~'))))
