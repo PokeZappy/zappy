@@ -23,6 +23,7 @@ void cmd_eject(server_t *server, char *args, client_socket_t *client)
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
+    dprintf(get_gui(server)->socket, "pex #%d\n", client->_id);
     printf("eject\n");
 }
 
