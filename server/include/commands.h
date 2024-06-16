@@ -56,6 +56,7 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client);
 void cmd_post_incant(server_t *server, char *args, client_socket_t *client);
 
 // -- GUI -- //
+client_socket_t *get_gui(server_t *server);
 void cmd_msz(server_t *server, char *args, client_socket_t *client);
 void cmd_bct(server_t *server, char *args, client_socket_t *client);
 void cmd_mct(server_t *server, char *args, client_socket_t *client);

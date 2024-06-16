@@ -7,6 +7,18 @@
 
 #include "../../../include/commands.h"
 
+client_socket_t *get_gui(server_t *server)
+{
+    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
+
+    while (current != NULL) {
+        if (current->_is_gui == 1)
+            return current;
+        current = TAILQ_NEXT(current, entries);
+    }
+    return NULL;
+}
+
 static void m_cmd_2(char *command, client_socket_t *client, server_t *server)
 {
     if (strncmp(command, "pin ", 4) == 0)

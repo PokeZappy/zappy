@@ -66,5 +66,13 @@ void cmd_tna(server_t *server, char *args, client_socket_t *client)
 
 void cmd_pnw(server_t *server, char *args, client_socket_t *client)
 {
-    printf("pnw\n");
+    int id = client->_id;
+    int x = client->player->_pos._x;
+    int y = client->player->_pos._y;
+    int o = client->player->_direction + 1;
+    int l = client->player->_level;
+    char *n = client->player->_team->_name;
+    int gui_socket = get_gui(server)->socket;
+
+    dprintf(gui_socket, "pnw #%d %d %d %d %d %s\n", id, x, y, o, l, n);
 }

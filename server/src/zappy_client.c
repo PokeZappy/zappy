@@ -60,9 +60,9 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
             fprintf(stderr, "handle_client_cmd: Enable to create player\n");
             return;
         }
-        dprintf(client->socket, "%d\n%d %d\n",
-            get_client_rest(client->player->_team), client->player->_pos._x,
-            client->player->_pos._y);
+        dprintf(client->socket, "%d\n%d %d\n", get_client_rest(client->player
+            ->_team), client->player->_pos._x, client->player->_pos._y);
+        cmd_pnw(server, NULL, client);
     }
     if (client->_is_gui == 0)
         return manage_cmd_play(commands, client, server);
