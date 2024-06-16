@@ -38,3 +38,4 @@ typedef struct server_s {
 } server_t;
 
 int zappy_server(server_arg_t *arguments);
+void time_manager(server_t *server);

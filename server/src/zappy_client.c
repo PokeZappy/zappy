@@ -103,7 +103,7 @@ static int loop_all_client(struct server_s *server, fd_set readfds)
             handle_client_message(client, server);
         client = tmp;
     }
-    execute_command(server);
+    time_manager(server);
     return 1;
 }
 

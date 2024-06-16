@@ -26,6 +26,7 @@ typedef struct player_s {
     direction_t _direction; // looking direction of the player
     int _level; // level of the player
     int _inventory[ITEM_PER_TILE]; // list items on the tile
+    int _health; // health of the player
     struct team_s *_team; // team of the player
     TAILQ_ENTRY(player_s) _entries; // list of players
 } player_t;
@@ -49,6 +50,7 @@ char *player_look(server_t *server, player_t *player);
 void player_look_loop(server_t *server, player_t *p, int i, char *result);
 int nb_player_on_tile(server_t *server, vector_t tile_pos);
 bool check_incantation(server_t *server, player_t *player);
+void check_death(server_t *server);
 
 // -- GRID RELATED -- //
 bool player_take_item(player_t *player, tiles_t *tile, int item);

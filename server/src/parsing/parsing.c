@@ -69,7 +69,7 @@ static int check_arg(int ac, char **av, server_arg_t *args, int i)
     if (strcmp(av[i - 1], "-c") == 0 && i < ac && is_number(av[i]))
         args->_c = atoi(av[i]);
     if (strcmp(av[i - 1], "-f") == 0 && i < ac && is_number(av[i]))
-        args->_f = atoi(av[i]);
+        args->_f = atoi(av[i]) / 100;
     if (strcmp(av[i - 1], "-n") == 0 && i < ac)
         return create_tab(ac, av, args, i);
     if (!is_an_arg(av[i - 1]) || (i + 1 > ac)) {
