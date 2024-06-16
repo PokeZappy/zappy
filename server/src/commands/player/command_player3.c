@@ -23,6 +23,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
     egg->_team = client->player->_team;
     egg->_pos = client->player->_pos;
     TAILQ_INSERT_TAIL(&server->grid->_tiles[x][y]->_head_egg, egg, _entries);
+    dprintf(get_gui(server)->socket, "pfk #%d\n", client->_id);
     printf("ok\n");
 }
 
