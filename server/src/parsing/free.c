@@ -53,6 +53,19 @@ static void free_server_team(server_t *server)
     }
 }
 
+static void free_egg_list(server_t *server)
+{
+    egg_t *egg = TAILQ_FIRST(&server->_head_egg);
+    egg_t *tmp_egg;
+
+    while (egg != NULL) {
+        tmp_egg = TAILQ_NEXT(egg, _entries);
+        TAILQ_REMOVE(&server->_head_egg, egg, _entries);
+        free(egg);
+        egg = tmp_egg;
+    }
+}
+
 void free_server(server_t *server)
 {
     if (!server)
@@ -61,5 +74,6 @@ void free_server(server_t *server)
     free_server_client(server);
     free_server_team(server);
     free_grid(server->grid);
+    free_egg_list(server);
     free(server);
 }

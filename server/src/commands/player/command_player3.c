@@ -7,6 +7,13 @@
 
 #include "../../../include/commands.h"
 
+static int calc_egg_id(server_t *server)
+{
+    int id = 0;
+
+    return id;
+}
+
 void cmd_fork(server_t *server, char *args, client_socket_t *client)
 {
     int x = client->player->_pos._x;
@@ -22,9 +29,11 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
     egg->_available = 600;
     egg->_team = client->player->_team;
     egg->_pos = client->player->_pos;
+    egg->_id = calc_egg_id(server);
     TAILQ_INSERT_TAIL(&server->grid->_tiles[x][y]->_head_egg, egg, _entries);
-    dprintf(get_gui(server)->socket, "enw #e #%d %d %d\n", client->_id,
-        client->player->_pos._x, client->player->_pos._y);
+    TAILQ_INSERT_TAIL(&server->_head_egg, egg, _entries);
+    dprintf(get_gui(server)->socket, "enw #%d #%d %d %d\n", egg->_id,
+        client->_id, client->player->_pos._x, client->player->_pos._y);
     printf("ok\n");
 }
 

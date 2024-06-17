@@ -35,6 +35,7 @@ typedef struct server_s {
     TAILQ_HEAD(, team_s) _head_team; // list of teams
     TAILQ_HEAD(client_list, client_socket_s) _head_client_sockets; // players
     TAILQ_HEAD(, delayed_command_s) _head_delayed_commands; // list of commands
+    TAILQ_HEAD(, egg_s) _head_egg; // list of egg
 } server_t;
 
 int zappy_server(server_arg_t *arguments);

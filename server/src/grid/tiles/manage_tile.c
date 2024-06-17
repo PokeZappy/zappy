@@ -26,11 +26,13 @@ tiles_t *init_tile(void)
 void free_all_egg(tiles_t *tile)
 {
     egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+    egg_t *tmp_egg;
 
     while (egg != NULL) {
+        tmp_egg = TAILQ_NEXT(egg, _entries);
         TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
         free(egg);
-        egg = TAILQ_FIRST(&tile->_head_egg);
+        egg = tmp_egg;
     }
 }
 
