@@ -15,20 +15,20 @@ class Collector(Player):
         self.nbr_focus: list[int] = [0]
         self.depot: tuple[int, int] = (0, 0)
         self.hard_focus: bool = False
+        self.response: int = 0
+        self.id = 0
+        self.get_id('Quot publicani ibi sunt?')
 
-    def go_to_start(self, index):
-        #  TODO - pour chaque index on vient se placer sur une case en particulier pour pas tomber sur une ligne sans rien
+    def go_to_start(self):
+        # TODO - faire un algo qui vient placer le collecteur en fonction de son id % taille max de la map pour éviter les bétise sur le 0 1 et 2
         pass
 
     def raids_resources(self, tiles) -> None:
         """
         Perform raids on resources based on the given tiles and focus.
 
-        Parameters:
-        - tiles: list - List of tiles to search for resources.
-
-        Returns:
-        - None
+        :param tiles: list - List of tiles to search for resources.
+        :return: None
         """
         for tile in tiles:
             for resource in tile:
@@ -40,8 +40,8 @@ class Collector(Player):
         """
         Move the player straight while focusing on specific resources.
 
-        Parameters:
-        - index: int - The index of the player.
+        :param index: int - The index of the player.
+        :return: None
         """
         self.go_to_start(index)
         tiles = look_resources(self.environment, self.focus)
@@ -54,10 +54,13 @@ class Collector(Player):
             # TODO - go to depot à voir avec @Matthias
             self.move_to(self.depot)
         # TODO - check if food needed -> search_food()
+        #  sécu si pas de bouffe sur le chemin.
 
     def reset_focus(self) -> None:
         """
         Reset the focus of the player to default values.
+
+        :return: None
         """
         self.focus = ['linemate', 'deraumere', 'sibur', 'mendiane', 'phiras', 'thystame', 'food']
         self.hard_focus = False
@@ -173,40 +176,41 @@ class Collector(Player):
                             self.inventory[i] += 1
         #         droite
 
-    def deposits_resources(self):
+    def deposits_resources(self) -> None:
         """
         Deposits the resources from the player's inventory.
-
         This method adds the resources to the queue for depositing.
+
+        :return: None
         """
         for resource in self.inventory:
             if resource != 'food':
                 self.queue.append([('Set', resource) for _ in range(self.inventory[resource])])
-    #     TODO - @Matthias est-ce que je le fais sortir ici et comment tout droit ou avec un 180° ?
+    #     TODO - sortie vers le nord
 
     def make_action(self) -> None:
         """
         Perform the next action based on the current state of the player.
-
         This method checks if there are pending actions, looks around if needed, and applies the next action in the queue.
+
+        :return: None
         """
         if len(self.actions) >= 1:
             return
-        print(self.looked)
-        # if not self.looked and 'Look' not in self.queue:
-        self.queue.append('Look')
-        self.apply_action()
+        if not self.looked and 'Look' not in self.queue:
+            self.queue.append('Look')
         if self.looked:
             if len(self.queue) == 0:
                 self.mouving_straight(0)
             self.looked = False
+        self.apply_action()
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         """
         Process the broadcast message and take appropriate actions.
 
-        Parameters:
-        - message: tuple | str - The message received for broadcast processing.
+        :param message: tuple | str - The message received for broadcast processing.
+        :return: None
         """
         if message['msg'] == 'quid habes ut nobis offerat':
             self.message.buf_messages(self.inventory)
@@ -230,4 +234,11 @@ class Collector(Player):
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 self.get_north(message['direction'])
+        if message['msg'] == 'Ego sum publicani ibi':
+            # TODO - ADD parser id to replace missing id if collector died
+            self.id += 1
+        if message['msg'] == 'Quot publicani ibi sunt?':
+            self.message.buf_messages('Ego sum publicani ibi', infos=[self.id])
+            self.queue.insert(0, 'Broadcast')
+            self.apply_action()
         self.global_message()

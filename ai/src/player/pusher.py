@@ -16,6 +16,8 @@ class Pusher(Player):
         self.you_should_not_pass = True
         self.is_in_position = False
         self.goto = None
+        self.id = 0
+        self.get_id('Quis est puer interfector?')
 
     def recv_treatment(self, buf: str) -> None:
         """
@@ -55,21 +57,28 @@ class Pusher(Player):
             self.queue.append('Broadcast')
             print("after_broadcast")
             # self.goto = not None
-        elif self.is_in_position == False:
+        elif not self.is_in_position:
             #TODO: ask for a direction to go to
             pass
-        elif self.you_should_not_pass == True:
+        elif self.you_should_not_pass:
             self.eject()
         self.apply_action()
 
     def broadcast_traitement(self, message: tuple | str) -> None:
-            if message['msg'] == 'sum socius senatus':
-                # TODO: parler et dire 'Potes dominum facti' et ne pas pousser pendant X temps
-                pass
-            if message['msg'] == 'hic est prandium tuum':
-                # TODO: prendre la bouffe sur la case
-                pass
-            if message['msg'] == 'movere ad':
-                #TODO: GoTO
-                pass
-            self.global_message()
+        if message['msg'] == 'sum socius senatus':
+            # TODO: parler et dire 'Potes dominum facti' et ne pas pousser pendant X temps
+            pass
+        if message['msg'] == 'hic est prandium tuum':
+            # TODO: prendre la bouffe sur la case
+            pass
+        if message['msg'] == 'movere ad':
+            #TODO: GoTO
+            pass
+        if message['msg'] == 'Ego sum puer inteffector':
+            # TODO - ADD parser id to replace missing id if collector died
+            self.id += 1
+        if message['msg'] == 'Quis est puer interfector?':
+            self.message.buf_messages('Ego sum puer inteffector', infos=[self.id])
+            self.queue.insert(0, 'Broadcast')
+            self.apply_action()
+        self.global_message()

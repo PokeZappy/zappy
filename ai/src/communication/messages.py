@@ -13,6 +13,12 @@ class Messages(object):
     def __init__(self, cipher: Cipher, id_nbr: str, language: Latin, debug: bool = False) -> None:
         """
         Initialize a Messages instance with a cipher and an ID number.
+
+        :param cipher: Cipher - Cipher class
+        :param id_nbr: str - id of the receiver
+        :param language: Latin - Gaffiot Latin - French
+        :param debug: bool - flag for debug prints
+        :return: None
         """
         self.uuid_used: list[str] = ["", ]
         self.id: str = id_nbr
@@ -22,6 +28,13 @@ class Messages(object):
         self.debug: bool = debug
 
     def send_coord(self, message: str, pos: (int, int)) -> str:
+        """
+        Send a message with coordinates to the specified position.
+
+        :param message: str - The message to be sent.
+        :param pos: tuple(int, int) - The coordinates of the message.
+        :return: str - A formatted string representing the broadcast message.
+        """
         new_uuid: str = ''
         while new_uuid in self.uuid_used:
             new_uuid = uuid.uuid4().__str__()
@@ -35,11 +48,8 @@ class Messages(object):
         """
         Send an encrypted message.
 
-        Parameters:
-            message (str): The message to be sent.
-
-        Returns:
-            str: A formatted string representing the broadcast message.
+        :param message: str - The message to be sent.
+        :return :str - A formatted string representing the broadcast message.
         """
         new_uuid: str = ""
         while new_uuid in self.uuid_used:
@@ -51,14 +61,11 @@ class Messages(object):
 
     def receive(self, message: str, action: any = None) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
         """
-        Receive and process encrypted messages.
+        Receive and process a message.
 
-        Parameters:
-            message (str): The encrypted message to be processed.
-            action (any):
-
-        Returns:
-            str | list[dict[str, str | int | tuple[int, int]]]: Either the processed message or a list of dictionaries containing message details.
+        :param message: str - The message received.
+        :param action: any - Additional action related to the message.
+        :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]]]] - A tuple containing the status and processed message details.
         """
         if validate_inventory_pattern(message):
             return 'inventory', message
@@ -78,11 +85,8 @@ class Messages(object):
         """
         Process the received broadcast message and extract relevant information.
 
-        Parameters:
-            message (str): The encrypted message received.
-
-        Returns:
-            tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]: A tuple containing the status of the broadcast and the processed message details.
+        :param message: str - The received broadcast message.
+        :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]]]] - A tuple containing the status and processed message details.
         """
         save_msg: str = message
         match = re.search(r'\d+, ', message)
@@ -119,18 +123,20 @@ class Messages(object):
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
         print(result)
+        if not result:
+            result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None,
                      infos: list[list[str, str]] = None) -> None:
         """
-        Append a message to the buffer for broadcasting.
+        Append an encrypted message to the buffer for broadcasting.
 
-        Parameters:
-            message (str): The message to be sent.
-            receiver_id (int): The ID of the message receiver.
-            coord (tuple[int, int], optional): The coordinates associated with the message. Defaults to None.
-            infos (list[str, str], optional): Additional information to be included in the message. Defaults to None.
+        :param message: str - The message to be sent.
+        :param receiver_id: int - The ID of the message receiver.
+        :param coord: tuple[int, int] - The coordinates of the message.
+        :param infos: list[list[str, str]] - Additional information related to the message.
+        :return: None
         """
         if coord is not None:
             message += f'#{coord[0]},{coord[1]}'
@@ -142,9 +148,9 @@ class Messages(object):
         """
         Append an encrypted message to the buffer for broadcasting.
 
-        Parameters:
-            message (str): The message to be encrypted and sent.
-            receiver_id (int): The ID of the message receiver.
+        :param message: str - The message to be sent.
+        :param receiver_id: int - The ID of the message receiver.
+        :return: None
         """
         new_uuid: str = ""
         while new_uuid in self.uuid_used:
@@ -159,10 +165,9 @@ class Messages(object):
 
     def send_buf(self) -> str:
         """
-        Send the buffered messages as a formatted broadcast message.
+        Format and return the buffered messages for broadcasting.
 
-        Returns:
-            str: A formatted string representing the broadcast message.
+        :return: str - A formatted string representing the buffered messages for broadcasting.
         """
         result = self.msg + '"'
         self.msg = 'Broadcast "'

@@ -117,20 +117,6 @@ class Player(Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    # def incantation(self) -> bool:
-    #     """
-    #     This method makes the player do an incantation.
-    #
-    #     :return: bool - True if the incantation is done, False otherwise.
-    #     """
-    #     for i in self.goal:
-    #         Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
-    #         for j in self.inv:
-    #             if i[0] == j[0]:
-    #                 self.send_action(f"Set {i[0]}\n")
-    #     self.send_action("Incantation\n")
-    #     return False
-
     def get_north(self, direction: int):
         """
         Set the player's facing direction based on the input direction.
@@ -157,47 +143,12 @@ class Player(Bot):
         for mvt in path:
             self.queue.append(mvt)
 
-    def pos_view(self, axis: str, i: int, dire: dir) -> int:
-        """
-        This method returns the position of the view.
-
-        :param axis: str - The axis to be used.
-        :param i: int - The index.
-        :param dire: dir - The direction.
-        :return: int - The position of the view.
-        """
-        sense = 1
-        if dire == dir.EAST or dire == dir.WEST:
-            if axis == 'x':
-                axis = 'y'
-            else:
-                axis = 'x'
-        if dire == dir.SOUTH or dire == dir.WEST:
-            sense = -1
-        if axis == 'x':
-            for j in range(0, 9):
-                if j * (j + 1) - j <= i <= j * (j + 1) + j:
-                    return sense * (i - j * (j + 1))
-        elif axis == 'y':
-            return sense * int(i ** 0.5)
-
-    def update_map(self, view: list[str], dire: dir) -> None:
-        """
-        This method updates the map.
-
-        :param view: list[str] - The view of the player.
-        :param dire: dir - The direction of the player.
-        :return: None
-        """
-        split_coma = view.split(',')
-        for words in split_coma:
-            split = words.split(' ')
-            for i in range(len(split)):
-                for obj in split:
-                    if obj in self.goal.keys():
-                        if obj not in self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]]:
-                            self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] = 0
-                        self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] += 1
+    def get_id(self, message: str) -> None:
+        self.message.buf_messages(message)
+        self.queue.append('Broadcast')
+        self.queue.append('Look')
+        self.queue.append('Look')
+        self.apply_action()
 
     def apply_action(self) -> None:
         """
@@ -242,7 +193,10 @@ class Player(Bot):
         :param buf: The data received from the server.
         :return: None
         """
-        recv_type, msgs = self.message.receive(buf, self.actions[0])
+        if len(self.actions) == 0:
+            recv_type, msgs = self.message.receive(buf)
+        else:
+            recv_type, msgs = self.message.receive(buf, self.actions[0])
         print(recv_type)
         print(f'before distribution: {msgs}')
         if recv_type == 'ok':
@@ -261,7 +215,9 @@ class Player(Bot):
         if recv_type == 'broadcast':
             for msg in msgs:
                 self.broadcast_traitement(msg)
-        self.actions.pop(0)
+            return
+        if len(self.actions) != 0:
+            self.actions.pop(0)
 
     @abstractmethod
     def make_action(self) -> None:
