@@ -85,3 +85,10 @@ class Depot(Player):
                 self.set_obj(resource)
         self.message.buf_messages('facultates positas carmina')
         self.broadcast()
+
+    def make_action(self) -> None:
+        if len(self.actions) >= 1:
+            return
+        self.message.buf_messages('collectio rerum : ', coord=(1, 103))
+        self.queue.append('Broadcast')
+        self.apply_action()

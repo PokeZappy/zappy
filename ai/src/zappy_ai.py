@@ -39,7 +39,7 @@ class Bot(object):
         self.cipher = cipher.Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu") #m. Donec fringilla lectus et imperdiet hendrerit. Morbi eget risus volutpat, tincidunt tellus quis, maximus augue. Proin ac hendrerit mauris. Sed egestas sapien ac tellus sagittis laoreet. Cras sed pretium erat. Etiam ac aliquet ante. Vivamus ornare tellus quis ante eleifend, egestas fringilla velit suscipit. Nulla sollicitudin, erat non eleifend lobortis, lacus tortor luctus mi, at volutpat neque arcu facilisis dolor. Pellentesque eros sapien, dapibus eget mauris at, rhoncus gravida odio. Integer viverra velit eu mi tincidunt efficitur. Aenean vitae sem ipsum. Integer quam nibh, semper eu venenatis a, egestas et sem.")
         self.language = latin.Latin()
         self.message = messages.Messages(self.cipher, self.cli_num, self.language)
-        self.life = 1260
+        self.life = 10 * self.FOOD
         print(self.cli_num)
         print(self.dimensions)
         print(self.cli_socket)
@@ -61,10 +61,7 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        if self.debug_mode:
-            print("Receiving action...")
         rec: str = self.cli_socket.recv(1024).decode()
-        # message = self.message.receive(rec)
         if self.debug_mode:
             print(f"Received action: {rec}")
         return rec

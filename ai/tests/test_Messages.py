@@ -39,16 +39,16 @@ class TestMessages:
         cipher = Cipher("testkey")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result = messages.receive("INVALID MESSAGE FORMAT")
-        assert result == []
+        result = messages.receive("INVALID MESSAGE FORMAT", "hello")
+        assert result == ('broadcast', [])
 
     #  receive method handles empty messages or messages shorter than expected
     def test_receive_handles_empty_or_short_messages(self):
         cipher = Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result_empty = messages.receive('')
-        assert result_empty == []
+        result_empty = messages.receive('', "hello")
+        assert result_empty == ('broadcast', [])
 
         # TODO - Find why isn't working
         # latin = Latin()
@@ -64,9 +64,9 @@ class TestReceive:
         cipher = Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        processed_message = messages.receive('message 1, "ACCMST 1 cfcba69f-887b-444d-bdd0-850fd47ffbdd yo_la_team"')
-        assert isinstance(processed_message, str)
-        assert processed_message == 'ko'
+        processed_message = messages.receive('message 1, "ACCMST 1 cfcba69f-887b-444d-bdd0-850fd47ffbdd yo_la_team"', "hello")
+        assert isinstance(processed_message, tuple)
+        assert processed_message == ('ko', 'ko')
 
     #  returns the original message if it matches the predefined pattern
     def test_returns_original_message_if_matches_predefined_pattern(self):
@@ -74,8 +74,8 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         original_message = "[ food 1, linemate 2, deraumere 3, sibur 4, mendiane 5, phiras 6, thystame 7 ]"
-        processed_message = messages.receive(original_message)
-        assert processed_message == original_message
+        processed_message = messages.receive(original_message, "hello")
+        assert processed_message == ('inventory', original_message)
 
     #  appends new UUIDs to the uuid_used list after processing messages
     def test_appends_new_uuids_to_uuid_used_list_after_processing_messages(self):
@@ -84,7 +84,7 @@ class TestReceive:
         messages = Messages(cipher, "123", latin)
         initial_uuid_count = len(messages.uuid_used)
         encrypted_message = messages.send("Hello World")
-        messages.receive(encrypted_message)
+        messages.receive(encrypted_message, "hello")
         assert len(messages.uuid_used) == initial_uuid_count + 1
 
     #  handles messages with invalid formats gracefully
@@ -92,8 +92,8 @@ class TestReceive:
         cipher = Cipher("testkey")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result = messages.receive("INVALID MESSAGE FORMAT")
-        assert result == []
+        result = messages.receive("INVALID MESSAGE FORMAT", "hello")
+        assert result == ('broadcast', [])
 
     #  returns 'ko' for messages with reused UUIDs
     def test_returns_ko_for_messages_with_reused_uuids(self):
@@ -101,9 +101,9 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         encrypted_message = messages.send("Hello World")
-        messages.receive(encrypted_message)
-        result = messages.receive(encrypted_message)
-        assert result == []
+        messages.receive(encrypted_message, "hello")
+        result = messages.receive(encrypted_message, "hello")
+        assert result == ('broadcast', [])
 
     #  processes messages with missing or malformed parts
     def test_processes_messages_with_missing_or_malformed_parts(self):
@@ -111,5 +111,5 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         malformed_message = 'Broadcast "ACCMST 123 4567 89#90#91"'
-        result = messages.receive(malformed_message)
-        assert result == []
+        result = messages.receive(malformed_message, "hello")
+        assert result == ('broadcast', [])

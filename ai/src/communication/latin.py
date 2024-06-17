@@ -54,6 +54,8 @@ class Latin(object):
                                         'deplace-toi vers : ': 'movere ad',
                                         'changement de rôle': 'factus es : ',
 
+                                        # North_guard to ALL
+                                        'voici le nord': 'est dominus aquilonis',
                                         'évo de niveau': 'nobilis incantatio',
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',

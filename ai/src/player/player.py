@@ -44,6 +44,7 @@ class Player(Bot):
                                           }
         self.looked: bool = False
         self.environment: str = ""
+        self.path = Path(self.limit, (0, 0), (0, 0))
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -129,6 +130,21 @@ class Player(Bot):
     #                 self.send_action(f"Set {i[0]}\n")
     #     self.send_action("Incantation\n")
     #     return False
+
+    def get_north(self, direction: int):
+        """
+        Set the player's facing direction based on the input direction.
+
+        :param direction: int - The direction value to set the player's facing direction.
+        """
+        if direction == 1:
+            self.path.facing = dir.NORTH.value
+        if direction == 5:
+            self.path.facing = dir.SOUTH.value
+        if direction == 3:
+            self.path.facing = dir.EAST.value
+        if direction == 7:
+            self.path.facing = dir.WEST.value
 
     def move_to(self, pos: tuple[int, int]) -> None:
         """
@@ -218,21 +234,31 @@ class Player(Bot):
             self.move(action, self.dir)
 
     def recv_treatment(self, buf) -> None:
-        print(buf)
-        recv_type, msg = self.message.receive(buf, self.actions[0])
+        """
+        Process the received data from the server.
+
+        This method handles the data received from the server, updates player attributes accordingly, and removes the processed action from the action queue.
+
+        :param buf: The data received from the server.
+        :return: None
+        """
+        recv_type, msgs = self.message.receive(buf, self.actions[0])
+        print(recv_type)
+        print(f'before distribution: {msgs}')
         if recv_type == 'ok':
-            if isinstance(msg, tuple) and msg[0] == 'Take':
-                self.inventory[msg[1]] += 1
-            if isinstance(msg, tuple) and msg[0] == 'Set':
-                self.inventory[msg[1]] -= 1
+            if isinstance(msgs, tuple) and msgs[0] == 'Take':
+                self.inventory[msgs[1]] += 1
+            if isinstance(msgs, tuple) and msgs[0] == 'Set':
+                self.inventory[msgs[1]] -= 1
         if recv_type == 'look':
             self.looked = True
             print("recieve look")
-            self.environment = msg
+            self.environment = msgs
         if recv_type == 'inventory':
             print("inventory")
         if recv_type == 'broadcast':
-            self.broadcast_traitement(msg)
+            for msg in msgs:
+                self.broadcast_traitement(msg)
         self.actions.pop(0)
 
     @abstractmethod
@@ -274,6 +300,6 @@ class Player(Bot):
     def broadcast_traitement(self, msg: tuple | str) -> None:
         pass
 
-    def global_message(self, msg) -> None:
+    def global_message(self) -> None:
         # TODO - faire les messages globaux comme le changement de metier
         pass
