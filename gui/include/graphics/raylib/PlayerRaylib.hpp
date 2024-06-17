@@ -20,9 +20,10 @@ namespace Zappy {
             color = raylib::Color::White();
             _modelAnimation = raylib::ModelAnimation::Load(modelPath);
 
-            offset =  raylib::Vector2(static_cast<float>(rand() % 10 - 5),
-                static_cast<float>(rand() % 10 - 5));
-            // offset = raylib::Vector2(0, 0);
+            offset = raylib::Vector2(
+                static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),
+                static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)));
+            offset = raylib::Vector2(0, 0);
         }
 
         void draw(void)

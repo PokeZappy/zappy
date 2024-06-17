@@ -14,10 +14,12 @@ namespace Zappy
         _window.SetTargetFPS(60);
 
         // Load floor texture
-        _floorTexture = raylib::Texture2D("assets/floor4.png");
+        _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");
         _floorMesh = GenMeshPlane(GRID_SIZE, GRID_SIZE, 1, 1);
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
+
+        _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
     }
 
     void Raylib::render(const World &world)
@@ -26,7 +28,7 @@ namespace Zappy
         raylib::Color textColor = raylib::Color::Black();
         _window.BeginDrawing();
         {
-            _window.ClearBackground(RAYWHITE);
+            _window.ClearBackground(raylib::Color::SkyBlue());
             _window.DrawFPS();
             // 3D scene
 
@@ -40,6 +42,8 @@ namespace Zappy
             for (auto &player : _players) {
                 player.draw();
             }
+
+            _tv.Draw(raylib::Vector3(_mapX / 2 * GRID_SIZE - 50, 80, - GRID_SIZE * 4), 2000);
 
             _camera.EndMode();
             // end of 3D scene

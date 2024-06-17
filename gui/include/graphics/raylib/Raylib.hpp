@@ -37,5 +37,7 @@ namespace Zappy {
             raylib::Texture2D _floorTexture;
             Mesh _floorMesh;
             Material _floorMaterial;
+
+            raylib::Model _tv;
     };
 }
