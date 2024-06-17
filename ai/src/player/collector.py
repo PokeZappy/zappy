@@ -193,13 +193,13 @@ class Collector(Player):
         if len(self.actions) >= 1:
             return
         print(self.looked)
-        if not self.looked and 'Look' not in self.queue:
-            self.queue.append('Look')
-        if self.looked:
-            if len(self.queue) == 0:
-                self.mouving_straight(0)
-            self.looked = False
+        # if not self.looked and 'Look' not in self.queue:
+        self.queue.append('Look')
         self.apply_action()
+        # if self.looked:
+        #     if len(self.queue) == 0:
+                # self.mouving_straight(0)
+            # self.looked = False
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         """
@@ -214,12 +214,11 @@ class Collector(Player):
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
-        #     TODO - @Matthias est-ce que je viens clear la queue pour recommencer le look etc.
+        #     TODO clear la queue
         if message['msg'] == 'collectio rerum : ':
             self.depot = message['coord']
         if message['msg'] == 'vade ad me aliquid : ':
-        #     TODO - IDEM
-        #      @Matthias est-ce que je viens clear la queue pour recommencer le look etc.
+        #     TODO - clear la queue
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
             self.hard_focus = True
@@ -227,4 +226,8 @@ class Collector(Player):
             self.queue.append('Forward')
             self.queue.append('Forward')
             self.deposits_resources()
+        #     TODO - on peut y mettre dans globale message
+        if message['msg'] == 'est dominus aquilonis':
+            if self.path.facing is None:
+                self.get_north(message['direction'])
         self.global_message()

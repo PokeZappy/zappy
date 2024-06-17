@@ -44,6 +44,7 @@ class Player(Bot):
                                           }
         self.looked: bool = False
         self.environment: str = ""
+        self.path = Path(self.limit, (0, 0), (0, 0))
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -129,6 +130,21 @@ class Player(Bot):
     #                 self.send_action(f"Set {i[0]}\n")
     #     self.send_action("Incantation\n")
     #     return False
+
+    def get_north(self, direction: int):
+        """
+        Set the player's facing direction based on the input direction.
+
+        :param direction: int - The direction value to set the player's facing direction.
+        """
+        if direction == 1:
+            self.path.facing = dir.NORTH.value
+        if direction == 5:
+            self.path.facing = dir.SOUTH.value
+        if direction == 3:
+            self.path.facing = dir.EAST.value
+        if direction == 7:
+            self.path.facing = dir.WEST.value
 
     def move_to(self, pos: tuple[int, int]) -> None:
         """
@@ -220,6 +236,14 @@ class Player(Bot):
             self.move(action, self.dir)
 
     def recv_treatment(self, buf) -> None:
+        """
+        Process the received data from the server.
+
+        This method handles the data received from the server, updates player attributes accordingly, and removes the processed action from the action queue.
+
+        :param buf: The data received from the server.
+        :return: None
+        """
         recv_type, msgs = self.message.receive(buf, self.actions[0])
         print(recv_type)
         print(f'before distribution: {msgs}')

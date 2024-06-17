@@ -3,6 +3,7 @@ import re
 
 from src.communication.latin import Latin
 from src.communication.cipher import Cipher
+from src.utils.messages import validate_look_pattern, validate_encryption_pattern, validate_inventory_pattern, get_infos, exctrat_direction
 
 
 class Messages(object):
@@ -83,6 +84,7 @@ class Messages(object):
         Returns:
             tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]: A tuple containing the status of the broadcast and the processed message details.
         """
+        save_msg: str = message
         match = re.search(r'\d+, ', message)
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
@@ -96,7 +98,15 @@ class Messages(object):
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
                 text = text.split('#')
-                if text[0] in self.language.verbum.values():
+                if text[0] == 'est dominus aquilonis':
+
+                    direction = exctrat_direction(save_msg)
+                    result.append({
+                        'id': int(parts[1]),
+                        'msg': text[0],
+                        'direction': direction
+                    })
+                elif text[0] in self.language.verbum.values():
                     infos, nbr = get_infos(text)
                     result.append({
                         'id': int(parts[1]),
@@ -159,60 +169,4 @@ class Messages(object):
         return result
 
 
-def get_infos(text: list[str]) -> tuple[list] | None:
-    """
-    Get information from the input text.
 
-    Parameters:
-    - text: a list of strings containing information.
-
-    Returns:
-    - A tuple of lists containing parsed information.
-    """
-    if len(text) == 2 and text[1][0:1].isnumeric() or len(text) < 2:
-        return None, None
-    if len(text) > 2:
-        return tuple(zip(*(infos.split(";") for infos in text[2].split('~'))))
-    return tuple(zip(*(infos.split(";") for infos in text[1].split('~'))))
-
-
-def validate_look_pattern(s):
-    """
-    Check if the input string matches a specific pattern.
-
-    Parameters:
-    s (str): The input string to be validated.
-
-    Returns:
-    int: 1 if the string matches the pattern, 0 otherwise.
-    """
-    pattern = r'^\[ player.*\]$'
-    return 1 if re.match(pattern, s) else 0
-
-
-def validate_encryption_pattern(s):
-    """
-    Validate if the input string follows a specific encryption pattern.
-
-    Args:
-        s (str): The input string to be validated.
-
-    Returns:
-        int: 0 if the pattern is valid, 1 if not.
-    """
-    pattern = r'^(?:\d+#){9}\d+(?:#(?:\d+#){9}\d+)*$'
-    return 0 if re.fullmatch(pattern, s) else 1
-
-
-def validate_inventory_pattern(s):
-    """
-    Validate if the input string matches a specific inventory pattern.
-
-    Args:
-        s (str): The input string to be validated.
-
-    Returns:
-        int: 1 if the input string matches the pattern, 0 otherwise.
-    """
-    pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
-    return 1 if re.match(pattern, s) else 0

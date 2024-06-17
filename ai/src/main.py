@@ -33,9 +33,9 @@ def main():
             elif sys.argv[i - 1] != '-p' and sys.argv[i - 1] != '-n' and sys.argv[i - 1] != '-h':
                 raise ValueError("Invalid argument")
         server_info, cli_socket = connection(port, name, machine)
-        # mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
+        mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
         # mybot = Pusher(server_info, cli_socket, debug)
-        mybot = Collector(server_info, cli_socket, debug)
+        # mybot = Collector(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

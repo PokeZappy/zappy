@@ -7,7 +7,7 @@ class Path(object):
     """
     A class to calculate paths from start to end points.
     """
-    def __init__(self, limit: tuple[int, int], start: tuple[int, int], end: tuple[int, int], facing: int) -> None:
+    def __init__(self, limit: tuple[int, int], start: tuple[int, int], end: tuple[int, int], facing: int = None) -> None:
         """
         Initialize the Path object with limit, start, end points, and facing direction.
 
