@@ -9,5 +9,7 @@
 
 void cmd_sst(server_t *server, char *args, client_socket_t *client)
 {
-    printf("sst\n");
+    int new_f = args + 4;
+    server->arguments->_f = new_f;
+    dprintf(get_gui(server)->socket, "sst %d\n", new_f);
 }
