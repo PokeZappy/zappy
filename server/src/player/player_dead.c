@@ -7,15 +7,20 @@
 
 #include "../../include/server.h"
 
+// free_client(client);
 void client_dead(server_t *server, client_socket_t *client)
 {
-    delayed_command_t *delayed_command;
+    delayed_command_t *delayed_command =
+    TAILQ_FIRST(&server->_head_delayed_commands);
 
-    TAILQ_FOREACH(delayed_command, &server->_head_delayed_commands, entries) {
+    while (delayed_command) {
         if (delayed_command->_client == client) {
             TAILQ_REMOVE(&server->_head_delayed_commands,
             delayed_command, entries);
             free(delayed_command);
+            delayed_command = TAILQ_FIRST(&server->_head_delayed_commands);
+        } else {
+            delayed_command = TAILQ_NEXT(delayed_command, entries);
         }
     }
     dprintf(client->socket, "dead\n");
@@ -23,7 +28,6 @@ void client_dead(server_t *server, client_socket_t *client)
     close(client->socket);
     TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
     free_player(client->player);
-    free(client);
 }
 
 void client_eat(server_t *server, client_socket_t *client)
@@ -31,8 +35,9 @@ void client_eat(server_t *server, client_socket_t *client)
     if (client->player->_inventory[0] > 0) {
         client->player->_inventory[0] -= 1;
         client->player->_health = 126;
-    } else
+    } else {
         client_dead(server, client);
+    }
 }
 
 void check_death(server_t *server)
