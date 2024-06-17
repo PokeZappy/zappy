@@ -10,8 +10,13 @@
 static int calc_egg_id(server_t *server)
 {
     int id = 0;
+    egg_t *egg = TAILQ_FIRST(&server->_head_egg);
 
-    return id;
+    while (egg != NULL) {
+        id = egg->_id;
+        egg = TAILQ_NEXT(egg, _entries);
+    }
+    return id + 1;
 }
 
 void cmd_fork(server_t *server, char *args, client_socket_t *client)
@@ -34,7 +39,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
     TAILQ_INSERT_TAIL(&server->_head_egg, egg, _entries);
     dprintf(get_gui(server)->socket, "enw #%d #%d %d %d\n", egg->_id,
         client->_id, client->player->_pos._x, client->player->_pos._y);
-    printf("ok\n");
+    dprintf(client->socket, "ok\n");
 }
 
 void cmd_dead(server_t *server, char *args, client_socket_t *client)
