@@ -23,10 +23,9 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
-INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world -Iinclude/graphics
-DBGFLAGS		=	-g3 -O0
+INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world -Iinclude/graphics -I./lib/raylib/src -I./lib/raylib-cpp/include
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
-LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system -L./lib/raylib/src -lraylib -lpthread -ldl
 DEPSFLAGS		=	-MMD -MP
 
 LDLIBS			+=	-L./criterion/lib -lcriterion
@@ -35,8 +34,8 @@ CC = g++
 
 MACBREWSFML		= 	/opt/homebrew/Cellar/sfml/2.6.1
 
-MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include
-MACSFMLLIB		=	-L$(MACBREWSFML)/lib
+MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include 
+MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
 UNAME_S := $(shell uname -s)
 
