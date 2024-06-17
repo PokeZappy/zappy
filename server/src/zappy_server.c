@@ -5,7 +5,6 @@
 ** zappy_server.c
 */
 
-
 #include "../include/server.h"
 
 static void end_game(server_t *server, int gui_socket)
