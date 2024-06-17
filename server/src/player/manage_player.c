@@ -60,6 +60,13 @@ static egg_t *check_for_egg(server_t *server, char *team_name)
     return tmp;
 }
 
+static void remove_egg(server_t *server, egg_t *egg)
+{
+    TAILQ_REMOVE(&server->grid->_tiles[egg->_pos._x][egg->_pos._y]->_head_egg,
+        egg, _entries);
+    TAILQ_REMOVE(&server->_head_egg, egg, _entries);
+}
+
 static void check_for_pos(player_t *player, server_t *server)
 {
     int w = server->grid->_width;
@@ -72,7 +79,8 @@ static void check_for_pos(player_t *player, server_t *server)
     } else {
         player->_pos._x = rand_egg->_pos._x;
         player->_pos._y = rand_egg->_pos._y;
-        free(rand_egg);
+        dprintf(get_gui(server)->socket, "ebo #%d\n", rand_egg->_id);
+        remove_egg(server, rand_egg);
     }
 }
 

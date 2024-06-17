@@ -31,7 +31,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
         return;
     }
     client->player->_team->_max_clients += 1;
-    egg->_available = 600;
+    egg->_available = 0;
     egg->_team = client->player->_team;
     egg->_pos = client->player->_pos;
     egg->_id = calc_egg_id(server);
