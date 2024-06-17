@@ -93,7 +93,7 @@ class Messages(object):
             for msg in messages:
                 parts = msg.split()
                 if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
-                    return 'ko', 'ko'
+                    return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
