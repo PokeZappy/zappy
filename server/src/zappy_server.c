@@ -8,6 +8,16 @@
 
 #include "../include/server.h"
 
+static void end_game(server_t *server, int gui_socket)
+{
+    team_t *team = TAILQ_FIRST(&server->_head_team);
+
+    while (team != NULL) {
+        dprintf(gui_socket, "seg %s\n", team->_name);
+        team = TAILQ_NEXT(team, _entries);
+    }
+}
+
 static void close_all_clients(server_t *server)
 {
     client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
@@ -15,6 +25,8 @@ static void close_all_clients(server_t *server)
     if (!server)
         return;
     while (client != NULL) {
+        if (client->_is_gui == 1)
+            end_game(server, client->socket);
         close(client->socket);
         client = TAILQ_NEXT(client, entries);
     }
