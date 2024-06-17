@@ -1,4 +1,4 @@
-from src.gameplay.enum_gameplay import Ressources as res
+from ai.src.gameplay.enum_gameplay import Ressources as res
 
 
 def evolution(level: int = 1):

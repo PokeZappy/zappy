@@ -1,6 +1,6 @@
 import socket
 
-from src.player.player import Player
+from ai.src.player.player import Player
 
 
 class Progenitor(Player):
@@ -20,8 +20,6 @@ class Progenitor(Player):
         :param buf: str - The received message.
         :return: None
         """
-        if buf != 'ok\n':
-            pass
         self.actions.pop(0)
     
     def make_action(self) -> None:
@@ -40,5 +38,4 @@ class Progenitor(Player):
             self.apply_action()
     
     def broadcast_traitement(self, message: tuple | str) -> None:
-        # TODO check si doit rajouter un truc
         self.global_message()

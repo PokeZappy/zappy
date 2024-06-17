@@ -5,7 +5,7 @@ import socket
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.zappy_ai import Bot
+from ai.src.zappy_ai import Bot
 
 
 class Test__Init__:

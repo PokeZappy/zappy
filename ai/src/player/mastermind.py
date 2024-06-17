@@ -1,6 +1,6 @@
 from socket import socket
 
-from src.player.player import Player
+from ai.src.player.player import Player
 
 
 class Mastermind(Player):

@@ -7,6 +7,7 @@
 
 all:
 	$(MAKE) -C ./ai
+	cp ./ai/zappy_ai ./zappy_ai
 	$(MAKE) -C ./gui
 	$(MAKE) -C ./server
 
@@ -17,6 +18,7 @@ clean:
 
 fclean:
 	$(MAKE) -C ./ai fclean
+	rm -f zappy_ai
 	$(MAKE) -C ./gui fclean
 	$(MAKE) -C ./server fclean
 

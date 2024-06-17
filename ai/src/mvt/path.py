@@ -1,6 +1,6 @@
 from math import floor
 
-from src.gameplay.enum_gameplay import Directions as face
+from ai.src.gameplay.enum_gameplay import Directions as face
 
 
 class Path(object):

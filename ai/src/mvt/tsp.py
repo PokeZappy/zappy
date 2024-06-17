@@ -1,4 +1,4 @@
-from src.mvt.path import Path
+from ai.src.mvt.path import Path
 
 type actions = tuple[int, int] | list[str, list] | list[actions]
 

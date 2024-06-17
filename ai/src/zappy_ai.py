@@ -7,8 +7,8 @@ import time
 import select
 from abc import abstractmethod
 
-from src.server import connexion
-from src.communication import cipher, messages, latin
+from ai.src.server import connexion
+from ai.src.communication import cipher, messages, latin
 
 
 class Bot(object):
@@ -64,10 +64,10 @@ class Bot(object):
         if self.debug_mode:
             print("Receiving action...")
         rec: str = self.cli_socket.recv(1024).decode()
-        message = self.message.receive(rec)
+        # message = self.message.receive(rec)
         if self.debug_mode:
-            print(f"Received action: {message}")
-        return message
+            print(f"Received action: {rec}")
+        return rec
 
     def forward(self) -> None:
         """
@@ -168,7 +168,7 @@ class Bot(object):
 
         :return: None
         """
-        self -= self.ACTION
+        self.life -= self.ACTION
         self.send_action(f"Set {obj}\n")
 
     def incantation(self) -> None:
@@ -198,5 +198,3 @@ def connection(port: str, name: str, machine: str):
         server_info, cli_socket = connexion.connect(port, name, machine)
         print(f"Connected to {machine}:{port}")
         return server_info, cli_socket
-
-

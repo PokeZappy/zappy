@@ -4,12 +4,12 @@ import random
 from abc import abstractmethod
 from datetime import datetime
 
-import src.mvt.tsp as tsp
-from src.zappy_ai import Bot
-from src.gameplay.enum_gameplay import Directions as dir
-from src.mvt.path import Path
-from src.gameplay.enum_gameplay import Resources as res
-from src.utils.info_look import look_resources
+import ai.src.mvt.tsp as tsp
+from ai.src.zappy_ai import Bot
+from ai.src.gameplay.enum_gameplay import Directions as dir
+from ai.src.mvt.path import Path
+from ai.src.gameplay.enum_gameplay import Resources as res
+from ai.src.utils.info_look import look_resources
 
 
 class Player(Bot):
@@ -214,8 +214,6 @@ class Player(Bot):
             self.left()
         elif action == 'Inventory':
             self.check_inventory()
-        elif isinstance(action, tuple) and action[0] == 'Take':
-            self.take_obj(action[1])
         elif isinstance(action, tuple):
             self.move(action, self.dir)
 

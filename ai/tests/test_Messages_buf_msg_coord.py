@@ -1,7 +1,7 @@
 import uuid
 import pytest
 
-from src.communication.messages import Messages
+from ai.src.communication.messages import Messages
 
 
 class TestBufMsgCoord:

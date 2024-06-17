@@ -1,4 +1,4 @@
-from src.gameplay.enum_gameplay import Ressources as res
+from ai.src.gameplay.enum_gameplay import Ressources as res
 
 def is_all_val0(dict, not_contains = []):
     values = dict.values()

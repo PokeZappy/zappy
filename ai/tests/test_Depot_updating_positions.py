@@ -1,7 +1,7 @@
 import socket
 import pytest
 
-from src.player.depot import Depot
+from ai.src.player.depot import Depot
 
 
 class TestUpdatingPositions:

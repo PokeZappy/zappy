@@ -1,11 +1,11 @@
-from src.player.player import Player
+from ai.src.player.player import Player
 import socket
-from src.mvt.path import Path
-from src.mvt.tsp import Held_krap
-from src.gameplay.evolution import evolution
-from src.gameplay.enum_gameplay import Ressources as res
-from src.gameplay.utils import is_all_val0
-from src.gameplay.enum_gameplay import Directions as dir
+from ai.src.mvt.path import Path
+from ai.src.mvt.tsp import Held_krap
+from ai.src.gameplay.evolution import evolution
+from ai.src.gameplay.enum_gameplay import Ressources as res
+from ai.src.gameplay.utils import is_all_val0
+from ai.src.gameplay.enum_gameplay import Directions as dir
 import select
 
 class Role(Player):

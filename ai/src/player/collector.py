@@ -1,8 +1,8 @@
 import socket
 from abc import ABC
 
-from src.player.player import Player
-from src.utils.info_look import look_resources, only_forward_resources
+from ai.src.player.player import Player
+from ai.src.utils.info_look import look_resources, only_forward_resources
 
 
 class Collector(Player):
@@ -13,6 +13,7 @@ class Collector(Player):
         self.pos = (0, 0)
         self.the_place_to_be = (0, 0)
         self.lvl = 1
+        self.queue = [('Set', 'food') for _ in range(6)]
 
     def go_to_start(self, index):
         #  TODO - pour chaque index on vient se placer sur une case en particulier pour pas tomber sur une ligne sans rien

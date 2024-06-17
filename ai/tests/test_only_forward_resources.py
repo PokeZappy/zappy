@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils.info_look import only_forward_resources
+from ai.src.utils.info_look import only_forward_resources
 
 
 class TestOnlyForwardResources:

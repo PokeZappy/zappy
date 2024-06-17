@@ -1,8 +1,8 @@
 import uuid
 import re
 
-from src.communication.latin import Latin
-from src.communication.cipher import Cipher
+from ai.src.communication.latin import Latin
+from ai.src.communication.cipher import Cipher
 
 
 class Messages(object):
@@ -21,7 +21,7 @@ class Messages(object):
         self.debug: bool = debug
 
     def send_coord(self, message: str, pos: (int, int)) -> str:
-        new_uuid: str = ""
+        new_uuid: str = ''
         while new_uuid in self.uuid_used:
             new_uuid = uuid.uuid4().__str__()
         if new_uuid not in self.uuid_used:

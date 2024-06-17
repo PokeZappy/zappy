@@ -26,17 +26,23 @@ class Latin(object):
                                         # TODO - ajouter le nombre pour chaque avec l'id
                                         'Vous êtes servi maître': 'dominus servivit : ',
 
+
                                         # MM to Incant
+                                        'deplace-toi vers : ': 'movere ad : ',
                                        'ressources placés pour l\'incantation': 'facultates positas carmina',
+
+                                        # Incant to MM
+                                        'incantation raté': 'defecit carmen',
+                                        'incantation réussie': 'felix carmen', # Incant to PNJ
+
+                                        # COOCK to Incant
+                                        'j\'ai besoin de nourriture': 'cibo opus est',
+                                        'mange pour incanter : ': 'comedent ut incant : ', #COOCK to PNJ
+
 
                                         # Coll to MM
                                         'ressources déposées': 'opes deposita',
                                         # TODO - parse l'inventaire
-
-
-                                        # Incant to MM
-                                        'incantation raté': 'defecit carmen',
-                                        'j\'ai besoin de nourriture': 'cibo opus est',
 
                                         # All to push
                                         'confirmation id': 'sum socius senatus',
@@ -85,6 +91,7 @@ class Latin(object):
                                         'qui est le mastermind ?': 'quis est dominus mentis',
                                         'c\'est moi': 'ego sum',
 
+                                        # Numbers
                                         'zero': 'nulla',
                                         'un': 'unum',
                                         'deux': 'duo',
@@ -95,4 +102,13 @@ class Latin(object):
                                         'sept': 'septem',
                                         'huit': 'octo',
                                         'neuf': 'novem',
+
+                                        # Elements
+                                        'linemate': 'linemate',
+                                        'deraumere': 'deraumere',
+                                        'sibur': 'sibur',
+                                        'mendiane': 'mendiane',
+                                        'phiras': 'phiras',
+                                        'thystame': 'thystame',
+                                        'food': 'cibus',
                                        }

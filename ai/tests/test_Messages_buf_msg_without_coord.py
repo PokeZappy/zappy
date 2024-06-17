@@ -2,7 +2,7 @@ import uuid
 import pytest
 import re
 
-from src.communication.messages import Messages
+from ai.src.communication.messages import Messages
 
 
 class TestBufMsgWithoutCoord:

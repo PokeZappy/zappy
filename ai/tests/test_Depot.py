@@ -6,7 +6,7 @@ import socket
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.player.depot import Depot
+from ai.src.player.depot import Depot
 
 
 class TestDepot:

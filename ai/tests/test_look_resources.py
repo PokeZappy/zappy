@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils.info_look import look_resources
+from ai.src.utils.info_look import look_resources
 
 
 class TestLookResources:
