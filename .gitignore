@@ -12,3 +12,14 @@ zappy_ref-2-0-2
 *.elf
 zappy_test/
 *.d
+*.txt
+
+# Fichiers raylib indésirables
+
+xdg*
+wayland*
+viewporter*
+pointer-constraints*
+fractional*
+relative-pointer*
+idle-inhibit*

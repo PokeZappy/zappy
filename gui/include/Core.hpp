@@ -14,6 +14,7 @@
 
 #include "ClientSocket.hpp"
 #include "Sfml.hpp"
+#include "Raylib.hpp"
 #include "IGraphicalModule.hpp"
 #include "world/World.hpp"
 
@@ -21,7 +22,7 @@ namespace Zappy {
     class Core {
     public:
         Core() {
-            _graphics = std::make_shared<Sfml>();
+            _graphics = std::make_shared<Raylib>();
         };
         ~Core() = default;
         void setPort(int port) { _port = port; };

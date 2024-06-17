@@ -8,6 +8,7 @@
 SRC				=	main.cpp					\
 					$(wildcard src/*.cpp)		\
 					$(wildcard src/sfml/*.cpp)	\
+					$(wildcard src/raylib/*.cpp)	\
 					$(wildcard src/world/*.cpp)
 
 
@@ -58,6 +59,7 @@ dbgs: $(NAME)
 	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@ $(LDFLAGS)
 
 $(NAME):	$(OBJ)
+	@$(MAKE) -C lib/raylib/src
 	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 	cp $(NAME) ../
 
