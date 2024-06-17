@@ -37,7 +37,7 @@ namespace Zappy
                 }
             }
 
-            for (const auto &player : _players) {
+            for (auto &player : _players) {
                 player.draw();
             }
 
@@ -81,7 +81,7 @@ namespace Zappy
         _camera.Update(CAMERA_FIRST_PERSON);
         for (const auto &player : world.getPlayers()) {
             if (!containsPlayer(player))
-                _players.push_back(PlayerRaylib(player));
+                _players.push_back(PlayerRaylib(player, "assets/models/pokemons/torterra.glb"));
         }
     }
 
