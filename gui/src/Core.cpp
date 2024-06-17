@@ -15,9 +15,9 @@ namespace Zappy
     {
         std::optional<std::string> command;
 
-        while (_graphics.isOpen()) {
+        while (_graphics->isOpen()) {
             _socket.receive(MSG_DONTWAIT);
-            _graphics.update();
+            _graphics->update();
             command = _socket.getNextCommand();
             while (command.has_value()) {
                 try {
@@ -27,7 +27,7 @@ namespace Zappy
                 }
                 command = _socket.getNextCommand();
             }
-            _graphics.display(_world);
+            _graphics->render(_world);
         }
     }
 } // namespace Zappy

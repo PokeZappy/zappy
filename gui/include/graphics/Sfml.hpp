@@ -12,6 +12,7 @@
 #include <SFML/System.hpp>
 #include "world/World.hpp"
 #include "sfml/PlayerGraphics.hpp"
+#include "AGraphicalModule.hpp"
 
 namespace Zappy {
     typedef struct mouse_pos_s {
@@ -19,20 +20,21 @@ namespace Zappy {
         sf::Vector2f view;
         sf::Vector2i grid;
     } mouse_pos_t;
-    class Sfml {
+
+    class Sfml : public AGraphicalModule {
     #define GUI_WIDTH 1920
     #define GUI_HEIGHT 1080
     public:
         Sfml();
-        void update(void);
-        void display(const World &world);
+        void update(void) override;
+        void render(const World &world) override;
         bool isOpen(void) { return (_window.isOpen()); }
 
         void updateMouse(void);
         void handleEvent(void);
 
-        void drawTiles(const std::vector<std::vector<Tile>> &tiles);
-        void drawEntity(const std::shared_ptr<IEntity> entity);
+        void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
+        void drawEntity(const std::shared_ptr<IEntity> entity) override;
         void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
         void resetViewPos(void);

@@ -23,7 +23,7 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
-INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
+INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world -Iinclude/graphics
 DBGFLAGS		=	-g3 -O0
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system

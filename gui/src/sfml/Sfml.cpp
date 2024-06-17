@@ -68,7 +68,7 @@ namespace Zappy
 
     }
 
-    void Sfml::display(const World &world)
+    void Sfml::render(const World &world)
     {
         _window.clear();
         drawTiles(world.getTiles());

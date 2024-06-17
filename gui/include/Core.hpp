@@ -14,12 +14,15 @@
 
 #include "ClientSocket.hpp"
 #include "Sfml.hpp"
+#include "IGraphicalModule.hpp"
 #include "world/World.hpp"
 
 namespace Zappy {
     class Core {
     public:
-        Core() = default;
+        Core() {
+            _graphics = std::make_shared<Sfml>();
+        };
         ~Core() = default;
         void setPort(int port) { _port = port; };
         void setMachine(std::string &machine) { _machine = machine; };
@@ -44,7 +47,7 @@ namespace Zappy {
         int _port = -1;
         std::string _machine = "";
         ClientSocket _socket;
-        Sfml _graphics;
+        std::shared_ptr<IGraphicalModule> _graphics;
         World _world;
     };
 }
