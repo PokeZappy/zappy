@@ -7,8 +7,7 @@
 
 SRC				=	main.cpp					\
 					$(wildcard src/*.cpp)		\
-					$(wildcard src/sfml/*.cpp)	\
-					$(wildcard src/raylib/*.cpp)	\
+					$(wildcard src/raylib/*.cpp)\
 					$(wildcard src/world/*.cpp)
 
 
@@ -24,7 +23,7 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
-INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world -Iinclude/graphics -I./lib/raylib/src -I./lib/raylib-cpp/include
+INCLUDEFLAGS	=	-Iinclude -Iinclude/graphics/sfml -Iinclude/world -Iinclude/graphics/raylib -Iinclude/graphics -I./lib/raylib/src -I./lib/raylib-cpp/include
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system -L./lib/raylib/src -lraylib -lpthread -ldl
 DEPSFLAGS		=	-MMD -MP

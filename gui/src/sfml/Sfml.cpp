@@ -61,11 +61,11 @@ namespace Zappy
         _shellTextTeamColor.setSize(sf::Vector2f(15, 15));
     };
 
-    void Sfml::update(void)
+    void Sfml::update(const World &world)
     {
+        (void)world;
         updateMouse();
         handleEvent();
-
     }
 
     void Sfml::render(const World &world)

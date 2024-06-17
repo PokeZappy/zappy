@@ -17,7 +17,8 @@ namespace Zappy
 
         while (_graphics->isOpen()) {
             _socket.receive(MSG_DONTWAIT);
-            _graphics->update();
+            // _graphics->
+            _graphics->update(_world);
             command = _socket.getNextCommand();
             while (command.has_value()) {
                 try {

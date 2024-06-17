@@ -16,8 +16,8 @@ namespace Zappy
     public:
         AGraphicalModule() = default;
 
-    private:
-        int _mapX = -1;
-        int _mapY = -1;
+        int _mapX = 10;
+        int _mapY = 10;
+    protected:
     };
 };

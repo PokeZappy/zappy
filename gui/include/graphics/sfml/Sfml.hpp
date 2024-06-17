@@ -26,7 +26,7 @@ namespace Zappy {
     #define GUI_HEIGHT 1080
     public:
         Sfml();
-        void update(void) override;
+        void update(const World &world) override;
         void render(const World &world) override;
         bool isOpen(void) { return (_window.isOpen()); }
 
