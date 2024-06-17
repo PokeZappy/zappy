@@ -196,10 +196,10 @@ class Collector(Player):
         # if not self.looked and 'Look' not in self.queue:
         self.queue.append('Look')
         self.apply_action()
-        # if self.looked:
-        #     if len(self.queue) == 0:
-                # self.mouving_straight(0)
-            # self.looked = False
+        if self.looked:
+            if len(self.queue) == 0:
+                self.mouving_straight(0)
+            self.looked = False
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         """

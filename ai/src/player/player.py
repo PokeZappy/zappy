@@ -248,6 +248,8 @@ class Player(Bot):
         if recv_type == 'ok':
             if isinstance(msgs, tuple) and msgs[0] == 'Take':
                 self.inventory[msgs[1]] += 1
+                if msgs[1] == 'food':
+                    self.life += self.FOOD
             if isinstance(msgs, tuple) and msgs[0] == 'Set':
                 self.inventory[msgs[1]] -= 1
         if recv_type == 'look':
