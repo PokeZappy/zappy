@@ -35,13 +35,13 @@ CC = g++
 
 MACBREWSFML		= 	/opt/homebrew/Cellar/sfml/2.6.1
 
-MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include 
+MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include
 MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS += $(MACSFMLINCLUDE)
+	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15
 	LDFLAGS += $(MACSFMLLIB)
 endif
 
