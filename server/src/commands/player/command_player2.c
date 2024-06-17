@@ -8,6 +8,17 @@
 #include "../../../include/commands.h"
 #include "../../../include/utils.h"
 
+static void check_all_egg(tiles_t *tile, server_t *server)
+{
+    egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
+
+    while (egg != NULL) {
+        dprintf(get_gui(server)->socket, "edi #%d\n", egg->_id);
+        TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
+        egg = TAILQ_NEXT(egg, _entries);
+    }
+}
+
 void cmd_eject(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
@@ -19,7 +30,7 @@ void cmd_eject(server_t *server, char *args, client_socket_t *client)
         return;
     pushed = player_eject(server, player);
     if (pushed == true) {
-        free_all_egg(server->grid->_tiles[x][y]);
+        check_all_egg(server->grid->_tiles[x][y], server);
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
