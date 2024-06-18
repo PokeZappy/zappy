@@ -26,30 +26,31 @@ class Incantator(Player):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_type, msgs = self.message.receive(buf)
+            recv_list = self.message.receive(buf)
         else:
-            recv_type, msgs = self.message.receive(buf, self.actions[0])
-        if recv_type == 'ok':
-            if msgs == 'Incantation':
-                self.level += 1
-            if msgs[1] == 'food':
-                self.life += self.FOOD
-        elif recv_type == 'ko':
-            if msgs == 'Incantation':
-                self.allowed_incantation_mns -= 1
-                self.message.buf_messages('defecit carmen')
-                self.queue.append('Broadcast')
-            if msgs == 'Take food':
-                self.message.buf_messages('cibo opus est')
-                self.waiting_food = True
-                self.queue.append('Broadcast')
-        elif recv_type == 'broadcast':
-            if msgs[0] == 'ko':
-                return
-            for msg in msgs:
-                self.broadcast_traitement(msg)
-            return
-        self.actions.pop(0)
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'ok':
+                if msgs == 'Incantation':
+                    self.level += 1
+                if msgs[0] == 'Take' and msgs[1] == 'food':
+                    self.life += self.FOOD
+            elif recv_type == 'ko':
+                if msgs == 'Incantation':
+                    self.allowed_incantation_mns -= 1
+                    self.message.buf_messages('defecit carmen')
+                    self.queue.append('Broadcast')
+                if msgs[0] == 'Take' and msgs[1] == 'food':
+                    self.message.buf_messages('cibo opus est')
+                    self.waiting_food = True
+                    self.queue.append('Broadcast')
+            elif recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            self.actions.pop(0)
 
 
 

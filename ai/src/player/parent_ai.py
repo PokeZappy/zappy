@@ -125,7 +125,6 @@ class ParentAI(Player):
         if message['msg'] == 'defecit carmen':
             #TODO: problem to make the incantation
             pass
-        self.global_message()
 
     def progenitor_treatment(self, buf: str) -> None:
         if len(self.actions) == 0:
@@ -187,7 +186,7 @@ class ParentAI(Player):
 
         if RoleInGame.PNJ not in self.give_role and self.level_to_give <= 1:
             self.message.buf_messages('facultates positas carmina')
-            self.broadcast()
+            self.queue.append('Broadcast')
             self.can_incant = True
             self.level_to_give += 1
             return True
@@ -201,10 +200,9 @@ class ParentAI(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        print('mastermind')
         if self.life <= 300:
             self.queue.append(('Take', 'food'))
-        if not self.communicate_orders():
+        elif not self.communicate_orders():
             print('communicate orders')
             self.queue.append('Look')
         self.queue.append('Slots')

@@ -29,7 +29,7 @@ class Player(Bot):
         self.level: int = 1
         self.actions = []
         self.queue = []
-        self.LIMIT_QUEUE: int = 10
+        self.LIMIT_QUEUE: int = 9
         self.LEVEL_MAX: int = 8
         self.FORK_ACTION: int = 42
         self.INCUBATION_TIME: int = 600
@@ -61,6 +61,7 @@ class Player(Bot):
 
         :return: None
         """
+        self.life -= self.FORK_ACTION
         self.send_action("Fork\n")
 
     def turn_around_without_watching(self) -> None:
