@@ -63,3 +63,11 @@ def validate_inventory_pattern(s) -> bool:
     """
     pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
     return True if re.match(pattern, s) else False
+
+def validate_number_pattern(s) -> bool:
+    """
+
+    :param s:
+    :return:
+    """
+    return bool(re.match(r'^\d+$', s))

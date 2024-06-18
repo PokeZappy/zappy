@@ -3,7 +3,12 @@ import re
 
 from ai.src.communication.latin import Latin
 from ai.src.communication.cipher import Cipher
-from ai.src.utils.messages import validate_look_pattern, validate_encryption_pattern, validate_inventory_pattern, get_infos, extract_direction
+from ai.src.utils.messages import (validate_look_pattern,
+                                   validate_encryption_pattern,
+                                   validate_inventory_pattern,
+                                   get_infos,
+                                   extract_direction,
+                                   validate_number_pattern)
 
 
 class Messages(object):
@@ -70,6 +75,8 @@ class Messages(object):
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
+            if validate_number_pattern(message):
+                result.append(('slots', int(message)))
             if validate_inventory_pattern(message):
                 result.append(('inventory', message))
             elif validate_look_pattern(message):
