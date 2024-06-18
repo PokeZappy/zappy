@@ -71,3 +71,13 @@ def validate_number_pattern(s) -> bool:
     :return:
     """
     return bool(re.match(r'^\d+$', s))
+
+def validate_elevation(s) -> bool:
+    """
+
+    :param s:
+    :return:
+    """
+    if s == 'Elevation underway' or re.match(r'^Current level: (\d+)$', s):
+        return True
+    return False

@@ -8,7 +8,8 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    validate_inventory_pattern,
                                    get_infos,
                                    extract_direction,
-                                   validate_number_pattern)
+                                   validate_number_pattern,
+                                   validate_elevation)
 
 
 class Messages(object):
@@ -81,6 +82,8 @@ class Messages(object):
                 result.append(('inventory', message))
             elif validate_look_pattern(message):
                 result.append(('look', message))
+            elif validate_elevation(message):
+                result.append(('elevation', message))
             elif message == 'ok':
                 if self.debug:
                     print(f'ok: {action}')
