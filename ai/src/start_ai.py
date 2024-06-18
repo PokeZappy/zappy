@@ -36,7 +36,7 @@ def start_ai():
         mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
         # mybot = Pnj(server_info, cli_socket, debug)
         # mybot = Pusher(server_info, cli_socket, debug)
-        # mybot = Collector(server_info, cli_socket, debug)
+        mybot = Collector(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

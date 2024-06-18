@@ -25,7 +25,6 @@ class Player(Bot):
         self.limit: list[int] = self.dimensions
         self.pos: tuple[int, int] = (0, 0)
         self.inv = {}
-        self.map_knowledge: list[list[dict]] = [[{} for _ in range(self.limit[0])] for _ in range(self.limit[1])]
         self.parent = None
         self.level: int = 1
         self.actions = []
@@ -45,6 +44,7 @@ class Player(Bot):
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))
+        self.got_id: bool = False
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -117,20 +117,6 @@ class Player(Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    # def incantation(self) -> bool:
-    #     """
-    #     This method makes the player do an incantation.
-    #
-    #     :return: bool - True if the incantation is done, False otherwise.
-    #     """
-    #     for i in self.goal:
-    #         Path(self.limit, self.pos, (0, 0), self.dir).opti_path()
-    #         for j in self.inv:
-    #             if i[0] == j[0]:
-    #                 self.send_action(f"Set {i[0]}\n")
-    #     self.send_action("Incantation\n")
-    #     return False
-
     def get_north(self, direction: int):
         """
         Set the player's facing direction based on the input direction.
@@ -146,6 +132,27 @@ class Player(Bot):
         if direction == 7:
             self.path.facing = dir.WEST.value
 
+    def turn_to_the_north(self) -> None:
+        """
+        Turn the player to face the North direction.
+
+        This method checks the current facing direction of the player and adjusts it to face North if needed.
+
+        :return: None
+        """
+        if self.path.facing == dir.NORTH.value:
+            return
+        if self.path.facing == dir.EAST.value:
+            self.queue.append('Left')
+            self.path.facing = dir.NORTH.value
+        if self.path.facing == dir.WEST.value:
+            self.queue.append('Right')
+            self.path.facing = dir.NORTH.value
+        if self.path.facing == dir.SOUTH.value:
+            self.queue.append('Right')
+            self.queue.append('Right')
+            self.path.facing = dir.NORTH.value
+
     def move_to(self, pos: tuple[int, int]) -> None:
         """
         This method makes the player move to a position.
@@ -157,47 +164,10 @@ class Player(Bot):
         for mvt in path:
             self.queue.append(mvt)
 
-    def pos_view(self, axis: str, i: int, dire: dir) -> int:
-        """
-        This method returns the position of the view.
-
-        :param axis: str - The axis to be used.
-        :param i: int - The index.
-        :param dire: dir - The direction.
-        :return: int - The position of the view.
-        """
-        sense = 1
-        if dire == dir.EAST or dire == dir.WEST:
-            if axis == 'x':
-                axis = 'y'
-            else:
-                axis = 'x'
-        if dire == dir.SOUTH or dire == dir.WEST:
-            sense = -1
-        if axis == 'x':
-            for j in range(0, 9):
-                if j * (j + 1) - j <= i <= j * (j + 1) + j:
-                    return sense * (i - j * (j + 1))
-        elif axis == 'y':
-            return sense * int(i ** 0.5)
-
-    def update_map(self, view: list[str], dire: dir) -> None:
-        """
-        This method updates the map.
-
-        :param view: list[str] - The view of the player.
-        :param dire: dir - The direction of the player.
-        :return: None
-        """
-        split_coma = view.split(',')
-        for words in split_coma:
-            split = words.split(' ')
-            for i in range(len(split)):
-                for obj in split:
-                    if obj in self.goal.keys():
-                        if obj not in self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]]:
-                            self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] = 0
-                        self.map_knowledge[(self.pos[0] + self.pos_view('x', i, dire)) % self.limit[0]][(self.pos[1] + self.pos_view('y', i, dire)) % self.limit[1]][obj] += 1
+    def get_id(self, message: str) -> None:
+        self.message.buf_messages(message)
+        self.queue.append('Broadcast')
+        self.queue.append(('Take', 'player'))
 
     def apply_action(self) -> None:
         """
@@ -208,6 +178,8 @@ class Player(Bot):
         self.actions.append(self.queue[0])
         self.queue.pop(0)
         action = self.actions[-1]
+        if action[0] == ('Take', 'player'):
+            self.got_id = True
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
@@ -243,33 +215,28 @@ class Player(Bot):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_type, msgs = self.message.receive(buf)
+            recv_list = self.message.receive(buf)
         else:
-            recv_type, msgs = self.message.receive(buf, self.actions[0])
-        print(recv_type)
-        print(f'before distribution: {msgs}')
-        if recv_type == 'broadcast':
-            if msgs[0] == 'ko':
-                return
-            for msg in msgs:
-                self.broadcast_traitement(msg)
-            return
-        if recv_type == 'ok':
-            if isinstance(msgs, tuple) and msgs[0] == 'Take':
-                self.inventory[msgs[1]] += 1
-                if msgs[1] == 'food':
-                    self.life += self.FOOD
-            if isinstance(msgs, tuple) and msgs[0] == 'Set':
-                self.inventory[msgs[1]] -= 1
-                if msgs[1] == 'food':
-                    self.life -= self.FOOD
-        if recv_type == 'look':
-            self.looked = True
-            print("recieve look")
-            self.environment = msgs
-        if recv_type == 'inventory':
-            print("inventory")
-        self.actions.pop(0)
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'ok':
+                if isinstance(msgs, tuple) and msgs[0] == 'Take' and msgs[1] != 'player':
+                    self.inventory[msgs[1]] += 1
+                    if msgs[1] == 'food':
+                        self.life += self.FOOD
+                if isinstance(msgs, tuple) and msgs[0] == 'Set':
+                    self.inventory[msgs[1]] -= 1
+            if recv_type == 'look':
+                self.looked = True
+                self.environment = msgs
+            if recv_type == 'inventory':
+                print("inventory")
+            if recv_type == 'broadcast':
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            if len(self.actions) != 0:
+                self.actions.pop(0)
 
     @abstractmethod
     def make_action(self) -> None:

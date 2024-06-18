@@ -118,6 +118,8 @@ class Bot(object):
          """
         self.life -= self.ACTION
         self.send_action(f'{self.message.send_buf()}\n')
+        if self.debug_mode:
+            print('message send')
 
     def nbr_of_slot(self) -> None:
         """

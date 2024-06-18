@@ -1,8 +1,9 @@
 import re
 
 
-def exctrat_direction(message: str) -> int:
-    return int(message[8:9])
+def extract_direction(message: str) -> int:
+    match = re.search(r'\b\d+', message)
+    return int(match.group())
 
 
 def get_infos(text: list[str]) -> tuple[list] | None:

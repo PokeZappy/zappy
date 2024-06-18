@@ -11,11 +11,10 @@ class Path(object):
         """
         Initialize the Path object with limit, start, end points, and facing direction.
 
-        Args:
-        - limit: A tuple representing the limits of the path.
-        - start: A tuple representing the starting point.
-        - end: A tuple representing the end point.
-        - facing: An integer representing the initial facing direction.
+        :param limit: tuple[int, int] - The limits of the path.
+        :param start: tuple[int, int] - The starting point.
+        :param end: ypuple[int, int] - The end point.
+        :param facing: int - The initial facing direction.
         """
         self.limit = limit
         self.start = start
@@ -26,10 +25,9 @@ class Path(object):
 
     def calculate_paths(self) -> tuple[bool, bool, int, int, int, int]:
         """
-        Calculate the paths to reach the end point from the start point.
+        Calculate the optimal path from the start point to the end point.
 
-        Returns:
-        - A tuple containing information about the directions to move (west, north, northward, eastward, southward, westward).
+        :return: tuple - containing booleans for west and north directions, and integers for distances in each direction.
         """
         west: bool = False
         if self.end[0] - self.start[0] >= 0:
@@ -54,10 +52,9 @@ class Path(object):
 
     def get_path(self) -> list[str]:
         """
-        Calculate the path to move from the start point to the end point based on the current facing direction.
+        Calculate the optimal path from the start point to the end point and determine the necessary turns to align with the path direction.
 
-        Returns:
-        - A list of strings representing the directions to move.
+        :return: list[str] - the turns and movements to reach the end point.
         """
         west, north, northward, eastward, southward, westward = self.calculate_paths()
         if self.facing == face.EAST.value or self.facing == face.WEST.value:
@@ -66,17 +63,16 @@ class Path(object):
             self.calculate_vertical_path(west, north, northward, eastward, southward, westward)
         return self.turns()
 
-    def calculate_horizontal_path(self, west, north, northward, eastward, southward, westward):
+    def calculate_horizontal_path(self, west: bool, north: bool, northward: int, eastward: int, southward: int, westward: int) -> None:
         """
-        Calculate the horizontal path based on the provided directions.
 
-        Args:
-        - west: A boolean indicating if the path is towards the west.
-        - north: A boolean indicating if the path is towards the north.
-        - northward: An integer representing the distance to move northward.
-        - eastward: An integer representing the distance to move eastward.
-        - southward: An integer representing the distance to move southward.
-        - westward: An integer representing the distance to move westward.
+        :param west: bool -  A boolean indicating if the path is towards the west.
+        :param north: bool - A boolean indicating if the path is towards the north.
+        :param northward: int - An integer representing the distance to move northward.
+        :param eastward: int - An integer representing the distance to move eastward.
+        :param southward: int - An integer representing the distance to move southward.
+        :param westward: int - An integer representing the distance to move westward.
+        :return: None
         """
         if west and eastward - 1 <= westward or not west:
             self.path = [['Forward' * eastward]]
@@ -91,17 +87,17 @@ class Path(object):
             self.path += [['Forward'] * southward]
             self.path_facing += [face.SOUTH.value]
 
-    def calculate_vertical_path(self, west, north, northward, eastward, southward, westward):
+    def calculate_vertical_path(self, west: bool, north: bool, northward: int, eastward: int, southward: int, westward: int) -> None:
         """
         Calculate the vertical path based on the provided directions.
 
-        Args:
-        - west: A boolean indicating if the path is towards the west.
-        - north: A boolean indicating if the path is towards the north.
-        - northward: An integer representing the distance to move northward.
-        - eastward: An integer representing the distance to move eastward.
-        - southward: An integer representing the distance to move southward.
-        - westward: An integer representing the distance to move westward.
+        :param west: A boolean indicating if the path is towards the west.
+        :param north: A boolean indicating if the path is towards the north.
+        :param northward: An integer representing the distance to move northward.
+        :param eastward: An integer representing the distance to move eastward.
+        :param southward: An integer representing the distance to move southward.
+        :param westward: An integer representing the distance to move westward.
+        :return: None
         """
         if north and southward - 1 <= northward or not north:
             self.path_facing = [face.SOUTH.value]
@@ -120,8 +116,7 @@ class Path(object):
         """
         Determine the necessary turns to align with the path direction.
 
-        Returns:
-        - A list of strings representing the turns to be made.
+        :return: A list of strings representing the turns to be made.
         """
         if self.facing in self.path_facing:
             return []

@@ -43,6 +43,10 @@ class Latin(object):
                                         # Coll to MM
                                         'ressources déposées': 'opes deposita',
                                         # TODO - parse l'inventaire
+                                        'Je suis positionné pour le dépot': 'situm intrare',
+                                        # TODO - compter le nombre de collecteur pour désactiver la sécurité
+                                       'Je suis sortie du dépot': 'sum extra domum',
+                                        # TODO - savoir si l'envoies au M&Ms ou Pousseur et tt le monde l'envoie où non
 
                                         # All to push
                                         'confirmation id': 'sum socius senatus',
@@ -56,6 +60,16 @@ class Latin(object):
 
                                         # North_guard to ALL
                                         'voici le nord': 'est dominus aquilonis',
+
+                                        # Coll to Coll
+                                        'Qui est collecteur ?': 'Quot publicani ibi sunt?',
+                                        'Je suis collecteur': 'Ego sum publicani ibi',
+
+
+                                        # Push to Push
+                                        'Qui est un pusher': 'Quis est puer interfector?',
+                                        'Je suis un pusher': 'Ego sum puer inteffector',
+
                                         'évo de niveau': 'nobilis incantatio',
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
