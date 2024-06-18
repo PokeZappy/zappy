@@ -95,25 +95,25 @@ class ParentAI(Player):
         :return true: else
         """
         if len(self.actions) == 0:
-            recv_type, msgs = self.message.receive(buf)
+            recv_list = self.message.receive(buf)
         else:
-            recv_type, msgs = self.message.receive(buf, self.actions[0])
-        if isinstance(buf, str) and buf.isnumeric():
-            counter = int(buf)
-            for _ in range(counter):
-                self.real_fork()
-                if len(self.give_role) > 0:
-                    self.give_role.pop(0)
-        elif buf == 'ok':
-            if self.actions[0] == 'Take' and self.actions[1] == 'food':
-                self.life += self.FOOD
-        elif recv_type == 'broadcast':
-            if msgs[0] == 'ko':
-                return False
-            for msg in msgs:
-                self.broadcast_traitement(msg)
-            return False
-        return True
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'slots':
+                for _ in range(msgs):
+                    self.real_fork()
+                    if len(self.give_role) > 0:
+                        self.give_role.pop(0)
+            elif recv_type == 'ok':
+                if msgs[0] == 'Take' and msgs[1] == 'food':
+                    self.life += self.FOOD
+            elif recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            self.actions.pop(0)
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'tamer':
@@ -129,20 +129,21 @@ class ParentAI(Player):
 
     def progenitor_treatment(self, buf: str) -> None:
         if len(self.actions) == 0:
-            recv_type, msgs = self.message.receive(buf)
+            recv_list = self.message.receive(buf)
         else:
-            recv_type, msgs = self.message.receive(buf, self.actions[0])
-        if buf == 'ok' or buf == 'ko':
-            # TODO: make brodacast with cyprien
-            # if self.is_broadcast(buf):
-            #     self.apply_broadcast(buf)
-            #     return
-            # self.apply_action(buf)
-            l = 1
-        else:
-            #TODO: communication broadcast
-            return False
-        return True
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'ok' or recv_type == 'ko':
+                # TODO: make brodacast with cyprien
+                # if self.is_broadcast(buf):
+                #     self.apply_broadcast(buf)
+                #     return
+                # self.apply_action(buf)
+                l = 1
+            else:
+                #TODO: communication broadcast
+                continue
+            self.actions.pop(0)
 
 
     def recv_treatment(self, buf: str) -> None:
