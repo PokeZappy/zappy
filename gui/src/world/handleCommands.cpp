@@ -19,7 +19,7 @@ namespace Zappy
         size_t x, y, id = 0;
 
         if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-            std::cout << command << std::endl;
+            // std::cout << command << std::endl;
         }
         // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
         //     std::cout << command << std::endl;
@@ -104,7 +104,7 @@ namespace Zappy
             else
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
-            std::cout << command << std::endl;
+            // std::cout << command << std::endl;
         }
         else if (commandName == "pfk") { // egg laying by the player
 

@@ -12,6 +12,19 @@ namespace Zappy
     Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"), _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f)
     {
         _window.SetTargetFPS(60);
+        try
+        {
+            _configuration.readFile("assets/pokemons.cfg");
+        }
+        catch (const libconfig::FileIOException &fioex)
+        {
+            std::cerr << "Impossible d'ouvrir le fichier de configuration." << std::endl;
+        }
+        catch (const libconfig::ParseException &pex)
+        {
+            std::cerr << "Erreur de parsing au fichier " << pex.getFile() << ":"
+                      << pex.getLine() << " - " << pex.getError() << std::endl;
+        }
 
         _camera.SetPosition(Vector3{(247.0F), (125.0F), (710.0F)});
         _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
@@ -37,17 +50,20 @@ namespace Zappy
             // 3D scene
 
             _camera.BeginMode();
-            for (int x = 0; x < 10; x++) {
-                for (int z = 0; z < 10; z++) {
+            for (int x = 0; x < 10; x++)
+            {
+                for (int z = 0; z < 10; z++)
+                {
                     DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * GRID_SIZE, 0.0f, z * GRID_SIZE));
                 }
             }
 
-            for (auto &player : _players) {
+            for (auto &player : _players)
+            {
                 player.draw();
             }
 
-            _tv.Draw(raylib::Vector3(_mapX / 2 * GRID_SIZE - 50, 80, - GRID_SIZE * 4), 2000);
+            _tv.Draw(raylib::Vector3(_mapX / 2 * GRID_SIZE - 50, 80, -GRID_SIZE * 4), 2000);
 
             _camera.EndMode();
             // end of 3D scene
@@ -69,78 +85,99 @@ namespace Zappy
 
     bool Raylib::containsPlayer(std::shared_ptr<Player> player)
     {
-        for (const auto &playerRaylib : _players) {
-            if (playerRaylib.worldPlayer == player) {
+        for (const auto &playerRaylib : _players)
+        {
+            if (playerRaylib.worldPlayer == player)
+            {
                 return true;
             }
         }
         return false;
     }
 
-    PokemonInfo Raylib::parsePokemon(libconfig::Setting &pokemon) {
+    PokemonInfo Raylib::parsePokemon(libconfig::Setting &pokemon)
+    {
         PokemonInfo pkInfo = PokemonInfo();
 
-        try {
+        try
+        {
+            std::cout << "j'essaie" << std::endl;
             std::string pokeName = pokemon["name"];
             std::string pokeId = pokemon["id"];
             pkInfo.displayName = pokeName;
             pkInfo.id = pokeId;
             libconfig::Setting &evos = pokemon["evolutions"];
-            for (int i = 0; i < evos.getLength(); i++) {
+            for (int i = 0; i < evos.getLength(); i++)
+            {
                 pkInfo.evolutions.push_back(parsePokemon(evos[i]));
             }
-        } catch (libconfig::SettingNotFoundException &ex) {
-        std::cerr << ex.what() << std::endl;
-        // return (false);
-    } catch (libconfig::SettingTypeException &ex) {
-        std::cerr << ex.what() << std::endl;
-        // return (false);
-    }
+        }
+        catch (libconfig::SettingNotFoundException &ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            // return (false);
+        }
+        catch (libconfig::SettingTypeException &ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            // return (false);
+        }
 
         return pkInfo;
     }
 
-    PokemonInfo Raylib::getPokemon(std::string team) {
-        std::cout << team << std::endl;
-        _configuration.readFile("assets/pokemons.cfg");
-        if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end()) {
+    PokemonInfo Raylib::getPokemon(std::string team)
+    {
+        std::string t = team;
+        _configuration.write(stdout);
+
+        if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end())
+        {
             // pas trouvé
-            team = listTypes[Utils::random(0, listTypes.size())];
-            std::cout << "modification de la team : " << team << std::endl;
+            t = listTypes[Utils::random(0, listTypes.size() - 1)];
         }
-        try {
+        try
+        {
+            std::cout << "team utilise : " << t << std::endl;
             libconfig::Setting &root = _configuration.getRoot();
             libconfig::Setting &types = root["types"];
-            libconfig::Setting &pokemons = types[team.c_str()];
-            return parsePokemon(pokemons[Utils::random(0, pokemons.getLength())]);
-        } catch (libconfig::SettingNotFoundException &ex) {
-        std::cerr << ex.what() << std::endl;
-        // return (false);
-    } catch (libconfig::SettingTypeException &ex) {
-        std::cerr << ex.what() << std::endl;
-        // return (false);
-    }
-    return PokemonInfo();
+            libconfig::Setting &pokemons = types[t.c_str()];
+            return parsePokemon(pokemons[Utils::random(0, pokemons.getLength() - 1)]);
+        }
+        catch (libconfig::SettingNotFoundException &ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            // return (false);
+        }
+        catch (libconfig::SettingTypeException &ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            // return (false);
+        }
+        return PokemonInfo();
     }
 
     void Raylib::update(const World &world)
     {
-        if (IsKeyDown(KEY_SPACE)) {
+        if (IsKeyDown(KEY_SPACE))
+        {
             _camera.position.y += 1;
             _camera.target.y += 1;
         }
-        if (IsKeyDown(KEY_LEFT_SHIFT)) {
+        if (IsKeyDown(KEY_LEFT_SHIFT))
+        {
             _camera.position.y -= 1;
             _camera.target.y -= 1;
         }
         _camera.Update(CAMERA_FIRST_PERSON);
-        for (const auto &player : world.getPlayers()) {
-            if (!containsPlayer(player)) {
+        for (const auto &player : world.getPlayers())
+        {
+            if (!containsPlayer(player))
+            {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 _players.push_back(PlayerRaylib(player, pokemon));
             }
-
         }
     }
 
