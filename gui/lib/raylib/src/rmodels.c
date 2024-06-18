@@ -5830,8 +5830,8 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
                         cgltf_node node = *skin.joints[k];
                         animations[i].framePoses[j][k] = (Transform){
                             // .translation = translation,
-                            // .translation = (Vector3){node.translation[0], node.translation[1], node.translation[2]},
-                            .translation = Vector3Add(translation, (Vector3){node.translation[0], node.translation[1], node.translation[2]}),
+                            .translation = (Vector3){node.translation[0], node.translation[1], node.translation[2]},
+                            // .translation = Vector3Add(translation, (Vector3){node.translation[0], node.translation[1], node.translation[2]}),
                             .rotation = rotation,
                             // .rotation = (Quaternion){node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]},
                             // .rotation = QuaternionMultiply(rotation, (Quaternion){node.rotation[0], node.rotation[1], node.rotation[2], node.rotation[3]}),

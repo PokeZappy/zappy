@@ -13,6 +13,9 @@ namespace Zappy
     {
         _window.SetTargetFPS(60);
 
+        _camera.SetPosition(Vector3{(247.0F), (125.0F), (710.0F)});
+        _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+
         // Load floor texture
         _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");
         _floorMesh = GenMeshPlane(GRID_SIZE, GRID_SIZE, 1, 1);
@@ -48,6 +51,7 @@ namespace Zappy
             _camera.EndMode();
             // end of 3D scene
             textColor.DrawText(raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
+            textColor.DrawText(raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
         }
         _window.EndDrawing();
     }
@@ -75,12 +79,12 @@ namespace Zappy
     void Raylib::update(const World &world)
     {
         if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += 0.5f;
-            _camera.target.y += 0.5f;
+            _camera.position.y += 1;
+            _camera.target.y += 1;
         }
         if (IsKeyDown(KEY_LEFT_SHIFT)) {
-            _camera.position.y -= 0.5f;
-            _camera.target.y -= 0.5f;
+            _camera.position.y -= 1;
+            _camera.target.y -= 1;
         }
         _camera.Update(CAMERA_FIRST_PERSON);
         for (const auto &player : world.getPlayers()) {
