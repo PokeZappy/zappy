@@ -29,7 +29,6 @@ void time_manager(server_t *server)
         static_time = current_time;
         time_unit++;
         check_death(server);
-        check_eggs(server);
     }
     launch_timed_function(server, time_unit);
 }
