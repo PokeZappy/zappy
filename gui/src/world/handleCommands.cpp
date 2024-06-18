@@ -18,9 +18,9 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-            std::cout << command << std::endl;
-        }
+        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
+        //     std::cout << command << std::endl;
+        // }
         // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
         //     std::cout << command << std::endl;
         // }

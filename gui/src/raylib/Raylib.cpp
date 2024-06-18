@@ -26,9 +26,19 @@ namespace Zappy
 
         _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
 
+        // Rocks
         std::string pokeballModelPath = "assets/models/poke_ball.glb";
-        _itemModel = raylib::Model(pokeballModelPath);
-        _itemAnimations = raylib::ModelAnimation::Load(pokeballModelPath);
+        _rockModel = raylib::Model(pokeballModelPath);
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/poke_ball.png"));
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/great_ball.png"));
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/ultra_ball.png"));
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/premier_ball.png"));
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/luxury_ball.png"));
+        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/master_ball.png"));
+        _rockAnimations = raylib::ModelAnimation::Load(pokeballModelPath);
+
+        // Food
+        _foodModel = raylib::Model("assets/models/pecha_berry.glb");
     }
 
     void Raylib::render(const World &world)
@@ -97,6 +107,10 @@ namespace Zappy
         size_t decal = 0;
         for (size_t i = 0; i < _players.size(); i++) {
             if (!world.containsPlayer(_players[i - decal]->worldPlayer->getId())) {
+                _players[i]->kill();
+            }
+            _players[i]->update();
+            if (_players[i]->getHeight() > 2000) {
                 _players.erase(_players.begin() + i - decal);
                 decal++;
             }

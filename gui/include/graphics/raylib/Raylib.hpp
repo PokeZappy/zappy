@@ -25,7 +25,8 @@ namespace Zappy {
 
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
-            void drawItem(size_t x, size_t y, size_t id, size_t quantity);
+            void drawFood(float x, float y, size_t quantity);
+            void drawRock(float x, float y, size_t id, size_t quantity);
 
             raylib::Window _window;
             raylib::Camera _camera;
@@ -38,9 +39,16 @@ namespace Zappy {
 
             raylib::Model _tv;
 
-            raylib::Model _itemModel;
-            std::vector<raylib::ModelAnimation> _itemAnimations;
-            size_t _itemAnimationFrame = 0;
+            // Rocks (pokeballs)
+            raylib::Model _rockModel;
+            std::vector<Texture2D> _rockTextures;
+            std::vector<raylib::ModelAnimation> _rockAnimations;
+            size_t _rockAnimationFrame = 0;
+
+            // Food
+            raylib::Model _foodModel;
+
+
             raylib::Shader _shader;
     };
 }
