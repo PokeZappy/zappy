@@ -23,6 +23,7 @@ namespace Zappy
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
 
         _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
+        listTypes = {"grass", "fire", "water"};
     }
 
     void Raylib::render(const World &world)
@@ -76,6 +77,46 @@ namespace Zappy
         return false;
     }
 
+    PokemonInfo Raylib::parsePokemon(libconfig::Setting &pokemon) {
+        PokemonInfo pkInfo = PokemonInfo();
+
+        try {
+            std::string pokeName = pokemon["name"];
+            std::string pokeId = pokemon["id"];
+            libconfig::Setting &evos = pokemon["evolutions"];
+            for (int i = 0; i < evos.getLength(); i++) {
+                pkInfo.evolutions.push_back(parsePokemon(evos[i]));
+            }
+        } catch (libconfig::SettingNotFoundException &ex) {
+        std::cerr << ex.what() << std::endl;
+        // return (false);
+    } catch (libconfig::SettingTypeException &ex) {
+        std::cerr << ex.what() << std::endl;
+        // return (false);
+    }
+        return pkInfo;
+    }
+
+    PokemonInfo Raylib::getPokemon(std::string team) {
+        if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end()) {
+            // pas trouvé
+            team = listTypes[Utils::random(0, listTypes.size())];
+        }
+
+        try {
+            libconfig::Setting &root = _configuration.getRoot();
+            libconfig::Setting &pokemons = root[team.c_str()];
+            return parsePokemon(pokemons[Utils::random(0, pokemons.getLength())]);
+        } catch (libconfig::SettingNotFoundException &ex) {
+        std::cerr << ex.what() << std::endl;
+        // return (false);
+    } catch (libconfig::SettingTypeException &ex) {
+        std::cerr << ex.what() << std::endl;
+        // return (false);
+    }
+    return PokemonInfo();
+    }
+
     void Raylib::update(const World &world)
     {
         if (IsKeyDown(KEY_SPACE)) {
@@ -88,8 +129,12 @@ namespace Zappy
         }
         _camera.Update(CAMERA_FIRST_PERSON);
         for (const auto &player : world.getPlayers()) {
-            if (!containsPlayer(player))
-                _players.push_back(PlayerRaylib(player, "assets/models/pokemons/torterra.glb"));
+            if (!containsPlayer(player)) {
+                PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
+                pokemon.shiny = Utils::random(0, 20) == 6;
+                _players.push_back(PlayerRaylib(player, pokemon));
+            }
+
         }
     }
 

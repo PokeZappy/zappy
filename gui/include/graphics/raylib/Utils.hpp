@@ -7,6 +7,23 @@
 
 #pragma once
 
-namespace Zappy {
-    #define GRID_SIZE 50
+#include <random>
+
+namespace Zappy
+{
+#define GRID_SIZE 50
+
+    class Utils
+    {
+        public:
+            static int random(int min, int max)
+            {
+                static std::random_device rd; 
+                static std::mt19937 gen(rd());
+
+                std::uniform_int_distribution<> distr(min, max);
+
+                return distr(gen);
+            }
+    };
 }

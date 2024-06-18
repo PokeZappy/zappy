@@ -9,10 +9,11 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath)
-        : worldPlayer(worldPlayer), _model(modelPath) {
+    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo)
+        : worldPlayer(worldPlayer), _model("assets/models/pokemons/" + pkInfo.id + ".glb") {
             color = raylib::Color::White();
-            _modelAnimation = raylib::ModelAnimation::Load(modelPath);
+            infos = pkInfo;
+            _modelAnimation = raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb");
 
             offset = raylib::Vector2(
                 static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),

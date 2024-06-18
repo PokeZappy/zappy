@@ -10,12 +10,13 @@
 #include "raylib-cpp.hpp"
 #include "Utils.hpp"
 #include "Player.hpp"
+#include "PokemonInfo.hpp"
 
 namespace Zappy {
     class PlayerRaylib {
     public:
         PlayerRaylib() = default;
-        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath);
+        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo);
 
         void draw(void);
 
@@ -25,6 +26,7 @@ namespace Zappy {
     private:
         float getRotation(void) const;
         raylib::Model _model;
+        PokemonInfo infos;
         std::vector<raylib::ModelAnimation> _modelAnimation;
         int _animIndex = 0;
         int _animFrame = 0;
