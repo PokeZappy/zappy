@@ -19,6 +19,7 @@ void client_dead(server_t *server, client_socket_t *client)
         }
     }
     dprintf(client->socket, "dead\n");
+    dprintf(get_gui(server)->socket, "pdi %d\n", client->_id);
     close(client->socket);
     TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
     free_player(client->player);
