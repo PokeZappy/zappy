@@ -86,7 +86,7 @@ namespace Zappy
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
 
         // draw
-        float scale = 0.5;
+        float scale = 1.0;
         // std::cout << _scale.ToString() << raylib::Vector3(scale, scale, scale).ToString()  << std::endl;
         _model.UpdateAnimation(_modelAnimation[_animIndex], _animFrame).Draw
         (raylib::Vector3{
