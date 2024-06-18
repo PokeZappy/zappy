@@ -11,6 +11,8 @@
 #include "raylib-cpp.hpp"
 #include "PlayerRaylib.hpp"
 #include "Utils.hpp"
+#include <libconfig.h++>
+#include "PokemonInfo.hpp"
 
 namespace Zappy {
     class Raylib : public AGraphicalModule {
@@ -22,7 +24,9 @@ namespace Zappy {
             void update(const World &world) override;
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-
+            PokemonInfo getPokemon(std::string team);
+            PokemonInfo parsePokemon(libconfig::Setting &pokemon);
+            void testEvolution(void);
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
             void drawFood(float x, float y, size_t quantity);
@@ -31,6 +35,8 @@ namespace Zappy {
             raylib::Window _window;
             raylib::Camera _camera;
             std::vector<std::unique_ptr<PlayerRaylib>> _players;
+            std::vector<std::string> listTypes;
+            libconfig::Config _configuration;
 
             // floor
             raylib::Texture2D _floorTexture;

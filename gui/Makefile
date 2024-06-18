@@ -25,7 +25,7 @@ NAME			=	zappy_gui
 
 INCLUDEFLAGS	=	-Iinclude -Iinclude/graphics/sfml -Iinclude/world -Iinclude/graphics/raylib -Iinclude/graphics -I./lib/raylib/src -I./lib/raylib-cpp/include
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
-LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system -L./lib/raylib/src -lraylib -lpthread -ldl
+LDFLAGS			=	-lconfig++ -lsfml-graphics -lsfml-window -lsfml-system -L./lib/raylib/src -lraylib -lpthread -ldl
 DEPSFLAGS		=	-MMD -MP
 
 LDLIBS			+=	-L./criterion/lib -lcriterion

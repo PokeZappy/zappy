@@ -10,12 +10,12 @@
 #include "raylib-cpp.hpp"
 #include "Utils.hpp"
 #include "Player.hpp"
+#include "PokemonInfo.hpp"
 
 namespace Zappy {
     class PlayerRaylib {
     public:
-        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath, size_t gridSize);
-
+        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize);
         void draw(void);
         void update(void);
         float getHeight(void) const { return _height; }
@@ -23,10 +23,12 @@ namespace Zappy {
         void move(raylib::Vector3 vector);
         bool isDying(void) const { return _isDying; }
         void kill(void) { _isDying = true; }
+        void loadTextureAndModel(void);
 
         raylib::Color color;
         raylib::Vector2 offset;
         const std::shared_ptr<Player> worldPlayer;
+        PokemonInfo infos;
     private:
         float getRotation(void) const;
         raylib::Model _model;

@@ -9,29 +9,47 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath, size_t gridSize)
-        : worldPlayer(worldPlayer), _model(modelPath), _gridSize(gridSize) {
-            color = raylib::Color::White();
-            _modelAnimation = raylib::ModelAnimation::Load(modelPath);
-            // offset = raylib::Vector2(rand() % _gridSize / 4 - _gridSize / 8, rand() % _gridSize / 4 - _gridSize / 8);
-            // offset = raylib::Vector2(0, 0);
-            offset = raylib::Vector2(
+    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize)
+        : worldPlayer(worldPlayer), _model("assets/models/pokemons/" + pkInfo.id + ".glb"), _gridSize(gridSize)
+    {
+        color = raylib::Color::White();
+        infos = pkInfo;
+        loadTextureAndModel();
+
+        offset = raylib::Vector2(
                 (float)(rand() % _gridSize / 3) - _gridSize / 6,
                 (float)(rand() % _gridSize / 3) - _gridSize / 6);
-            _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
+        _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
+    }
+
+    void PlayerRaylib::loadTextureAndModel(void)
+    {
+        _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
+        if (infos.shiny)
+        {
+            std::string path = "assets/textures/" + infos.id + "_shiny.png";
+            std::cout << "              chemin de fou :" << path << std::endl;
+            Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
+
+            // raylib::Texture2D textureShiny = raylib::Texture2D::Load("assets/textures/" + pkInfo.id + "_shiny.png");
+
+            _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
         }
+        _modelAnimation = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
+    }
 
     float PlayerRaylib::getRotation(void) const
     {
-        switch (worldPlayer->getOrientation()) {
-            case Orientation::NORTH:
-                return 180;
-            case Orientation::EAST:
-                return 270;
-            case Orientation::SOUTH:
-                return 0;
-            case Orientation::WEST:
-                return 90;
+        switch (worldPlayer->getOrientation())
+        {
+        case Orientation::NORTH:
+            return 180;
+        case Orientation::EAST:
+            return 270;
+        case Orientation::SOUTH:
+            return 0;
+        case Orientation::WEST:
+            return 90;
         }
         return 0;
     }
