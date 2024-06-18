@@ -25,7 +25,6 @@ class Player(Bot):
         self.limit: list[int] = self.dimensions
         self.pos: tuple[int, int] = (0, 0)
         self.inv = {}
-        self.map_knowledge: list[list[dict]] = [[{} for _ in range(self.limit[0])] for _ in range(self.limit[1])]
         self.parent = None
         self.level: int = 1
         self.actions = []
@@ -45,6 +44,7 @@ class Player(Bot):
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))
+        self.got_id: bool = False
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -132,6 +132,27 @@ class Player(Bot):
         if direction == 7:
             self.path.facing = dir.WEST.value
 
+    def turn_to_the_north(self) -> None:
+        """
+        Turn the player to face the North direction.
+
+        This method checks the current facing direction of the player and adjusts it to face North if needed.
+
+        :return: None
+        """
+        if self.path.facing == dir.NORTH.value:
+            return
+        if self.path.facing == dir.EAST.value:
+            self.queue.append('Left')
+            self.path.facing = dir.NORTH.value
+        if self.path.facing == dir.WEST.value:
+            self.queue.append('Right')
+            self.path.facing = dir.NORTH.value
+        if self.path.facing == dir.SOUTH.value:
+            self.queue.append('Right')
+            self.queue.append('Right')
+            self.path.facing = dir.NORTH.value
+
     def move_to(self, pos: tuple[int, int]) -> None:
         """
         This method makes the player move to a position.
@@ -146,9 +167,7 @@ class Player(Bot):
     def get_id(self, message: str) -> None:
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
-        self.queue.append('Look')
-        self.queue.append('Look')
-        self.apply_action()
+        self.queue.append(('Take', 'player'))
 
     def apply_action(self) -> None:
         """
@@ -159,6 +178,8 @@ class Player(Bot):
         self.actions.append(self.queue[0])
         self.queue.pop(0)
         action = self.actions[-1]
+        if action[0] == ('Take', 'player'):
+            self.got_id = True
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
@@ -194,30 +215,28 @@ class Player(Bot):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_type, msgs = self.message.receive(buf)
+            recv_list = self.message.receive(buf)
         else:
-            recv_type, msgs = self.message.receive(buf, self.actions[0])
-        print(recv_type)
-        print(f'before distribution: {msgs}')
-        if recv_type == 'ok':
-            if isinstance(msgs, tuple) and msgs[0] == 'Take':
-                self.inventory[msgs[1]] += 1
-                if msgs[1] == 'food':
-                    self.life += self.FOOD
-            if isinstance(msgs, tuple) and msgs[0] == 'Set':
-                self.inventory[msgs[1]] -= 1
-        if recv_type == 'look':
-            self.looked = True
-            print("recieve look")
-            self.environment = msgs
-        if recv_type == 'inventory':
-            print("inventory")
-        if recv_type == 'broadcast':
-            for msg in msgs:
-                self.broadcast_traitement(msg)
-            return
-        if len(self.actions) != 0:
-            self.actions.pop(0)
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'ok':
+                if isinstance(msgs, tuple) and msgs[0] == 'Take' and msgs[1] != 'player':
+                    self.inventory[msgs[1]] += 1
+                    if msgs[1] == 'food':
+                        self.life += self.FOOD
+                if isinstance(msgs, tuple) and msgs[0] == 'Set':
+                    self.inventory[msgs[1]] -= 1
+            if recv_type == 'look':
+                self.looked = True
+                self.environment = msgs
+            if recv_type == 'inventory':
+                print("inventory")
+            if recv_type == 'broadcast':
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            if len(self.actions) != 0:
+                self.actions.pop(0)
 
     @abstractmethod
     def make_action(self) -> None:

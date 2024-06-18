@@ -1,9 +1,9 @@
 import socket
 from abc import ABC
 
-from src.player.player import Player
-from src.mvt import path
-from src.utils.info_look import look_resources
+from ai.src.player.player import Player
+from ai.src.mvt import path
+from ai.src.utils.info_look import look_resources
 
 
 class NorthGuard(Player):

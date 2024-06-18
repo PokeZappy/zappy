@@ -3,7 +3,7 @@ import re
 
 from ai.src.communication.latin import Latin
 from ai.src.communication.cipher import Cipher
-from ai.src.utils.messages import validate_look_pattern, validate_encryption_pattern, validate_inventory_pattern, get_infos, exctrat_direction
+from ai.src.utils.messages import validate_look_pattern, validate_encryption_pattern, validate_inventory_pattern, get_infos, extract_direction
 
 
 class Messages(object):
@@ -59,27 +59,32 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def receive(self, message: str, action: any = None) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
+    def receive(self, message: str, action: any = None) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
         :param message: str - The message received.
         :param action: any - Additional action related to the message.
-        :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]]]] - A tuple containing the status and processed message details.
+        :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
         """
-        if validate_inventory_pattern(message):
-            return 'inventory', message
-        if validate_look_pattern(message):
-            return 'look', message
-        if message == 'ok\n':
-            if self.debug:
-                print(f'ok: {action}')
-            return 'ok', action
-        if message == 'ko\n':
-            if self.debug:
-                print(f'ko: {action}')
-            return 'ko', action
-        return self.broadcast_received(message)
+        messages = list(filter(None, message.split('\n')))
+        result = []
+        for message in messages:
+            if validate_inventory_pattern(message):
+                result.append(('inventory', message))
+            elif validate_look_pattern(message):
+                result.append(('look', message))
+            elif message == 'ok':
+                if self.debug:
+                    print(f'ok: {action}')
+                result.append(('ok', action))
+            elif message == 'ko':
+                if self.debug:
+                    print(f'ko: {action}')
+                result.append(('ko', action))
+            else:
+                result.append(self.broadcast_received(message))
+        return result
 
     def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
         """
@@ -92,7 +97,7 @@ class Messages(object):
         match = re.search(r'\d+, ', message)
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
-            messages = message[match.end() + 1:-2]
+            messages = message[match.end() + 1:-1]
             messages = messages.split('|')
             for msg in messages:
                 parts = msg.split()
@@ -103,10 +108,8 @@ class Messages(object):
                 text = self.cipher.decryption([int(i) for i in text])
                 text = text.split('#')
                 if text[0] == 'est dominus aquilonis':
-
-                    direction = exctrat_direction(save_msg)
+                    direction = extract_direction(save_msg)
                     result.append({
-                        'id': int(parts[1]),
                         'msg': text[0],
                         'direction': direction
                     })
@@ -122,7 +125,6 @@ class Messages(object):
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
-        print(result)
         if not result:
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
@@ -172,6 +174,3 @@ class Messages(object):
         result = self.msg + '"'
         self.msg = 'Broadcast "'
         return result
-
-
-
