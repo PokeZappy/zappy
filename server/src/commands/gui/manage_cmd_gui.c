@@ -7,6 +7,22 @@
 
 #include "../../../include/commands.h"
 
+static const command_t commands_gui[] = {
+    {"msz", cmd_msz, 0},
+    {"bct", cmd_bct, 0},
+    {"mct", cmd_mct, 0},
+    {"tna", cmd_tna, 0},
+    {"pnw", cmd_pnw, 0},
+    {"ppo", cmd_ppo, 0},
+    {"plv", cmd_plv, 0},
+    {"pin", cmd_pin, 0},
+    {"sgt", cmd_sgt, 0},
+    {"sst", cmd_sst, 0},
+    {"EXIT", exit_command, 0},
+    {"CLIENT_LIST", print_client_list, 0},
+    {NULL, NULL, 0}
+};
+
 client_socket_t *get_gui(server_t *server)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
@@ -19,35 +35,21 @@ client_socket_t *get_gui(server_t *server)
     return NULL;
 }
 
-static void m_cmd_2(char *command, client_socket_t *client, server_t *server)
-{
-    if (strncmp(command, "pin ", 4) == 0)
-        return cmd_pin(server, command, client);
-    if (strncmp(command, "sgt ", 4) == 0)
-        return cmd_sgt(server, command, client);
-    if (strncmp(command, "sst ", 4) == 0)
-        return cmd_sst(server, command, client);
-}
-
 void manage_cmd_gui(char *command, client_socket_t *client, server_t *server)
 {
-    if (strcmp(command, "EXIT") == 0)
-        return exit_command(server, command, client);
-    if (strcmp(command, "CLIENT_LIST") == 0)
-        return print_client_list(server, command, client);
-    if (strncmp(command, "msz ", 4) == 0)
-        return cmd_msz(server, command, client);
-    if (strncmp(command, "bct ", 4) == 0)
-        return cmd_bct(server, command, client);
-    if (strncmp(command, "mct ", 4) == 0)
-        return cmd_mct(server, command, client);
-    if (strncmp(command, "tna ", 4) == 0)
-        return cmd_tna(server, command, client);
-    if (strncmp(command, "pnw ", 4) == 0)
-        return cmd_pnw(server, command, client);
-    if (strncmp(command, "ppo ", 4) == 0)
-        return cmd_ppo(server, command, client);
-    if (strncmp(command, "plv ", 4) == 0)
-        return cmd_plv(server, command, client);
-    return m_cmd_2(command, client, server);
+    command_t *cmd = (command_t *)malloc(sizeof(command_t));
+    timeval_t wait;
+
+    for (int i = 0; commands_gui[i].name != NULL; i++) {
+        if (strncmp(command, commands_gui[i].name,
+                    strlen(commands_gui[i].name)) == 0) {
+            commands_gui[i].ptr(server, command, client);
+            break;
+        }
+        if (commands_gui[i + 1].name == NULL) {
+            dprintf(client->socket, "suc\n");
+            free(cmd);
+            return;
+        }
+    }
 }
