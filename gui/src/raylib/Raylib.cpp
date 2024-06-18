@@ -83,6 +83,8 @@ namespace Zappy
         try {
             std::string pokeName = pokemon["name"];
             std::string pokeId = pokemon["id"];
+            pkInfo.displayName = pokeName;
+            pkInfo.id = pokeId;
             libconfig::Setting &evos = pokemon["evolutions"];
             for (int i = 0; i < evos.getLength(); i++) {
                 pkInfo.evolutions.push_back(parsePokemon(evos[i]));
@@ -94,18 +96,22 @@ namespace Zappy
         std::cerr << ex.what() << std::endl;
         // return (false);
     }
+
         return pkInfo;
     }
 
     PokemonInfo Raylib::getPokemon(std::string team) {
+        std::cout << team << std::endl;
+        _configuration.readFile("assets/pokemons.cfg");
         if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end()) {
             // pas trouvé
             team = listTypes[Utils::random(0, listTypes.size())];
+            std::cout << "modification de la team : " << team << std::endl;
         }
-
         try {
             libconfig::Setting &root = _configuration.getRoot();
-            libconfig::Setting &pokemons = root[team.c_str()];
+            libconfig::Setting &types = root["types"];
+            libconfig::Setting &pokemons = types[team.c_str()];
             return parsePokemon(pokemons[Utils::random(0, pokemons.getLength())]);
         } catch (libconfig::SettingNotFoundException &ex) {
         std::cerr << ex.what() << std::endl;

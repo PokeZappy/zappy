@@ -11,7 +11,7 @@
 
 namespace Zappy
 {
-#define GRID_SIZE 50
+#define GRID_SIZE 20
 
     class Utils
     {
