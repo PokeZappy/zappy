@@ -18,28 +18,30 @@ class Pnj(Player):
         self.allowed_to_move = True
         self.first_round = True
     
-    def recv_treatment(self, buf: str) -> None:
-        """
-        This method treats the received message.
+    # def recv_treatment(self, buf: str) -> None:
+    #     """
+    #     This method treats the received message.
 
-        :param buf: str - The received message.
-        :return: None
-        """
-        recv_type, msg = self.message.receive(buf)
-        if recv_type == 'ok':
-            if msg[1] == 'food':
-                self.life += self.FOOD
-            self.actions.pop(0)
-        if recv_type == 'ko':
-            self.actions.pop(0)
-        elif recv_type == 'broadcast':
-            self.broadcast_traitement(msg)
+    #     :param buf: str - The received message.
+    #     :return: None
+    #     """
+    #     recv_type, msg = self.message.receive(buf)
+    #     if recv_type == 'ok':
+    #         if msg[1] == 'food':
+    #             self.life += self.FOOD
+    #         self.actions.pop(0)
+    #     if recv_type == 'ko':
+    #         self.actions.pop(0)
+    #     elif recv_type == 'broadcast':
+    #         self.broadcast_traitement(msg)
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'felix carmen':
             self.allowed_to_move = True
             self.level += 1
             self.life -= self.INCANTATION
+        if message['msg'] == 'defecit carmen':
+            self.allowed_to_move = True
         if message['msg'] == 'comedent ut incant : ':
             for _ in range(message['nbr']):
                 self.queue.append('Take food')
@@ -53,7 +55,7 @@ class Pnj(Player):
         if self.first_round:
             self.queue.append(('Set', 'food'))
             self.first_round = False
-        if not self.allowed_to_moove:
+        if not self.allowed_to_move:
             return
         while len(self.queue) > 0:
             self.apply_action()

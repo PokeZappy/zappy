@@ -4,6 +4,7 @@ from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
 from ai.src.player.incantator import Incantator
 from ai.src.player.player import Player
+from ai.src.player.pnj import Pnj
 from ai.src.zappy_ai import connection
 from socket import socket
 from ai.src.gameplay.enum_gameplay import RoleInGame
@@ -11,8 +12,8 @@ from ai.src.gameplay.enum_gameplay import RoleInGame
 class ParentAI(Player):
 
     ROLE = [
-            RoleInGame.PROGENITOR,
-            RoleInGame.PROGENITOR,
+            # RoleInGame.PROGENITOR,
+            # RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.INCANTATOR,
             RoleInGame.PNJ,
@@ -20,26 +21,27 @@ class ParentAI(Player):
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.PUSHER,
-            RoleInGame.PUSHER,
-            RoleInGame.PUSHER,
-            RoleInGame.PUSHER,
-            RoleInGame.COOCKER,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
+            # RoleInGame.COOCKER,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
+            # RoleInGame.COLLECTOR,
             ]
-    DEFAULT_ROLE = RoleInGame.COLLECTOR
+    DEFAULT_ROLE = RoleInGame.PNJ
 
     BIND = {
         RoleInGame.PROGENITOR: Progenitor,
         RoleInGame.COLLECTOR: Collector,
-        RoleInGame.INCANTATOR: Incantator
+        RoleInGame.INCANTATOR: Incantator,
+        RoleInGame.PNJ: Pnj
     }
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False,
@@ -58,6 +60,8 @@ class ParentAI(Player):
         self.index = 0
         self.give_role = []
         self.can_incant = False
+        self.level_to_give = 1
+        self.fork_gave = 0
     
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -83,71 +87,81 @@ class ParentAI(Player):
             return self.DEFAULT_ROLE
         
 
-    def mastermind_treatment(self, buf) -> None:
+    def mastermind_treatment(self, buf) -> bool:
         """"
         mastermind treatment informations
 
         :return false: if he received a broadcast
         :return true: else
         """
-        recv_type, msg = self.message.receive(buf, self.actions[0])
-        if recv_type == 'ok':
-            if msg == 'Broadcast':
-                self.broadcast_traitement(msg)
-            if msg[1] == 'food':
-                self.life += self.FOOD
-        elif isinstance(buf, str) and buf.isnumeric() and int(buf) > 0:
+        if len(self.actions) == 0:
+            recv_type, msgs = self.message.receive(buf)
+        else:
+            recv_type, msgs = self.message.receive(buf, self.actions[0])
+        if isinstance(buf, str) and buf.isnumeric():
             counter = int(buf)
-            for _ in range(counter, 0, -1):
+            for _ in range(counter):
                 self.real_fork()
-                self.give_role.pop(0)
+                if len(self.give_role) > 0:
+                    self.give_role.pop(0)
+        elif buf == 'ok':
+            if self.actions[0] == 'Take' and self.actions[1] == 'food':
+                self.life += self.FOOD
         elif recv_type == 'broadcast':
-            self.broadcast_traitement(msg)
+            if msgs[0] == 'ko':
+                return False
+            for msg in msgs:
+                self.broadcast_traitement(msg)
             return False
         return True
 
-        def broadcast_traitement(self, message: tuple | str) -> None:
-            if message['msg'] == '':
-                # TODO: recieve all inventory from collector
-                pass
-            if message['msg'] == 'opes deposita':
-            #     TODO : faire lancer l'incantation si ressources ok
-                pass
-            if message['msg'] == 'defecit carmen':
-                #TODO: problem to make the incantation
-                pass
-            self.global_message()
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        if message['msg'] == 'tamer':
+            # TODO: recieve all inventory from collector
+            pass
+        if message['msg'] == 'opes deposita':
+        #     TODO : faire lancer l'incantation si ressources ok
+            pass
+        if message['msg'] == 'defecit carmen':
+            #TODO: problem to make the incantation
+            pass
+        self.global_message()
+
+    def progenitor_treatment(self, buf: str) -> None:
+        if len(self.actions) == 0:
+            recv_type, msgs = self.message.receive(buf)
+        else:
+            recv_type, msgs = self.message.receive(buf, self.actions[0])
+        if buf == 'ok' or buf == 'ko':
+            # TODO: make brodacast with cyprien
+            # if self.is_broadcast(buf):
+            #     self.apply_broadcast(buf)
+            #     return
+            # self.apply_action(buf)
+            l = 1
+        else:
+            #TODO: communication broadcast
+            return False
+        return True
 
 
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
         print(buf)
-        
+        print(self.queue)
+        print(self.actions)
         if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
             for _ in range(0, int(buf)):
                 self.real_fork()
         if self.first_round[1]:
             self.first_round[1] = False
             self.give_role = self.ROLE
-        if self.role == RoleInGame.PROGENITOR:
-            if buf == 'ok':
-                # TODO: make brodacast with cyprien
-                # if self.is_broadcast(buf):
-                #     self.apply_broadcast(buf)
-                #     return
-                # self.apply_action(buf)
-                l = 1
-            elif isinstance(buf, str) and buf.isnumeric() and int(buf) > 0:
-                counter = int(buf)
-                for _ in range(counter, 0, -1):
-                    self.real_fork()
-                    self.give_role.pop(0)
-
-            else:
-                #TODO: communication broadcast
+        elif self.role == RoleInGame.PROGENITOR:
+            if not self.progenitor_treatment(buf):
                 return
-        elif RoleInGame.MASTERMIND:
-            self.mastermind_treatment(buf)
+        elif self.role == RoleInGame.MASTERMIND:
+            if not self.mastermind_treatment(buf):
+                return
         self.actions.pop(0)
 
     def action_as_progenitor(self) -> None:
@@ -157,35 +171,43 @@ class ParentAI(Player):
         self.queue.append('Fork')
         if self.counter > 0:
             self.counter -= self.FORK_ACTION
+        print (self.counter)
         if self.counter <= 0:
             self.queue.append('Slots')
-        if RoleInGame.PROGENITOR not in self.give_role:
+            self.fork_gave += 1
+        if self.fork_gave == 1:
             self.role = RoleInGame.MASTERMIND
 
-    def communicate_orders(self) -> None:
+    def communicate_orders(self) -> bool:
         """
         This method communicates the orders to the mastermind.
         """
         #TODO: implement the communication between the mastermind and the putas
 
-        if RoleInGame.PNJ not in self.give_role and not self.can_incant:
-            self.broadcast('facultates positas carmina')
+        if RoleInGame.PNJ not in self.give_role and self.level_to_give <= 1:
+            self.message.buf_messages('facultates positas carmina')
+            self.broadcast()
             self.can_incant = True
+            self.level_to_give += 1
+            return True
+        return False
 
     def action_as_mastermind(self) -> None:
         """
         This is being used when parent_ai is a mastermind
         """
-        if len(self.queue) > 1:
-            return
         if len(self.queue) > 0:
             self.apply_action()
+        if len(self.actions) > 0:
             return
-        self.queue.append('Slots')
+        print('mastermind')
         if self.life <= 300:
             self.queue.append(('Take', 'food'))
-        else:
-            self.communicate_orders()
+        if not self.communicate_orders():
+            print('communicate orders')
+            self.queue.append('Look')
+        self.queue.append('Slots')
+
 
     def make_action(self) -> None:
         """
@@ -199,9 +221,9 @@ class ParentAI(Player):
             return
         if self.role == RoleInGame.PROGENITOR:
             self.action_as_progenitor()
+            self.apply_action()
         elif self.role == RoleInGame.MASTERMIND:
             self.action_as_mastermind()
-        self.apply_action()
 
     def get_broadcast(self, broadcast_recv: str):
         print(broadcast_recv)

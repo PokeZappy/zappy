@@ -242,9 +242,18 @@ class Player(Bot):
         :param buf: The data received from the server.
         :return: None
         """
-        recv_type, msgs = self.message.receive(buf, self.actions[0])
+        if len(self.actions) == 0:
+            recv_type, msgs = self.message.receive(buf)
+        else:
+            recv_type, msgs = self.message.receive(buf, self.actions[0])
         print(recv_type)
         print(f'before distribution: {msgs}')
+        if recv_type == 'broadcast':
+            if msgs[0] == 'ko':
+                return
+            for msg in msgs:
+                self.broadcast_traitement(msg)
+            return
         if recv_type == 'ok':
             if isinstance(msgs, tuple) and msgs[0] == 'Take':
                 self.inventory[msgs[1]] += 1
@@ -252,15 +261,14 @@ class Player(Bot):
                     self.life += self.FOOD
             if isinstance(msgs, tuple) and msgs[0] == 'Set':
                 self.inventory[msgs[1]] -= 1
+                if msgs[1] == 'food':
+                    self.life -= self.FOOD
         if recv_type == 'look':
             self.looked = True
             print("recieve look")
             self.environment = msgs
         if recv_type == 'inventory':
             print("inventory")
-        if recv_type == 'broadcast':
-            for msg in msgs:
-                self.broadcast_traitement(msg)
         self.actions.pop(0)
 
     @abstractmethod

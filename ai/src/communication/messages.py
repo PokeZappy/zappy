@@ -119,6 +119,8 @@ class Messages(object):
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
         print(result)
+        if not result:
+            result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
 
     def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None,

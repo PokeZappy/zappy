@@ -13,7 +13,7 @@ class Incantator(Player):
         """
         super().__init__(serv_info, cli_socket, debug_mode)
         self.allowed_incantation_mns = 1
-        self.goto = None
+        self.goto = (0, 1)
         self.dir = None
         self.allowed_incantation_cooker = 0
         self.first_round = True
@@ -25,38 +25,46 @@ class Incantator(Player):
         :param buf: str - The received message.
         :return: None
         """
-        recv_type, msg = self.message.receive(buf, self.actions[0])
+        if len(self.actions) == 0:
+            recv_type, msgs = self.message.receive(buf)
+        else:
+            recv_type, msgs = self.message.receive(buf, self.actions[0])
         if recv_type == 'ok':
-            if msg == 'Incantation':
+            if msgs == 'Incantation':
                 self.level += 1
-            if msg[1] == 'food':
+            if msgs[1] == 'food':
                 self.life += self.FOOD
-            self.actions.pop(0)
         elif recv_type == 'ko':
-            if msg == 'Incantation':
+            if msgs == 'Incantation':
                 self.allowed_incantation_mns -= 1
                 self.message.buf_messages('defecit carmen')
                 self.queue.append('Broadcast')
-            if msg == 'Take food':
+            if msgs == 'Take food':
                 self.message.buf_messages('cibo opus est')
                 self.waiting_food = True
                 self.queue.append('Broadcast')
         elif recv_type == 'broadcast':
-            self.broadcast_traitement(msg)
+            if msgs[0] == 'ko':
+                return
+            for msg in msgs:
+                self.broadcast_traitement(msg)
+            return
+        self.actions.pop(0)
 
 
-        def broadcast_traitement(self, message: tuple | str) -> None:
-            if message['msg'] == 'facultates positas carmina':
-                self.allowed_incantation_mns += 1
-            if message['msg'] == 'comedent ut incant : ':
-                self.wating_food = False
-                self.food_can_be_taken = True
-            if message['msg'] == 'comedent ut incant : ':
-                if message['info'] == 'cibus':
-                    self.allowed_incantation_cooker = message['nbr']
-            if message['msg'] == 'movere ad : ':
-                self.goto = message['info']
-            # TODO: see utility of self.global_message()
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        if message['msg'] == 'facultates positas carmina':
+            self.allowed_incantation_mns += 1
+        if message['msg'] == 'comedent ut incant : ':
+            self.wating_food = False
+            self.food_can_be_taken = True
+        if message['msg'] == 'comedent ut incant : ':
+            if message['info'] == 'cibus':
+                self.allowed_incantation_cooker = message['nbr']
+        if message['msg'] == 'movere ad : ':
+            self.goto = message['info']
+        # TODO: see utility of self.global_message()
 
 
     def make_action(self) -> None:
@@ -66,25 +74,21 @@ class Incantator(Player):
         if self.first_round:
             self.queue.append(('Set', 'food'))
             self.first_round = False
-        if len(self.action) > 1:
-            return
         if len(self.queue) > 0:
             self.apply_action()
+        if len(self.actions) > 1:
             return
         if self.life <= 400:
             self.queue.append('Take food')
-        elif self.goto != None:
-            #TODO: ask for a direction to go to cyprien
+        if self.dir == None:
+            #TODO: find the direction to go north the incantation (asign Cyprien)
             pass
-        elif self.allowed_incantation_mns > self.level:
+        if self.goto != None:
+            #TODO: (0, 1) -> first incantation when level 2 -> incantation in (0, 0) (asign Cyprien)
+            pass
+        if self.allowed_incantation_mns > self.level:
             self.queue.append('Incantation')
         else:
             self.queue.append('Look')
             #TODO: commmunicate with the mastermind on the look
-        self.apply_action()
-
-
-    def broadcast_traitement(self, message: tuple | str) -> None:
-        if message['msg'] == 'facultates positas carmina':
-            self.allowed_incantation += 1
-        self.global_message()
+        # self.apply_action()
