@@ -29,7 +29,7 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
     for (int i = 0; i < 7; i++)
         player->_inventory[i] -= incantation._objects_required[i];
     player->_level++;
-    dprintf(get_gui(server)->socket, "plv #%d %d\n", client->_id,
+    dprintf(get_gui(server)->socket, "plv %d %d\n", client->_id,
         client->player->_level);
     dprintf(client->socket, "Current level: %d\n", player->_level);
 }

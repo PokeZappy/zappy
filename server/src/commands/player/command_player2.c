@@ -13,7 +13,7 @@ static void check_all_egg(tiles_t *tile, server_t *server)
     egg_t *egg = TAILQ_FIRST(&tile->_head_egg);
 
     while (egg != NULL) {
-        dprintf(get_gui(server)->socket, "edi #%d\n", egg->_id);
+        dprintf(get_gui(server)->socket, "edi %d\n", egg->_id);
         TAILQ_REMOVE(&tile->_head_egg, egg, _entries);
         egg = TAILQ_NEXT(egg, _entries);
     }
@@ -34,7 +34,7 @@ void cmd_eject(server_t *server, char *args, client_socket_t *client)
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
-    dprintf(get_gui(server)->socket, "pex #%d\n", client->_id);
+    dprintf(get_gui(server)->socket, "pex %d\n", client->_id);
     printf("eject\n");
 }
 
@@ -56,7 +56,7 @@ void cmd_take(server_t *server, char *args, client_socket_t *client)
     else
         dprintf(client->socket, "ko\n");
     free_str_array(parse_args);
-    dprintf(get_gui(server)->socket, "pgt #%d %d\n", client->_id, obj_taken);
+    dprintf(get_gui(server)->socket, "pgt %d %d\n", client->_id, obj_taken);
     printf("take\n");
 }
 
@@ -78,6 +78,6 @@ void cmd_set(server_t *server, char *args, client_socket_t *client)
     else
         dprintf(client->socket, "ko\n");
     free_str_array(parse_args);
-    dprintf(get_gui(server)->socket, "pdr #%d %d\n", client->_id, obj_set);
+    dprintf(get_gui(server)->socket, "pdr %d %d\n", client->_id, obj_set);
     printf("set\n");
 }

@@ -79,7 +79,7 @@ static void check_for_pos(player_t *player, server_t *server)
     } else {
         player->_pos._x = rand_egg->_pos._x;
         player->_pos._y = rand_egg->_pos._y;
-        dprintf(get_gui(server)->socket, "ebo #%d\n", rand_egg->_id);
+        dprintf(get_gui(server)->socket, "ebo %d\n", rand_egg->_id);
         remove_egg(server, rand_egg);
     }
 }

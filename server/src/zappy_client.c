@@ -51,7 +51,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
     int client_socket = client->socket;
 
     if (client->player == NULL && client->_is_gui == 0) {
-        if (strcmp(commands, "GUI") == 0) {
+        if (strcmp(commands, "GRAPHIC") == 0) {
             handle_gui_client(client, server);
             return;
         }

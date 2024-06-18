@@ -77,6 +77,6 @@ void cmd_broadcast(server_t *server, char *args, client_socket_t *client)
         }
         current = TAILQ_NEXT(current, entries);
     }
-    dprintf(get_gui(server)->socket, "pbc #%d %s\n", client->_id, text);
+    dprintf(get_gui(server)->socket, "pbc %d %s\n", client->_id, text);
     dprintf(client->socket, "ok\n");
 }

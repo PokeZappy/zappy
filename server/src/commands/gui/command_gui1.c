@@ -76,5 +76,5 @@ void cmd_pnw(server_t *server, char *args, client_socket_t *client)
 
     if (gui_socket)
         dprintf(gui_socket->socket,
-        "pnw #%d %d %d %d %d %s\n", id, x, y, o, l, n);
+        "pnw %d %d %d %d %d %s\n", id, x, y, o, l, n);
 }
