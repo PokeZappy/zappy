@@ -7,7 +7,6 @@
 
 #include "../../include/server.h"
 
-// free_client(client);
 void client_dead(server_t *server, client_socket_t *client)
 {
     delayed_command_t *delayed_command =
