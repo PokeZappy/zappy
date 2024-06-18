@@ -14,8 +14,7 @@
 namespace Zappy {
     class PlayerRaylib {
     public:
-        PlayerRaylib() = default;
-        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath);
+        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath, size_t gridSize);
 
         void draw(void);
 
@@ -28,6 +27,9 @@ namespace Zappy {
         std::vector<raylib::ModelAnimation> _modelAnimation;
         int _animIndex = 0;
         int _animFrame = 0;
-        raylib::Vector2 _lastPos;
+        raylib::Vector2 _currentPos;
+        size_t _currentOrientation;
+
+        size_t _gridSize;
     };
 } // namespace Zappy

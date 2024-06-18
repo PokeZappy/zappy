@@ -9,15 +9,16 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath)
-        : worldPlayer(worldPlayer), _model(modelPath) {
+    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, const std::string &modelPath, size_t gridSize)
+        : worldPlayer(worldPlayer), _model(modelPath), _gridSize(gridSize) {
             color = raylib::Color::White();
             _modelAnimation = raylib::ModelAnimation::Load(modelPath);
 
-            offset = raylib::Vector2(
-                static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),
-                static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)));
+            // offset = raylib::Vector2(
+            //     static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),
+            //     static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)));
             offset = raylib::Vector2(0, 0);
+            _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
         }
 
     float PlayerRaylib::getRotation(void) const
@@ -39,24 +40,26 @@ namespace Zappy
     {
         // update
         _animFrame++;
-        raylib::Vector2 pos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
-        _lastPos += (pos - _lastPos) / 10;
+        raylib::Vector2 posGoal = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
+        _currentPos += (posGoal - _currentPos) / 10;
         _animIndex = 1;
-        if (std::abs(_lastPos.x - pos.x) < 0.01 && std::abs(_lastPos.y - pos.y) < 0.01) {
-            _lastPos = pos;
+        if (std::abs(_currentPos.x - posGoal.x) < 0.01 && std::abs(_currentPos.y - posGoal.y) < 0.01) {
+            _currentPos = posGoal;
             // _animFrame = 0;
         }
-        if (_lastPos == pos) {
+        if (_currentPos == posGoal) {
             _animIndex = 0;
             // _animFrame = 0;
         }
-        
+
+        float rotationGoal = getRotation();
+        _currentOrientation += (rotationGoal - _currentOrientation) / 5;
 
         // draw
         _model.UpdateAnimation(_modelAnimation[_animIndex], _animFrame).Draw
         (raylib::Vector3{
-            _lastPos.x * GRID_SIZE + offset.x, 0,
-            _lastPos.y * GRID_SIZE + offset.y},
-            raylib::Vector3(0, 1, 0), getRotation());
+            _currentPos.x * _gridSize + offset.x, 0,
+            _currentPos.y * _gridSize + offset.y},
+            raylib::Vector3(0, 1, 0), _currentOrientation);
     }
 } // namespace Zappy

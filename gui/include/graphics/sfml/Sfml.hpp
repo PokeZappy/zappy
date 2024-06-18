@@ -34,7 +34,7 @@ namespace Zappy {
         void handleEvent(void);
 
         void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-        void drawEntity(const std::shared_ptr<IEntity> entity) override;
+        void drawEntity(const std::shared_ptr<IEntity> entity);
         void drawShell(const std::vector<ShellCommand> &shellCommands);
     private:
         void resetViewPos(void);

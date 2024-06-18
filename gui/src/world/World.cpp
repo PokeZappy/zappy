@@ -66,4 +66,13 @@ namespace Zappy
         }
         throw std::runtime_error("Egg not found");
     }
+
+    bool World::containsPlayer(size_t id) const
+    {
+        for (auto player : _players) {
+            if (player->getId() == id)
+                return true;
+        }
+        return false;
+    }
 } // namespace Zappy

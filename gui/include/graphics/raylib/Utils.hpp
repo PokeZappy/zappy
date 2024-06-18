@@ -8,5 +8,5 @@
 #pragma once
 
 namespace Zappy {
-    #define GRID_SIZE 50
+
 }

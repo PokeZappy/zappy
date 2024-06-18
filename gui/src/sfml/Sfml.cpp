@@ -63,7 +63,8 @@ namespace Zappy
 
     void Sfml::update(const World &world)
     {
-        (void)world;
+        _mapX = world._mapX;
+        _mapY = world._mapY;
         updateMouse();
         handleEvent();
     }

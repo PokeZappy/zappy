@@ -44,11 +44,12 @@ namespace Zappy {
 
         const std::vector<ShellCommand> &getShellCommands(void) const;
         void addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity = nullptr);
+        bool containsPlayer(size_t id) const;
+        int _mapX = -1;
+        int _mapY = -1;
     private:
         std::string getOrientationString(Orientation orientation);
         std::string getItemString(Item item);
-        int _mapX = -1;
-        int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;
         std::vector<Team> _teams;
         Team defaultTeam;

@@ -22,22 +22,25 @@ namespace Zappy {
             void update(const World &world) override;
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-            void drawEntity(const std::shared_ptr<IEntity> entity) override;
 
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
-
+            void drawItem(size_t x, size_t y, size_t id, size_t quantity);
 
             raylib::Window _window;
             raylib::Camera _camera;
-            std::vector<PlayerRaylib> _players;
+            std::vector<std::unique_ptr<PlayerRaylib>> _players;
 
             // floor
-            void createMeshWithTexture(void);
             raylib::Texture2D _floorTexture;
             Mesh _floorMesh;
             Material _floorMaterial;
 
             raylib::Model _tv;
+
+            raylib::Model _itemModel;
+            std::vector<raylib::ModelAnimation> _itemAnimations;
+            size_t _itemAnimationFrame = 0;
+            raylib::Shader _shader;
     };
 }

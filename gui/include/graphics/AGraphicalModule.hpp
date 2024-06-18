@@ -16,8 +16,15 @@ namespace Zappy
     public:
         AGraphicalModule() = default;
 
-        int _mapX = 10;
-        int _mapY = 10;
+        void setMapSize(int x, int y) override
+        {
+            _mapX = x;
+            _mapY = y;
+        }
+
     protected:
+        int _mapX = -1;
+        int _mapY = -1;
+        size_t _gridSize = 50;
     };
 };

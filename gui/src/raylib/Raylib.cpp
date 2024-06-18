@@ -9,7 +9,9 @@
 
 namespace Zappy
 {
-    Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"), _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f)
+    Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
+        _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
+        _shader(raylib::Shader::Load(nullptr, "assets/discard_alpha.fs"))
     {
         _window.SetTargetFPS(60);
 
@@ -18,11 +20,15 @@ namespace Zappy
 
         // Load floor texture
         _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");
-        _floorMesh = GenMeshPlane(GRID_SIZE, GRID_SIZE, 1, 1);
+        _floorMesh = GenMeshPlane(_gridSize, _gridSize, 1, 1);
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
 
         _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
+
+        std::string pokeballModelPath = "assets/models/poke_ball.glb";
+        _itemModel = raylib::Model(pokeballModelPath);
+        _itemAnimations = raylib::ModelAnimation::Load(pokeballModelPath);
     }
 
     void Raylib::render(const World &world)
@@ -36,17 +42,20 @@ namespace Zappy
             // 3D scene
 
             _camera.BeginMode();
-            for (int x = 0; x < 10; x++) {
-                for (int z = 0; z < 10; z++) {
-                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * GRID_SIZE, 0.0f, z * GRID_SIZE));
+
+            for (int x = 0; x < _mapX; x++) {
+                for (int z = 0; z < _mapY; z++) {
+                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
                 }
             }
 
+            drawTiles(world.getTiles());
+
             for (auto &player : _players) {
-                player.draw();
+                player->draw();
             }
 
-            _tv.Draw(raylib::Vector3(_mapX / 2 * GRID_SIZE - 50, 80, - GRID_SIZE * 4), 2000);
+            _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
 
             _camera.EndMode();
             // end of 3D scene
@@ -56,20 +65,10 @@ namespace Zappy
         _window.EndDrawing();
     }
 
-    void Raylib::drawTiles(const std::vector<std::vector<Tile>> &tiles)
-    {
-        return;
-    }
-
-    void Raylib::drawEntity(const std::shared_ptr<IEntity> entity)
-    {
-        return;
-    }
-
     bool Raylib::containsPlayer(std::shared_ptr<Player> player)
     {
         for (const auto &playerRaylib : _players) {
-            if (playerRaylib.worldPlayer == player) {
+            if (playerRaylib->worldPlayer == player) {
                 return true;
             }
         }
@@ -78,6 +77,8 @@ namespace Zappy
 
     void Raylib::update(const World &world)
     {
+        _mapX = world._mapX;
+        _mapY = world._mapY;
         if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += 1;
             _camera.target.y += 1;
@@ -86,10 +87,19 @@ namespace Zappy
             _camera.position.y -= 1;
             _camera.target.y -= 1;
         }
+
+        // Update Graphical Player list
         _camera.Update(CAMERA_FIRST_PERSON);
         for (const auto &player : world.getPlayers()) {
             if (!containsPlayer(player))
-                _players.push_back(PlayerRaylib(player, "assets/models/pokemons/torterra.glb"));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, "assets/models/pokemons/torterra.glb", _gridSize));
+        }
+        size_t decal = 0;
+        for (size_t i = 0; i < _players.size(); i++) {
+            if (!world.containsPlayer(_players[i - decal]->worldPlayer->getId())) {
+                _players.erase(_players.begin() + i - decal);
+                decal++;
+            }
         }
     }
 
