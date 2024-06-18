@@ -27,6 +27,7 @@ namespace Zappy {
             void drawEntity(const std::shared_ptr<IEntity> entity) override;
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
+            void testEvolution(void);
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
 
@@ -44,5 +45,6 @@ namespace Zappy {
             Material _floorMaterial;
 
             raylib::Model _tv;
+            raylib::Model _pokeCenter;
     };
 }

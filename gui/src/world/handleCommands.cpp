@@ -65,7 +65,8 @@ namespace Zappy
         }
         else if (commandName == "plv") { // player’s level
             size_t level;
-            ss >> level;
+            ss >> id >> level;
+            std::cout << "on change de niveau vers : " << level << std::endl;
             std::shared_ptr<Player> player = getPlayer(id);
             player->setLevel(level);
             addShellCommand("T" + std::to_string(id) + " is now level " +

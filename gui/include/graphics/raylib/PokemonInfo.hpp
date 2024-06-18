@@ -18,6 +18,7 @@ namespace Zappy
         bool shiny;
         std::string displayName;
         std::string id;
+        int stage;
         std::vector<PokemonInfo> evolutions;
     };
 }

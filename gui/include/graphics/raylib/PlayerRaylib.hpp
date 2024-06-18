@@ -19,14 +19,15 @@ namespace Zappy {
         PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo);
 
         void draw(void);
+        void loadTextureAndModel(void);
 
         raylib::Color color;
         raylib::Vector2 offset;
         const std::shared_ptr<Player> worldPlayer;
+        PokemonInfo infos;
     private:
         float getRotation(void) const;
         raylib::Model _model;
-        PokemonInfo infos;
         std::vector<raylib::ModelAnimation> _modelAnimation;
         int _animIndex = 0;
         int _animFrame = 0;

@@ -26,8 +26,9 @@ namespace Zappy
                       << pex.getLine() << " - " << pex.getError() << std::endl;
         }
 
-        _camera.SetPosition(Vector3{(247.0F), (125.0F), (710.0F)});
+        _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
         _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+        DisableCursor();
 
         // Load floor texture
         _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");
@@ -36,6 +37,7 @@ namespace Zappy
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
 
         _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
+        _pokeCenter = raylib::Model("assets/models/pokecenter.glb");
         listTypes = {"grass", "fire", "water"};
     }
 
@@ -104,8 +106,10 @@ namespace Zappy
             std::cout << "j'essaie" << std::endl;
             std::string pokeName = pokemon["name"];
             std::string pokeId = pokemon["id"];
+            int stage = pokemon["stage"];
             pkInfo.displayName = pokeName;
             pkInfo.id = pokeId;
+            pkInfo.stage = stage;
             libconfig::Setting &evos = pokemon["evolutions"];
             for (int i = 0; i < evos.getLength(); i++)
             {
@@ -129,7 +133,6 @@ namespace Zappy
     PokemonInfo Raylib::getPokemon(std::string team)
     {
         std::string t = team;
-        _configuration.write(stdout);
 
         if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end())
         {
@@ -157,6 +160,43 @@ namespace Zappy
         return PokemonInfo();
     }
 
+    void Raylib::testEvolution(void)
+    {
+         for (auto &graphicPlayer : _players)
+        {
+            PokemonInfo &infos = graphicPlayer.infos;
+            bool isAbleToEvolve = false;
+            int maxStage = 1;
+            if (infos.evolutions.empty())
+                continue;
+            switch (infos.stage)
+            {
+            case 1:
+                 if (infos.evolutions[0].evolutions.empty())
+                    maxStage = 2;
+                else
+                    maxStage = 3;
+                switch (maxStage) {
+                    case 2:
+                        isAbleToEvolve = (graphicPlayer.worldPlayer->getLevel() >= 4); break;
+                    case 3:
+                        isAbleToEvolve = (graphicPlayer.worldPlayer->getLevel() >= 3); break;
+                    default: break;
+            } break;
+            case 2:
+                if (infos.evolutions.empty()) break;
+                isAbleToEvolve = (graphicPlayer.worldPlayer->getLevel() >= 6);
+                break;
+            }
+            if (isAbleToEvolve) {
+                PokemonInfo pickedEvolution = infos.evolutions[Utils::random(0, infos.evolutions.size() - 1)];
+                pickedEvolution.shiny = infos.shiny;
+                infos = pickedEvolution;
+                graphicPlayer.loadTextureAndModel();
+            }
+        }
+    }
+
     void Raylib::update(const World &world)
     {
         if (IsKeyDown(KEY_SPACE))
@@ -176,9 +216,11 @@ namespace Zappy
             {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
+                // pokemon.shiny = true;
                 _players.push_back(PlayerRaylib(player, pokemon));
             }
         }
+        testEvolution();
     }
 
     bool Raylib::isOpen()

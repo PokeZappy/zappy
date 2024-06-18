@@ -14,9 +14,20 @@ namespace Zappy
     {
         color = raylib::Color::White();
         infos = pkInfo;
-        if (pkInfo.shiny)
+        loadTextureAndModel();
+
+        offset = raylib::Vector2(
+            static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),
+            static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)));
+        offset = raylib::Vector2(0, 0);
+    }
+
+    void PlayerRaylib::loadTextureAndModel(void)
+    {
+        _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
+        if (infos.shiny)
         {
-            std::string path = "assets/textures/" + pkInfo.id + "_shiny.png";
+            std::string path = "assets/textures/" + infos.id + "_shiny.png";
             std::cout << "              chemin de fou :" << path << std::endl;
             Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
 
@@ -24,12 +35,7 @@ namespace Zappy
 
             _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
         }
-        _modelAnimation = raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb");
-
-        offset = raylib::Vector2(
-            static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)),
-            static_cast<float>(rand() % (GRID_SIZE / 4) - (GRID_SIZE / 2)));
-        offset = raylib::Vector2(0, 0);
+        _modelAnimation = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
     }
 
     float PlayerRaylib::getRotation(void) const
