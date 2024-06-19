@@ -55,4 +55,5 @@ void manage_cmd_gui(char *command, client_socket_t *client, server_t *server)
             return;
         }
     }
+    free(cmd);
 }
