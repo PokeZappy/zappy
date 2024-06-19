@@ -7,11 +7,15 @@ class Path(object):
     """
     A class to calculate paths from start to end points.
     """
-    def __init__(self, limit: tuple[int, int], start: tuple[int, int], end: tuple[int, int], facing: int = None) -> None:
+    def __init__(self,
+                 limit: list[int],
+                 start: tuple[int, int],
+                 end: tuple[int, int],
+                 facing: int = None) -> None:
         """
         Initialize the Path object with limit, start, end points, and facing direction.
 
-        :param limit: tuple[int, int] - The limits of the path.
+        :param limit: list[int] - The limits of the path.
         :param start: tuple[int, int] - The starting point.
         :param end: ypuple[int, int] - The end point.
         :param facing: int - The initial facing direction.
@@ -27,32 +31,33 @@ class Path(object):
         """
         Calculate the optimal path from the start point to the end point.
 
-        :return: tuple - containing booleans for west and north directions, and integers for distances in each direction.
+        :return: tuple - containing booleans for west and north directions, and integers for distances in each direction
         """
         west: bool = False
         if self.end[0] - self.start[0] >= 0:
-            westward = self.end[0] - self.start[0]
-            eastward = self.start[0] + self.limit[0] - self.end[0]
+            westward: int = self.end[0] - self.start[0]
+            eastward: int = self.start[0] + self.limit[0] - self.end[0]
         else:
-            westward = self.limit[0] - self.start[0] + self.end[0]
-            eastward = self.start[0] - self.end[0]
+            westward: int = self.limit[0] - self.start[0] + self.end[0]
+            eastward: int = self.start[0] - self.end[0]
         north: bool = False
         if self.end[1] - self.start[1] > 0:
-            northward = self.end[1] - self.start[1]
-            southward = self.start[1] + self.limit[1] - self.end[1]
+            northward: int = self.end[1] - self.start[1]
+            southward: int = self.start[1] + self.limit[1] - self.end[1]
         else:
-            northward = self.end[1] + self.limit[1] - self.start[1]
-            southward = self.start[1] - self.end[1]
+            northward: int = self.end[1] + self.limit[1] - self.start[1]
+            southward: int = self.start[1] - self.end[1]
 
         if westward < eastward:
             west = True
         if northward < southward:
             north = True
-        return west, north, northward, eastward, southward, westward
+        return west, north, int(northward), int(eastward), int(southward), int(westward)
 
     def get_path(self) -> list[str]:
         """
-        Calculate the optimal path from the start point to the end point and determine the necessary turns to align with the path direction.
+        Calculate the optimal path from the start point to the end point and determine the necessary turns
+        to align with the path direction.
 
         :return: list[str] - the turns and movements to reach the end point.
         """
@@ -63,7 +68,12 @@ class Path(object):
             self.calculate_vertical_path(west, north, northward, eastward, southward, westward)
         return self.turns()
 
-    def calculate_horizontal_path(self, west: bool, north: bool, northward: int, eastward: int, southward: int, westward: int) -> None:
+    def calculate_horizontal_path(self,
+                                  west: bool, north: bool,
+                                  northward: int,
+                                  eastward: int,
+                                  southward: int,
+                                  westward: int) -> None:
         """
 
         :param west: bool -  A boolean indicating if the path is towards the west.
@@ -87,7 +97,13 @@ class Path(object):
             self.path += [['Forward'] * southward]
             self.path_facing += [face.SOUTH.value]
 
-    def calculate_vertical_path(self, west: bool, north: bool, northward: int, eastward: int, southward: int, westward: int) -> None:
+    def calculate_vertical_path(self,
+                                west: bool,
+                                north: bool,
+                                northward: int,
+                                eastward: int,
+                                southward: int,
+                                westward: int) -> None:
         """
         Calculate the vertical path based on the provided directions.
 
@@ -119,27 +135,34 @@ class Path(object):
         :return: A list of strings representing the turns to be made.
         """
         if self.facing in self.path_facing:
-            return []
-        self.path = self.path[::-1]
-        self.path_facing = self.path_facing[::-1]
+            self.path = self.path[::-1]
+            self.path_facing = self.path_facing[::-1]
         if self.facing not in self.path_facing and 0 < self.facing < 3:
             if self.path_facing[0] > self.facing:
                 self.path = ['Right'] + self.path
+                self.facing = (self.facing + 1) % 4
             else:
                 self.path = ['Left'] + self.path
+                self.facing = (self.facing - 1) % 4
         elif self.facing not in self.path_facing and self.facing == 0 or self.facing == 3:
             if self.path_facing[0] > self.facing:
                 self.path = ['Left'] + self.path
+                self.facing = (self.facing - 1) % 4
             else:
                 self.path = ['Right'] + self.path
+                self.facing = (self.facing + 1) % 4
         if 0 < self.path_facing[0] < 3:
             if self.path_facing[1] > self.path_facing[0]:
                 self.path.insert(len(self.path) - 1, 'Right')
+                self.facing = (self.facing + 1) % 4
             else:
                 self.path.insert(len(self.path) - 1, 'Left')
+                self.facing = (self.facing - 1) % 4
         elif self.path_facing[0] == 0 or self.path_facing[0] == 3:
             if self.path_facing[1] > self.path_facing[0]:
                 self.path.insert(len(self.path) - 1, 'Left')
+                self.facing = (self.facing - 1) % 4
             else:
                 self.path.insert(len(self.path) - 1, 'Right')
+                self.facing = (self.facing + 1) % 4
         return self.path

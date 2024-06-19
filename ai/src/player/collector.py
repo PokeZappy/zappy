@@ -11,7 +11,6 @@ class Collector(Player):
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
         super().__init__(serv_info, cli_socket, debug_mode)
         self.need_eat = 0
-        self.pos: tuple[int, int] = (0, 0)
         self.the_place_to_be: tuple[int, int] = (0, 0)
         self.focus: list[str] = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate', 'food']
         self.nbr_focus: list[int] = [0]
@@ -20,6 +19,9 @@ class Collector(Player):
         self.id = 0
         self.start: bool = False
         self.get_id('Quot publicani ibi sunt?')
+        self.start_path: list = []
+        self.deposit_path: list = []
+        self.start_pos: list = []
 
     def go_to_start(self) -> None:
         # TODO - faire un algo qui vient placer le collecteur en fonction de son id % taille max de la map pour éviter les bétise sur le 0 1 et 2
@@ -29,14 +31,33 @@ class Collector(Player):
             return
         if self.id % 2 == 0:
             self.path.start = (0, 0)
-            self.path.end = (1, self.id / 2)
-            print(self.path.get_path())
-            self.start = True
+            self.path.end = (1, int(self.id / 2))
         else:
             self.path.start = (0, 0)
-            self.path.end = (1, self.path.limit[0] - self.id // 2)
-            print(f'the path for the start: {self.path.get_path()}')
-            self.start = True
+            self.path.end = (1, self.path.limit[0] - 1 - self.id // 2)
+
+        self.start_path = [item for sublist in self.path.get_path()
+                           for item in (sublist if isinstance(sublist, list) else [sublist])]
+        if self.debug_mode:
+            print(f'start: {self.path.start}')
+            print(f'end: {self.path.end}')
+            print(f'queue without path: {self.queue}')
+        # self.path.start = [0, 0]
+        # self.deposit_path = [item for sublist in self.path.get_path()
+        #                      for item in (sublist if isinstance(sublist, list) else [sublist])]
+        # self.path.start = list(self.path.end)
+        # self.start_pos = list(self.path.end)
+        # self.pos = list(self.start_pos)
+        for move in self.start_path:
+            self.queue.append(move)
+        if self.debug_mode:
+            print(f'start path: {self.start_path}')
+            print(f'queue with path: {self.queue}')
+            print(f'start: {self.path.start}')
+            print(f'end: {self.path.end}')
+            # print(f'deposit path: {self.deposit_path}')
+        self.start = True
+        self.turn_to_the_north()
 
     def raids_resources(self, tiles) -> None:
         """
@@ -50,8 +71,15 @@ class Collector(Player):
                 if resource in self.focus:
                     self.queue.append(("Take", resource))
             self.queue.append('Forward')
+            self.pos[0] = (self.pos[0] + 1) % (self.limit[0] - 1)
+            if self.debug_mode:
+                print(f'lim: {self.limit[0]}')
+                print(f'pos: {self.pos}')
+                print(f'start: {self.start_pos}')
+            # if self.pos == self.start_pos:
+            #     break
 
-    def mouving_straight(self,) -> None:
+    def mouving_straight(self, ) -> None:
         """
         Move the player straight while focusing on specific resources.
 
@@ -61,8 +89,9 @@ class Collector(Player):
         self.looked = False
         self.environment = ""
         tiles = only_forward_resources(tiles)
-        print(f'FORWARD tiles {tiles}')
         self.raids_resources(tiles)
+        # if self.pos == self.start_pos:
+        #     self.deposits_resources()
         if self.hard_focus and self.nbr_focus[0] <= self.inventory[self.focus[0]]:
             # TODO - go to depot à voir avec @Matthias
             self.move_to(self.depot)
@@ -86,35 +115,39 @@ class Collector(Player):
 
         :return: None
         """
+        for move in self.deposit_path:
+            self.queue.append(move)
         for resource in self.inventory:
             if resource != 'food':
                 self.queue.append([('Set', resource) for _ in range(self.inventory[resource])])
                 self.inventory[resource] -= 1
+
     #     TODO - sortie vers le nord
 
     def make_action(self) -> None:
         """
         Perform the next action based on the current state of the player.
-        This method checks if there are pending actions, looks around if needed, and applies the next action in the queue.
+        This method checks if there are pending actions,
+        looks around if needed, and applies the next action in the queue.
 
         :return: None
         """
-        if len(self.queue) > 0:
+        if 0 < len(self.queue) and len(self.actions) < 2:
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if not self.looked and 'Look' not in self.queue and self.path.facing is not None:
+        if not self.looked and 'Look' not in self.queue and self.start is not False:
             self.queue.append('Look')
         if self.looked:
             if len(self.queue) == 0:
                 self.mouving_straight()
             self.looked = False
 
-    def broadcast_traitement(self, message: tuple | str) -> None:
+    def broadcast_traitement(self, message: tuple | str | dict) -> None:
         """
         Process the broadcast message and take appropriate actions.
 
-        :param message: tuple | str - The message received for broadcast processing.
+        :param message: tuple | str | dict - The message received for broadcast processing.
         :return: None
         """
         if message['msg'] == 'quid habes ut nobis offerat':
@@ -124,11 +157,11 @@ class Collector(Player):
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
-        #     TODO clear la queue
+        #     TODO clear la queue -> nop we can clear path to deposit or something else
         if message['msg'] == 'collectio rerum : ':
             self.depot = message['coord']
         if message['msg'] == 'vade ad me aliquid : ':
-        #     TODO - clear la queue
+            #     TODO - clear la queue -> nop we can clear path to deposit or something else
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
             self.hard_focus = True
@@ -137,18 +170,18 @@ class Collector(Player):
             self.queue.append('Forward')
             self.deposits_resources()
         #     TODO - on peut y mettre dans globale message
-        if message['msg'] == 'est dominus aquilonis' and self.path.facing is None:
-            self.get_north(message['direction'])
-            self.turn_to_the_north()
-            # TODO - a enelever
-            self.go_to_start()
-        if message['msg'] == 'Ego sum publicani ibi' and not self.got_id:
+        if message['msg'] == 'est dominus aquilonis':
+            if self.path.facing is None:
+                self.get_north(message['direction'])
+                self.turn_to_the_north()
+            if self.got_id > 2 and self.start is False:
+                self.go_to_start()
+        if message['msg'] == 'Ego sum publicani ibi' and self.got_id < 3:
             self.id += 1
+            print(f'message id inc is {message}|end')
             print(message['nbr'][0])
-            # TODO - ADD parser id to replace missing id if collector died
-            print(self.id)
-            # TODO - poour l'id 0 placer au bon endroit le go_to_start()
-            self.go_to_start()
+            # TODO - ADD parser id to replace missing id if collector died in :message['nbr'][0]
+            print(f'my id is now: {self.id}')
         if message['msg'] == 'Quot publicani ibi sunt?':
             print([self.id])
             print(type([self.id]))
