@@ -53,5 +53,5 @@ bool check_incantation(server_t *server, player_t *player);
 void check_death(server_t *server);
 
 // -- GRID RELATED -- //
-bool player_take_item(player_t *player, tiles_t *tile, int item);
-bool player_drop_item(player_t *player, tiles_t *tile, int item);
+int player_take_item(player_t *player, tiles_t *tile, char *item);
+int player_drop_item(player_t *player, tiles_t *tile, char *item);

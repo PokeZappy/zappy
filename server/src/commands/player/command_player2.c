@@ -21,20 +21,16 @@ static void check_all_egg(tiles_t *tile, server_t *server)
 
 void cmd_eject(server_t *server, char *args, client_socket_t *client)
 {
-    player_t *player = client->player;
-    int x = player->_pos._x;
-    int y = player->_pos._y;
+    int x = client->player->_pos._x;
+    int y = client->player->_pos._y;
     bool pushed = false;
 
-    if (!player)
-        return;
-    pushed = player_eject(server, player);
+    pushed = player_eject(server, client->player);
     if (pushed == true) {
         check_all_egg(server->grid->_tiles[x][y], server);
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
-    dprintf(get_gui(server)->socket, "pex %d\n", client->_id);
     printf("eject\n");
 }
 
@@ -42,21 +38,15 @@ void cmd_take(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
     char **parse_args = decompose_output(args);
-    int obj_taken = atoi(parse_args[1]);
-    int result;
+    int result = player_take_item(player,
+    server->grid->_tiles[player->_pos._y][player->_pos._x], parse_args[1]);
 
-    if (!player) {
-        free_str_array(parse_args);
-        return;
-    }
-    result = player_take_item(player,
-    server->grid->_tiles[player->_pos._y][player->_pos._y], obj_taken);
-    if (result == 0)
+    if (result >= 0)
         dprintf(client->socket, "ok\n");
     else
         dprintf(client->socket, "ko\n");
     free_str_array(parse_args);
-    dprintf(get_gui(server)->socket, "pgt %d %d\n", client->_id, obj_taken);
+    dprintf(get_gui(server)->socket, "pgt %d %d\n", client->_id, result);
     printf("take\n");
 }
 
@@ -64,20 +54,14 @@ void cmd_set(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
     char **parse_args = decompose_output(args);
-    int obj_set = atoi(parse_args[1]);
-    int result;
+    int result = player_drop_item(player,
+    server->grid->_tiles[player->_pos._y][player->_pos._x], parse_args[1]);
 
-    if (!player) {
-        free_str_array(parse_args);
-        return;
-    }
-    result = player_take_item(player,
-    server->grid->_tiles[player->_pos._y][player->_pos._y], obj_set);
-    if (result == 0)
+    if (result >= 0)
         dprintf(client->socket, "ok\n");
     else
         dprintf(client->socket, "ko\n");
     free_str_array(parse_args);
-    dprintf(get_gui(server)->socket, "pdr %d %d\n", client->_id, obj_set);
+    dprintf(get_gui(server)->socket, "pdr %d %d\n", client->_id, result);
     printf("set\n");
 }

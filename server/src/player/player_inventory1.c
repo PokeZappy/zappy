@@ -6,32 +6,7 @@
 */
 
 #include "../../include/player.h"
-#include <stdlib.h>
-#include <stdio.h>
-
-static const char *items[] = {
-    "food",
-    "linemate",
-    "deraumere",
-    "sibur",
-    "mendiane",
-    "phiras",
-    "thystame"
-};
-
-char *print_player_inventory(player_t *player)
-{
-    char *result = (char *)malloc(sizeof(char) * 1024);
-
-    sprintf(result, "[");
-    for (int i = 1; i < ITEM_PER_TILE; i++) {
-        sprintf(result, "%s%s %d", result, items[i], player->_inventory[i]);
-        if (i != 6)
-            sprintf(result, "%s, ", result);
-    }
-    sprintf(result, "%s]", result);
-    return result;
-}
+#include "../../include/objects.h"
 
 void add_item_to_player(player_t *player, int item, int quantity)
 {
@@ -43,22 +18,28 @@ void remove_item_from_player(player_t *player, int item, int quantity)
     player->_inventory[item] -= quantity;
 }
 
-bool player_take_item(player_t *player, tiles_t *tile, int item)
+int player_take_item(player_t *player, tiles_t *tile, char *item)
 {
-    if (tile->_items[item] > 0) {
-        add_item_to_player(player, item, 1);
-        remove_item_from_tile(tile, item, 1);
-        return true;
+    for (int i = 0; i < ITEM_PER_TILE; i++) {
+        if ((strncmp(item, object_names[i], strlen(object_names[i])) == 0)
+        && tile->_items[i] > 0) {
+            add_item_to_player(player, i, 1);
+            remove_item_from_tile(tile, i, 1);
+            return i;
+        }
     }
-    return false;
+    return -1;
 }
 
-bool player_drop_item(player_t *player, tiles_t *tile, int item)
+int player_drop_item(player_t *player, tiles_t *tile, char *item)
 {
-    if (player->_inventory[item] > 0) {
-        add_item_to_tile(tile, item, 1);
-        remove_item_from_player(player, item, 1);
-        return true;
+    for (int i = 0; i < ITEM_PER_TILE; i++) {
+        if ((strncmp(item, object_names[i], strlen(object_names[i])) == 0)
+        && player->_inventory[i] > 0) {
+            remove_item_from_player(player, i, 1);
+            add_item_to_tile(tile, i, 1);
+            return i;
+        }
     }
-    return false;
+    return -1;
 }

@@ -21,7 +21,7 @@ char **decompose_output(char *output)
         i++;
         token = strtok(NULL, " ");
     }
-    result[i - 1][strlen(result[i - 1]) -1] = '\0';
+    result[i - 1][strlen(result[i - 1])] = '\0';
     result[i] = NULL;
     return result;
 }

@@ -6,6 +6,22 @@
 */
 
 #include "../../include/player.h"
+#include "../../include/objects.h"
+
+char *print_player_inventory(player_t *player)
+{
+    char *result = (char *)malloc(sizeof(char) * 1024);
+
+    sprintf(result, "[");
+    for (int i = 1; i < ITEM_PER_TILE; i++) {
+        sprintf(result, "%s%s %d", result, object_names[i],
+        player->_inventory[i]);
+        if (i != 6)
+            sprintf(result, "%s, ", result);
+    }
+    sprintf(result, "%s]", result);
+    return result;
+}
 
 char *get_player_inventory(player_t *player)
 {
