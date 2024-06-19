@@ -38,6 +38,10 @@ namespace Zappy
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
 
+        _hitGridTexture = raylib::Texture2D("assets/textures/pokemon_hit_tile.png");
+        _hitGridMaterial = LoadMaterialDefault();
+        _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
+
         _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
 
         // Rocks
@@ -60,6 +64,7 @@ namespace Zappy
     {
         (void)world;
         raylib::Color textColor = raylib::Color::Black();
+        raylib::Ray ray(GetMousePosition(), _camera);
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::SkyBlue());
@@ -68,9 +73,18 @@ namespace Zappy
 
             _camera.BeginMode();
 
+
+
+
+
             for (int x = 0; x < _mapX; x++) {
                 for (int z = 0; z < _mapY; z++) {
-                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                    raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                    if (meshHit.hit) {
+                        DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                    } else {
+                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                    }
                 }
             }
 

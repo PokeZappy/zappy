@@ -40,8 +40,10 @@ namespace Zappy {
 
             // floor
             raylib::Texture2D _floorTexture;
+            raylib::Texture2D _hitGridTexture;
             Mesh _floorMesh;
             Material _floorMaterial;
+            Material _hitGridMaterial;
 
             raylib::Model _tv;
 
