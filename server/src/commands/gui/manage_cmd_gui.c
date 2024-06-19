@@ -22,7 +22,6 @@ static const command_t commands_gui[] = {
     {"HACK_POS", hack_player_pos, 0},
     {"CLIENT_LIST", print_client_list, 0},
     {"EGG_LIST", print_egg_list, 0},
-    {"BAN", ban_command, 0},
     {NULL, NULL, 0}
 };
 

@@ -28,14 +28,6 @@ void print_client_list(server_t *server, char *args, client_socket_t *client)
     }
 }
 
-void ban_command(server_t *server, char *args, client_socket_t *client)
-{
-    printf("Client requested exit {%d}\n", client->_id);
-    close(client->socket);
-    TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-    free_client(client);
-}
-
 void hack_player_pos(server_t *server, char *args, client_socket_t *client)
 {
     int x = 0;

@@ -77,7 +77,6 @@ void exit_command(server_t *server, char *args, client_socket_t *client);
 void hack_player_pos(server_t *server, char *args, client_socket_t *client);
 void hack_player_dir(server_t *server, char *args, client_socket_t *client);
 void print_egg_list(server_t *server, char *args, client_socket_t *client);
-void ban_command(server_t *server, char *args, client_socket_t *client);
 
 // -- DELAYED -- //
 // Add Command to List
