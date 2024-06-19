@@ -24,6 +24,8 @@ namespace Zappy {
         bool isDying(void) const { return _isDying; }
         void kill(void) { _isDying = true; }
 
+        raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _height, _currentPos.y); }
+
         raylib::Color color;
         raylib::Vector2 offset;
         const std::shared_ptr<Player> worldPlayer;
