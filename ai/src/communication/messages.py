@@ -131,7 +131,7 @@ class Messages(object):
                         **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and text[
                             1][0].isnumeric() else {}),
                         **({'infos': list(infos)} if infos is not None else {}),
-                        **({'nbr': list(nbr)} if infos is not None else {})
+                        **({'nbr': list(nbr)} if nbr is not None else {})
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
@@ -139,29 +139,30 @@ class Messages(object):
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
 
-    def buf_messages(self, message: str, receiver_id: int = 0, coord: tuple[int, int] = None,
-                     infos: list[list[str, str]] = None) -> None:
+    def buf_messages(self, message: str, coord: tuple[int, int] = None,
+                     infos: list[list[str, str]] = None, my_id: int = -1) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
         :param message: str - The message to be sent.
-        :param receiver_id: int - The ID of the message receiver.
         :param coord: tuple[int, int] - The coordinates of the message.
-        :param infos: list[list[str, str]] - Additional information related to the message.
+        :param infos: list[list[str, str] | any] - Additional information related to the message.
+        :param my_id: int - Additional id related to the message
         :return: None
         """
         if coord is not None:
             message += f'#{coord[0]},{coord[1]}'
         if infos is not None:
             message += f'#{'~'.join(';'.join(info) for info in infos)}'
-        self.buf_msg_default(message, receiver_id)
+        if my_id != -1:
+            message += f'#{my_id}'
+        self.buf_msg_default(message)
 
-    def buf_msg_default(self, message: str, receiver_id: int) -> None:
+    def buf_msg_default(self, message: str) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
         :param message: str - The message to be sent.
-        :param receiver_id: int - The ID of the message receiver.
         :return: None
         """
         new_uuid: str = ""
@@ -171,9 +172,9 @@ class Messages(object):
             self.uuid_used.append(new_uuid)
         encrypted_msg = self.cipher.encryption(message)
         if self.msg == 'Broadcast "':
-            self.msg += f'ACCMST {receiver_id} {new_uuid} {encrypted_msg}'
+            self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
         else:
-            self.msg += f'|ACCMST {receiver_id} {new_uuid} {encrypted_msg}'
+            self.msg += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
 
     def send_buf(self) -> str:
         """

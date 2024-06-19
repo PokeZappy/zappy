@@ -17,22 +17,26 @@ class Collector(Player):
         self.nbr_focus: list[int] = [0]
         self.depot: tuple[int, int] = (0, 0)
         self.hard_focus: bool = False
-        self.response: int = 0
         self.id = 0
+        self.start: bool = False
         self.get_id('Quot publicani ibi sunt?')
 
     def go_to_start(self) -> None:
         # TODO - faire un algo qui vient placer le collecteur en fonction de son id % taille max de la map pour éviter les bétise sur le 0 1 et 2
         if self.id == 0:
-            return self.queue.append('Forward')
+            self.queue.append('Forward')
+            self.start = True
+            return
         if self.id % 2 == 0:
             self.path.start = (0, 0)
             self.path.end = (1, self.id / 2)
             print(self.path.get_path())
+            self.start = True
         else:
             self.path.start = (0, 0)
-            self.path.end = (1, self.path.min_limit - self.id // 2)
-            print(self.path.get_path())
+            self.path.end = (1, self.path.limit[0] - self.id // 2)
+            print(f'the path for the start: {self.path.get_path()}')
+            self.start = True
 
     def raids_resources(self, tiles) -> None:
         """
@@ -114,7 +118,8 @@ class Collector(Player):
         :return: None
         """
         if message['msg'] == 'quid habes ut nobis offerat':
-            self.message.buf_messages(self.inventory)
+            self.message.buf_messages('opes in meo inventario sunt : ',
+                                      infos=[(key, str(value)) for key, value in self.inventory.items()])
             self.queue.append('Broadcast')
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
@@ -135,12 +140,18 @@ class Collector(Player):
         if message['msg'] == 'est dominus aquilonis' and self.path.facing is None:
             self.get_north(message['direction'])
             self.turn_to_the_north()
+            # TODO - a enelever
             self.go_to_start()
         if message['msg'] == 'Ego sum publicani ibi' and not self.got_id:
-            # TODO - ADD parser id to replace missing id if collector died
             self.id += 1
+            print(message['nbr'][0])
+            # TODO - ADD parser id to replace missing id if collector died
             print(self.id)
+            # TODO - poour l'id 0 placer au bon endroit le go_to_start()
+            self.go_to_start()
         if message['msg'] == 'Quot publicani ibi sunt?':
-            self.message.buf_messages('Ego sum publicani ibi', infos=[self.id])
+            print([self.id])
+            print(type([self.id]))
+            self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
         self.global_message()

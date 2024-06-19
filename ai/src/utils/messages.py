@@ -6,7 +6,7 @@ def extract_direction(message: str) -> int:
     return int(match.group())
 
 
-def get_infos(text: list[str]) -> tuple[list] | None:
+def get_infos(text: list[str]) -> tuple | None:
     """
     Get information from the input text.
 
@@ -18,9 +18,21 @@ def get_infos(text: list[str]) -> tuple[list] | None:
     """
     if len(text) == 2 and text[1][0:1].isnumeric() or len(text) < 2:
         return None, None
+    if len(text) == 2 and validate_id_pattern(text[1]):
+        return None, re.match(r'^\[(\d+)\]$', text[1]).group(1)
     if len(text) > 2:
         return tuple(zip(*(infos.split(";") for infos in text[2].split('~'))))
     return tuple(zip(*(infos.split(";") for infos in text[1].split('~'))))
+
+
+def validate_id_pattern(s) -> bool:
+    """
+    Validate if the input string matches the pattern '[number]'.
+
+    :param s: Input string to be validated.
+    :return: True if the input string matches the pattern, False otherwise.
+    """
+    return bool(re.match(r'^\[\d+\]$', s))
 
 
 def validate_look_pattern(s) -> bool:
@@ -64,19 +76,23 @@ def validate_inventory_pattern(s) -> bool:
     pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
     return True if re.match(pattern, s) else False
 
+
 def validate_number_pattern(s) -> bool:
     """
+    Validate if the input string `s` consists only of digits.
 
-    :param s:
-    :return:
+    :param s: input string to be validated
+    :return: True if `s` consists only of digits, False otherwise
     """
     return bool(re.match(r'^\d+$', s))
 
+
 def validate_elevation(s) -> bool:
     """
+    Validate if the input string represents a valid elevation level.
 
-    :param s:
-    :return:
+    :param s: Input string to be validated.
+    :return: True if the input string represents a valid elevation level, False otherwise.
     """
     if s == 'Elevation underway' or re.match(r'^Current level: (\d+)$', s):
         return True

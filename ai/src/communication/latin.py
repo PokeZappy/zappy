@@ -49,6 +49,8 @@ class Latin(object):
                                         # TODO - savoir si l'envoies au M&Ms ou Pousseur et tt le monde l'envoie où non
                                         'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
 
+                                        #   TODO - envoie de l'inventaire au M&Ms
+                                        'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
                                         # All to push
                                         'confirmation id': 'sum socius senatus',
 
