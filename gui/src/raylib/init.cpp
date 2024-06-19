@@ -29,7 +29,7 @@ namespace Zappy {
 
         _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
         _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
-        DisableCursor();
+        // DisableCursor();
 
         // Load floor texture
         _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");

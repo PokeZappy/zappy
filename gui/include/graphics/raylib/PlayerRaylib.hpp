@@ -16,16 +16,17 @@ namespace Zappy {
     class PlayerRaylib {
     public:
         PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize);
-        void draw(void);
+        void draw(const raylib::Camera camera);
         void update(void);
-        float getHeight(void) const { return _height; }
-        void setHeight(float height) { _height = height; }
+        float getHeight(void) const { return _altitude; }
+        void setHeight(float height) { _altitude = height; }
         void move(raylib::Vector3 vector);
         bool isDying(void) const { return _isDying; }
         void kill(void) { _isDying = true; }
         void loadTextureAndModel(void);
+        int getAnimationIndex(const std::vector<std::string> &names);
 
-        raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _height, _currentPos.y); }
+        raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _altitude, _currentPos.y); }
 
         raylib::Color color;
         raylib::Vector2 offset;
@@ -33,17 +34,25 @@ namespace Zappy {
         PokemonInfo infos;
     private:
         float getRotation(void) const;
+        size_t _gridSize;
+
         raylib::Model _model;
         std::vector<raylib::ModelAnimation> _modelAnimation;
-        int _animIndex = 0;
+        int _animIndex = -1;
         int _animFrame = 0;
         raylib::Vector2 _currentPos;
-        float _height;
+        float _altitude;
+        float _height = 40;
         size_t _currentOrientation;
+        bool _hasIdleAnim = false;
+
+        std::unordered_map<std::string, int> _animationIndexes;
 
         bool _isDying = false;
         float _scale = 2.0;
 
-        size_t _gridSize;
+        raylib::Image _textImage;
+        raylib::Texture2D _textTexture;
+
     };
 } // namespace Zappy

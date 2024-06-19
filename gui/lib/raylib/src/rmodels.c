@@ -5717,6 +5717,7 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
                 animations[i].bones = LoadBoneInfoGLTF(skin, &animations[i].boneCount);
 
                 cgltf_animation animData = data->animations[i];
+                TRACELOG(LOG_WARNING, "       %s\n", animData.name);
 
                 struct Channels {
                     cgltf_animation_channel *translate;

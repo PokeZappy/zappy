@@ -42,7 +42,7 @@ namespace Zappy
 
             for (auto &player : _players)
             {
-                player->draw();
+                player->draw(_camera);
             }
 
             _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);

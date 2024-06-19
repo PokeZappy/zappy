@@ -56,6 +56,9 @@ namespace Zappy {
             // Food
             raylib::Model _foodModel;
 
+            // Text
+            Texture2D _textTexture;
+
 
             raylib::Shader _shader;
     };

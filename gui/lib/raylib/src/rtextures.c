@@ -1616,7 +1616,7 @@ Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Co
     if (textSize.y != imSize.y)
     {
         float scaleFactor = textSize.y/imSize.y;
-        TRACELOG(LOG_INFO, "IMAGE: Text scaled by factor: %f", scaleFactor);
+        // TRACELOG(LOG_INFO, "IMAGE: Text scaled by factor: %f", scaleFactor);
 
         // Using nearest-neighbor scaling algorithm for default font
         // TODO: Allow defining the preferred scaling mechanism externally
