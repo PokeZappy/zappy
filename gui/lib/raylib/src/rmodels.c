@@ -5689,7 +5689,7 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
     cgltf_result result = cgltf_parse(&options, fileData, dataSize, &data);
     cgltf_result otherResult = cgltf_validate(data);
 
-    if (otherResult != cgltf_result_success) 
+    if (otherResult != cgltf_result_success)
     {
         TRACELOG(LOG_WARNING, "***** MODEL: [%s] Validation failed for glTF data", fileName);
     }
@@ -5717,7 +5717,6 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
                 animations[i].bones = LoadBoneInfoGLTF(skin, &animations[i].boneCount);
 
                 cgltf_animation animData = data->animations[i];
-                TRACELOG(LOG_WARNING, "       %s\n", animData.name);
 
                 struct Channels {
                     cgltf_animation_channel *translate;
@@ -5860,6 +5859,7 @@ static ModelAnimation *LoadModelAnimationsGLTF(const char *fileName, int *animCo
         cgltf_free(data);
     }
     UnloadFileData(fileData);
+
     return animations;
 }
 #endif

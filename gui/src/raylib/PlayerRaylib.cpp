@@ -30,9 +30,9 @@ namespace Zappy
     int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
     {
         for (size_t i = 0; i < _modelAnimation.size(); i++) {
-            // std::cout << "name: " << _modelAnimation[i].name << std::endl;
             for (size_t j = 0; j < names.size(); j++) {
-                if (_modelAnimation[i].name == names[j]) {
+                std::string animName(_modelAnimation[i].name);
+                if (animName.find(names[j]) != std::string::npos) {
                     return i;
                 }
             }

@@ -14,7 +14,6 @@ namespace Zappy {
 
         try
         {
-            std::cout << "j'essaie" << std::endl;
             std::string pokeName = pokemon["name"];
             std::string pokeId = pokemon["id"];
             int stage = pokemon["stage"];
@@ -52,7 +51,6 @@ namespace Zappy {
         }
         try
         {
-            std::cout << "team utilise : " << t << std::endl;
             libconfig::Setting &root = _configuration.getRoot();
             libconfig::Setting &types = root["types"];
             libconfig::Setting &pokemons = types[t.c_str()];

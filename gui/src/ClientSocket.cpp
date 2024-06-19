@@ -34,7 +34,6 @@ void ClientSocket::connectSocket(int port, std::string &ip) {
 
 void ClientSocket::receive(int flags)
 {
-    // std::cout << "  --  RECEIVE BUFFER :" << _receiveBuffer << "  --  " << std::endl;
     char buffer[BUFFER_SIZE] = {0};
     int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, flags);
     buffer[valread] = '\0';

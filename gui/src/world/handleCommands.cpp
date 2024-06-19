@@ -66,7 +66,6 @@ namespace Zappy
         else if (commandName == "plv") { // player’s level
             size_t level;
             ss >> id >> level;
-            std::cout << "on change de niveau vers : " << level << std::endl;
             std::shared_ptr<Player> player = getPlayer(id);
             player->setLevel(level);
             addShellCommand("T" + std::to_string(id) + " is now level " +
@@ -105,7 +104,6 @@ namespace Zappy
             else
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
-            // std::cout << command << std::endl;
         }
         else if (commandName == "pfk") { // egg laying by the player
 

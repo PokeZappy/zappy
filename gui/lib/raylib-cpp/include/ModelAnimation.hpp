@@ -102,6 +102,7 @@ class ModelAnimation : public ::ModelAnimation {
         frameCount = model.frameCount;
         bones = model.bones;
         framePoses = model.framePoses;
+        std::strcpy(name, model.name);
     }
 };
 }  // namespace raylib

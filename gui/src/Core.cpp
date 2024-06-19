@@ -24,7 +24,7 @@ namespace Zappy
                 try {
                     _world.handleCommand(command.value());
                 } catch (const std::exception &e) {
-                    std::cerr << e.what() << std::endl;
+                    // std::cerr << e.what() << std::endl;
                 }
                 command = _socket.getNextCommand();
             }
