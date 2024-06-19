@@ -26,7 +26,7 @@ void client_dead(server_t *server, client_socket_t *client)
     dprintf(get_gui(server)->socket, "pdi %d\n", client->_id);
     close(client->socket);
     TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
-    free_player(client->player);
+    free_client(client);
 }
 
 void client_eat(server_t *server, client_socket_t *client)
@@ -41,14 +41,19 @@ void client_eat(server_t *server, client_socket_t *client)
 
 void check_death(server_t *server)
 {
-    client_socket_t *client;
+    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *next_client;
 
-    TAILQ_FOREACH(client, &server->_head_client_sockets, entries) {
-        if (!client->player)
+    while (client != NULL) {
+        next_client = TAILQ_NEXT(client, entries);
+        if (!client->player) {
+            client = next_client;
             continue;
+        }
         if (client->player->_health == 0)
             client_eat(server, client);
         else
             client->player->_health -= 1;
+        client = next_client;
     }
 }

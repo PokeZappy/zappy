@@ -12,14 +12,17 @@ static const command_t commands_gui[] = {
     {"bct", cmd_bct, 0},
     {"mct", cmd_mct, 0},
     {"tna", cmd_tna, 0},
-    {"pnw", cmd_pnw, 0},
     {"ppo", cmd_ppo, 0},
     {"plv", cmd_plv, 0},
     {"pin", cmd_pin, 0},
     {"sgt", cmd_sgt, 0},
     {"sst", cmd_sst, 0},
     {"EXIT", exit_command, 0},
+    {"HACK_DIR", hack_player_dir, 0},
+    {"HACK_POS", hack_player_pos, 0},
     {"CLIENT_LIST", print_client_list, 0},
+    {"EGG_LIST", print_egg_list, 0},
+    {"BAN", ban_command, 0},
     {NULL, NULL, 0}
 };
 
