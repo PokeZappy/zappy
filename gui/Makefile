@@ -28,6 +28,7 @@ INCLUDEFLAGS	=	-Iinclude					\
 					-Iinclude/world				\
 					-Iinclude/graphics/raylib	\
 					-Iinclude/graphics			\
+					-I./lib/include				\
 					-I./lib/raylib/src			\
 					-I./lib/raylib-cpp/include	\
 					$(shell pkg-config --cflags libconfig++)
