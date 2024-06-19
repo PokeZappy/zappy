@@ -42,17 +42,20 @@ namespace Zappy {
         int _animFrame = 0;
         raylib::Vector2 _currentPos;
         float _altitude;
-        float _height = 40;
+        float _height = 30;
         size_t _currentOrientation;
         bool _hasIdleAnim = false;
 
         std::unordered_map<std::string, int> _animationIndexes;
 
         bool _isDying = false;
+        float _verticalRotation = 0.0;
         float _scale = 2.0;
+        size_t _level = 1;
 
         raylib::Image _textImage;
         raylib::Texture2D _textTexture;
+        raylib::RenderTexture2D _textRenderTexture;
 
     };
 } // namespace Zappy
