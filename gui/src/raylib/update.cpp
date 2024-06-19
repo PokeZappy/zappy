@@ -21,6 +21,9 @@ namespace Zappy {
             _camera.position.y -= 1;
             _camera.target.y -= 1;
         }
+        if (IsKeyPressed(KEY_P)) {
+            _selectionMode = !_selectionMode;
+        }
 
         // Update Graphical Player list
         _camera.Update(CAMERA_FIRST_PERSON);

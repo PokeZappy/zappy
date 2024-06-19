@@ -6,6 +6,8 @@
 */
 
 #include "Raylib.hpp"
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
 namespace Zappy
 {
@@ -26,6 +28,11 @@ namespace Zappy
             {
                 for (int z = 0; z < _mapY; z++)
                 {
+                    if (!_selectionMode)
+                    {
+                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                        continue;
+                    }
                     raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
                     if (meshHit.hit)
                     {
@@ -48,7 +55,25 @@ namespace Zappy
             _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
 
             _camera.EndMode();
-            // end of 3D scene
+
+            Rectangle r = {
+                0,
+                GUI_HEIGHT - 250,
+                GUI_WIDTH,
+                250
+            };
+
+            // GuiButton(r, "Follow");
+
+            if (_selectionMode)
+                GuiWindowBox(r, "Actions");
+            int a = 0;
+            GuiButton((Rectangle) {GUI_WIDTH - 125, GUI_HEIGHT - 200, 100, 60}, "Follow");
+            GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 120, 225, 60}, "Kill");
+            GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
+            // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
+
+                // end of 3D scene
             textColor.DrawText(raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
             textColor.DrawText(raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
         }

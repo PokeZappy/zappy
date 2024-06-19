@@ -11,6 +11,7 @@
 #include "Utils.hpp"
 #include "Player.hpp"
 #include "PokemonInfo.hpp"
+#include <unordered_map>
 
 namespace Zappy {
     class PlayerRaylib {
