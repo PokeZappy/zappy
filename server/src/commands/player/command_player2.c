@@ -26,8 +26,8 @@ void cmd_eject(server_t *server, char *args, client_socket_t *client)
     bool pushed = false;
 
     pushed = player_eject(server, client->player);
+    check_all_egg(server->grid->_tiles[x][y], server);
     if (pushed == true) {
-        check_all_egg(server->grid->_tiles[x][y], server);
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
