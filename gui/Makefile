@@ -30,9 +30,9 @@ INCLUDEFLAGS	=	-Iinclude					\
 					-Iinclude/graphics			\
 					-I./lib/raylib/src			\
 					-I./lib/raylib-cpp/include	\
-					$(shell pkg-config --cflags libconfig)
+					$(shell pkg-config --cflags libconfig++)
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
-LDFLAGS			=	$(shell pkg-config --libs libconfig)		\
+LDFLAGS			=	$(shell pkg-config --libs libconfig++)		\
 					$(shell pkg-config --libs sfml-graphics)	\
 					-L./lib/raylib/src -lraylib -lpthread -ldl
 DEPSFLAGS		=	-MMD -MP
