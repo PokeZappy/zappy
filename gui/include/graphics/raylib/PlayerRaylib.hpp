@@ -42,7 +42,7 @@ namespace Zappy {
         size_t _currentOrientation;
 
         bool _isDying = false;
-        float _scale = 0.5;
+        float _scale = 2.0;
 
         size_t _gridSize;
     };

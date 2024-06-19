@@ -53,7 +53,7 @@ namespace Zappy
 
         // Food
         _foodModel = raylib::Model("assets/models/pecha_berry.glb");
-        listTypes = {"grass", "fire", "water"};
+        listTypes = {"grass", "fire", "water", "steel", "dragon", "electric", "bug", "psychic", "ground", "dark", "fight", "fairy", "ice", "normal", "poison", "rock", "ghost", "fly", "eevee"};
     }
 
     void Raylib::render(const World &world)
