@@ -65,14 +65,23 @@ void hack_player_pos(server_t *server, char *args, client_socket_t *client)
 
 void hack_player_dir(server_t *server, char *args, client_socket_t *client)
 {
-    if (strcmp(args + 9, "UP") == 0)
-        client->player->_direction = UP;
-    if (strcmp(args + 9, "RIGHT") == 0)
-        client->player->_direction = RIGHT;
-    if (strcmp(args + 9, "DOWN") == 0)
-        client->player->_direction = DOWN;
-    if (strcmp(args + 9, "LEFT") == 0)
-        client->player->_direction = LEFT;
+    int id = 0;
+    char dir[16];
+    client_socket_t *tmp = NULL;
+
+    if (sscanf(args + 9, "%d %15s", &id, dir) == 2) {
+        tmp = get_client(server, id);
+        if (tmp == NULL)
+            return;
+        if (strcmp(dir, "UP") == 0)
+            tmp->player->_direction = UP;
+        if (strcmp(dir, "RIGHT") == 0)
+            tmp->player->_direction = RIGHT;
+        if (strcmp(dir, "DOWN") == 0)
+            tmp->player->_direction = DOWN;
+        if (strcmp(dir, "LEFT") == 0)
+            tmp->player->_direction = LEFT;
+    }
 }
 
 void print_egg_list(server_t *server, char *args, client_socket_t *client)
