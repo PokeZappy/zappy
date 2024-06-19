@@ -225,7 +225,7 @@ namespace Zappy
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, "assets/models/pokemons/torterra.glb", _gridSize));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize));
             }
         }
         size_t decal = 0;

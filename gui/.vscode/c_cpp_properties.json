@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include/**",
-                "/opt/homebrew/Cellar/sfml/2.6.1/include"
+                "/opt/homebrew/Cellar/sfml/2.6.1/include",
+                "/opt/homebrew/Cellar/libconfig/1.7.3/include"
             ],
             "defines": [],
             "cStandard": "c23",
