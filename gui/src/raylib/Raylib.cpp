@@ -216,13 +216,16 @@ namespace Zappy
 
         // Update Graphical Player list
         _camera.Update(CAMERA_FIRST_PERSON);
-        for (const auto &player : world.getPlayers())
-        {
+        if (!_players.empty() && !_players[0]->isDying()) {
+            // _camera.target = _players[0]->getPosition() * _gridSize;
+            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
+        }
+        for (const auto &player : world.getPlayers()) {
             if (!containsPlayer(player)) {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, "assets/models/pokemons/torterra.glb", _gridSize));
             }
         }
         size_t decal = 0;

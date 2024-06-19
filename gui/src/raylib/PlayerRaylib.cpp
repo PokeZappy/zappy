@@ -17,8 +17,8 @@ namespace Zappy
         loadTextureAndModel();
 
         offset = raylib::Vector2(
-                (float)(rand() % _gridSize / 3) - _gridSize / 6,
-                (float)(rand() % _gridSize / 3) - _gridSize / 6);
+                Utils::generateRandomFloat(gridSize / 3),
+                Utils::generateRandomFloat(gridSize / 3));
         _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
     }
 
@@ -72,11 +72,9 @@ namespace Zappy
         _animIndex = 1;
         if (std::abs(_currentPos.x - posGoal.x) < 0.01 && std::abs(_currentPos.y - posGoal.y) < 0.01) {
             _currentPos = posGoal;
-            // _animFrame = 0;
         }
         if (_currentPos == posGoal) {
             _animIndex = 0;
-            // _animFrame = 0;
         }
     }
 
@@ -87,12 +85,12 @@ namespace Zappy
 
         // draw
         float scale = 0.5;
-        // std::cout << _scale.ToString() << raylib::Vector3(scale, scale, scale).ToString()  << std::endl;
-        _model.UpdateAnimation(_modelAnimation[_animIndex], _animFrame).Draw
-        (raylib::Vector3{
+        _model.UpdateAnimation(_modelAnimation[_animIndex], _animFrame)
+        .Draw(raylib::Vector3{
             _currentPos.x * _gridSize + offset.x, _height,
             _currentPos.y * _gridSize + offset.y},
-            raylib::Vector3(0, 1, 0), _currentOrientation, raylib::Vector3(_scale, _scale, _scale));
+            raylib::Vector3(0, 1, 0), _currentOrientation,
+            raylib::Vector3(_scale, _scale, _scale));
     }
 
     void PlayerRaylib::move(raylib::Vector3 vector)
