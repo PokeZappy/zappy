@@ -11,21 +11,22 @@ client_socket_t *find_client_by_socket(server_t *server, int socket)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
-    while (current) {
-        if (current->socket == socket)
+    TAILQ_FOREACH(current, &server->_head_client_sockets, entries) {
+        if (current->player && current->_id == socket)
             return current;
-        current = TAILQ_NEXT(current, entries);
     }
     return NULL;
 }
 
 player_t *find_player_by_socket(server_t *server, int socket)
 {
-    client_socket_t *client = find_client_by_socket(server, socket);
+    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
-    if (!client)
-        return NULL;
-    return client->player;
+    TAILQ_FOREACH(current, &server->_head_client_sockets, entries) {
+        if (current->player && current->_id == socket)
+            return current->player;
+    }
+    return NULL;
 }
 
 client_socket_t *find_gui(server_t *server, int socket)

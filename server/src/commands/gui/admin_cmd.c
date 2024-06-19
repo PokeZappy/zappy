@@ -8,17 +8,6 @@
 #include "../../../include/commands.h"
 #include "../../../include/utils.h"
 
-static client_socket_t *get_client(server_t *server, int id)
-{
-    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
-
-    TAILQ_FOREACH(current, &server->_head_client_sockets, entries) {
-        if (current->player && current->_id == id)
-            return current;
-    }
-    return NULL;
-}
-
 void print_client_list(server_t *server, char *args, client_socket_t *client)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
@@ -55,7 +44,7 @@ void hack_player_pos(server_t *server, char *args, client_socket_t *client)
     client_socket_t *tmp = NULL;
 
     if (sscanf(args + 9, "%d %d %d", &id, &x, &y)) {
-        tmp = get_client(server, id);
+        tmp = find_client_by_socket(server, id);
         if (tmp != NULL) {
             tmp->player->_pos._x = x;
             tmp->player->_pos._y = y;
@@ -70,7 +59,7 @@ void hack_player_dir(server_t *server, char *args, client_socket_t *client)
     client_socket_t *tmp = NULL;
 
     if (sscanf(args + 9, "%d %15s", &id, dir) == 2) {
-        tmp = get_client(server, id);
+        tmp = find_client_by_socket(server, id);
         if (tmp == NULL)
             return;
         if (strcmp(dir, "UP") == 0)
