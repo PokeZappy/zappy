@@ -7,7 +7,7 @@
 
 #include "../../include/server.h"
 
-void push_player(client_socket_t *pushed, player_t *pusher)
+void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
 {
     if (pusher->_direction == UP)
         pushed->player->_pos._y -= 1;
@@ -18,6 +18,7 @@ void push_player(client_socket_t *pushed, player_t *pusher)
     if (pusher->_direction == RIGHT)
         pushed->player->_pos._x += 1;
     dprintf(pushed->socket, "eject: %d\n", pusher->_direction);
+    dprintf(get_gui(server)->socket, "pex %d\n", pushed->_id);
 }
 
 bool player_eject(server_t *server, player_t *player)
@@ -30,7 +31,7 @@ bool player_eject(server_t *server, player_t *player)
             continue;
         if (client->player->_pos._x == player->_pos._x &&
         client->player->_pos._y == player->_pos._y) {
-            push_player(client, player);
+            push_player(client, player, server);
             pushed = true;
         }
     }
