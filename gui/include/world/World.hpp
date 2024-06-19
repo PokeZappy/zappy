@@ -12,6 +12,7 @@
 #include "Egg.hpp"
 #include "world/Team.hpp"
 #include "ShellCommand.hpp"
+#include "Utils.hpp"
 #include <algorithm>
 #include <memory>
 #include <algorithm>

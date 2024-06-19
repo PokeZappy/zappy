@@ -10,8 +10,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <getopt.h>
-#include "Tools.hpp"
-
 #include "ClientSocket.hpp"
 #include "Sfml.hpp"
 #include "Raylib.hpp"

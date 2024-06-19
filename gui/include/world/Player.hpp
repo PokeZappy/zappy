@@ -8,9 +8,9 @@
 #pragma once
 
 #include "Inventory.hpp"
-#include "Tools.hpp"
 #include "AEntity.hpp"
 #include <memory>
+#include "Utils.hpp"
 #include <vector>
 #include <sstream>
 
