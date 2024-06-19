@@ -14,7 +14,6 @@ void check_eggs(server_t *server)
     TAILQ_FOREACH(egg, &server->_head_egg, _entries) {
         if (egg->_available > 0) {
             egg->_available -= 1;
-            printf("egg %d is now at %d\n", egg->_id, egg->_available);
         }
     }
 }
