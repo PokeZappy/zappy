@@ -6,7 +6,7 @@ def extract_direction(message: str) -> int:
     return int(match.group())
 
 
-def get_infos(text: list[str]) -> tuple[list] | None:
+def get_infos(text: list[str]) -> tuple | None:
     """
     Get information from the input text.
 
@@ -19,7 +19,7 @@ def get_infos(text: list[str]) -> tuple[list] | None:
     if len(text) == 2 and text[1][0:1].isnumeric() or len(text) < 2:
         return None, None
     if len(text) == 2 and validate_id_pattern(text[1]):
-        return re.match(r'^\[(\d+)\]$', text[1]).group(1)
+        return None, re.match(r'^\[(\d+)\]$', text[1]).group(1)
     if len(text) > 2:
         return tuple(zip(*(infos.split(";") for infos in text[2].split('~'))))
     return tuple(zip(*(infos.split(";") for infos in text[1].split('~'))))

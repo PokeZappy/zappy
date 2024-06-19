@@ -168,6 +168,7 @@ class Player(Bot):
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
         self.queue.append(('Take', 'player'))
+        self.queue.append(('Take', 'player'))
 
     def apply_action(self) -> None:
         """
