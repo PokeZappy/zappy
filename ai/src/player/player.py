@@ -33,14 +33,15 @@ class Player(Bot):
         self.LEVEL_MAX: int = 8
         self.FORK_ACTION: int = 42
         self.INCUBATION_TIME: int = 600
-        self.inventory: dict[str: int] = {'food': 10,
-                                          'linemate': 0,
-                                          'deraumere': 0,
-                                          'sibur': 0,
-                                          'mendiane': 0,
-                                          'phiras': 0,
-                                          'thystame': 0
-                                          }
+        self.based_ressource = {'food': 10,
+                                'linemate': 0,
+                                'deraumere': 0,
+                                'sibur': 0,
+                                'mendiane': 0,
+                                'phiras': 0,
+                                'thystame': 0
+                                }
+        self.inventory: dict[str: int] = self.based_ressource
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))

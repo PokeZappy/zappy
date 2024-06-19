@@ -62,6 +62,9 @@ class ParentAI(Player):
         self.can_incant = False
         self.level_to_give = 1
         self.fork_gave = 0
+        self.coll_ressources = {}
+        self.level_incant = 1
+        self.global_ressources = self.based_ressources
     
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -79,6 +82,7 @@ class ParentAI(Player):
     #         self.decode_message(list_message)
     #     elif buf.__contains__('death'):
     #         self.actions.append()
+    # [m_info, m_nbr] for m_info, m_nbr in zip(message['info'], message['nbr'])
 
     def real_fork_addaptativ(self) -> None:
         #TODO: implement the real_fork_addaptativ with cyprien
@@ -116,15 +120,20 @@ class ParentAI(Player):
             self.actions.pop(0)
 
     def broadcast_traitement(self, message: tuple | str) -> None:
-        if message['msg'] == 'tamer':
-            # TODO: recieve all inventory from collector
-            pass
+        if message['msg'] == 'opes in meo inventario sunt : ':
+            if message['id'] not in self.coll_ressources.keys():
+                self.coll_ressources[message['id']] = self.based_ressources
+            for keys, nbrs in zip(message['info'], message['nbr']):
+                self.coll_ressources[message['id']][keys] = nbrs
+                self.global_ressources[keys] += nbrs
+
         if message['msg'] == 'opes deposita':
-        #     TODO : faire lancer l'incantation si ressources ok
-            pass
+            self.message.buf_messages('facultates positas carmina')
         if message['msg'] == 'defecit carmen':
             #TODO: problem to make the incantation
             pass
+        if message['msg'] == 'felix carmen':
+            self.level_incant += 1
 
     def progenitor_treatment(self, buf: str) -> None:
         if len(self.actions) == 0:
@@ -188,6 +197,10 @@ class ParentAI(Player):
             self.message.buf_messages('facultates positas carmina')
             self.queue.append('Broadcast')
             self.can_incant = True
+            return True
+        if RoleInGame.PNJ in self.give_role and self.level_to_give == self.level_incant:
+            self.message.buf_messages('quid habes ut nobis offerat')
+            self.queue.append('Broadcast')
             self.level_to_give += 1
             return True
         return False
