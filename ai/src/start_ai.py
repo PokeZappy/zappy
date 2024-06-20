@@ -5,6 +5,7 @@ from ai.src.player.parent_ai import ParentAI
 from ai.src.player.pusher import Pusher
 from ai.src.player.collector import Collector
 from ai.src.player.pnj import Pnj
+from ai.src.player.first_born import First_born
 from ai.src.zappy_ai import display_help, connection
 
 
@@ -37,6 +38,7 @@ def start_ai():
         # mybot = Pnj(server_info, cli_socket, debug)
         # mybot = Pusher(server_info, cli_socket, debug)
         # mybot = Collector(server_info, cli_socket, debug)
+        # mybot = First_born(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

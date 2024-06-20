@@ -10,6 +10,7 @@ from ai.src.gameplay.enum_gameplay import Directions as dir
 from ai.src.mvt.path import Path
 from ai.src.gameplay.enum_gameplay import Resources as res
 from ai.src.utils.info_look import look_resources
+from ai.src.gameplay.enum_gameplay import RoleInGame
 
 
 class Player(Bot):
@@ -33,7 +34,7 @@ class Player(Bot):
         self.LEVEL_MAX: int = 8
         self.FORK_ACTION: int = 42
         self.INCUBATION_TIME: int = 600
-        self.based_ressource = {'food': 10,
+        self.based_ressources = {'food': 10,
                                 'linemate': 0,
                                 'deraumere': 0,
                                 'sibur': 0,
@@ -41,11 +42,12 @@ class Player(Bot):
                                 'phiras': 0,
                                 'thystame': 0
                                 }
-        self.inventory: dict[str: int] = self.based_ressource
+        self.inventory: dict[str: int] = self.based_ressources
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))
         self.got_id: bool = False
+        self.death: any = False
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -254,13 +256,15 @@ class Player(Bot):
         else:
             self.inventory[new_object] -= 1
 
-    def run(self) -> None:
+    def run(self) -> any:
         """
         This method is the main loop of the ai.
 
         :return: None
         """
         while self.level < self.LEVEL_MAX:
+            if self.death != False:
+                return self.death
             infds, outfds, _ = select.select(self.inout, self.inout, [])
 
             """
@@ -269,6 +273,8 @@ class Player(Bot):
             if len(infds) != 0:
                 buf = self.recv_action()
                 self.recv_treatment(buf)
+                if buf == 'death\n':
+                    return None
 
             """
             outfds: list[socket] - The list of sockets to write to.

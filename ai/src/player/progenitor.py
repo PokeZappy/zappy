@@ -1,12 +1,13 @@
-import socket
+from socket import socket
 
 from ai.src.player.player import Player
 
 
 class Progenitor(Player):
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
-        super().__init__(serv_info, cli_socket, debug_mode)
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.need_eat = 0
         self.pos = (0, 0)
         self.the_place_to_be = (0, 0)

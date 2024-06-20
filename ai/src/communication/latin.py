@@ -41,7 +41,7 @@ class Latin(object):
 
 
                                         # Coll to MM
-                                        'ressources déposées': 'opes deposita',
+                                        'ressources déposées : ': 'opes deposita : ',
                                         # TODO - parse l'inventaire
                                         'Je suis positionné pour le dépot': 'situm intrare',
                                         # TODO - compter le nombre de collecteur pour désactiver la sécurité
@@ -73,11 +73,16 @@ class Latin(object):
                                         'Qui est un pusher': 'Quis est puer interfector?',
                                         'Je suis un pusher': 'Ego sum puer inteffector',
 
+                                        # First Born to MM
+                                        'Je me vais me transormer en : ': 'Ego me transform : ',
+
                                         'évo de niveau': 'nobilis incantatio',
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
                                         'Incantator': 'Incantator',
                                         'Progenitor': 'Progenitor',
+                                        'Mastermind': 'Mastermind',
+                                        'North guard': 'North guard',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',

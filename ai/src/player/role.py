@@ -1,5 +1,6 @@
+from socket import socket
+
 from ai.src.player.player import Player
-import socket
 from ai.src.mvt.path import Path
 from ai.src.mvt.tsp import Held_krap
 from ai.src.gameplay.evolution import evolution
@@ -10,7 +11,7 @@ import select
 
 class Role(Player):
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug: bool = False):
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
         """
         This class is the role of the player.
 
@@ -18,7 +19,8 @@ class Role(Player):
         :param cli_socket: socket - The client socket for communication.
         :param debug: bool - The debug mode.
         """
-        super().__init__(serv_info, cli_socket, debug)
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.level = 1
         self.goal = evolution()
         self.mvt = Held_krap(self.limit, self.pos)

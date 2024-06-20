@@ -7,11 +7,12 @@ class Pnj(Player):
     Pnj class
     """
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
         """
         Pnj class constructor
         """
-        super().__init__(serv_info, cli_socket, debug_mode)
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.goto = None
         self.dir = None
         self.allowed_incantation_cooker = 0
