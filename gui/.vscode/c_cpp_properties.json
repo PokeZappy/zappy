@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include/**",
+                "/opt/homebrew/Cellar/sfml/2.6.1/include",
+                "/opt/homebrew/Cellar/libconfig/1.7.3/include"
+            ],
+            "defines": [],
+            "cStandard": "c23",
+            "cppStandard": "gnu++20",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
