@@ -8,21 +8,20 @@
 #include "../../../include/commands.h"
 
 static const command_t commands[] = {
-    {"forward", cmd_forward, 7},
-    {"right", cmd_right, 7},
-    {"left", cmd_left, 7},
-    {"look", cmd_look, 7},
-    {"inventory", cmd_inventory, 1},
-    {"broadcast", cmd_broadcast, 7},
-    {"fork", cmd_fork, 42},
-    {"eject", cmd_eject, 7},
+    {"Forward", cmd_forward, 7},
+    {"Right", cmd_right, 7},
+    {"Left", cmd_left, 7},
+    {"Look", cmd_look, 7},
+    {"Inventory", cmd_inventory, 1},
+    {"Broadcast", cmd_broadcast, 7},
+    {"Fork", cmd_fork, 42},
+    {"Eject", cmd_eject, 7},
     {"dead", cmd_dead, 0},
-    {"connect_nbr", cmd_connect_nbr, 0},
-    {"take", cmd_take, 7},
-    {"set", cmd_set, 7},
-    {"incantation", cmd_pre_incant, 0},
+    {"Connect_nbr", cmd_connect_nbr, 0},
+    {"Take", cmd_take, 7},
+    {"Set", cmd_set, 7},
+    {"Incantation", cmd_pre_incant, 0},
     {"EXIT", exit_command, 0},
-    {"test", cmd_forward, 300},
     {NULL, NULL, 0}
 };
 
