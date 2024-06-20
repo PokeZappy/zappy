@@ -23,6 +23,7 @@ class Collector(Player):
         self.deposit_path: list = []
         self.start_pos: list = [0, 0]
         self.empty: bool = True
+        self.lvl_one: bool = False
 
     def get_deposit_path(self) -> list:
         """
@@ -88,7 +89,8 @@ class Collector(Player):
             for resource in tile:
                 if resource in self.focus:
                     self.queue.append(("Take", resource))
-            if self.pos == self.start_pos and self.id != 0 and self.empty == False:
+            if (self.pos == self.start_pos and self.id != 0 and not self.empty and not
+               (self.id == 1 and not self.lvl_one)):
                 break
             self.queue.append('Forward')
             self.pos[0] = (self.pos[0] + 1) % (self.limit[0] - 1)
@@ -96,7 +98,7 @@ class Collector(Player):
                 print(f'lim: {self.limit[0]}')
                 print(f'pos: {self.pos}')
                 print(f'start: {self.start_pos}')
-            if self.pos == self.start_pos and self.id == 0:
+            if (self.pos == self.start_pos and self.id == 0) or (self.id == 1 and not self.lvl_one):
                 break
             if self.pos[0] == self.start_pos[0] + 1:
                 self.empty = False
@@ -221,4 +223,6 @@ class Collector(Player):
             print(type([self.id]))
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
+        if message['msg'] == 'INCANTATION LVL 1 DONE':
+            self.lvl_one = True
         self.global_message()
