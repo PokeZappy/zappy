@@ -25,10 +25,10 @@ namespace Zappy {
             _selectionMode = !_selectionMode;
         }
         if (IsKeyPressed(KEY_D)) {
-            if (debugMode.activated()) {
-                debugMode.desactive();
+            if (debugMode->activated()) {
+                debugMode->desactive();
             } else {
-                debugMode.activate();
+                debugMode->activate();
             }
         }
 

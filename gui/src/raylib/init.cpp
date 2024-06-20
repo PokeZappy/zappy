@@ -14,7 +14,8 @@ namespace Zappy {
         _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs"))
+        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
+        )
     {
         _window.SetTargetFPS(60);
         try
@@ -38,6 +39,7 @@ namespace Zappy {
         int ambientLoc = GetShaderLocation(_shader, "ambient");
         float array[4] = { 0.15f, 0.15f, 0.15f, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
+        debugMode = std::make_unique<DebugMode>();
 
         _lights->enabled = true;
 

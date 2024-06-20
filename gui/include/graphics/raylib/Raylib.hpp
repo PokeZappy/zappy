@@ -39,7 +39,6 @@ namespace Zappy {
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
-            DebugMode debugMode;
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
             bool containsEgg(std::shared_ptr<Egg> egg);
@@ -54,6 +53,7 @@ namespace Zappy {
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
             std::vector<std::string> listTypes;
             libconfig::Config _configuration;
+            std::unique_ptr<DebugMode> debugMode;
 
             // floor
             raylib::Texture2D _floorTexture;

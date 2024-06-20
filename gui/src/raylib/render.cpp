@@ -14,7 +14,7 @@ namespace Zappy
     void Raylib::render(const World &world)
     {
         (void)world;
-        if (debugMode.activated()) {
+        if (debugMode->activated()) {
             renderDebug(world);
             return;
         }

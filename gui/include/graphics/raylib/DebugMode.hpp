@@ -13,6 +13,7 @@ namespace Zappy {
     class DebugMode {
     public:
         DebugMode(void) : _model(raylib::Model("assets/models/pokemons/ditto.glb")) {};
+        // DebugMode(void) = default;
         void activate(void) {};
         void desactive(void) {};
         void changeAnimation(std::string newAnimation) {};
