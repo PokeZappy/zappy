@@ -10,15 +10,19 @@
 
 void cmd_msz(server_t *server, char *args, client_socket_t *client)
 {
+    char message[256];
+
     if (!client || !is_client_gui(client))
         return;
-    dprintf(client->socket, "msz %d %d\n", server->grid->_width,
+    snprintf(message, sizeof(message), "msz %d %d\n", server->grid->_width,
         server->grid->_height);
+    send_gui_message(client->socket, message);
     printf("msz\n");
 }
 
 void cmd_bct(server_t *server, char *args, client_socket_t *client)
 {
+    char message[256];
     char **parse_command = decompose_output(args);
     int x = atoi(parse_command[1]);
     int y = atoi(parse_command[2]);
@@ -29,7 +33,8 @@ void cmd_bct(server_t *server, char *args, client_socket_t *client)
         return;
     }
     response = get_tile_content(server->grid->_tiles[y][x]);
-    dprintf(client->socket, "bct %d %d %s\n", x, y, response);
+    snprintf(message, sizeof(message), "bct %d %d %s\n", x, y, response);
+    send_gui_message(client->socket, message);
     free(response);
     free_str_array(parse_command);
     printf("bct\n");
@@ -37,6 +42,7 @@ void cmd_bct(server_t *server, char *args, client_socket_t *client)
 
 void cmd_mct(server_t *server, char *args, client_socket_t *client)
 {
+    char message[256];
     char *response;
 
     if (!client || !is_client_gui(client))
@@ -44,7 +50,9 @@ void cmd_mct(server_t *server, char *args, client_socket_t *client)
     for (int i = 0; i < server->grid->_height; i++) {
         for (int j = 0; j < server->grid->_width; j++) {
             response = get_tile_content(server->grid->_tiles[i][j]);
-            dprintf(client->socket, "bct %d %d %s\n", j, i, response);
+            snprintf(message, sizeof(message),
+                "bct %d %d %s\n", j, i, response);
+            send_gui_message(client->socket, message);
             free(response);
         }
     }
@@ -53,11 +61,14 @@ void cmd_mct(server_t *server, char *args, client_socket_t *client)
 
 void cmd_tna(server_t *server, char *args, client_socket_t *client)
 {
+    char message[256];
     team_t *current = TAILQ_FIRST(&server->_head_team);
 
     if (!client || !is_client_gui(client))
         return;
     while (current) {
+        snprintf(message, sizeof(message), "tna %s\n", current->_name);
+        send_gui_message(client->socket, message);
         dprintf(client->socket, "tna %s\n", current->_name);
         current = TAILQ_NEXT(current, _entries);
     }
@@ -66,6 +77,7 @@ void cmd_tna(server_t *server, char *args, client_socket_t *client)
 
 void cmd_pnw(server_t *server, char *args, client_socket_t *client)
 {
+    char message[256];
     int id = client->_id;
     int x = client->player->_pos._x;
     int y = client->player->_pos._y;
@@ -74,7 +86,9 @@ void cmd_pnw(server_t *server, char *args, client_socket_t *client)
     char *n = client->player->_team->_name;
     client_socket_t *gui_socket = get_gui(server);
 
-    if (gui_socket)
-        dprintf(gui_socket->socket,
-        "pnw %d %d %d %d %d %s\n", id, x, y, o, l, n);
+    if (gui_socket) {
+        snprintf(message, sizeof(message),
+            "pnw %d %d %d %d %d %s\n", id, x, y, o, l, n);
+        send_gui_message(client->socket, message);
+    }
 }

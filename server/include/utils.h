@@ -17,3 +17,5 @@ bool is_client_gui(client_socket_t *client);
 
 char **decompose_output(char *output);
 void free_str_array(char **array);
+
+void send_gui_message(int socket, const char *msg);

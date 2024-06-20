@@ -6,9 +6,13 @@
 */
 
 #include "../../../include/commands.h"
+#include "../../../include/utils.h"
 
 void cmd_sgt(server_t *server, char *args, client_socket_t *client)
 {
-    dprintf(client->socket, "sgt %d\n", server->arguments->_f);
+    char message[256];
+
+    snprintf(message, sizeof(message), "sgt %d\n", server->arguments->_f);
+    send_gui_message(client->socket, message);
     printf("sgt\n");
 }
