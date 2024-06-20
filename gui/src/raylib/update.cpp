@@ -10,6 +10,7 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
+
         _mapX = world._mapX;
         _mapY = world._mapY;
         if (IsKeyDown(KEY_SPACE)) {
@@ -21,15 +22,49 @@ namespace Zappy {
             _camera.position.y -= 1;
             _camera.target.y -= 1;
         }
-        if (IsKeyPressed(KEY_P)) {
+        if (IsKeyPressed(KEY_N)) {
+            std::cout << "j'active le mode GUI" << std::endl;
             _selectionMode = !_selectionMode;
         }
-        if (IsKeyPressed(KEY_D)) {
+        if (IsKeyPressed(KEY_P)) {
+            std::cout << "jai pressé la touche n" << std::endl;
             if (debugMode->activated()) {
-                debugMode->desactive();
+            //     std::cout << "je desac" << std::endl;
+                debugMode->desactive(_camera);
             } else {
-                debugMode->activate();
+                debugMode->activate(_camera);
             }
+        }
+
+        if (debugMode->activated()) {
+            if (IsKeyPressed(KEY_ONE)) {
+                debugMode->changeAnimation(0);
+            } else if (IsKeyPressed(KEY_TWO)) {
+                debugMode->changeAnimation(1);
+            } else if (IsKeyPressed(KEY_THREE)) {
+                debugMode->changeAnimation(2);
+            } else if (IsKeyPressed(KEY_FOUR)) {
+                debugMode->changeAnimation(3);
+            } else if (IsKeyPressed(KEY_FIVE)) {
+                debugMode->changeAnimation(4);
+            } else if (IsKeyPressed(KEY_SIX)) {
+                debugMode->changeAnimation(5);
+            } else if (IsKeyPressed(KEY_SEVEN)) {
+                debugMode->changeAnimation(6);
+            } else if (IsKeyPressed(KEY_EIGHT)) {
+                debugMode->changeAnimation(7);
+            } else if (IsKeyPressed(KEY_NINE)) {
+                debugMode->changeAnimation(8);
+            }else if (IsKeyPressed(KEY_ZERO)) {
+                debugMode->switchShiny();
+            } else if (IsKeyPressed(KEY_I)) {
+                debugMode->changeAnimation(false);
+            } else if (IsKeyPressed(KEY_K)) {
+                debugMode->changeAnimation(true);
+            } else if (IsKeyPressed(KEY_J)) {
+                debugMode->lastModel();
+            } else if (IsKeyPressed(KEY_L))
+                debugMode->nextModel();
         }
 
         _camera.Update(CAMERA_FIRST_PERSON);

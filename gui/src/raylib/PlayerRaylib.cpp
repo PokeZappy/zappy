@@ -13,7 +13,7 @@ namespace Zappy
         PokemonInfo &pkInfo, size_t gridSize, raylib::Shader &shader)
         : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
         _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb"))
+        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb"))
     {
         color = raylib::Color::White();
         infos = pkInfo;
@@ -137,9 +137,6 @@ namespace Zappy
         if (_animIndex != -1) {
             _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
         }
-        // _model.Draw((Vector3) {50, 50, 50},
-        //     raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
-        //     raylib::Vector3(_scale, _scale, _scale));
         _model.Draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
             raylib::Vector3(_scale, _scale, _scale));

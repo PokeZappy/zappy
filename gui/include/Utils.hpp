@@ -34,5 +34,14 @@ namespace Zappy
             static float generateRandomFloat(size_t delta) {
                 return (float)(rand() % delta) - delta / 2;
             }
+
+        static std::string remove_extension(const std::string& filename) {
+                size_t last_dot = filename.find_last_of(".");
+                if (last_dot == std::string::npos) {
+                    return filename;
+                }
+                return filename.substr(0, last_dot);
+            }
+
     };
 }

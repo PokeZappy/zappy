@@ -29,7 +29,7 @@ namespace Zappy {
         public:
             Raylib();
             void render(const World &world) override;
-            void renderDebug(const World &world) {};
+            void renderDebug(const World &world);
             void update(const World &world) override;
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
