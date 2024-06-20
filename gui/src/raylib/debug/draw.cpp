@@ -14,7 +14,6 @@ namespace Zappy {
             _model.Draw((Vector3) {0, 0, 0},
             raylib::Vector3(0, 1, 0), 0,
             raylib::Vector3(_scaleModel, _scaleModel, _scaleModel));
-            _animFrame++;   
     }
 
     void DebugMode::drawAnimations(void) {
@@ -38,6 +37,18 @@ namespace Zappy {
 
         white.DrawText("Pokemon séléctionné : (J, L)", 50, 50, 60);
         white.DrawText(_modelsId[_modelIndex], 230, 120, 45);
-        white.DrawText("Shiny = touche 0", 10, 950, 45);
+        white.DrawText("FrameStepper = F", 10, 850, 45);
+        white.DrawText("Shiny = NUM 0", 10, 950, 45);
+        _animFrame++;
+    }
+
+    void DebugMode::drawFrameStepper(void) {
+        raylib::Color white = raylib::Color::White();
+        raylib::Color green = raylib::Color::Green();
+        
+        green.DrawText(_animations[_animIndex].name, 400, 20, 50);
+        white.DrawText("Frame: " + std::to_string(_animFrame) + "/" + std::to_string(_animations[_animIndex].frameCount) + " (J, L pour changer de frame)", 550, 75, 30);
+
+        white.DrawText("Appuyez sur F pour quitter le mode FrameStepper", 10, 950, 45);
     }
 }

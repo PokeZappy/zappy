@@ -10,6 +10,7 @@
 namespace Zappy {
     void Raylib::renderDebug(const World &world) {
         raylib::Color textColor = raylib::Color::Black();
+        DebugType type = debugMode->getType();
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::Black());
@@ -26,7 +27,11 @@ namespace Zappy {
             _camera.EndMode();
 
             debugMode->drawAnimations();
-            debugMode->drawPokemon();
+            switch (type) {
+                case NONE: debugMode->drawPokemon(); break;
+                case FRAMESTEPPER: debugMode->drawFrameStepper(); break;
+                default: break;
+            }
         }
         _window.EndDrawing();
     }
