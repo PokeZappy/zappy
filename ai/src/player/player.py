@@ -24,7 +24,7 @@ class Player(Bot):
         """
         super().__init__(serv_info, cli_socket, debug_mode)
         self.limit: list[int] = self.dimensions
-        self.pos: tuple[int, int] = (0, 0)
+        self.pos: list[int] = [0, 0]
         self.inv = {}
         self.parent = None
         self.level: int = 1
@@ -46,8 +46,9 @@ class Player(Bot):
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))
-        self.got_id: bool = False
         self.death: any = False
+        self.got_id: int = 0
+        # self.got_id: bool = False
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -144,6 +145,9 @@ class Player(Bot):
 
         :return: None
         """
+        # TODO - move it in Path class if possible
+        if self.debug_mode:
+            print('going to the north')
         if self.path.facing == dir.NORTH.value:
             return
         if self.path.facing == dir.EAST.value:
@@ -173,6 +177,7 @@ class Player(Bot):
         self.queue.append('Broadcast')
         self.queue.append(('Take', 'player'))
         self.queue.append(('Take', 'player'))
+        self.queue.append(('Take', 'player'))
 
     def apply_action(self) -> None:
         """
@@ -182,9 +187,10 @@ class Player(Bot):
         """
         self.actions.append(self.queue[0])
         self.queue.pop(0)
+        if self.debug_mode:
+            print(f'apply action actions: {self.actions}')
+            print(f'waiting queue: {self.queue}')
         action = self.actions[-1]
-        if action[0] == ('Take', 'player'):
-            self.got_id = True
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
@@ -224,6 +230,8 @@ class Player(Bot):
         else:
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
+            if recv_type == 'ko' and len(self.actions) > 0 and self.actions[0] == ('Take', 'player'):
+                self.got_id += 1
             if recv_type == 'ok':
                 if isinstance(msgs, tuple) and msgs[0] == 'Take' and msgs[1] != 'player':
                     self.inventory[msgs[1]] += 1
