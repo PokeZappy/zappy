@@ -22,7 +22,7 @@ class Collector(Player):
         self.start_path: list = []
         self.deposit_path: list = []
         self.start_pos: list = [0, 0]
-        self.empty: bool = False
+        self.empty: bool = True
 
     def get_deposit_path(self) -> list:
         """
@@ -88,16 +88,20 @@ class Collector(Player):
             for resource in tile:
                 if resource in self.focus:
                     self.queue.append(("Take", resource))
+            if self.pos == self.start_pos and self.id != 0 and self.empty == False:
+                break
             self.queue.append('Forward')
             self.pos[0] = (self.pos[0] + 1) % (self.limit[0] - 1)
             if self.debug_mode:
                 print(f'lim: {self.limit[0]}')
                 print(f'pos: {self.pos}')
                 print(f'start: {self.start_pos}')
-            if self.pos == self.start_pos:
+            if self.pos == self.start_pos and self.id == 0:
                 break
+            if self.pos[0] == self.start_pos[0] + 1:
+                self.empty = False
 
-    def mouving_straight(self, ) -> None:
+    def moving_straight(self, ) -> None:
         """
         Move the player straight while focusing on specific resources.
 
@@ -133,6 +137,7 @@ class Collector(Player):
 
         :return: None
         """
+        self.empty = True
         for move in self.deposit_path:
             self.queue.append(move)
         for resource in self.inventory:
@@ -163,7 +168,7 @@ class Collector(Player):
             self.queue.append('Look')
         if self.looked:
             if len(self.queue) == 0:
-                self.mouving_straight()
+                self.moving_straight()
             self.looked = False
 
     def broadcast_traitement(self, message: tuple | str | dict) -> None:
