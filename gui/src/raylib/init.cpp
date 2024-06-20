@@ -36,7 +36,8 @@ namespace Zappy {
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        SetShaderValue(_shader, ambientLoc, (float[4]){ 0.15f, 0.15f, 0.15f, 1.0f }, SHADER_UNIFORM_VEC4);
+        float array[4] = { 0.15f, 0.15f, 0.15f, 1.0f };
+        SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
 
         _lights->enabled = true;
 

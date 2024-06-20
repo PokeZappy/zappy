@@ -14,6 +14,10 @@ namespace Zappy
     void Raylib::render(const World &world)
     {
         (void)world;
+        if (debugMode.activated()) {
+            renderDebug(world);
+            return;
+        }
         raylib::Color textColor = raylib::Color::Black();
         raylib::Ray ray(GetMousePosition(), _camera);
         _window.BeginDrawing();

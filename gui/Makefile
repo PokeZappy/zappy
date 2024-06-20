@@ -5,9 +5,10 @@
 ## Makefile
 ##
 
-SRC				=	main.cpp					\
-					$(wildcard src/*.cpp)		\
-					$(wildcard src/raylib/*.cpp)\
+SRC				=	main.cpp							\
+					$(wildcard src/*.cpp)				\
+					$(wildcard src/raylib/*.cpp)		\
+					$(wildcard src/raylib/debug/*.cpp)	\
 					$(wildcard src/world/*.cpp)
 
 

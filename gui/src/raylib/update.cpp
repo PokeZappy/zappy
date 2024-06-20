@@ -24,6 +24,13 @@ namespace Zappy {
         if (IsKeyPressed(KEY_P)) {
             _selectionMode = !_selectionMode;
         }
+        if (IsKeyPressed(KEY_D)) {
+            if (debugMode.activated()) {
+                debugMode.desactive();
+            } else {
+                debugMode.activate();
+            }
+        }
 
         _camera.Update(CAMERA_FIRST_PERSON);
 

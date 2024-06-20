@@ -12,6 +12,7 @@
 #include "EggRaylib.hpp"
 #include "Utils.hpp"
 #include <libconfig.h++>
+#include "DebugMode.hpp"
 
 #define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
@@ -27,8 +28,8 @@ namespace Zappy {
         #define GUI_HEIGHT 1080
         public:
             Raylib();
-            ~Raylib() override;
             void render(const World &world) override;
+            void renderDebug(const World &world) {};
             void update(const World &world) override;
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
@@ -38,6 +39,7 @@ namespace Zappy {
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
+            DebugMode debugMode;
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
             bool containsEgg(std::shared_ptr<Egg> egg);
