@@ -23,13 +23,10 @@ namespace Zappy {
             _camera.target.y -= 10;
         }
         if (IsKeyPressed(KEY_N)) {
-            std::cout << "j'active le mode GUI" << std::endl;
             _selectionMode = !_selectionMode;
         }
         if (IsKeyPressed(KEY_P)) {
-            std::cout << "jai pressé la touche n" << std::endl;
             if (debugMode->activated()) {
-            //     std::cout << "je desac" << std::endl;
                 debugMode->desactive(_camera);
             } else {
                 debugMode->activate(_camera);
