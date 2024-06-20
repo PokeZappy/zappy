@@ -16,6 +16,7 @@ namespace Zappy {
     enum DebugType {
         NONE = 0,
         FRAMESTEPPER,
+        CHAT
     };
 
     class DebugMode {
@@ -46,11 +47,14 @@ namespace Zappy {
         void drawAnimations();
         void drawPokemon();
         void drawFrameStepper();
+        void drawChat();
         void update();
         void updateNone();
         void updateFrameStepper();
+        void updateChat();
     private:
         DebugType _type = NONE;
+        std::string _pokemonInput = "";
         Texture2D _oldTexture;
         std::vector<std::string> _modelsId;
         int _modelIndex = 0;

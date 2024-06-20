@@ -13,6 +13,7 @@ namespace Zappy {
         switch (_type) {
             case NONE: updateNone(); break;
             case FRAMESTEPPER: updateFrameStepper(); break;
+            case CHAT: updateChat(); break;
             default: break;
         }
     }
@@ -49,11 +50,33 @@ namespace Zappy {
             } else if (IsKeyPressed(KEY_F)) {
                 _type = FRAMESTEPPER;
                 _animFrame = 0;
+            } else if (IsKeyPressed(KEY_T)) {
+                _type = CHAT;
             }
     }
 
     void DebugMode::updateFrameStepper() {
-        if (IsKeyPressed(KEY_F)) {
+         if (IsKeyPressed(KEY_ONE)) {
+                changeAnimation(0);
+        } else if (IsKeyPressed(KEY_TWO)) {
+            changeAnimation(1);
+        } else if (IsKeyPressed(KEY_THREE)) {
+            changeAnimation(2);
+        } else if (IsKeyPressed(KEY_FOUR)) {
+            changeAnimation(3);
+        } else if (IsKeyPressed(KEY_FIVE)) {
+            changeAnimation(4);
+        } else if (IsKeyPressed(KEY_SIX)) {
+            changeAnimation(5);
+        } else if (IsKeyPressed(KEY_SEVEN)) {
+            changeAnimation(6);
+        } else if (IsKeyPressed(KEY_EIGHT)) {
+            changeAnimation(7);
+        } else if (IsKeyPressed(KEY_NINE)) {
+            changeAnimation(8);
+        } else if (IsKeyPressed(KEY_ZERO)) {
+            switchShiny();
+        } else if (IsKeyPressed(KEY_F)) {
             _type = NONE;
             _animFrame = 0;
         } else if (IsKeyDown(KEY_J)) {
@@ -70,6 +93,20 @@ namespace Zappy {
         } else if (IsKeyPressed(KEY_K)) {
             changeAnimation(true);
             _animFrame = 0;
+        }
+    }
+
+    void DebugMode::updateChat() {
+        int input = GetCharPressed();
+        if (input != 0)
+            _pokemonInput += input;
+        if (IsKeyPressed(KEY_ENTER)) {
+            changeModel(_pokemonInput);
+            _type = NONE;
+            _pokemonInput = "";
+        } else if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) {
+            if (!_pokemonInput.empty())
+                _pokemonInput.pop_back();
         }
     }
 }

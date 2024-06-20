@@ -30,7 +30,7 @@ namespace Zappy {
             switch (type) {
                 case NONE: debugMode->drawPokemon(); break;
                 case FRAMESTEPPER: debugMode->drawFrameStepper(); break;
-                default: break;
+                case CHAT: debugMode->drawPokemon(); debugMode->drawChat(); break;
             }
         }
         _window.EndDrawing();

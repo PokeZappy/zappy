@@ -13,22 +13,22 @@ namespace Zappy {
 
         _mapX = world._mapX;
         _mapY = world._mapY;
-        if (IsKeyDown(KEY_SPACE)) {
+        if (debugMode->getType() != CHAT) {
+             if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += 1;
             _camera.target.y += 1;
-        }
-        if (IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            _camera.position.y -= 1;
-            _camera.target.y -= 1;
+            }
+            if (IsKeyDown(KEY_LEFT_SHIFT))
+            {
+                _camera.position.y -= 1;
+                _camera.target.y -= 1;
+            }
         }
         if (IsKeyPressed(KEY_N)) {
-            std::cout << "j'active le mode GUI" << std::endl;
             _selectionMode = !_selectionMode;
         }
         if (IsKeyPressed(KEY_P)) {
-            std::cout << "jai pressé la touche n" << std::endl;
-            if (debugMode->activated()) {
+            if (debugMode->activated() && debugMode->getType() == NONE) {
             //     std::cout << "je desac" << std::endl;
                 debugMode->desactive(_camera);
             } else {
@@ -39,7 +39,8 @@ namespace Zappy {
             debugMode->update();
         }
 
-        _camera.Update(CAMERA_FIRST_PERSON);
+        if (debugMode->getType() != CHAT)
+            _camera.Update(CAMERA_FIRST_PERSON);
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };

@@ -37,6 +37,7 @@ namespace Zappy {
 
         white.DrawText("Pokemon séléctionné : (J, L)", 50, 50, 60);
         white.DrawText(_modelsId[_modelIndex], 230, 120, 45);
+        white.DrawText("Select Pokemon = T", 10, 750, 45);
         white.DrawText("FrameStepper = F", 10, 850, 45);
         white.DrawText("Shiny = NUM 0", 10, 950, 45);
         _animFrame++;
@@ -50,5 +51,14 @@ namespace Zappy {
         white.DrawText("Frame: " + std::to_string(_animFrame) + "/" + std::to_string(_animations[_animIndex].frameCount) + " (J, L pour changer de frame)", 550, 75, 30);
 
         white.DrawText("Appuyez sur F pour quitter le mode FrameStepper", 10, 950, 45);
+    }
+
+    void DebugMode::drawChat(void) {
+        raylib::Color white = raylib::Color::White();
+        raylib::Color black = raylib::Color::Black();
+
+        white.DrawText("Appuyez sur ENTRÉE pour confirmer", 625, 825, 40);
+        white.DrawRectangle((Vector2) {50, 880}, (Vector2) {1800, 120});
+        black.DrawText(_pokemonInput.empty() ? "_" : _pokemonInput, 80, 940, 40);
     }
 }
