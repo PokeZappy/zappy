@@ -226,7 +226,7 @@ class Player(Bot):
         else:
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
-            if recv_type == 'ko' and self.actions[0] == ('Take', 'player'):
+            if recv_type == 'ko' and len(self.actions) > 0 and self.actions[0] == ('Take', 'player'):
                 self.got_id += 1
             if recv_type == 'ok':
                 if isinstance(msgs, tuple) and msgs[0] == 'Take' and msgs[1] != 'player':

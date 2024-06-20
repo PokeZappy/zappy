@@ -33,7 +33,7 @@ class Collector(Player):
             path = ['Left']
         else:
             path = ['Right']
-        path += ['Forward' * ((self.id // 2) + self.id % 2)]
+        path += ['Forward'] * ((self.id // 2) + self.id % 2)
         if self.debug_mode:
             print(f'path to depot is: {path}')
         return path
@@ -114,6 +114,7 @@ class Collector(Player):
         self.raids_resources(tiles)
         if self.pos == self.start_pos:
             self.deposits_resources()
+            self.turn_to_the_north()
         if self.hard_focus and self.nbr_focus[0] <= self.inventory[self.focus[0]]:
             # TODO - go to depot à voir avec @Matthias
             self.move_to(self.depot)
@@ -150,7 +151,12 @@ class Collector(Player):
         elif self.id % 2 == 1:
             self.queue.append('Left')
         for move in self.start_path:
+            if move == 'Left':
+                self.path.facing = (self.path.facing - 1) % 4
+            if move == 'Right':
+                self.path.facing = (self.path.facing + 1) % 4
             self.queue.append(move)
+        self.turn_to_the_north()
 
     def make_action(self) -> None:
         """
