@@ -38,10 +38,10 @@ static void handle_gui_client(client_socket_t *client, struct server_s *server)
     int y = server->grid->_height;
 
     client->_is_gui = 1;
-    cmd_msz(server, NULL, client);
-    cmd_sgt(server, NULL, client);
-    cmd_mct(server, NULL, client);
-    cmd_tna(server, NULL, client);
+    cmd_msz(server, NULL, get_gui(server));
+    cmd_sgt(server, NULL, get_gui(server));
+    cmd_mct(server, NULL, get_gui(server));
+    cmd_tna(server, NULL, get_gui(server));
 }
 
 static void handle_client_cmd(char *commands, client_socket_t *client,
