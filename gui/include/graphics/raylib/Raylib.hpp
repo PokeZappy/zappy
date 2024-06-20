@@ -8,7 +8,6 @@
 #pragma once
 
 #include "AGraphicalModule.hpp"
-#include "raylib-cpp.hpp"
 #include "PlayerRaylib.hpp"
 #include "Utils.hpp"
 #include <libconfig.h++>
@@ -61,5 +60,7 @@ namespace Zappy {
 
 
             raylib::Shader _shader;
+
+            bool _selectionMode = true;
     };
 }
