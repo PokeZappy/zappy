@@ -86,7 +86,7 @@ static void handle_client_message(client_socket_t *client,
         close(client_socket);
         return;
     }
-    buffer[bytes - 1] = '\0';
+    buffer[bytes - 2] = '\0';
     printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
 }
@@ -127,7 +127,7 @@ static void wait_for_client(struct server_s *server)
     new_client->_id = ntohs(client_addr.sin_port);
     new_client->player = NULL;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
-    send_client_message(client_socket, "WELCOME\n");
+    send_client_message(client_socket, "Welcome !\n");
 }
 
 int handle_client(struct server_s *server, int max_sd, fd_set readfds)
