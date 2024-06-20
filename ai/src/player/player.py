@@ -141,6 +141,9 @@ class Player(Bot):
 
         :return: None
         """
+        # TODO - move it in Path class if possible
+        if self.debug_mode:
+            print('going to the north')
         if self.path.facing == dir.NORTH.value:
             return
         if self.path.facing == dir.EAST.value:

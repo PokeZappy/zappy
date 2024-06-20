@@ -21,12 +21,31 @@ class Collector(Player):
         self.get_id('Quot publicani ibi sunt?')
         self.start_path: list = []
         self.deposit_path: list = []
-        self.start_pos: list = []
+        self.start_pos: list = [0, 0]
+        self.empty: bool = False
+
+    def get_deposit_path(self) -> list:
+        """
+
+        :return:
+        """
+        if self.id % 2 == 0 and self.id != 0:
+            path = ['Left']
+        else:
+            path = ['Right']
+        path += ['Forward' * ((self.id // 2) + self.id % 2)]
+        if self.debug_mode:
+            print(f'path to depot is: {path}')
+        return path
 
     def go_to_start(self) -> None:
-        # TODO - faire un algo qui vient placer le collecteur en fonction de son id % taille max de la map pour éviter les bétise sur le 0 1 et 2
+        """
+
+        :return:
+        """
         if self.id == 0:
             self.queue.append('Forward')
+            self.start_path = ['Forward']
             self.start = True
             return
         if self.id % 2 == 0:
@@ -38,24 +57,23 @@ class Collector(Player):
 
         self.start_path = [item for sublist in self.path.get_path()
                            for item in (sublist if isinstance(sublist, list) else [sublist])]
+        if self.id != 0:
+            self.deposit_path = self.get_deposit_path()
         if self.debug_mode:
             print(f'start: {self.path.start}')
             print(f'end: {self.path.end}')
             print(f'queue without path: {self.queue}')
-        # self.path.start = [0, 0]
-        # self.deposit_path = [item for sublist in self.path.get_path()
-        #                      for item in (sublist if isinstance(sublist, list) else [sublist])]
-        # self.path.start = list(self.path.end)
-        # self.start_pos = list(self.path.end)
-        # self.pos = list(self.start_pos)
+            print(f'facing: {self.path.facing}')
+        self.start_pos[0], self.start_pos[1] = self.path.end
+        self.pos[0], self.pos[1] = self.path.end
         for move in self.start_path:
             self.queue.append(move)
         if self.debug_mode:
-            print(f'start path: {self.start_path}')
             print(f'queue with path: {self.queue}')
-            print(f'start: {self.path.start}')
-            print(f'end: {self.path.end}')
-            # print(f'deposit path: {self.deposit_path}')
+            print(f'start path: {self.start_path}')
+            print(f'2nd start: {self.path.start}')
+            print(f'2nd end: {self.path.end}')
+            print(f'deposit path: {self.deposit_path}')
         self.start = True
         self.turn_to_the_north()
 
@@ -76,8 +94,8 @@ class Collector(Player):
                 print(f'lim: {self.limit[0]}')
                 print(f'pos: {self.pos}')
                 print(f'start: {self.start_pos}')
-            # if self.pos == self.start_pos:
-            #     break
+            if self.pos == self.start_pos:
+                break
 
     def mouving_straight(self, ) -> None:
         """
@@ -90,8 +108,8 @@ class Collector(Player):
         self.environment = ""
         tiles = only_forward_resources(tiles)
         self.raids_resources(tiles)
-        # if self.pos == self.start_pos:
-        #     self.deposits_resources()
+        if self.pos == self.start_pos:
+            self.deposits_resources()
         if self.hard_focus and self.nbr_focus[0] <= self.inventory[self.focus[0]]:
             # TODO - go to depot à voir avec @Matthias
             self.move_to(self.depot)
@@ -119,10 +137,15 @@ class Collector(Player):
             self.queue.append(move)
         for resource in self.inventory:
             if resource != 'food':
-                self.queue.append([('Set', resource) for _ in range(self.inventory[resource])])
-                self.inventory[resource] -= 1
-
-    #     TODO - sortie vers le nord
+                for _ in range(self.inventory[resource]):
+                    self.queue.append(('Set', resource.__str__()))
+                    self.inventory[resource] -= 1
+        if self.id % 2 == 0 and self.id != 0:
+            self.queue.append('Right')
+        elif self.id % 2 == 1:
+            self.queue.append('Left')
+        for move in self.start_path:
+            self.queue.append(move)
 
     def make_action(self) -> None:
         """
@@ -132,7 +155,7 @@ class Collector(Player):
 
         :return: None
         """
-        if 0 < len(self.queue) and len(self.actions) < 2:
+        if 0 < len(self.queue) and len(self.actions) < 1:
             self.apply_action()
         if len(self.actions) > 0:
             return

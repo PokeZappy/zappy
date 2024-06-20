@@ -9,15 +9,15 @@ class Path(object):
     """
     def __init__(self,
                  limit: list[int],
-                 start: tuple[int, int],
-                 end: tuple[int, int],
+                 start: list[int, int],
+                 end: list[int, int],
                  facing: int = None) -> None:
         """
         Initialize the Path object with limit, start, end points, and facing direction.
 
         :param limit: list[int] - The limits of the path.
-        :param start: tuple[int, int] - The starting point.
-        :param end: ypuple[int, int] - The end point.
+        :param start: list[int, int] - The starting point.
+        :param end: list[int, int] - The end point.
         :param facing: int - The initial facing direction.
         """
         self.limit = limit
