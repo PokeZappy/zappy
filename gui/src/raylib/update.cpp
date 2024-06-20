@@ -13,58 +13,33 @@ namespace Zappy {
 
         _mapX = world._mapX;
         _mapY = world._mapY;
-        if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += 10;
-            _camera.target.y += 10;
-        }
-        if (IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            _camera.position.y -= 10;
-            _camera.target.y -= 10;
+        if (debugMode->getType() != CHAT) {
+             if (IsKeyDown(KEY_SPACE)) {
+            _camera.position.y += 1;
+            _camera.target.y += 1;
+            }
+            if (IsKeyDown(KEY_LEFT_SHIFT))
+            {
+                _camera.position.y -= 1;
+                _camera.target.y -= 1;
+            }
         }
         if (IsKeyPressed(KEY_N)) {
             _selectionMode = !_selectionMode;
         }
         if (IsKeyPressed(KEY_P)) {
-            if (debugMode->activated()) {
+            if (debugMode->activated() && debugMode->getType() == NONE) {
                 debugMode->desactive(_camera);
             } else {
                 debugMode->activate(_camera);
             }
         }
-
         if (debugMode->activated()) {
-            if (IsKeyPressed(KEY_ONE)) {
-                debugMode->changeAnimation(0);
-            } else if (IsKeyPressed(KEY_TWO)) {
-                debugMode->changeAnimation(1);
-            } else if (IsKeyPressed(KEY_THREE)) {
-                debugMode->changeAnimation(2);
-            } else if (IsKeyPressed(KEY_FOUR)) {
-                debugMode->changeAnimation(3);
-            } else if (IsKeyPressed(KEY_FIVE)) {
-                debugMode->changeAnimation(4);
-            } else if (IsKeyPressed(KEY_SIX)) {
-                debugMode->changeAnimation(5);
-            } else if (IsKeyPressed(KEY_SEVEN)) {
-                debugMode->changeAnimation(6);
-            } else if (IsKeyPressed(KEY_EIGHT)) {
-                debugMode->changeAnimation(7);
-            } else if (IsKeyPressed(KEY_NINE)) {
-                debugMode->changeAnimation(8);
-            }else if (IsKeyPressed(KEY_ZERO)) {
-                debugMode->switchShiny();
-            } else if (IsKeyPressed(KEY_I)) {
-                debugMode->changeAnimation(false);
-            } else if (IsKeyPressed(KEY_K)) {
-                debugMode->changeAnimation(true);
-            } else if (IsKeyPressed(KEY_J)) {
-                debugMode->lastModel();
-            } else if (IsKeyPressed(KEY_L))
-                debugMode->nextModel();
+            debugMode->update();
         }
 
-        _camera.Update(CAMERA_FIRST_PERSON);
+        if (debugMode->getType() != CHAT)
+            _camera.Update(CAMERA_FIRST_PERSON);
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };

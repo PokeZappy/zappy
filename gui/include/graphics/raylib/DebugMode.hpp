@@ -13,6 +13,12 @@
 #include <algorithm>
 
 namespace Zappy {
+    enum DebugType {
+        NONE = 0,
+        FRAMESTEPPER,
+        CHAT
+    };
+
     class DebugMode {
     public:
         DebugMode(void);
@@ -34,12 +40,21 @@ namespace Zappy {
         bool activated(void) { return _activated; };
         const raylib::Model &getModel(void) const { return _model; }
         double getScale() { return _scaleModel; }
+        DebugType getType(void) { return _type; }
         bool isShiny() { return _shiny; }
         int getAnimIndex() { return _animIndex; }
         void drawModel();
         void drawAnimations();
         void drawPokemon();
+        void drawFrameStepper();
+        void drawChat();
+        void update();
+        void updateNone();
+        void updateFrameStepper();
+        void updateChat();
     private:
+        DebugType _type = NONE;
+        std::string _pokemonInput = "";
         Texture2D _oldTexture;
         std::vector<std::string> _modelsId;
         int _modelIndex = 0;
