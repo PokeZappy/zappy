@@ -75,4 +75,13 @@ namespace Zappy
         }
         return false;
     }
+
+    bool World::containsEgg(size_t id) const
+    {
+        for (auto egg : _eggs) {
+            if (egg->getId() == id)
+                return true;
+        }
+        return false;
+    }
 } // namespace Zappy

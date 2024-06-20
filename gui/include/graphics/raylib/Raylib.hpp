@@ -9,9 +9,9 @@
 
 #include "AGraphicalModule.hpp"
 #include "PlayerRaylib.hpp"
+#include "EggRaylib.hpp"
 #include "Utils.hpp"
 #include <libconfig.h++>
-#include "PokemonInfo.hpp"
 
 namespace Zappy {
     class Raylib : public AGraphicalModule {
@@ -21,6 +21,9 @@ namespace Zappy {
             Raylib();
             void render(const World &world) override;
             void update(const World &world) override;
+            void updatePlayers(const World &world);
+            void updateEggs(const World &world);
+
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
             PokemonInfo getPokemon(std::string team);
@@ -28,12 +31,14 @@ namespace Zappy {
             void testEvolution(void);
         private:
             bool containsPlayer(std::shared_ptr<Player> player);
+            bool containsEgg(std::shared_ptr<Egg> egg);
             void drawFood(float x, float y, size_t quantity);
             void drawRock(float x, float y, size_t id, size_t quantity);
 
             raylib::Window _window;
             raylib::Camera _camera;
             std::vector<std::unique_ptr<PlayerRaylib>> _players;
+            std::vector<std::unique_ptr<EggRaylib>> _eggs;
             std::vector<std::string> listTypes;
             libconfig::Config _configuration;
 

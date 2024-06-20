@@ -31,7 +31,13 @@ namespace Zappy {
             // _camera.target = _players[0]->getPosition() * _gridSize;
             // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
         }
-        for (const auto &player : world.getPlayers()) {
+        updatePlayers(world);
+        updateEggs(world);
+        testEvolution();
+    }
+
+    void Raylib::updatePlayers(const World &world) {
+         for (const auto &player : world.getPlayers()) {
             if (!containsPlayer(player)) {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
@@ -50,6 +56,24 @@ namespace Zappy {
                 decal++;
             }
         }
-        testEvolution();
+    }
+
+    void Raylib::updateEggs(const World &world) {
+         for (const auto &egg : world.getEggs()) {
+            if (!containsEgg(egg)) {
+                _eggs.push_back(std::make_unique<EggRaylib>(egg, Utils::random(0, 20) == 6, _gridSize));
+            }
+        }
+        size_t decal = 0;
+        for (size_t i = 0; i < _eggs.size(); i++) {
+            if (!world.containsEgg(_eggs[i - decal]->worldEgg->getId())) {
+                _eggs[i]->kill();
+            }
+            _eggs[i]->update();
+            if (_eggs[i]->getHeight() > 2000) {
+                _eggs.erase(_eggs.begin() + i - decal);
+                decal++;
+            }
+        }
     }
 }

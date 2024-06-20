@@ -21,6 +21,18 @@ namespace Zappy
         return false;
     }
 
+    bool Raylib::containsEgg(std::shared_ptr<Egg> egg)
+    {
+        for (const auto &eggRaylib : _eggs)
+        {
+            if (eggRaylib->worldEgg == egg)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     bool Raylib::isOpen()
     {
         return (!_window.ShouldClose());

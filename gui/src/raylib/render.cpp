@@ -52,6 +52,11 @@ namespace Zappy
                 player->draw(_camera);
             }
 
+            for (auto &egg : _eggs)
+            {
+                egg->draw(_camera);
+            }
+
             _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
 
             _camera.EndMode();
