@@ -22,7 +22,7 @@ namespace Zappy {
         raylib::Color green = raylib::Color::Green();
     
         raylib::Vector2 startPos(1400, 100);
-        white.DrawText("Animations: ", startPos.x, startPos.y - 70, 60);
+        white.DrawText("Animations: (I, K)", startPos.x, startPos.y - 70, 60);
         for (size_t i = 0; i < _animations.size(); i++) {
             if (i == _animIndex) {
                 green.DrawText("- " + std::string(_animations[i].name), startPos.x, startPos.y, 30);
@@ -36,7 +36,8 @@ namespace Zappy {
     void DebugMode::drawPokemon(void) {
         raylib::Color white = raylib::Color::White();
 
-        white.DrawText("Pokemon séléctionné : ", 50, 50, 60);
+        white.DrawText("Pokemon séléctionné : (J, L)", 50, 50, 60);
         white.DrawText(_modelsId[_modelIndex], 230, 120, 45);
+        white.DrawText("Shiny = touche 0", 10, 950, 45);
     }
 }
