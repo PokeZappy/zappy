@@ -117,9 +117,6 @@ class Collector(Player):
         if self.pos == self.start_pos:
             self.deposits_resources()
             self.turn_to_the_north()
-        if self.hard_focus and self.nbr_focus[0] <= self.inventory[self.focus[0]]:
-            # TODO - go to depot à voir avec @Matthias
-            self.move_to(self.depot)
         # TODO - check if food needed -> search_food()
         #  sécu si pas de bouffe sur le chemin.
 
@@ -196,16 +193,10 @@ class Collector(Player):
         #     TODO clear la queue -> nop we can clear path to deposit or something else
         if message['msg'] == 'collectio rerum : ':
             self.depot = message['coord']
-        if message['msg'] == 'vade ad me aliquid : ':
-            #     TODO - clear la queue -> nop we can clear path to deposit or something else
-            self.focus = message['infos']
-            self.nbr_focus = message['nbr']
-            self.hard_focus = True
         if message['msg'] == 'Potes dominum facti':
             self.queue.append('Forward')
             self.queue.append('Forward')
             self.deposits_resources()
-        #     TODO - on peut y mettre dans globale message
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 self.get_north(message['direction'])
@@ -223,6 +214,7 @@ class Collector(Player):
             print(type([self.id]))
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
+        #     TODO - Change the string to have the real string send by incantator or M&M's
         if message['msg'] == 'INCANTATION LVL 1 DONE':
             self.lvl_one = True
         self.global_message()
