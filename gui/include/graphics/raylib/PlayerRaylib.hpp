@@ -15,15 +15,20 @@
 namespace Zappy {
     class PlayerRaylib : public AEntityRaylib {
     public:
-        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize);
+        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo,
+            size_t gridSize, raylib::Shader &shader);
         void draw(const raylib::Camera camera);
         void update(void);
         void loadTextureAndModel(void);
+        void loadShinyTexture(void);
+        int getAnimationIndex(const std::vector<std::string> &names);
         const std::shared_ptr<Player> worldPlayer;
         PokemonInfo infos;
     private:
         float getRotation(void) const;
 
+        raylib::Model _model;
+        std::vector<raylib::ModelAnimation> _modelAnimations;
         size_t _currentOrientation;
         size_t _level = 1;
         float _verticalRotation = 0.0;

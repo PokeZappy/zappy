@@ -8,12 +8,16 @@
 #include "EggRaylib.hpp"
 
 namespace Zappy {
-    EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, bool shiny, size_t gridSize)
-        : worldEgg(egg), shiny(shiny), AEntityRaylib("assets/models/pokemons/ditto.glb", gridSize)
+    EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
+        std::vector<raylib::ModelAnimation> &animations,
+        size_t gridSize, raylib::Shader &shader)
+        : worldEgg(egg), _model(model), _modelAnimations(animations),
+        AEntityRaylib(gridSize)
     {
-        _scale = 5.0f;
+        _scale = 2.0f;
         color = raylib::Color::White();
-        loadTextureAndModel();
+
+        _model.materials[1].shader = shader;
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
@@ -34,28 +38,14 @@ namespace Zappy {
         }
 
         _height += rand() % 20;
-    }
 
-    void EggRaylib::loadTextureAndModel(void)
-    {
-        _model = raylib::Model("assets/models/pokemons/ditto.glb");
-        if (shiny)
-        {
-            std::string path = "assets/textures/ditto_shiny.png";
-            Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
-
-            _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
-        }
-        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/ditto.glb");
+        // _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
+        // _textImage.DrawText(std::to_string(worldEgg->getId()), 10, 10, 80, raylib::Color::Black());
+        // _textTexture.Update(_textImage.data);
     }
 
     void EggRaylib::update(void)
     {
-        // Text
-        _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
-        _textImage.DrawText(std::to_string(worldEgg->getId()), 10, 10, 80, raylib::Color::Black());
-        _textTexture.Update(_textImage.data);
-
         // die, TODO à changer à terme pour l'animation faint de l'oeuf
         if (_isDying) {
             move(raylib::Vector3((float)(rand() % 3 - 1) / 20,
@@ -98,5 +88,18 @@ namespace Zappy {
             raylib::Vector3(_scale, _scale, _scale));
         playerPos.y += _height + 5;
         _textTexture.DrawBillboard(camera, playerPos, 15);
+    }
+
+    int EggRaylib::getAnimationIndex(const std::vector<std::string> &names)
+    {
+        for (size_t i = 0; i < _modelAnimations.size(); i++) {
+            std::string animName(_modelAnimations[i].name);
+            for (size_t j = 0; j < names.size(); j++) {
+                if (animName.find(names[j]) != std::string::npos) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }

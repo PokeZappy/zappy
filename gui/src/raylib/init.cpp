@@ -10,7 +10,11 @@
 namespace Zappy {
      Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
-        _shader(raylib::Shader::Load(nullptr, "assets/discard_alpha.fs"))
+        _eggModel(raylib::Model(EGG_MODEL_PATH)),
+        _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
+        _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
+        _foodModel(raylib::Model(FOOD_MODEL_PATH)),
+        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs"))
     {
         _window.SetTargetFPS(60);
         try
@@ -27,6 +31,24 @@ namespace Zappy {
                       << pex.getLine() << " - " << pex.getError() << std::endl;
         }
 
+        // -- Shader Lighting --
+        SetConfigFlags(FLAG_MSAA_4X_HINT);  // Enable Multi Sampling Anti Aliasing 4x (if available)
+        _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
+        // Ambient light level (some basic lighting)
+        int ambientLoc = GetShaderLocation(_shader, "ambient");
+        SetShaderValue(_shader, ambientLoc, (float[4]){ 0.15f, 0.15f, 0.15f, 1.0f }, SHADER_UNIFORM_VEC4);
+
+        _lights->enabled = true;
+
+        // Create lights
+        float lightHeight = 100.0f;
+        float extremity = _gridSize * 10;
+        _lights[0] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, extremity }, Vector3Zero(), YELLOW, _shader);
+        _lights[1] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, extremity }, Vector3Zero(), RED, _shader);
+        _lights[2] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, 0 }, Vector3Zero(), GREEN, _shader);
+        _lights[3] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, 0 }, Vector3Zero(), BLUE, _shader);
+
+        // -- Camera --
         _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
         _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
         // DisableCursor();
@@ -36,26 +58,29 @@ namespace Zappy {
         _floorMesh = GenMeshPlane(_gridSize, _gridSize, 1, 1);
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
+        _floorMaterial.shader = _shader;
 
         _hitGridTexture = raylib::Texture2D("assets/textures/pokemon_hit_tile.png");
         _hitGridMaterial = LoadMaterialDefault();
         _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
 
-        _tv = raylib::Model("assets/models/nintendo_game_boy.glb");
+        _tv.materials[2].shader = _shader;
 
-        // Rocks
-        std::string pokeballModelPath = "assets/models/poke_ball.glb";
-        _rockModel = raylib::Model(pokeballModelPath);
+        // -- Rocks --
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/poke_ball.png"));
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/great_ball.png"));
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/ultra_ball.png"));
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/premier_ball.png"));
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/luxury_ball.png"));
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/master_ball.png"));
-        _rockAnimations = raylib::ModelAnimation::Load(pokeballModelPath);
+        _rockAnimations = raylib::ModelAnimation::Load(POKEBALL_MODEL_PATH);
+        _rockModel.materials[1].shader = _shader;
 
-        // Food
-        _foodModel = raylib::Model("assets/models/pecha_berry.glb");
+        // -- Food --
+        _foodModel.materials[1].shader = _shader;
         listTypes = {"grass", "fire", "water", "steel", "dragon", "electric", "bug", "psychic", "ground", "dark", "fight", "fairy", "ice", "normal", "poison", "rock", "ghost", "fly", "eevee"};
+
+        // -- Eggs --
+        _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
     }
 }

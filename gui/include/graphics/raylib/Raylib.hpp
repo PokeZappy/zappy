@@ -13,12 +13,21 @@
 #include "Utils.hpp"
 #include <libconfig.h++>
 
+#define RLIGHTS_IMPLEMENTATION
+#include "rlights.h"
+
+#define POKEBALL_MODEL_PATH "assets/models/poke_ball.glb"
+#define FOOD_MODEL_PATH "assets/models/pecha_berry.glb"
+#define GAMEBOY_MODEL_PATH "assets/models/nintendo_game_boy.glb"
+#define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
+
 namespace Zappy {
     class Raylib : public AGraphicalModule {
         #define GUI_WIDTH 1920
         #define GUI_HEIGHT 1080
         public:
             Raylib();
+            ~Raylib() override;
             void render(const World &world) override;
             void update(const World &world) override;
             void updatePlayers(const World &world);
@@ -39,6 +48,8 @@ namespace Zappy {
             raylib::Camera _camera;
             std::vector<std::unique_ptr<PlayerRaylib>> _players;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
+            raylib::Model _eggModel;
+            std::vector<raylib::ModelAnimation> _eggModelAnimations;
             std::vector<std::string> listTypes;
             libconfig::Config _configuration;
 
@@ -63,8 +74,8 @@ namespace Zappy {
             // Text
             Texture2D _textTexture;
 
-
             raylib::Shader _shader;
+            Light _lights[MAX_LIGHTS];
 
             bool _selectionMode = true;
     };

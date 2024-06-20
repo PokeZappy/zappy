@@ -27,6 +27,5 @@ namespace Zappy
             virtual raylib::Vector3 getPosition(void) const = 0;
             virtual void draw(const raylib::Camera camera) = 0;
             virtual void update(void) = 0;
-            virtual void loadTextureAndModel(void) = 0;
     };
 }

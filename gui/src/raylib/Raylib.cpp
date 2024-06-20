@@ -9,4 +9,8 @@
 
 namespace Zappy
 {
+    Raylib::~Raylib()
+    {
+        CloseWindow();
+    }
 }

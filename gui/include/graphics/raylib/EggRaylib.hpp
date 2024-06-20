@@ -13,11 +13,15 @@
 namespace Zappy {
     class EggRaylib : public AEntityRaylib {
     public:
-        EggRaylib(const std::shared_ptr<Egg> &worldEgg, bool shiny, size_t gridSize);
+        EggRaylib(const std::shared_ptr<Egg> &worldEgg, raylib::Model &model,
+            std::vector<raylib::ModelAnimation> &animations,
+            size_t gridSize, raylib::Shader &shader);
         void draw(const raylib::Camera camera);
         void update(void);
-        void loadTextureAndModel(void);
+        int getAnimationIndex(const std::vector<std::string> &names);
         const std::shared_ptr<Egg> worldEgg;
-        bool shiny = false;
+    private:
+        raylib::Model &_model;
+        std::vector<raylib::ModelAnimation> &_modelAnimations;
     };
 } // namespace Zappy

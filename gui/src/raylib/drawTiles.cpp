@@ -36,10 +36,8 @@ namespace Zappy
 
     void Raylib::drawRock(float x, float y, size_t id, size_t quantity)
     {
-        _shader.BeginMode();
         _rockModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = _rockTextures[id - 1];
         for (size_t i = 0; i < std::clamp(quantity, (size_t)0, (size_t)5); i++)
             _rockModel.Draw(raylib::Vector3(x + i * 3, 0, y + id * 5), 4.0f);
-        _shader.EndMode();
     }
 } // namespace Zappy

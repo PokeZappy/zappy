@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include/**",
+                "${workspaceFolder}/include/graphics/raylib/**",
                 "/opt/homebrew/Cellar/sfml/2.6.1/include",
                 "/opt/homebrew/Cellar/libconfig/1.7.3/include"
             ],

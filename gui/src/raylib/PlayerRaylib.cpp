@@ -9,12 +9,16 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize)
-        : worldPlayer(worldPlayer), AEntityRaylib("assets/models/pokemons/" + pkInfo.id + ".glb", gridSize)
+    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
+        PokemonInfo &pkInfo, size_t gridSize, raylib::Shader &shader)
+        : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
+        _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
+        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb"))
     {
         color = raylib::Color::White();
         infos = pkInfo;
-        loadTextureAndModel();
+        loadShinyTexture();
+        _model.materials[1].shader = shader;
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
@@ -38,6 +42,12 @@ namespace Zappy
     void PlayerRaylib::loadTextureAndModel(void)
     {
         _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
+        loadShinyTexture();
+        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
+    }
+
+    void PlayerRaylib::loadShinyTexture(void)
+    {
         if (infos.shiny)
         {
             std::string path = "assets/textures/" + infos.id + "_shiny.png";
@@ -45,7 +55,6 @@ namespace Zappy
 
             _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
         }
-        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
     }
 
     float PlayerRaylib::getRotation(void) const
@@ -135,4 +144,16 @@ namespace Zappy
         _textTexture.DrawBillboard(camera, playerPos, 15);
     }
 
+    int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
+    {
+        for (size_t i = 0; i < _modelAnimations.size(); i++) {
+            std::string animName(_modelAnimations[i].name);
+            for (size_t j = 0; j < names.size(); j++) {
+                if (animName.find(names[j]) != std::string::npos) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
 } // namespace Zappy

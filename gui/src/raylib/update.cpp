@@ -25,8 +25,21 @@ namespace Zappy {
             _selectionMode = !_selectionMode;
         }
 
-        // Update Graphical Player list
         _camera.Update(CAMERA_FIRST_PERSON);
+
+        // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
+        float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
+        SetShaderValue(_shader, _shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
+
+        // Check key inputs to enable/disable lights
+        if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
+        if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
+        if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
+        if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
+
+        _lights[0].position.y += sinf(GetTime()) * 5 - 0.01;
+        for (int i = 0; i < MAX_LIGHTS; i++) UpdateLightValues(_shader, _lights[i]);
+
         if (!_players.empty() && !_players[0]->isDying()) {
             // _camera.target = _players[0]->getPosition() * _gridSize;
             // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
@@ -42,9 +55,11 @@ namespace Zappy {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize, _shader));
             }
         }
+
+        // Update & kill graphical players
         size_t decal = 0;
         for (size_t i = 0; i < _players.size(); i++) {
             if (!world.containsPlayer(_players[i - decal]->worldPlayer->getId())) {
@@ -61,7 +76,8 @@ namespace Zappy {
     void Raylib::updateEggs(const World &world) {
          for (const auto &egg : world.getEggs()) {
             if (!containsEgg(egg)) {
-                _eggs.push_back(std::make_unique<EggRaylib>(egg, Utils::random(0, 20) == 6, _gridSize));
+                _eggs.push_back(std::make_unique<EggRaylib>(egg, _eggModel,
+                    _eggModelAnimations, _gridSize, _shader));
             }
         }
         size_t decal = 0;

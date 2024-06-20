@@ -23,6 +23,7 @@ namespace Zappy
             // 3D scene
 
             _camera.BeginMode();
+            _shader.BeginMode();
 
             for (int x = 0; x < _mapX; x++)
             {
@@ -58,6 +59,18 @@ namespace Zappy
             }
 
             _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
+
+            DrawCube(Vector3Zero(), 2.0, 4.0, 2.0, WHITE);
+
+            _shader.EndMode();
+
+            // Draw spheres to show where the lights are
+            for (int i = 0; i < MAX_LIGHTS; i++)
+            {
+                if (_lights[i].enabled) DrawSphereEx(_lights[i].position, 20, 8, 8, _lights[i].color);
+                
+                else DrawSphereWires(_lights[i].position, 20, 8, 8, ColorAlpha(_lights[i].color, 0.3f));
+            }
 
             _camera.EndMode();
 

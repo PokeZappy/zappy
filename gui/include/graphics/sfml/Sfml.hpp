@@ -28,7 +28,7 @@ namespace Zappy {
         Sfml();
         void update(const World &world) override;
         void render(const World &world) override;
-        bool isOpen(void) { return (_window.isOpen()); }
+        bool isOpen(void) override { return (_window.isOpen()); }
 
         void updateMouse(void);
         void handleEvent(void);
