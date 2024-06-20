@@ -126,7 +126,7 @@ namespace Zappy {
          for (const auto &egg : world.getEggs()) {
             if (!containsEgg(egg)) {
                 _eggs.push_back(std::make_unique<EggRaylib>(egg, _eggModel,
-                    _eggModelAnimations, _gridSize, _shader, raylib::Color::White())); // getTeamColor(egg->getTeam())));
+                    _eggModelAnimations, _gridSize, _shader, getTeamColor(egg->getTeam())));
             }
         }
         size_t decal = 0;

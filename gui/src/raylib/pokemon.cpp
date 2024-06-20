@@ -44,10 +44,10 @@ namespace Zappy {
     {
         std::string t = team;
 
-        if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end())
+        if (std::find(_listTypes.begin(), _listTypes.end(), team) == _listTypes.end())
         {
             // pas trouvé
-            t = listTypes[Utils::random(0, listTypes.size() - 1)];
+            t = _listTypes[Utils::random(0, _listTypes.size() - 1)];
         }
         try
         {

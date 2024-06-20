@@ -41,16 +41,13 @@ namespace Zappy
 
     raylib::Color Raylib::getTeamColor(const std::string &teamName)
     {
-        // for (const auto &team : listTypes)
-        // {
-        //     if (team == teamName)
-        //     {
-        //         return raylib::Color(team["color"][0], team["color"][1], team["color"][2], team["color"][3]);
-        //     }
-        // }
-        // if (teamName == "fire")
-        //     return raylib::Color(0, 0, 255, 255);
-        // if (teamName == "Team2")
+        int i = 0;
+        for (const auto &team : _listTypes) {
+            if (team == teamName) {
+                return _listTypesColors[i];
+            }
+            i++;
+        }
         return raylib::Color::White();
     }
 

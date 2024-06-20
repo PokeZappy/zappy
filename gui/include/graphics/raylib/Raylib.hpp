@@ -61,7 +61,9 @@ namespace Zappy {
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
             size_t _eggAnimFrame = 0;
-            std::vector<std::string> listTypes;
+            std::vector<std::string> _listTypes;
+            std::vector<raylib::Color> _listTypesColors;
+
             libconfig::Config _configuration;
             std::unique_ptr<DebugMode> debugMode;
 

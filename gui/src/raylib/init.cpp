@@ -91,7 +91,22 @@ namespace Zappy {
 
         // -- Food --
         _foodModel.materials[1].shader = _shader;
-        listTypes = {"grass", "fire", "water", "steel", "dragon", "electric", "bug", "psychic", "ground", "dark", "fight", "fairy", "ice", "normal", "poison", "rock", "ghost", "fly", "eevee"};
+        _listTypes = {"grass", "fire", "water",
+                      "steel", "dragon", "electric",
+                      "bug", "psychic", "ground",
+                      "dark", "fight", "fairy",
+                      "ice", "normal", "poison",
+                      "rock", "ghost", "fly",
+                      "eevee"};
+        _listTypesColors = {
+            (Color){107, 190, 48}, (Color){231, 59, 12}, (Color){48, 144, 241},
+            (Color){179, 179, 194}, (Color){113, 89, 215}, (Color){250, 179, 21},
+            (Color){148, 162, 18}, (Color){234, 67, 125}, (Color){203, 171, 82},
+            (Color){79, 57, 43}, (Color){126, 50, 26}, (Color){239, 172, 241},
+            (Color){126, 218, 244}, (Color){197, 191, 180}, (Color){146, 66, 144},
+            (Color){181, 161, 88}, (Color){89, 92, 169}, (Color){138, 159, 239},
+            raylib::Color::White(),
+        };
 
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
