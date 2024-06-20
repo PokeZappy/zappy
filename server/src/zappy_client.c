@@ -127,7 +127,7 @@ static void wait_for_client(struct server_s *server)
     new_client->_id = ntohs(client_addr.sin_port);
     new_client->player = NULL;
     TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
-    send_client_message(client_socket, "Welcome !\n");
+    send_client_message(client_socket, "WELCOME\n");
 }
 
 int handle_client(struct server_s *server, int max_sd, fd_set readfds)
