@@ -15,9 +15,72 @@ class Incantator(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.allowed_incantation_mns = 1
         self.goto = (0, 1)
-        self.dir = None
-        self.allowed_incantation_cooker = 0
+        self.dir = 0
         self.first_round = True
+        self.pos = [0, 0]
+        self.map = [[0 for _ in range(self.limit[0])] for _ in range(self.limit[1])]
+        self.have_linemate = False
+        self.count_pos = 0
+
+    def goto(self, i: int) -> None:
+        """
+        This method makes the incantator go to the case i.
+
+        :param i: int - The case to go to.
+        :return: None
+        """
+        if i != 0:
+            self.queue.append('Forward')
+        if i == 1:
+            self.queue.append('Left')
+            self.queue.append('Forward')
+        elif i == 3:
+            self.queue.append('Right')
+            self.queue.append('Forward')
+        self.queue.append(('Take', 'linemate'))
+    
+    def addapt_map(self, vision : str) -> None:
+        """
+        This method adapts the map to the look message.
+
+        :param look: str - The look message.
+        :return: None
+        """
+        vi = vision.replace('[', '').replace(']', '')
+        list_vision = vi.split(',')
+        for i in range(len(list_vision)):
+            case = list_vision[i].split(' ')
+            if 'linemate' in case:
+                self.goto(i)
+            else:
+                horizontal = i - i * (i + 1)
+                vertical = int(i ** 0.5)
+                if self.dir == 0:
+                    x = (self.pos[0] + horizontal) % self.limit[0]
+                    y = (self.pos[1] + vertical) % self.limit[1]
+                elif self.dir == 1:
+                    x = (self.pos[0] + vertical) % self.limit[0]
+                    y = (self.pos[1] - horizontal) % self.limit[1]
+                elif self.dir == 2:
+                    x = (self.pos[0] - horizontal) % self.limit[0]
+                    y = (self.pos[1] - vertical) % self.limit[1]
+                else:
+                    x = (self.pos[0] - vertical) % self.limit[0]
+                    y = (self.pos[1] + horizontal) % self.limit[1]
+                self.map[x][y] = 1
+
+    def goto_01(self) -> None:
+        """
+        This method makes the incantator go to the case (0, 1).
+
+        :return: None
+        """
+        self.path.facing = self.dir
+        self.path.start = (self.pos[0], self.pos[1])
+        self.path.end = (0, 1)
+        result = [item for sublist in self.path.get_path() for item in (sublist if isinstance(sublist, list) else [sublist])]
+        for move in result:
+            self.queue.append(move)
 
     def recv_treatment(self, buf: str) -> None:
         """
@@ -36,6 +99,22 @@ class Incantator(Player):
                     self.level += 1
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     self.life += self.FOOD
+                if msgs[0] == 'Take' and msgs[1] == 'linemate':
+                    self.have_linemate = True
+                    self.goto_01()
+                if msgs[0] == 'Forward':
+                    if self.dir == 0:
+                        self.pos[0] = (self.pos[0] + 1) % self.limit[0]
+                    elif self.dir == 1:
+                        self.pos[1] = (self.pos[1] + 1) % self.limit[1]
+                    elif self.dir == 2:
+                        self.pos[0] = (self.pos[0] - 1) % self.limit[0]
+                    else:
+                        self.pos[1] = (self.pos[1] - 1) % self.limit[1]
+                if msgs[0] == 'Left':
+                    self.dir = (self.dir + 1) % 4
+                if msgs[0] == 'Right':
+                    self.dir = (self.dir - 1) % 4
             elif recv_type == 'ko':
                 if msgs == 'Incantation':
                     self.allowed_incantation_mns -= 1
@@ -45,6 +124,8 @@ class Incantator(Player):
                     self.message.buf_messages('cibo opus est')
                     self.waiting_food = True
                     self.queue.append('Broadcast')
+            elif recv_type == 'look':
+                self.map = self.addapt_map(msgs)
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
@@ -58,14 +139,14 @@ class Incantator(Player):
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'facultates positas carmina':
             self.allowed_incantation_mns += 1
-        if message['msg'] == 'comedent ut incant : ':
-            self.wating_food = False
-            self.food_can_be_taken = True
-        if message['msg'] == 'comedent ut incant : ':
-            if message['info'] == 'cibus':
-                self.allowed_incantation_cooker = message['nbr']
         if message['msg'] == 'movere ad : ':
             self.goto = message['info']
+        if self.dir is None and message['msg'] == 'est dominus aquilonis':
+            if self.path.facing is None:
+                self.get_north(message['direction'])
+                self.dir = self.path.facing
+        if message['msg'] == 'motus sum':
+            self.count_pos += 1
         # TODO: see utility of self.global_message()
 
 
@@ -73,6 +154,10 @@ class Incantator(Player):
         """
         This method makes the action of the incantator.
         """
+        if len(self.queue) > 0 and len(self.actions) != 0:
+            self.apply_action()
+        if len(self.actions) > 0:
+            return
         if self.first_round:
             self.queue.append(('Set', 'food'))
             self.first_round = False
@@ -81,16 +166,17 @@ class Incantator(Player):
         if len(self.actions) > 1:
             return
         if self.life <= 400:
-            self.queue.append('Take food')
+            self.queue.append(('Take', 'food'))
         if self.dir == None:
-            #TODO: find the direction to go north the incantation (asign Cyprien)
-            pass
-        if self.goto != None:
-            #TODO: (0, 1) -> first incantation when level 2 -> incantation in (0, 0) (asign Cyprien)
-            pass
-        if self.allowed_incantation_mns > self.level:
-            self.queue.append('Incantation')
-        else:
             self.queue.append('Look')
+        if self.count_pos == 5:
+            if self.have_linemate:
+                self.queue.append(('Set', 'linemate'))
+                self.queue.append('Incantation')
+            else:
+                self.queue.append('Incantation')
+        # if self.allowed_incantation > self.level:
+        #     self.queue.append('Incantation')
+        # else:
+        #     self.queue.append('Look')
             #TODO: commmunicate with the mastermind on the look
-        # self.apply_action()

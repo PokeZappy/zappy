@@ -15,7 +15,6 @@ class Pnj(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.goto = None
         self.dir = None
-        self.allowed_incantation_cooker = 0
         self.allowed_to_move = True
         self.first_round = True
     
@@ -48,6 +47,23 @@ class Pnj(Player):
                 self.queue.append('Take food')
         if message['msg'] == 'movere ad : ':
             self.goto = message['info']
+        if message['msg'] == 'est dominus aquilonis':
+            if self.path.facing is None:
+                self.get_north(message['direction'])
+                if self.path.facing == 0:
+                    self.queue.append('Right')
+                    self.queue.append('Forward')
+                elif self.path.facing == 1:
+                    self.queue.append('Forward')
+                elif self.path.facing == 2:
+                    self.queue.append('Left')
+                    self.queue.append('Forward')
+                else:
+                    self.queue.append('Right')
+                    self.queue.append('Right')
+                    self.queue.append('Forward')
+                self.message.buf_messages('motus sum')
+                self.queue.append('Broadcast')
 
     def make_action(self) -> None:
         """

@@ -32,8 +32,8 @@ class NorthGuard(Player):
         """
 
         """
-        if len(self.actions) >= 1:
-            return self.actions
+        if len(self.actions) >= 1 or len(self.queue) > 6:
+            return
         # TODO - rajouter la grille
         if not self.first:
             self.queue.append('Forward')

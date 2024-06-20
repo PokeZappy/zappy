@@ -17,7 +17,8 @@ class ParentAI(Player):
             # RoleInGame.PROGENITOR,
             # RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
-            RoleInGame.INCANTATOR,
+            RoleInGame.NORTH_GUARD,
+            # RoleInGame.INCANTATOR,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
@@ -76,8 +77,7 @@ class ParentAI(Player):
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
         role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
-        if role is not None:
-            print(type(role))
+        while role is not None:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         exit(0)
 
@@ -228,7 +228,7 @@ class ParentAI(Player):
         """
         This is being used when parent_ai is a mastermind
         """
-        if len(self.queue) > 0:
+        if len(self.queue) > 0 and len(self.actions) < 8:
             self.apply_action()
         if len(self.actions) > 0:
             return

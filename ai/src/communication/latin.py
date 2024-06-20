@@ -83,6 +83,10 @@ class Latin(object):
                                         'Progenitor': 'Progenitor',
                                         'Mastermind': 'Mastermind',
                                         'North guard': 'North guard',
+                                        'Pnj': 'Pnj',
+
+                                        #PNJ to Incant
+                                        'J\'ai bougé': 'motus sum',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',

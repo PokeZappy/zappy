@@ -40,7 +40,7 @@ class First_born(Player):
 
     def change_role(self) -> None:
         print(f'bind: {[self.BIND[self.role[0]][1]]}')
-        self.message.buf_messages('Ego me transform : ', infos=[self.BIND[self.role[0]][1]])
+        self.message.buf_messages('Ego me transform : ', infos=[[self.BIND[self.role[0]][1]]])
         self.queue.append('Broadcast')
         self.transformation = True
 

@@ -36,6 +36,7 @@ class Progenitor(Player):
                 if self.nbr_of_child_to_create != -1:
                     self.nbr_of_child_to_create -= 1
         if len(self.queue) > 0:
+            print(f'actions progenitor : {self.actions}')
             self.apply_action()
     
     def broadcast_traitement(self, message: tuple | str) -> None:
