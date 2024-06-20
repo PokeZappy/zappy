@@ -19,7 +19,8 @@ namespace Zappy {
             size_t gridSize, raylib::Shader &shader);
         void draw(const raylib::Camera camera);
         void update(void);
-        void loadTextureAndModel(void);
+        void loadTextureAndModel(raylib::Shader &shader);
+
         void loadShinyTexture(void);
         int getAnimationIndex(const std::vector<std::string> &names);
         const std::shared_ptr<Player> worldPlayer;
@@ -30,7 +31,7 @@ namespace Zappy {
         raylib::Model _model;
         std::vector<raylib::ModelAnimation> _modelAnimations;
         size_t _currentOrientation;
-        size_t _level = 1;
+        size_t _level = 0;
         float _verticalRotation = 0.0;
     };
 } // namespace Zappy

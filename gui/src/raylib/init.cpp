@@ -11,7 +11,10 @@ namespace Zappy {
      Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
         _eggModel(raylib::Model(EGG_MODEL_PATH)),
+        _sun(raylib::Model(SUN_MODEL_PATH)),
+        _moon(raylib::Model(MOON_MODEL_PATH)),
         _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
+        _arena(raylib::Model("assets/local/arena.glb")),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
@@ -37,23 +40,28 @@ namespace Zappy {
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        float array[4] = { 0.15f, 0.15f, 0.15f, 1.0f };
+        float ambientLight = 0.3f;
+        float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>();
 
-        _lights->enabled = true;
-
         // Create lights
         float lightHeight = 100.0f;
-        float extremity = _gridSize * 10;
-        _lights[0] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, extremity }, Vector3Zero(), YELLOW, _shader);
-        _lights[1] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, extremity }, Vector3Zero(), RED, _shader);
-        _lights[2] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, 0 }, Vector3Zero(), GREEN, _shader);
-        _lights[3] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, 0 }, Vector3Zero(), BLUE, _shader);
+        float extremity = _gridSize * 30;
+        _lights[0] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, extremity }, Vector3Zero(), SUN_COLOR, _shader);
+        _lights[1] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, extremity }, Vector3Zero(), MOON_COLOR, _shader);
+        // _lights[2] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, 0 }, Vector3Zero(), GREEN, _shader);
+        // _lights[3] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, 0 }, Vector3Zero(), BLUE, _shader);
 
         // -- Camera --
-        _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
-        _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+        // _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
+        // _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+
+        _camera.SetPosition(Vector3{(215.0F), (55.0F), (600.0F)});
+        _camera.SetTarget(Vector3{(223.0F), (1.0F), (350.0F)});
+        // 30x30
+        // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
+        // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
         // DisableCursor();
 
         // Load floor texture
@@ -68,6 +76,8 @@ namespace Zappy {
         _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
 
         _tv.materials[2].shader = _shader;
+        for (int i = 0; i < _arena.materialCount; i++)
+            _arena.materials[i].shader = _shader;
 
         // -- Rocks --
         _rockTextures.push_back(LoadTexture("assets/textures/pokeball/poke_ball.png"));
@@ -85,5 +95,7 @@ namespace Zappy {
 
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
+
+        _moon.materials[1].shader = _shader;
     }
 }

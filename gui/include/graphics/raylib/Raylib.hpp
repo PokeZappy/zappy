@@ -21,8 +21,12 @@
 #define FOOD_MODEL_PATH "assets/models/pecha_berry.glb"
 #define GAMEBOY_MODEL_PATH "assets/models/nintendo_game_boy.glb"
 #define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
+#define SUN_MODEL_PATH "assets/models/sun.glb"
+#define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
 
 namespace Zappy {
+    #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
+    #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     class Raylib : public AGraphicalModule {
         #define GUI_WIDTH 1920
         #define GUI_HEIGHT 1080
@@ -40,8 +44,13 @@ namespace Zappy {
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
         private:
+            // Utils
             bool containsPlayer(std::shared_ptr<Player> player);
             bool containsEgg(std::shared_ptr<Egg> egg);
+            raylib::Color getTeamColor(const std::string &teamName);
+            raylib::Color getTeamColor(const Team &team);
+            raylib::Vector3 getSunPosition(double elapsedTime, double cycle_duration_sec);
+            // Draw
             void drawFood(float x, float y, size_t quantity);
             void drawRock(float x, float y, size_t id, size_t quantity);
 
@@ -51,6 +60,7 @@ namespace Zappy {
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
+            size_t _eggAnimFrame = 0;
             std::vector<std::string> listTypes;
             libconfig::Config _configuration;
             std::unique_ptr<DebugMode> debugMode;
@@ -62,7 +72,15 @@ namespace Zappy {
             Material _floorMaterial;
             Material _hitGridMaterial;
 
+            // -- Models --
+
+            // Sun & moon
+            raylib::Model _sun;
+            raylib::Model _moon;
+
+            // Gameboy & Arena
             raylib::Model _tv;
+            raylib::Model _arena;
 
             // Rocks (pokeballs)
             raylib::Model _rockModel;

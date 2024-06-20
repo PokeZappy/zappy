@@ -39,10 +39,11 @@ namespace Zappy
         _height += rand() % 20;
     }
 
-    void PlayerRaylib::loadTextureAndModel(void)
+    void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
     {
         _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
         loadShinyTexture();
+        _model.materials[1].shader = shader;
         _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
     }
 
@@ -139,7 +140,7 @@ namespace Zappy
         }
         _model.Draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
-            raylib::Vector3(_scale, _scale, _scale));
+            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 5.0f));
         playerPos.y += _height + 5;
         _textTexture.DrawBillboard(camera, playerPos, 15);
     }

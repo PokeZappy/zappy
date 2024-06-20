@@ -14,13 +14,13 @@ namespace Zappy {
         _mapX = world._mapX;
         _mapY = world._mapY;
         if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += 1;
-            _camera.target.y += 1;
+            _camera.position.y += 10;
+            _camera.target.y += 10;
         }
         if (IsKeyDown(KEY_LEFT_SHIFT))
         {
-            _camera.position.y -= 1;
-            _camera.target.y -= 1;
+            _camera.position.y -= 10;
+            _camera.target.y -= 10;
         }
         if (IsKeyPressed(KEY_N)) {
             std::cout << "j'active le mode GUI" << std::endl;
@@ -79,8 +79,16 @@ namespace Zappy {
         if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
         if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
 
-        _lights[0].position.y += sinf(GetTime()) * 5 - 0.01;
-        for (int i = 0; i < MAX_LIGHTS; i++) UpdateLightValues(_shader, _lights[i]);
+        // Sun & Moon
+        size_t revolution = 1789 / 10;
+        for (int i = 0; i < 2; i++) {
+            _lights[i].position = getSunPosition(GetTime() + revolution / (1 + i), revolution);
+            raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
+            _lights[i].color =  newColor.Brightness(_lights[i].position.y * 1.f / 1000.f - (i == 0 ? 0.6f : 0.8f));
+            // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
+            // else _lights[i].enabled = true;
+            UpdateLightValues(_shader, _lights[i]);
+        }
 
         if (!_players.empty() && !_players[0]->isDying()) {
             // _camera.target = _players[0]->getPosition() * _gridSize;
@@ -116,10 +124,12 @@ namespace Zappy {
     }
 
     void Raylib::updateEggs(const World &world) {
+        _eggModel.UpdateAnimation(_eggModelAnimations[0], _eggAnimFrame);
+        _eggAnimFrame++;
          for (const auto &egg : world.getEggs()) {
             if (!containsEgg(egg)) {
                 _eggs.push_back(std::make_unique<EggRaylib>(egg, _eggModel,
-                    _eggModelAnimations, _gridSize, _shader));
+                    _eggModelAnimations, _gridSize, _shader, raylib::Color::White())); // getTeamColor(egg->getTeam())));
             }
         }
         size_t decal = 0;

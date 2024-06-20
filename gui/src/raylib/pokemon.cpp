@@ -101,7 +101,7 @@ namespace Zappy {
                 PokemonInfo pickedEvolution = infos.evolutions[Utils::random(0, infos.evolutions.size() - 1)];
                 pickedEvolution.shiny = infos.shiny;
                 infos = pickedEvolution;
-                graphicPlayer->loadTextureAndModel();
+                graphicPlayer->loadTextureAndModel(_shader);
             }
         }
     }

@@ -27,7 +27,7 @@ namespace Zappy
         int _animIndex = -1;
         int _animFrame = 0;
         bool _isDying = false;
-        float _scale = 2.0;
+        float _scale = 1.5;
         float _altitude;
         float _height = 30;
         bool _hasIdleAnim = false;

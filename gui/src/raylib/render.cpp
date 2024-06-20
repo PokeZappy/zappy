@@ -23,28 +23,29 @@ namespace Zappy
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::SkyBlue());
-            _window.DrawFPS();
             // 3D scene
 
             _camera.BeginMode();
             _shader.BeginMode();
 
-            for (int x = 0; x < _mapX; x++)
-            {
-                for (int z = 0; z < _mapY; z++)
-                {
-                    if (!_selectionMode)
-                    {
+            _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
+            float scale = 400;
+            _arena.Draw(raylib::Vector3(_mapX / 2 * _gridSize, -35, _mapY / 2 * _gridSize),
+                raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
+
+            _sun.Draw(_lights[0].position, 10);
+            _moon.Draw(_lights[1].position, 20);
+
+            for (int x = 0; x < _mapX; x++) {
+                for (int z = 0; z < _mapY; z++) {
+                    if (!_selectionMode) {
                         DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
                         continue;
                     }
                     raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
-                    if (meshHit.hit)
-                    {
+                    if (meshHit.hit) {
                         DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
-                    }
-                    else
-                    {
+                    } else {
                         DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
                     }
                 }
@@ -52,29 +53,22 @@ namespace Zappy
 
             drawTiles(world.getTiles());
 
-            for (auto &player : _players)
-            {
+            for (auto &player : _players) {
                 player->draw(_camera);
             }
 
-            for (auto &egg : _eggs)
-            {
+            for (auto &egg : _eggs) {
                 egg->draw(_camera);
             }
-
-            _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
-
-            DrawCube(Vector3Zero(), 2.0, 4.0, 2.0, WHITE);
 
             _shader.EndMode();
 
             // Draw spheres to show where the lights are
-            for (int i = 0; i < MAX_LIGHTS; i++)
-            {
-                if (_lights[i].enabled) DrawSphereEx(_lights[i].position, 20, 8, 8, _lights[i].color);
-                
-                else DrawSphereWires(_lights[i].position, 20, 8, 8, ColorAlpha(_lights[i].color, 0.3f));
-            }
+            // for (int i = 0; i < MAX_LIGHTS; i++)
+            // {
+            //     if (_lights[i].enabled) DrawSphereEx(_lights[i].position, 100, 20, 20, _lights[i].color);
+            //     else DrawSphereWires(_lights[i].position, 20, 8, 8, ColorAlpha(_lights[i].color, 0.3f));
+            // }
 
             _camera.EndMode();
 
@@ -98,6 +92,7 @@ namespace Zappy
                 // end of 3D scene
             textColor.DrawText(raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
             textColor.DrawText(raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
+            _window.DrawFPS();
         }
         _window.EndDrawing();
     }

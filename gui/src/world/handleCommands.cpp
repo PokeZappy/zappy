@@ -68,6 +68,7 @@ namespace Zappy
             ss >> id >> level;
             std::shared_ptr<Player> player = getPlayer(id);
             player->setLevel(level);
+            player->setIncanting(false);
             addShellCommand("T" + std::to_string(id) + " is now level " +
                 std::to_string(level), player);
         }
@@ -169,6 +170,7 @@ namespace Zappy
         }
         else if (commandName == "eht") {
             // DEPRECATED
+            // std::cout << command << std::endl;
         }
         else {
             // std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
