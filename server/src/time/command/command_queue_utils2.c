@@ -30,3 +30,18 @@ bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time)
             (current_time->tv_usec >= delay_time->tv_usec) :
             (current_time->tv_sec >= delay_time->tv_sec));
 }
+
+bool icii(server_t *server, client_socket_t *c)
+{
+    cmd_incantation_t *cmd_incantation =
+    TAILQ_FIRST(&server->_head_incantation);
+
+    while (cmd_incantation) {
+        if (cmd_incantation->organizer == c)
+            return true;
+        if (player_is_participant(cmd_incantation, c))
+            return true;
+        cmd_incantation = TAILQ_NEXT(cmd_incantation, entries);
+    }
+    return false;
+}

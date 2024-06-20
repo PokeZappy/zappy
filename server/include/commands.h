@@ -8,6 +8,7 @@
 #pragma once
 
 #include "server.h"
+#include "vector.h"
 
 #include <math.h>
 #include <time.h>
@@ -21,6 +22,9 @@ typedef struct client_socket_s client_socket_t;
 struct timeval;
 typedef struct timeval timeval_t;
 
+struct vector_s;
+typedef struct vector_s vector_t;
+
 typedef struct delayed_command_s {
     void (*_func)(server_t *server, char *args, client_socket_t *client);
     char *_args;
@@ -28,6 +32,15 @@ typedef struct delayed_command_s {
     timeval_t _delay;
     TAILQ_ENTRY(delayed_command_s) entries;
 } delayed_command_t;
+
+typedef struct cmd_incantation_s {
+    client_socket_t *organizer;
+    client_socket_t **participants;
+    int number_of_participants;
+    int _level;
+    vector_t tile_vector;
+    TAILQ_ENTRY(cmd_incantation_s) entries;
+} cmd_incantation_t;
 
 typedef struct command_s {
     const char *name;
@@ -77,11 +90,16 @@ void exit_command(server_t *server, char *args, client_socket_t *client);
 void hack_player_pos(server_t *server, char *args, client_socket_t *client);
 void hack_player_dir(server_t *server, char *args, client_socket_t *client);
 void print_egg_list(server_t *server, char *args, client_socket_t *client);
+void hack_player_give(server_t *server, char *args, client_socket_t *client);
+void hack_player_health(server_t *server, char *args, client_socket_t *client);
 
 // -- DELAYED -- //
 // Add Command to List
 void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args);
+bool icii(server_t *server, client_socket_t *c);
+void icii_actl(server_t *s, client_socket_t *c, command_t *cmd, char *a);
 void execute_command(server_t *server);
+void break_player_queue(server_t *server, client_socket_t *c);
 delayed_command_t *last_client_command(server_t *server, client_socket_t *c);
 int how_many_in_queue(server_t *server, client_socket_t *c);
 void calc_delay(server_t *server, client_socket_t *client, timeval_t delay);

@@ -78,3 +78,17 @@ void print_egg_list(server_t *server, char *args, client_socket_t *client)
         dprintf(client->socket, "\n");
     }
 }
+
+void hack_player_give(server_t *server, char *args, client_socket_t *client)
+{
+    int id = 0;
+    int resource = 0;
+    int quantity = 0;
+    client_socket_t *tmp = NULL;
+
+    if (sscanf(args + 10, "%d %d %d", &id, &resource, &quantity) == 3) {
+        tmp = find_client_by_socket(server, id);
+        if (tmp != NULL)
+            tmp->player->_inventory[resource] += 1;
+    }
+}

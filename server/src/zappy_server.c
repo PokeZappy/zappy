@@ -26,6 +26,7 @@ static void init_all_teams(server_t *server)
     team_t *team;
 
     TAILQ_INIT(&server->_head_team);
+    TAILQ_INIT(&server->_head_incantation);
     for (int i = 0; teams[i]; i++) {
         team = init_team(teams[i], max_clients);
         if (team) {

@@ -40,6 +40,15 @@ void print_queue(server_t *server)
     }
 }
 
+void icii_actl(server_t *server, client_socket_t *c, command_t *cmd, char *a)
+{
+    cmd_incantation_t *cmd_incantation;
+
+    if (icii(server, c))
+        return;
+    actl(server, c, cmd, a);
+}
+
 void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args)
 {
     delayed_command_t *delayed_command = (delayed_command_t *)
@@ -61,4 +70,22 @@ void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args)
     entries);
     print_queue(server);
     free(cmd);
+}
+
+void break_player_queue(server_t *server, client_socket_t *c)
+{
+    delayed_command_t *delayed_command;
+    delayed_command_t *tmp;
+
+    delayed_command = TAILQ_FIRST(&server->_head_delayed_commands);
+    while (delayed_command != NULL) {
+        tmp = TAILQ_NEXT(delayed_command, entries);
+        if (delayed_command->_client == c) {
+            TAILQ_REMOVE(&server->_head_delayed_commands, delayed_command,
+            entries);
+            free(delayed_command->_args);
+            free(delayed_command);
+        }
+        delayed_command = tmp;
+    }
 }
