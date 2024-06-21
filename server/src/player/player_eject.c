@@ -9,6 +9,9 @@
 
 void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
 {
+    int opposite_direction = (pusher->_direction + 2) % 4;
+
+
     if (pusher->_direction == UP)
         pushed->player->_pos._y -= 1;
     if (pusher->_direction == DOWN)
@@ -17,7 +20,7 @@ void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
         pushed->player->_pos._x -= 1;
     if (pusher->_direction == RIGHT)
         pushed->player->_pos._x += 1;
-    dprintf(pushed->socket, "eject: %d\n", pusher->_direction);
+    dprintf(pushed->socket, "eject: %d\n", opposite_direction);
     dprintf(get_gui(server)->socket, "pex %d\n", pushed->_id);
 }
 
