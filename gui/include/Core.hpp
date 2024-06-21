@@ -20,7 +20,7 @@ namespace Zappy {
     class Core {
     public:
         Core(bool isRaylib = false) {
-            _graphics = std::make_shared<Raylib>();
+            _graphics = std::make_shared<Sfml>();
         };
         ~Core() = default;
         void setPort(int port) { _port = port; }
