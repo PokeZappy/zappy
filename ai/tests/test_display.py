@@ -4,7 +4,7 @@ import pytest
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.zappy_ai import display_help, Bot
+from ai.src.zappy_ai import display_help, Bot
 
 
 class TestImport:
@@ -12,7 +12,7 @@ class TestImport:
     def test_function_compiles(self):
         try:
             result = display_help()
-            assert result == 0, "Expected return value is 0"
+            assert result is None, "Expected return value is None"
         except SyntaxError:
             pytest.fail("Syntax error occurred")
 

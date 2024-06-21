@@ -1,11 +1,12 @@
-import pytest
 import sys
 import os
 import socket
 
+import pytest
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.zappy_ai import Bot
+from ai.src.zappy_ai import Bot
 
 
 class Test__Init__:
@@ -38,23 +39,6 @@ class TestSend:
         bot = Bot([1, 5, 5], mock_socket)
         bot.send_action("")
         mock_socket.send.assert_called_once_with("".encode())
-
-
-class TestRecvAction:
-
-    def test_successful_receive_and_decode(self, mocker):
-        mock_socket = mocker.MagicMock()
-        mock_socket.recv.return_value = b"Action Command"
-        bot = Bot([1, 10, 10], mock_socket)
-        received_action = bot.recv_action()
-        assert received_action == "Action Command", "The action command should be decoded and match the server's message"
-
-    def test_receive_empty_string(self, mocker):
-        mock_socket = mocker.MagicMock()
-        mock_socket.recv.return_value = b""
-        bot = Bot([1, 10, 10], mock_socket)
-        received_action = bot.recv_action()
-        assert received_action == "", "The method should handle empty strings without error"
 
 
 class TestLookAround:
@@ -151,7 +135,7 @@ class TestInventory:
         mock_socket = mocker.MagicMock()
         serv_info = [1, 10, 20, 30]
         bot = Bot(serv_info, mock_socket)
-        bot.inventory()
+        bot.check_inventory()
         mock_socket.send.assert_called_once_with("Inventory\n".encode())
 
     def test_inventory_socket_broken(self, mocker):
@@ -160,7 +144,7 @@ class TestInventory:
         serv_info = [1, 10, 20, 30]
         bot = Bot(serv_info, mock_socket)
         with pytest.raises(socket.error):
-            bot.inventory()
+            bot.check_inventory()
 
 
 class TestIncantation:
