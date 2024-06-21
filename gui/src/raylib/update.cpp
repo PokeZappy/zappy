@@ -10,18 +10,18 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
-
-        _mapX = world._mapX;
-        _mapY = world._mapY;
+        // _mapX = world._mapX;
+        // _mapY = world._mapY;
+        float moveYSpeed = 5;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += 1;
-            _camera.target.y += 1;
+            _camera.position.y += moveYSpeed;
+            _camera.target.y += moveYSpeed;
             }
             if (IsKeyDown(KEY_LEFT_SHIFT))
             {
-                _camera.position.y -= 1;
-                _camera.target.y -= 1;
+                _camera.position.y -= moveYSpeed;
+                _camera.target.y -= moveYSpeed;
             }
         }
         if (IsKeyPressed(KEY_N)) {
@@ -36,6 +36,33 @@ namespace Zappy {
         }
         if (debugMode->activated()) {
             debugMode->update();
+        } else {
+            if (IsKeyPressed(KEY_ONE)) {
+                _mapX++;
+                _mapY++;
+            } else if (IsKeyPressed(KEY_TWO)) {
+                _mapX--;
+                _mapY--;
+            } else if (IsKeyPressed(KEY_THREE)) {
+                _arena = LoadModel("assets/local/boxing_ring.glb");
+                for (int i = 0; i < _arena.materialCount; i++)
+                    _arena.materials[i].shader = _shader;
+                _arenaScale = 1.35;
+                _arenaAltitudeScale = 0.2;
+                getArenaOffset = [](size_t tileCount, size_t gridSize) -> float {
+                    (void)gridSize;
+                    return - 30 - (float)tileCount * 7.;
+                };
+            } else if (IsKeyPressed(KEY_T)) {
+                _mapX = 10;
+                _mapY = 10;
+            } else if (IsKeyPressed(KEY_Y)) {
+                _mapX = 20;
+                _mapY = 20;
+            } else if (IsKeyPressed(KEY_U)) {
+                _mapX = 30;
+                _mapY = 30;
+            }
         }
 
         if (debugMode->getType() != CHAT)

@@ -23,14 +23,16 @@ namespace Zappy
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::SkyBlue());
-            // 3D scene
 
             _camera.BeginMode();
             _shader.BeginMode();
 
             _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
-            float scale = 400;
-            _arena.Draw(raylib::Vector3(_mapX / 2 * _gridSize, -35, _mapY / 2 * _gridSize),
+            float scale = _mapX * _arenaScale;
+            _arena.Draw(raylib::Vector3(
+                    getArenaOffset(_mapX, _gridSize),
+                    scale * _arenaAltitudeScale,
+                    getArenaOffset(_mapY, _gridSize)),
                 raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
 
             _sun.Draw(_lights[0].position, 10);
@@ -89,7 +91,6 @@ namespace Zappy
             GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
             // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-                // end of 3D scene
             textColor.DrawText(raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
             textColor.DrawText(raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
             _window.DrawFPS();

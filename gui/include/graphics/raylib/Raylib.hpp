@@ -23,6 +23,7 @@
 #define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
 #define SUN_MODEL_PATH "assets/models/sun.glb"
 #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
+#define ARENA_MODEL_PATH "assets/local/arena.glb"
 
 namespace Zappy {
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
@@ -83,6 +84,9 @@ namespace Zappy {
             // Gameboy & Arena
             raylib::Model _tv;
             raylib::Model _arena;
+            float _arenaScale = 1.0f;
+            float _arenaAltitudeScale = 0.0f;
+            float (*getArenaOffset)(size_t tileCount, size_t gridSize);
 
             // Rocks (pokeballs)
             raylib::Model _rockModel;

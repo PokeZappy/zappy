@@ -20,10 +20,12 @@ namespace Zappy {
             pkInfo.displayName = pokeName;
             pkInfo.id = pokeId;
             pkInfo.stage = stage;
-            libconfig::Setting &evos = pokemon["evolutions"];
-            for (int i = 0; i < evos.getLength(); i++)
-            {
-                pkInfo.evolutions.push_back(parsePokemon(evos[i]));
+            if (pokemon.exists("evolutions")) {
+                libconfig::Setting &evos = pokemon["evolutions"];
+                for (int i = 0; i < evos.getLength(); i++)
+                {
+                    pkInfo.evolutions.push_back(parsePokemon(evos[i]));
+                }
             }
         }
         catch (libconfig::SettingNotFoundException &ex)

@@ -14,7 +14,7 @@ namespace Zappy {
         _sun(raylib::Model(SUN_MODEL_PATH)),
         _moon(raylib::Model(MOON_MODEL_PATH)),
         _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
-        _arena(raylib::Model("assets/local/arena.glb")),
+        _arena(raylib::Model(ARENA_MODEL_PATH)),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
@@ -97,7 +97,7 @@ namespace Zappy {
                       "dark", "fight", "fairy",
                       "ice", "normal", "poison",
                       "rock", "ghost", "fly",
-                      "eevee"};
+                      "eevee", "mustebeh"};
         _listTypesColors = {
             (Color){107, 190, 48}, (Color){231, 59, 12}, (Color){48, 144, 241},
             (Color){179, 179, 194}, (Color){113, 89, 215}, (Color){250, 179, 21},
@@ -105,12 +105,19 @@ namespace Zappy {
             (Color){79, 57, 43}, (Color){126, 50, 26}, (Color){239, 172, 241},
             (Color){126, 218, 244}, (Color){197, 191, 180}, (Color){146, 66, 144},
             (Color){181, 161, 88}, (Color){89, 92, 169}, (Color){138, 159, 239},
-            raylib::Color::White(),
+            raylib::Color::White(), raylib::Color::Orange(),
         };
 
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
 
         _moon.materials[1].shader = _shader;
+
+        _arenaAltitudeScale = -(1. / 10.);
+        _arenaScale = 40;
+        getArenaOffset = [](size_t tileCount, size_t gridSize) -> float {
+            float correction = tileCount % 2 == 0 ? gridSize / 2 : 0;
+            return tileCount / 2 * gridSize - correction;
+        };
     }
 }

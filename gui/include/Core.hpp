@@ -43,6 +43,9 @@ namespace Zappy {
         void getOptions(int argc, char **argv);
         void loop(void);
     private:
+        void updateMapSize(void);
+        int _mapX = -1;
+        int _mapY = -1;
         int _port = -1;
         std::string _machine = "";
         ClientSocket _socket;
