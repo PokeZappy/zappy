@@ -3,6 +3,7 @@ import pytest
 from ai.src.communication.latin import Latin
 from ai.src.communication.cipher import Cipher
 from ai.src.communication.messages import Messages
+from ai.src.utils.messages import validate_encryption_pattern
 
 
 class TestValidateEncryptionPattern:

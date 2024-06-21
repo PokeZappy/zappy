@@ -40,7 +40,7 @@ class TestMessages:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result = messages.receive("INVALID MESSAGE FORMAT", "hello")
-        assert result == ('broadcast', [])
+        assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]
 
     #  receive method handles empty messages or messages shorter than expected
     def test_receive_handles_empty_or_short_messages(self):
@@ -48,7 +48,7 @@ class TestMessages:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result_empty = messages.receive('', "hello")
-        assert result_empty == ('broadcast', [])
+        assert result_empty == []
 
         # TODO - Find why isn't working
         # latin = Latin()
@@ -65,8 +65,8 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         processed_message = messages.receive('message 1, "ACCMST 1 cfcba69f-887b-444d-bdd0-850fd47ffbdd yo_la_team"', "hello")
-        assert isinstance(processed_message, tuple)
-        assert processed_message == ('ko', 'ko')
+        assert isinstance(processed_message, list)
+        assert processed_message == [('ko', 'ko')]
 
     #  returns the original message if it matches the predefined pattern
     def test_returns_original_message_if_matches_predefined_pattern(self):
@@ -75,7 +75,7 @@ class TestReceive:
         messages = Messages(cipher, "123", latin)
         original_message = "[ food 1, linemate 2, deraumere 3, sibur 4, mendiane 5, phiras 6, thystame 7 ]"
         processed_message = messages.receive(original_message, "hello")
-        assert processed_message == ('inventory', original_message)
+        assert processed_message == [('inventory', original_message)]
 
     #  appends new UUIDs to the uuid_used list after processing messages
     def test_appends_new_uuids_to_uuid_used_list_after_processing_messages(self):
@@ -93,7 +93,7 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result = messages.receive("INVALID MESSAGE FORMAT", "hello")
-        assert result == ('broadcast', [])
+        assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]
 
     #  returns 'ko' for messages with reused UUIDs
     def test_returns_ko_for_messages_with_reused_uuids(self):
@@ -103,7 +103,7 @@ class TestReceive:
         encrypted_message = messages.send("Hello World")
         messages.receive(encrypted_message, "hello")
         result = messages.receive(encrypted_message, "hello")
-        assert result == ('broadcast', [])
+        assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]
 
     #  processes messages with missing or malformed parts
     def test_processes_messages_with_missing_or_malformed_parts(self):
@@ -112,4 +112,4 @@ class TestReceive:
         messages = Messages(cipher, "123", latin)
         malformed_message = 'Broadcast "ACCMST 123 4567 89#90#91"'
         result = messages.receive(malformed_message, "hello")
-        assert result == ('broadcast', [])
+        assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]

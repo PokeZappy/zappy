@@ -13,7 +13,7 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result = messages.receive('ok\n', "hello")
-        assert result == ('ok', "hello")
+        assert result == [('ok', "hello")]
 
     #  returns 'ko\n' when message is 'ko\n'
     def test_returns_ko_when_message_is_ko(self, mocker):
@@ -21,7 +21,7 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result = messages.receive('ko\n', "hello")
-        assert result == ('ko', "hello")
+        assert result == [('ko', "hello")]
 
     #  handles messages with invalid formats gracefully
     def test_handles_invalid_formats_gracefully(self, mocker):
@@ -29,4 +29,4 @@ class TestReceive:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result = messages.receive('INVALID MESSAGE FORMAT', "hello")
-        assert result == ('broadcast', [])
+        assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]
