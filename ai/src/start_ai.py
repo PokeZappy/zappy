@@ -1,5 +1,6 @@
 import sys
 
+from ai.src.player.depot import Depot
 from ai.src.server import connexion
 from ai.src.player.parent_ai import ParentAI
 from ai.src.player.pusher import Pusher

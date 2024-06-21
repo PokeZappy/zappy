@@ -9,7 +9,8 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    get_infos,
                                    extract_direction,
                                    validate_number_pattern,
-                                   validate_elevation)
+                                   validate_elevation,
+                                   validate_eject_pattern)
 
 
 class Messages(object):
@@ -73,6 +74,8 @@ class Messages(object):
         :param action: any - Additional action related to the message.
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
         """
+        if message == "" or message == "\n":
+            return [('ko', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
@@ -84,6 +87,8 @@ class Messages(object):
                 result.append(('look', message))
             elif validate_elevation(message):
                 result.append(('elevation', message))
+            elif validate_eject_pattern(message):
+                result.append(('eject', message))
             elif message == 'ok':
                 if self.debug:
                     print(f'ok: {action}')

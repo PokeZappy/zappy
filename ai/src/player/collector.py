@@ -200,7 +200,7 @@ class Collector(Player):
             self.deposits_resources()
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
-                self.get_north(message['direction'])
+                self.path.get_north(message['direction'])
                 self.turn_to_the_north()
             if self.got_id > 2 and self.start is False:
                 self.go_to_start()
@@ -218,4 +218,4 @@ class Collector(Player):
         #     TODO - Change the string to have the real string send by incantator or M&M's
         if message['msg'] == 'INCANTATION LVL 1 DONE':
             self.lvl_one = True
-        self.global_message()
+        self.global_message(message)

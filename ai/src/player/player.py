@@ -121,21 +121,6 @@ class Player(Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    def get_north(self, direction: int):
-        """
-        Set the player's facing direction based on the input direction.
-
-        :param direction: int - The direction value to set the player's facing direction.
-        """
-        if direction == 1:
-            self.path.facing = dir.NORTH.value
-        if direction == 5:
-            self.path.facing = dir.SOUTH.value
-        if direction == 3:
-            self.path.facing = dir.EAST.value
-        if direction == 7:
-            self.path.facing = dir.WEST.value
-
     def turn_to_the_north(self) -> None:
         """
         Turn the player to face the North direction.
@@ -212,6 +197,8 @@ class Player(Bot):
             self.left()
         elif action == 'Inventory':
             self.check_inventory()
+        elif action == 'Eject':
+            self.eject()
         elif isinstance(action, tuple):
             self.move(action, self.dir)
 
@@ -250,6 +237,8 @@ class Player(Bot):
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
+            if recv_type == 'eject':
+                self.back_on_track(msgs[-1])
             if len(self.actions) != 0:
                 self.actions.pop(0)
 
@@ -296,6 +285,22 @@ class Player(Bot):
     def broadcast_traitement(self, msg: tuple | str) -> None:
         pass
 
-    def global_message(self) -> None:
+    def global_message(self, message: tuple | str | dict) -> None:
         # TODO - faire les messages globaux comme le changement de metier
         pass
+
+    def back_on_track(self, msg):
+        """
+
+        :param msg:
+        :return:
+        """
+        direction = int(msg)
+        if direction == 3:
+            self.queue.append('Left')
+        if direction == 7:
+            self.queue.append('Right')
+        if direction == 5:
+            self.queue.append('Right')
+            self.queue.append('Right')
+        self.queue.append('Forward')

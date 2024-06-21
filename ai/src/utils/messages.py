@@ -97,3 +97,12 @@ def validate_elevation(s) -> bool:
     if s == 'Elevation underway' or re.match(r'^Current level: (\d+)$', s):
         return True
     return False
+
+
+def validate_eject_pattern(s) -> bool:
+    """
+
+    :param s:
+    :return:
+    """
+    return bool(re.match(r'eject: [7135]', s))
