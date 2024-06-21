@@ -29,6 +29,9 @@ typedef struct cmd_incantation_s cmd_incantation_t;
 struct client_socket_s;
 typedef struct client_socket_s client_socket_t;
 
+struct delayed_command_s;
+typedef struct delayed_command_s delayed_command_t;
+
 typedef struct player_s {
     int _id; // id of the player
     int _fd; // file descriptor of the player
@@ -65,6 +68,8 @@ void create_current_incantation(server_t *server, player_t *player);
 bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl);
 void free_incantation(server_t *server, cmd_incantation_t *current);
 void check_death(server_t *server);
+cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c);
+delayed_command_t *ficbcq(server_t *s, client_socket_t *c);
 
 // -- GRID RELATED -- //
 int player_take_item(player_t *player, tiles_t *tile, char *item);

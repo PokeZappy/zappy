@@ -6,6 +6,7 @@
 */
 
 #include "../../../include/commands.h"
+#include "../../../include/server.h"
 
 void add_seconds(timeval_t *time, float seconds)
 {
@@ -44,4 +45,20 @@ bool icii(server_t *server, client_socket_t *c)
         cmd_incantation = TAILQ_NEXT(cmd_incantation, entries);
     }
     return false;
+}
+
+void add_delay(server_t *server, client_socket_t *c, delayed_command_t *delay)
+{
+    delayed_command_t *current;
+    timeval_t current_time;
+    long delay_ms;
+
+    if (how_many_in_queue(server, c) < 10) {
+        if (how_many_in_queue(server, c) != 0)
+            calc_delay(server, c, delay->_delay);
+    } else {
+        delete_last_cmd(server, c);
+        calc_delay(server, c, delay->_delay);
+    }
+    add_icii_delay(server, c, delay);
 }

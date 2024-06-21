@@ -46,5 +46,5 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
             return;
         }
     }
-    icii_actl(server, client, cmd, command);
+    actl(server, client, cmd, command);
 }

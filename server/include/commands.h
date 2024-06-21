@@ -97,9 +97,7 @@ void hack_player_health(server_t *server, char *args, client_socket_t *client);
 // Add Command to List
 void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args);
 bool icii(server_t *server, client_socket_t *c);
-void icii_actl(server_t *s, client_socket_t *c, command_t *cmd, char *a);
 void execute_command(server_t *server);
-void break_player_queue(server_t *server, client_socket_t *c);
 delayed_command_t *last_client_command(server_t *server, client_socket_t *c);
 int how_many_in_queue(server_t *server, client_socket_t *c);
 void calc_delay(server_t *server, client_socket_t *client, timeval_t delay);
@@ -107,3 +105,5 @@ void delete_last_cmd(server_t *server, client_socket_t *c);
 void add_seconds(timeval_t *time, float seconds);
 bool compare_timeval(timeval_t *a, timeval_t *b);
 bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time);
+void add_delay(server_t *server, client_socket_t *c, delayed_command_t *delay);
+void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d);

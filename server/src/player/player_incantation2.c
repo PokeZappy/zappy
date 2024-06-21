@@ -17,7 +17,7 @@ bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl)
     return false;
 }
 
-cmd_incantation_t *find_correct_incantation(server_t *s, client_socket_t *c)
+cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
 {
     cmd_incantation_t *current = TAILQ_FIRST(&s->_head_incantation);
 
@@ -35,7 +35,7 @@ bool player_still_on_pos(cmd_incantation_t *current)
 {
     client_socket_t *cli;
 
-    for (int i = 0; current->number_of_participants - 1; i++) {
+    for (int i = 0; i < current->number_of_participants; i++) {
         if (!current->participants[i])
             return false;
         cli = current->participants[i];
@@ -55,20 +55,16 @@ void free_incantation(server_t *server, cmd_incantation_t *current)
 
 bool check_post_incantation(server_t *server, client_socket_t *client)
 {
-    cmd_incantation_t *current = find_correct_incantation(server, client);
+    cmd_incantation_t *current = find_incantation(server, client);
     incantation_t incantation = incantations[client->player->_level - 1];
     tiles_t *tile = server->grid->_tiles[current->tile_vector._y]
     [current->tile_vector._x];
 
-    if (!player_still_on_pos(current)) {
-        printf("not all players are on the same tile\n");
+    if (!player_still_on_pos(current))
         return false;
-    }
     for (int i = 0; i < 7; i++) {
-        if (tile->_items[i] < incantation._objects_required[i]) {
-            printf("not enough items\n");
+        if (tile->_items[i] < incantation._objects_required[i])
             return false;
-        }
         tile->_items[i] -= incantation._objects_required[i];
     }
     return true;
