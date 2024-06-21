@@ -13,7 +13,7 @@ namespace Zappy
 {
     void Raylib::render(const World &world)
     {
-        _hudMode->getTile() = nullptr;
+        _hudMode->setTile(nullptr);
         (void)world;
         if (debugMode->activated()) {
             renderDebug(world);
@@ -39,18 +39,18 @@ namespace Zappy
             _sun.Draw(_lights[0].position, 10);
             _moon.Draw(_lights[1].position, 20);
 
-            for (int x = 0; x < _mapX; x++) {
-                for (int z = 0; z < _mapY; z++) {
+            for (int y = 0; y < _mapY; y++) {
+                for (int x = 0; x < _mapX; x++) {
                     if (!_hudMode->activated()) {
-                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                         continue;
                     }
-                    raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                    raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                     if (meshHit.hit) {
-                        _hudMode->setTile(std::make_unique<Tile>(world.getTiles()[x][z]));
-                        DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                        _hudMode->setTile(std::make_unique<Tile>(world.getTiles()[x][y]));
+                        DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                     } else {
-                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, z * _gridSize));
+                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                     }
                 }
             }
@@ -61,11 +61,14 @@ namespace Zappy
                 // if ((_hudMode->getTile() != nullptr) &&
                 // (_hudMode->getTile()->getX() == player->worldPlayer->getX()) &&
                 // (_hudMode->getTile()->getY() == player->worldPlayer->getY()))
-                player->draw(_camera, _hudMode->activated());
+                    player->draw(_camera, _hudMode->activated());
             }
 
             for (auto &egg : _eggs) {
-                egg->draw(_camera);
+                // if ((_hudMode->getTile() != nullptr) &&
+                // (_hudMode->getTile()->getX() == egg->worldEgg->getX()) &&
+                // (_hudMode->getTile()->getY() == egg->worldEgg->getY()))
+                    egg->draw(_camera);
             }
 
             _shader.EndMode();
