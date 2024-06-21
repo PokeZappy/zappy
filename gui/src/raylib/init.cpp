@@ -44,6 +44,7 @@ namespace Zappy {
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>();
+        _hudMode = std::make_unique<HudMode>();
 
         // Create lights
         float lightHeight = 100.0f;

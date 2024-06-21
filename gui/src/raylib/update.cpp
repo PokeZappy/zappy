@@ -13,19 +13,20 @@ namespace Zappy {
 
         _mapX = world._mapX;
         _mapY = world._mapY;
+        int factor = 5.0f;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += 1;
-            _camera.target.y += 1;
+            _camera.position.y += factor;
+            _camera.target.y += factor;
             }
             if (IsKeyDown(KEY_LEFT_SHIFT))
             {
-                _camera.position.y -= 1;
-                _camera.target.y -= 1;
+                _camera.position.y -= factor;
+                _camera.target.y -= factor;
             }
         }
         if (IsKeyPressed(KEY_N)) {
-            _selectionMode = !_selectionMode;
+            _hudMode->switchState();
         }
         if (IsKeyPressed(KEY_P)) {
             if (debugMode->activated() && debugMode->getType() == NONE) {

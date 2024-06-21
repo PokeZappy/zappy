@@ -18,7 +18,7 @@ namespace Zappy
         for (int height = 0; height < _mapY; height++) {
             std::vector<Tile> horizontalVector;
             for (int width = 0; width < _mapX; width++) {
-                horizontalVector.push_back(Tile());
+                horizontalVector.push_back(Tile(height, width));
             }
             _tiles.push_back(horizontalVector);
         }
