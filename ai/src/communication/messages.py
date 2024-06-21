@@ -153,7 +153,7 @@ class Messages(object):
         if coord is not None:
             message += f'#{coord[0]},{coord[1]}'
         if infos is not None:
-            message += f'#{'~'.join(';'.join(info) for info in infos)}'
+            message += f'#{"~".join(";".join(info) for info in infos)}'
         if my_id != -1:
             message += f'#{my_id}'
         self.buf_msg_default(message)
