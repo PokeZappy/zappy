@@ -33,3 +33,5 @@ class RoleInGame(Enum):
     COOCKER = 4
     PUSHER = 5
     PNJ = 6
+    FIRST_BORN = 7
+    NORTH_GUARD = 8

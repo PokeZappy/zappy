@@ -11,7 +11,7 @@ def calc_encryption_key(key: str) -> list[list[int]]:
     """
     key_len = len(key)
     matrix_size = int(np.ceil(np.sqrt(key_len)))
-    print(matrix_size)
+    # print(matrix_size)
     matrix = [
         [ord(key[count]) if count < key_len else 0 for count in range(i * matrix_size, (i + 1) * matrix_size)]
         for i in range(matrix_size)]

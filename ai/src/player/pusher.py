@@ -8,11 +8,12 @@ class Pusher(Player):
     Pusher class
     """
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
         """
         Pusher class constructor
         """
-        super().__init__(serv_info, cli_socket, debug_mode)
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.you_should_not_pass = True
         self.is_in_position = False
         self.goto = None
@@ -49,13 +50,11 @@ class Pusher(Player):
         if len(self.actions) > 1:
             return
         if self.life <= 300:
-            print("life")
-            self.queue.append('Take food')
+            self.queue.append(('Take', 'food'))
         elif self.goto is None:
             self.message.buf_messages('Pusher')
             self.message.buf_messages('Quo ego vado')
             self.queue.append('Broadcast')
-            print("after_broadcast")
             # self.goto = not None
         elif not self.is_in_position:
             #TODO: ask for a direction to go to

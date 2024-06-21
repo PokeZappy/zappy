@@ -1,5 +1,6 @@
+from socket import socket
+
 from ai.src.player.player import Player
-import socket
 from ai.src.mvt.path import Path
 from ai.src.mvt.tsp import Held_krap
 from ai.src.gameplay.evolution import evolution
@@ -10,7 +11,7 @@ import select
 
 class Role(Player):
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug: bool = False):
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
         """
         This class is the role of the player.
 
@@ -18,7 +19,8 @@ class Role(Player):
         :param cli_socket: socket - The client socket for communication.
         :param debug: bool - The debug mode.
         """
-        super().__init__(serv_info, cli_socket, debug)
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.level = 1
         self.goal = evolution()
         self.mvt = Held_krap(self.limit, self.pos)
@@ -70,7 +72,6 @@ class Role(Player):
         """
         actions = Held_krap(self.limit, self.pos).algo(self.map_knowledge)
         for ele in actions:
-            print(f"ele: {ele}")
             if type(ele) == list:
                 if type(ele[0]) == tuple:
                     for elem in ele:
@@ -93,7 +94,6 @@ class Role(Player):
         """
         if len(self.queue) == 0:
             return
-        print (f"queue: {self.queue[0]}")
         if self.queue[0] == 'Forward\n':
             if self.dir == dir.NORTH:
                 self.pos = (self.pos[0] + 1, self.pos[1])
@@ -132,14 +132,11 @@ class Role(Player):
             infds: list[socket] - The list of sockets to read from.
             """
             if len(infds) != 0:
-                print('action', self.actions)
                 buf = self.recv_action()
-                print(f"buf: {buf}")
                 #TODO: check if the player is dead or if he receved a broadcast or other msg
                 if buf == 'ok\n':
                     self.actions_update()
                     self.update_goals()
-                    print(f"inv: {self.inv}")
                 elif len(buf) != 0 and buf != 'ko\n':
                     self.update_map(buf, self.dir)
                     self.viewed = True
@@ -157,13 +154,11 @@ class Role(Player):
                     self.strategy()
                     self.allow_action = True
                 if len(self.queue) != 0 and len(self.actions) != len(self.queue):
-                    print(f"queue: {self.queue}")
                     self.actions.append(self.queue[0])
                     self.allow_action = True
                     self.queue.pop(0)
                 if len(self.actions) != 0 and self.allow_action:
                     self.apply_action()
-                    print(f"actions: {self.actions}")
                     self.allow_action = False
                 if len(self.queue) == 0 and len(self.actions) == 0:
                     self.empty_queue()

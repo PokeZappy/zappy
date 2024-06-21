@@ -41,12 +41,13 @@ class Latin(object):
 
 
                                         # Coll to MM
-                                        'ressources déposées': 'opes deposita',
+                                        'ressources déposées : ': 'opes deposita : ',
                                         # TODO - parse l'inventaire
                                         'Je suis positionné pour le dépot': 'situm intrare',
                                         # TODO - compter le nombre de collecteur pour désactiver la sécurité
                                        'Je suis sortie du dépot': 'sum extra domum',
                                         # TODO - savoir si l'envoies au M&Ms ou Pousseur et tt le monde l'envoie où non
+                                        'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
 
                                         #   TODO - envoie de l'inventaire au M&Ms
                                         'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
@@ -72,11 +73,20 @@ class Latin(object):
                                         'Qui est un pusher': 'Quis est puer interfector?',
                                         'Je suis un pusher': 'Ego sum puer inteffector',
 
+                                        # First Born to MM
+                                        'Je me vais me transormer en : ': 'Ego me transform : ',
+
                                         'évo de niveau': 'nobilis incantatio',
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
                                         'Incantator': 'Incantator',
                                         'Progenitor': 'Progenitor',
+                                        'Mastermind': 'Mastermind',
+                                        'North guard': 'North guard',
+                                        'Pnj': 'Pnj',
+
+                                        #PNJ to Incant
+                                        'J\'ai bougé': 'motus sum',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',

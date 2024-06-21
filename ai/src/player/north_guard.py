@@ -1,4 +1,4 @@
-import socket
+from socket import socket
 from abc import ABC
 
 from ai.src.player.player import Player
@@ -8,8 +8,9 @@ from ai.src.utils.info_look import look_resources
 
 class NorthGuard(Player):
 
-    def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False):
-        super().__init__(serv_info, cli_socket, debug_mode)
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False, yo: bool = False):
+        if serv_info is not None:
+            super().__init__(serv_info, cli_socket, debug_mode)
         self.first: bool = False
 
     def say_the_north(self):
@@ -31,8 +32,8 @@ class NorthGuard(Player):
         """
 
         """
-        if len(self.actions) >= 1:
-            return self.actions
+        if len(self.actions) >= 1 or len(self.queue) > 6:
+            return
         # TODO - rajouter la grille
         if not self.first:
             self.queue.append('Forward')

@@ -64,6 +64,9 @@ class Bot(object):
         rec: str = self.cli_socket.recv(1024).decode()
         if self.debug_mode:
             print(f"Received action: {rec}")
+        if rec == "":
+            print("Server disconnected")
+            sys.exit(84)
         return rec
 
     def forward(self) -> None:

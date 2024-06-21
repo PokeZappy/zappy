@@ -9,6 +9,7 @@ from ai.src.gameplay.enum_gameplay import Directions as dir
 from ai.src.mvt.path import Path
 from ai.src.gameplay.enum_gameplay import Resources as res
 from ai.src.utils.info_look import look_resources
+from ai.src.gameplay.enum_gameplay import RoleInGame
 
 
 class Player(Bot):
@@ -28,21 +29,23 @@ class Player(Bot):
         self.level: int = 1
         self.actions = []
         self.queue = []
-        self.LIMIT_QUEUE: int = 10
+        self.LIMIT_QUEUE: int = 9
         self.LEVEL_MAX: int = 8
         self.FORK_ACTION: int = 42
         self.INCUBATION_TIME: int = 600
-        self.inventory: dict[str: int] = {'food': 10,
-                                          'linemate': 0,
-                                          'deraumere': 0,
-                                          'sibur': 0,
-                                          'mendiane': 0,
-                                          'phiras': 0,
-                                          'thystame': 0
-                                          }
+        self.based_ressources = {'food': 10,
+                                'linemate': 0,
+                                'deraumere': 0,
+                                'sibur': 0,
+                                'mendiane': 0,
+                                'phiras': 0,
+                                'thystame': 0
+                                }
+        self.inventory: dict[str: int] = self.based_ressources
         self.looked: bool = False
         self.environment: str = ""
         self.path = Path(self.limit, (0, 0), (0, 0))
+        self.death: any = False
         self.got_id: int = 0
         # self.got_id: bool = False
 
@@ -61,6 +64,7 @@ class Player(Bot):
 
         :return: None
         """
+        self.life -= self.FORK_ACTION
         self.send_action("Fork\n")
 
     def turn_around_without_watching(self) -> None:
@@ -238,8 +242,11 @@ class Player(Bot):
                 self.looked = True
                 self.environment = msgs
             if recv_type == 'inventory':
-                print("inventory")
+                if self.debug_mode:
+                    print("inventory")
             if recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
@@ -259,13 +266,15 @@ class Player(Bot):
         else:
             self.inventory[new_object] -= 1
 
-    def run(self) -> None:
+    def run(self) -> any:
         """
         This method is the main loop of the ai.
 
         :return: None
         """
         while self.level < self.LEVEL_MAX:
+            if self.death != False:
+                return self.death
             infds, outfds, _ = select.select(self.inout, self.inout, [])
 
             """
@@ -274,6 +283,8 @@ class Player(Bot):
             if len(infds) != 0:
                 buf = self.recv_action()
                 self.recv_treatment(buf)
+                if buf == 'death\n':
+                    return None
 
             """
             outfds: list[socket] - The list of sockets to write to.

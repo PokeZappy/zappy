@@ -33,7 +33,7 @@ class Messages(object):
         self.msg: str = 'Broadcast "'
         self.debug: bool = debug
 
-    def send_coord(self, message: str, pos: (int, int)) -> str:
+    def send_coord(self, message: str, pos: tuple[int, int]) -> str:
         """
         Send a message with coordinates to the specified position.
 
@@ -112,7 +112,7 @@ class Messages(object):
             for msg in messages:
                 parts = msg.split()
                 if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
-                    return 'ko', 'ko'
+                    return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
@@ -124,7 +124,13 @@ class Messages(object):
                         'direction': direction
                     })
                 elif text[0] in self.language.verbum.values():
-                    infos, nbr = get_infos(text)
+                    res = get_infos(text)
+                    if len(res) == 1:
+                        infos = res[0][0]
+                        nbr = None
+                    else:
+                        infos, nbr = res
+
                     result.append({
                         'id': int(parts[1]),
                         'msg': text[0],
@@ -135,6 +141,7 @@ class Messages(object):
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
+                # print(f'after recv ttt: {result}')
         if not result:
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result

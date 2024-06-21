@@ -14,3 +14,5 @@ zappy_ref-2-0-2
 __pycache__/
 zappy_test/
 *.d
+
+sys
