@@ -61,14 +61,15 @@ namespace Zappy
         _shellTextTeamColor.setSize(sf::Vector2f(15, 15));
     };
 
-    void Sfml::update(void)
+    void Sfml::update(const World &world)
     {
+        _mapX = world._mapX;
+        _mapY = world._mapY;
         updateMouse();
         handleEvent();
-
     }
 
-    void Sfml::display(const World &world)
+    void Sfml::render(const World &world)
     {
         _window.clear();
         drawTiles(world.getTiles());
@@ -84,6 +85,7 @@ namespace Zappy
         _window.setView(_window.getDefaultView());
         drawShell(world.getShellCommands());
         _window.display();
+        // std::cout << _view.
     }
 
     sf::Vector2f Sfml::getEntityOffset(const std::shared_ptr<IEntity> entity)
@@ -110,9 +112,15 @@ namespace Zappy
 
     void Sfml::resetViewPos(void)
     {
-        _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+        if (_mapX == -1 || _mapY == -1)
+            _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+        else
+            _view.setSize(GUI_WIDTH * _mapX / 10, GUI_HEIGHT * _mapY / 10);
         _view.setRotation(0);
         _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
-        _view.move(-500, -30);
+        if (_mapX == -1 || _mapY == -1)
+            _view.move(-500, -30);
+        else
+            _view.move(-500 + (_mapX - 10) * (float)_gridSize, -30 + (_mapY - 10) * (float)_gridSize);
     }
 } // namespace Zappy

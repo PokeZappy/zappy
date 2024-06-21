@@ -1,5 +1,3 @@
-import pytest
-
 from ai.src.utils.info_look import only_forward_resources
 
 

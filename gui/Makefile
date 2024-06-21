@@ -5,8 +5,11 @@
 ## Makefile
 ##
 
-SRC				=	main.cpp					\
-					$(wildcard src/*.cpp)		\
+SRC				=	main.cpp							\
+					$(wildcard src/*.cpp)				\
+					$(wildcard src/raylib/*.cpp)		\
+					$(wildcard src/raylib/debug/*.cpp)	\
+					$(wildcard src/raylib/hud/*.cpp)	\
 					$(wildcard src/sfml/*.cpp)	\
 					$(wildcard src/world/*.cpp)
 
@@ -23,10 +26,19 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
-INCLUDEFLAGS	=	-Iinclude -Iinclude/sfml -Iinclude/world
-DBGFLAGS		=	-g3 -O0
-CXXFLAGS		=	-std=c++2a -Wall -Wextra -g3 $(INCLUDEFLAGS)
-LDFLAGS			=	-lsfml-graphics -lsfml-window -lsfml-system
+INCLUDEFLAGS	=	-Iinclude					\
+					-Iinclude/graphics/sfml		\
+					-Iinclude/world				\
+					-Iinclude/graphics/raylib	\
+					-Iinclude/graphics			\
+					-I./lib/include				\
+					-I./lib/raylib/src			\
+					-I./lib/raylib-cpp/include	\
+					$(shell pkg-config --cflags libconfig++)
+CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
+LDFLAGS			=	$(shell pkg-config --libs libconfig++)		\
+					$(shell pkg-config --libs sfml-graphics)	\
+					-L./lib/raylib/src -lraylib -lpthread -ldl
 DEPSFLAGS		=	-MMD -MP
 
 LDLIBS			+=	-L./criterion/lib -lcriterion
@@ -36,12 +48,12 @@ CC = g++
 MACBREWSFML		= 	/opt/homebrew/Cellar/sfml/2.6.1
 
 MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include
-MACSFMLLIB		=	-L$(MACBREWSFML)/lib
+MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
 
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS += $(MACSFMLINCLUDE)
+	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15
 	LDFLAGS += $(MACSFMLLIB)
 endif
 
@@ -59,6 +71,7 @@ dbgs: $(NAME)
 	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@ $(LDFLAGS)
 
 $(NAME):	$(OBJ)
+	@$(MAKE) -C lib/raylib/src
 	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 	cp $(NAME) ../
 

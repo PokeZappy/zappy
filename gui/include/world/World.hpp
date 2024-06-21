@@ -12,6 +12,7 @@
 #include "Egg.hpp"
 #include "world/Team.hpp"
 #include "ShellCommand.hpp"
+#include "Utils.hpp"
 #include <algorithm>
 #include <memory>
 #include <algorithm>
@@ -25,7 +26,7 @@ namespace Zappy {
         void updateTile(size_t x, size_t y, const Tile &tile);
         void updateTileInventory(size_t x, size_t y, const Inventory &inventory);
 
-        void handleCommand(std::string &command);
+        bool handleCommand(std::string &command);
         const std::vector<std::vector<Tile>> &getTiles() const { return (_tiles); }
         TeamType determineTeamType(const std::string &teamName);
 
@@ -44,11 +45,13 @@ namespace Zappy {
 
         const std::vector<ShellCommand> &getShellCommands(void) const;
         void addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity = nullptr);
+        bool containsPlayer(size_t id) const;
+        bool containsEgg(size_t id) const;
+        int _mapX = -1;
+        int _mapY = -1;
     private:
         std::string getOrientationString(Orientation orientation);
         std::string getItemString(Item item);
-        int _mapX = -1;
-        int _mapY = -1;
         std::vector<std::vector<Tile>> _tiles;
         std::vector<Team> _teams;
         Team defaultTeam;

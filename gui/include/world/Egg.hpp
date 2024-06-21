@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Inventory.hpp"
-#include "Tools.hpp"
 #include "world/Team.hpp"
 #include "AEntity.hpp"
 #include <memory>

@@ -69,6 +69,7 @@ namespace Zappy
         case Item::MENDIANE: return sf::Color::Green;
         case Item::PHIRAS: return sf::Color::Blue;
         case Item::THYSTAME: return sf::Color::White;
+        default: return sf::Color::White;
         }
     }
 

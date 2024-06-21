@@ -9,7 +9,7 @@
 
 namespace Zappy
 {
-    void World::handleCommand(std::string &command)
+    bool World::handleCommand(std::string &command)
     {
         int commandPos = command.find(' ');
         std::string commandName = command.substr(0, commandPos);
@@ -18,9 +18,9 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-            std::cout << command << std::endl;
-        }
+        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
+        //     std::cout << command << std::endl;
+        // }
         // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
         //     std::cout << command << std::endl;
         // }
@@ -46,7 +46,6 @@ namespace Zappy
             ss >> id >> x >> y >> orientation >> level >> teamName;
             std::shared_ptr<Player> player = std::make_shared<Player>(id, x, y,
                 static_cast<Orientation>(orientation), level, getTeam(teamName));
-            // player->setIncanting(true);
             addPlayer(player);
             addShellCommand("New player T" + std::to_string(id) + " joined the game", player);
         }
@@ -65,9 +64,10 @@ namespace Zappy
         }
         else if (commandName == "plv") { // player’s level
             size_t level;
-            ss >> level;
+            ss >> id >> level;
             std::shared_ptr<Player> player = getPlayer(id);
             player->setLevel(level);
+            player->setIncanting(false);
             addShellCommand("T" + std::to_string(id) + " is now level " +
                 std::to_string(level), player);
         }
@@ -91,15 +91,8 @@ namespace Zappy
             std::string colleagues;
             ss >> x >> y >> level >> id;
             getPlayer(id)->setIncanting(true);
-            while (ss >> otherId) {
-                getPlayer(otherId)->setIncanting(true);
-                colleagues += ", T" + std::to_string(otherId);
-            }
-
-            addShellCommand("Incantation started of level " + std::to_string(level) +
-                " at {x: " + std::to_string(x) + ", y: " +
-                std::to_string(y) + "} by T" + std::to_string(id) + " with his colleagues" +
-                colleagues, getPlayer(id));
+            addShellCommand("Incantation started at {x: " + std::to_string(x) + ", y: " +
+                std::to_string(y) + "} by T" + std::to_string(id), getPlayer(id));
         }
         else if (commandName == "pie") { // end of an incantation
             std::string result;
@@ -107,18 +100,11 @@ namespace Zappy
             for (auto player : getPlayers(x, y)) {
                 player->setIncanting(false);
             }
-
-            std::cout << "Incantation result: " << result << std::endl;
-
-            try {
-                size_t value = std::stoull(result);
-                if (value >= 2 && value <= 8) {
-                    addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
-                        std::to_string(y) + "} succeeded", getPlayer(id));
-                } else {
-                    throw std::out_of_range("The number is out of range for size_t.");
-                }
-            } catch (const std::exception& e) {
+            if (result == "ok") {
+                addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
+                    std::to_string(y) + "} succeeded", getPlayer(id));
+            }
+            else
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
             }
@@ -158,10 +144,7 @@ namespace Zappy
                 getEgg(id));
         }
         else if (commandName == "ebo") { // player connection for an egg
-            ss >> id;
-            addShellCommand("Player connected to egg " + std::to_string(id),
-                getEgg(id));
-            killEgg(id);
+
         }
         else if (commandName == "edi") { // death of an egg
             ss >> id;
@@ -175,7 +158,9 @@ namespace Zappy
 
         }
         else if (commandName == "seg") { // end of game
-
+            addShellCommand("Game ended");
+            std::cout << "Game ended" << std::endl;
+            return true;
         }
         else if (commandName == "smg") { // message from the server
             std::string message;
@@ -194,5 +179,6 @@ namespace Zappy
         else {
             // std::cerr << "Unknown command: " << command.substr(0, command.size() - 2) << std::endl;
         }
+        return false;
     }
 } // namespace Zappy

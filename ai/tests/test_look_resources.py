@@ -1,5 +1,3 @@
-import pytest
-
 from ai.src.utils.info_look import look_resources
 
 

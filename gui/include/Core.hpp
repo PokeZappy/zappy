@@ -10,19 +10,21 @@
 #include <string.h>
 #include <stdio.h>
 #include <getopt.h>
-#include "Tools.hpp"
-
 #include "ClientSocket.hpp"
 #include "Sfml.hpp"
+#include "Raylib.hpp"
+#include "IGraphicalModule.hpp"
 #include "world/World.hpp"
 
 namespace Zappy {
     class Core {
     public:
-        Core() = default;
+        Core(bool isRaylib = false) {
+            _graphics = std::make_shared<Raylib>();
+        };
         ~Core() = default;
-        void setPort(int port) { _port = port; };
-        void setMachine(std::string &machine) { _machine = machine; };
+        void setPort(int port) { _port = port; }
+        void setMachine(std::string &machine) { _machine = machine; }
         int getPort(void) const { return (_port); }
         ClientSocket &getSocket(void) { return (_socket); }
         std::string &getMachine(void) { return (_machine); }
@@ -41,10 +43,13 @@ namespace Zappy {
         void getOptions(int argc, char **argv);
         void loop(void);
     private:
+        void updateMapSize(void);
+        int _mapX = -1;
+        int _mapY = -1;
         int _port = -1;
         std::string _machine = "";
         ClientSocket _socket;
-        Sfml _graphics;
+        std::shared_ptr<IGraphicalModule> _graphics;
         World _world;
     };
 }

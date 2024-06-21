@@ -47,6 +47,17 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "ctime": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "chrono": "cpp",
+        "codecvt": "cpp",
+        "ratio": "cpp",
+        "iomanip": "cpp",
+        "*.h++": "cpp",
+        "utils.h": "c",
+        "commands.h": "c",
+        "server.h": "c"
     }
 }
