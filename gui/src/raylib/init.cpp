@@ -6,6 +6,7 @@
 */
 
 #include "Raylib.hpp"
+#include <filesystem>
 
 namespace Zappy {
      Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
@@ -14,7 +15,7 @@ namespace Zappy {
         _sun(raylib::Model(SUN_MODEL_PATH)),
         _moon(raylib::Model(MOON_MODEL_PATH)),
         _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
-        _arena(raylib::Model(ARENA_MODEL_PATH)),
+        _arena(raylib::Model(EGG_MODEL_PATH)),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")),
@@ -78,6 +79,8 @@ namespace Zappy {
         _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
 
         _tv.materials[2].shader = _shader;
+        if (std::filesystem::exists(ARENA_MODEL_PATH))
+            _arena = raylib::Model(ARENA_MODEL_PATH);
         for (int i = 0; i < _arena.materialCount; i++)
             _arena.materials[i].shader = _shader;
 
