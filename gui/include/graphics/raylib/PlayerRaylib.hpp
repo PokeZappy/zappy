@@ -17,7 +17,7 @@ namespace Zappy {
     public:
         PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo,
             size_t gridSize, raylib::Shader &shader);
-        void draw(const raylib::Camera camera);
+        void draw(const raylib::Camera camera, bool selectionMode);
         void update(void);
         void loadTextureAndModel(raylib::Shader &shader);
 

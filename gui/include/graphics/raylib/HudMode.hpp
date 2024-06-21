@@ -18,6 +18,7 @@ namespace Zappy {
             };
             void switchState() { _activated = !_activated; }
             bool activated() { return _activated; }
+            void setTile(std::shared_ptr<Tile> tile) { _selectedTile = tile; }
             std::shared_ptr<Tile> getTile() { return _selectedTile; }
             std::vector<std::shared_ptr<PlayerRaylib>> getPlayers() { return _selectedPlayers; }
             void drawBackground() {

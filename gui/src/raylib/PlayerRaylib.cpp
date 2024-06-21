@@ -124,7 +124,7 @@ namespace Zappy
         }
     }
 
-    void PlayerRaylib::draw(const raylib::Camera camera)
+    void PlayerRaylib::draw(const raylib::Camera camera, bool selectionMode)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
@@ -142,7 +142,8 @@ namespace Zappy
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
             raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 5.0f));
         playerPos.y += _height + 5;
-        _textTexture.DrawBillboard(camera, playerPos, 15);
+        if (selectionMode)
+            _textTexture.DrawBillboard(camera, playerPos, 15);
     }
 
     int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)

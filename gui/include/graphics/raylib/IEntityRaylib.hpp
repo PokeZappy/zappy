@@ -25,7 +25,6 @@ namespace Zappy
             virtual void setHeight(float height) = 0;
             virtual void move(raylib::Vector3 vector) = 0;
             virtual raylib::Vector3 getPosition(void) const = 0;
-            virtual void draw(const raylib::Camera camera) = 0;
             virtual void update(void) = 0;
     };
 }
