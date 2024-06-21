@@ -98,7 +98,7 @@ player_t *init_player(team_t *team, server_t *server)
     for (int i = 0; i < ITEM_PER_TILE; i++)
         player->_inventory[i] = 0;
     player->_inventory[0] = 9;
-    player->_health = 150000;
+    player->_health = 126;
     player->_team = team;
     team->_current_clients++;
     check_for_pos(player, server);
