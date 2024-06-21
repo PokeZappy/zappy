@@ -10,6 +10,8 @@
 #include "World.hpp"
 #include "Tile.hpp"
 #include "IEntity.hpp"
+#define GUI_WIDTH 1920
+#define GUI_HEIGHT 1080
 
 namespace Zappy
 {

@@ -13,6 +13,7 @@
 #include "Utils.hpp"
 #include <libconfig.h++>
 #include "DebugMode.hpp"
+#include "HudMode.hpp"
 
 #define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
@@ -29,8 +30,6 @@ namespace Zappy {
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     class Raylib : public AGraphicalModule {
-        #define GUI_WIDTH 1920
-        #define GUI_HEIGHT 1080
         public:
             Raylib();
             void render(const World &world) override;
@@ -41,6 +40,7 @@ namespace Zappy {
 
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
+            void drawGui(const World &world);
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
@@ -103,6 +103,7 @@ namespace Zappy {
             raylib::Shader _shader;
             Light _lights[MAX_LIGHTS];
 
-            bool _selectionMode = true;
+            // HUD
+            std::unique_ptr<HudMode> _hudMode;
     };
 }

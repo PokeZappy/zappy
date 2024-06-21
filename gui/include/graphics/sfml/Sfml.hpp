@@ -22,8 +22,6 @@ namespace Zappy {
     } mouse_pos_t;
 
     class Sfml : public AGraphicalModule {
-    #define GUI_WIDTH 1920
-    #define GUI_HEIGHT 1080
     public:
         Sfml();
         void update(const World &world) override;

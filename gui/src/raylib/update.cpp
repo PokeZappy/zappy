@@ -25,7 +25,7 @@ namespace Zappy {
             }
         }
         if (IsKeyPressed(KEY_N)) {
-            _selectionMode = !_selectionMode;
+            _hudMode->switchState();
         }
         if (IsKeyPressed(KEY_P)) {
             if (debugMode->activated() && debugMode->getType() == NONE) {
