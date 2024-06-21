@@ -13,7 +13,7 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
     command_t *cmd = (command_t *)malloc(sizeof(command_t));
     player_t *player = client->player;
 
-    cmd->name = "incantation";
+    cmd->name = "Incantation";
     cmd->ptr = cmd_post_incant;
     cmd->time = 300;
     if (!check_incantation(server, player)) {

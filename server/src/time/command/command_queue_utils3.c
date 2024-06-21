@@ -6,7 +6,6 @@
 */
 
 #include "../../../include/commands.h"
-#include "../../../include/server.h"
 
 void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d)
 {
@@ -18,7 +17,7 @@ void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d)
         current = ficbcq(s, c);
         if (!current)
             return;
-        if (!strncmp(d->_args, "incantation", 11))
+        if (!strncmp(d->_args, "Incantation", 11))
             return;
         gettimeofday(&current_time, NULL);
         delay_ms = (current->_delay.tv_sec - current_time.tv_sec) * 1000000 +

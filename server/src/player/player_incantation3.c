@@ -22,7 +22,7 @@ delayed_command_t *ficbcq(server_t *s, client_socket_t *c)
     cmd_incantation_t *incantation;
 
     TAILQ_FOREACH(command, &s->_head_delayed_commands, entries) {
-        if (strncmp(command->_args, "incantation", 11) == 0) {
+        if (strncmp(command->_args, "Incantation", 11) == 0) {
             incantation = find_incantation(s, command->_client);
             if (is_participant(incantation, c))
                 return command;
