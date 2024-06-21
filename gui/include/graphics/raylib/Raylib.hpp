@@ -57,7 +57,7 @@ namespace Zappy {
 
             raylib::Window _window;
             raylib::Camera _camera;
-            std::vector<std::unique_ptr<PlayerRaylib>> _players;
+            std::vector<std::shared_ptr<PlayerRaylib>> _players;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;

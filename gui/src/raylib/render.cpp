@@ -14,7 +14,7 @@ namespace Zappy
     void Raylib::render(const World &world)
     {
         _hudMode->setTile(nullptr);
-        (void)world;
+        _hudMode->clearPlayers();
         if (debugMode->activated()) {
             renderDebug(world);
             return;
@@ -47,7 +47,7 @@ namespace Zappy
                     }
                     raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                     if (meshHit.hit) {
-                        _hudMode->setTile(std::make_unique<Tile>(world.getTiles()[x][y]));
+                        _hudMode->setTile(std::make_shared<Tile>(world.getTiles()[x][y]));
                         DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
                     } else {
                         DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
@@ -58,17 +58,18 @@ namespace Zappy
             drawTiles(world.getTiles());
 
             for (auto &player : _players) {
-                // if ((_hudMode->getTile() != nullptr) &&
-                // (_hudMode->getTile()->getX() == player->worldPlayer->getX()) &&
-                // (_hudMode->getTile()->getY() == player->worldPlayer->getY()))
-                    player->draw(_camera, _hudMode->activated());
+                if ((_hudMode->getTile() != nullptr) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getY() == player->worldPlayer->getY()))
+                    _hudMode->addPlayer(player);
+                player->draw(_camera, _hudMode->activated());
             }
 
             for (auto &egg : _eggs) {
                 // if ((_hudMode->getTile() != nullptr) &&
                 // (_hudMode->getTile()->getX() == egg->worldEgg->getX()) &&
                 // (_hudMode->getTile()->getY() == egg->worldEgg->getY()))
-                    egg->draw(_camera);
+                egg->draw(_camera);
             }
 
             _shader.EndMode();
