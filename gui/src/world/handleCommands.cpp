@@ -158,7 +158,10 @@ namespace Zappy
                 getEgg(id));
         }
         else if (commandName == "ebo") { // player connection for an egg
-
+            ss >> id;
+            addShellCommand("Player connected to egg " + std::to_string(id),
+                getEgg(id));
+            killEgg(id);
         }
         else if (commandName == "edi") { // death of an egg
             ss >> id;

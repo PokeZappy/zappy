@@ -16,7 +16,7 @@ class Incantator(Player):
         self.allowed_incantation_mns = 1
         self.goto = (0, self.limit[1] - 1)
         # TODO: self.dir == None
-        self.dir = 0
+        self.dir = None
         self.first_round = True
         self.pos = [0, 0]
         self.map = [[0 for _ in range(self.limit[0])] for _ in range(self.limit[1])]
@@ -138,9 +138,9 @@ class Incantator(Player):
                     self.pos[0], self.pos[1] = self.npos((self.pos[0], self.pos[1]))
                     self.map[self.pos[0]][self.pos[1]] = 2
                 if msgs == 'Right':
-                    self.dir = (self.dir + 1) % 4
-                if msgs == 'Left':
                     self.dir = (self.dir - 1) % 4
+                if msgs == 'Left':
+                    self.dir = (self.dir + 1) % 4
             elif recv_type == 'ko':
                 if msgs == 'Incantation':
                     self.allowed_incantation_mns -= 1
@@ -155,9 +155,20 @@ class Incantator(Player):
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
                 if self.debug_mode:
-                    print('elevation: ', msgs)
-                if int(msgs[-1]) > 1:
+                    print('elevation: incant', msgs)
+                if msgs == 'Elevation underway':
                     continue
+                if int(msgs[-1]) > 1:
+                    self.level += 1
+                    if self.level == 2:
+                        print('I am level 2, here, get out')
+                        self.queue.append('Right')
+                        self.queue.append('Right')
+                        self.queue.append('Forward')
+                        self.ready = True
+                    self.queue.append(('Take', 'food'))
+                    self.queue.append(('Take', 'food'))
+                    self.queue.append(('Take', 'food'))
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
@@ -174,7 +185,7 @@ class Incantator(Player):
         if self.dir is None and message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 self.get_north(message['direction'])
-                self.dir = self.path.facing
+                self.dir = self.path.facing #if self.path.facing % 2 == 0 else (self.path.facing + 2) % 4
         if message['msg'] == 'motus sum':
             self.count_pos += 1
         # TODO: see utility of self.global_message()
@@ -227,12 +238,12 @@ class Incantator(Player):
         if self.first_round:
             self.queue.append(('Set', 'food'))
             self.first_round = False
-        if self.life <= 400:
-            self.queue.append(('Take', 'food'))
+        if self.level > 2:
+            self.queue.append('Incantation')
         if self.dir == None:
             self.queue.append('Look')
             return
-        if self.dir is not None and self.level <= 2 and self.have_linemate == False and not self.ready:
+        if self.dir is not None and self.level < 2 and self.have_linemate == False and not self.ready:
             self.set_path_to_watch_linemate()
         if self.ready:
             if self.count_pos == 5:
@@ -241,6 +252,7 @@ class Incantator(Player):
                     self.queue.append('Incantation')
                 else:
                     self.queue.append('Incantation')
+                self.ready = False
             else:
                 self.queue.append('Look')
         if self.have_linemate and not self.ready:
@@ -248,7 +260,7 @@ class Incantator(Player):
                 self.queue.append('Right')
                 self.unset = False
                 return
-            self.queue.append('Right')
+            self.queue.append('Left')
             self.queue.append('Forward')
             self.ready = True
         # if self.allowed_incantation > self.level:

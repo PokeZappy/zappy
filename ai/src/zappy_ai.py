@@ -62,7 +62,7 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        rec: str = self.cli_socket.recv((8000)).decode()
+        rec: str = self.cli_socket.recv((80000)).decode()
         if self.debug_mode:
             print(f"Received action: {rec}")
         if rec == "" or rec == "dead\n":

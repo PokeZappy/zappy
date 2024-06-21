@@ -1,4 +1,5 @@
 from socket import socket
+import re
 
 from ai.src.player.player import Player
 
@@ -17,33 +18,31 @@ class Pnj(Player):
         self.dir = None
         self.first_round = True
     
-    # def recv_treatment(self, buf: str) -> None:
-    #     """
-    #     This method treats the received message.
+    def recv_treatment(self, buf: str) -> None:
+        """
+        This method treats the received message.
 
-    #     :param buf: str - The received message.
-    #     :return: None
-    #     """
-    #     recv_type, msg = self.message.receive(buf)
-    #     if recv_type == 'ok':
-    #         if msg[1] == 'food':
-    #             self.life += self.FOOD
-    #         self.actions.pop(0)
-    #     if recv_type == 'ko':
-    #         self.actions.pop(0)
-    #     elif recv_type == 'broadcast':
-    #         self.broadcast_traitement(msg)
+        :param buf: str - The received message.
+        :return: None
+        """
+        super().recv_treatment(buf)
+        match = re.match(r'Current level: (\d+)\n', buf)
+        if match:
+            if int(match.group(1)) == 2:
+                print('I am level 2, here')
+                self.queue.append('Right')
+                self.queue.append('Right')
+                self.queue.append('Forward')
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            if int(match.group(1)) == 2:
+                self.message.buf_messages('motus sum')
+                self.queue.append('Broadcast')
+
+        
 
     def broadcast_traitement(self, message: tuple | str) -> None:
-        if message['msg'] == 'felix carmen':
-            self.allowed_to_move = True
-            self.level += 1
-            self.life -= self.INCANTATION
-        if message['msg'] == 'defecit carmen':
-            self.allowed_to_move = True
-        if message['msg'] == 'comedent ut incant : ':
-            for _ in range(message['nbr']):
-                self.queue.append('Take food')
         if message['msg'] == 'movere ad : ':
             self.goto = message['info']
         if message['msg'] == 'est dominus aquilonis':

@@ -14,7 +14,7 @@
 #include <optional>
 
 class ClientSocket {
-    #define BUFFER_SIZE 1024
+    #define BUFFER_SIZE 10000
 
     public:
         ClientSocket() {};
