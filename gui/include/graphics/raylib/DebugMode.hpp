@@ -21,7 +21,7 @@ namespace Zappy {
 
     class DebugMode {
     public:
-        DebugMode(void);
+        DebugMode(raylib::Shader &shader);
         // DebugMode(void) = default;
         void activate(raylib::Camera &camera);
         void desactive(raylib::Camera &camera);
@@ -61,9 +61,10 @@ namespace Zappy {
         raylib::Model _model;
         std::vector<raylib::ModelAnimation> _animations;
         double _scaleModel = 20.0f;
-        bool _activated = false;    
+        bool _activated = false;
         bool _shiny = false;
         int _animIndex = -1;
         int _animFrame = 0;
+        raylib::Shader &_shader;
     };
 }
