@@ -89,12 +89,6 @@ void create_current_incantation(server_t *server, player_t *player)
     cmd_incantation->participants = rip(server, player);
     cmd_incantation->number_of_participants =
     player_same_pos_and_level(server, player);
-    for (int i = 0; i < cmd_incantation->number_of_participants; i++) {
-        dprintf(get_gui(server)->socket, "pic %d %d %d %d\n", player->_pos._x,
-        player->_pos._y, player->_level,
-        cmd_incantation->participants[i]->socket);
-        dprintf(cmd_incantation->participants[i]->socket,
-        "Elevation underway\n");
-    }
+    send_gui_elevation(server, cmd_incantation, player);
     TAILQ_INSERT_TAIL(&server->_head_incantation, cmd_incantation, entries);
 }
