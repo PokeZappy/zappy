@@ -38,7 +38,7 @@ def start_ai():
         # mybot = Pusher(server_info, cli_socket, debug)
         mybot = Collector(server_info, cli_socket, debug)
         mybot.run()
-    except (ValueError, AssertionError) as e:
+    except (ValueError, AssertionError, ConnectionError, ConnectionRefusedError, Exception) as e:
         print(f"NOP: {e}")
         return 84
     return 0
