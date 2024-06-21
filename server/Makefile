@@ -1,14 +1,17 @@
 ##
 ## EPITECH PROJECT, 2024
-##
+## B-YEP-400-LYN-4-1-zappy-tom.blancheton
 ## File description:
 ## Makefile
 ##
 
-SRC = 	$(wildcard src/*.c)
+SRC = 	$(wildcard src/*.c) \
+		$(wildcard src/**/*.c) \
+		$(wildcard src/**/**/*.c)
 
 OBJ = $(SRC:.c=.o)
-
+MAIN = main.c
+MY_MAIN = tests/my_main.c
 TESTS_SRC = $(SRC)
 TESTS_SRC += $(wildcard tests/*.c)
 
@@ -20,21 +23,32 @@ NAME = zappy_server
 
 CXXFLAGS = -Wall -Wextra -g3 -Iinclude
 CXXFLAGS += -lpthread
+EXTRAFLAGS = -lcurses
 
 LDLIBS += -L./criterion/lib -lcriterion
 
 CC = g++
 
+ECHO = echo -e
+GREEN = "\033[0;32m"
+RED = "\033[0;31m"
+BLUE = "\033[0;34m"
+DEFAULT = "\033[0m"
+
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	$(CC) -o $(NAME) main.c $(OBJ) $(CXXFLAGS)
+	@ $(CC) -o $(NAME) $(MAIN) $(OBJ) $(CXXFLAGS) && \
+	$(ECHO) $(GREEN) "ZAPPY_SERVER COMPILED" || \
+	$(ECHO) $(RED) "ZAPPY_SERVER NON COMPILED"
 
 clean:
-	rm -f $(OBJ)
+	@ rm -f $(OBJ)
+	@ $(ECHO) $(GREEN) "CLEANED"
 
 fclean: clean
-	rm -f $(NAME)
+	@ rm -f $(NAME)
+	@ $(ECHO) $(GREEN) "FCLEANED"
 
 re: fclean all
 
@@ -48,5 +62,10 @@ tests_clean: fclean
 
 coverage:
 	gcovr
+
+.c.o:
+		@$(CC) $(CFLAGS) $(LDFLAGS) -c $< -o $@ && \
+        $(ECHO) $(GREEN) "[OK]" $(BLUE) $< $(DEFAULT) || \
+        ($(ECHO) $(RED) "[XX]" $(BLUE) $< $(DEFAULT) && exit 1)
 
 .PHONY: all clean fclean re tests_run coverage
