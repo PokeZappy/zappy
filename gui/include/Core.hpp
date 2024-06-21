@@ -19,8 +19,7 @@
 namespace Zappy {
     class Core {
     public:
-        Core() {
-        };
+        Core() = default;
         ~Core() = default;
         void setPort(int port) { _port = port; }
         void setMachine(std::string &machine) { _machine = machine; }
