@@ -126,8 +126,6 @@ class Incantator(Player):
             if self.debug_mode:
                 print(f'recv_type: {recv_type} and msgs: {msgs}')
             if recv_type == 'ok':
-                if msgs == 'Incantation':
-                    self.level += 1
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     self.life += self.FOOD
                 if msgs[0] == 'Take' and msgs[1] == 'linemate':
@@ -250,6 +248,7 @@ class Incantator(Player):
                 if self.have_linemate:
                     self.queue.append(('Set', 'linemate'))
                     self.queue.append('Incantation')
+                    self.have_linemate = False
                 else:
                     self.queue.append('Incantation')
                 self.ready = False

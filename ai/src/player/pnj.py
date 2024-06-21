@@ -36,9 +36,9 @@ class Pnj(Player):
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
-            if int(match.group(1)) == 2:
-                self.message.buf_messages('motus sum')
-                self.queue.append('Broadcast')
+            # if int(match.group(1)) == 2:
+            #     self.message.buf_messages('motus sum')
+            #     self.queue.append('Broadcast')
 
         
 
