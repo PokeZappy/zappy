@@ -11,7 +11,6 @@
 
 namespace Zappy
 {
-#define GRID_SIZE 20
     enum class Orientation {
         NONE,
         NORTH,

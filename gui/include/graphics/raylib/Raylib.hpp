@@ -31,6 +31,8 @@
 // #define TILE_TEXTURE_PATH "assets/textures/pokemon_tile.png"
 #define TILE_TEXTURE_PATH "assets/textures/ice_tile.png"
 
+#define MAIN_THEME_PATH "assets/menu/SouthProvince.ogg"
+
 namespace Zappy {
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
@@ -111,5 +113,8 @@ namespace Zappy {
 
             // HUD
             std::unique_ptr<HudMode> _hudMode;
+
+            // Sounds and Themes
+            raylib::Music _mainTheme;
     };
 }

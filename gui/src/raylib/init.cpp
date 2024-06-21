@@ -17,8 +17,8 @@ namespace Zappy {
         _arena(raylib::Model(ARENA_MODEL_PATH)),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")
-        )
+        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs")),
+        _mainTheme(raylib::Music(MAIN_THEME_PATH))
     {
         _window.SetTargetFPS(60);
         try
@@ -121,5 +121,7 @@ namespace Zappy {
             float correction = tileCount % 2 == 0 ? gridSize / 2 : 0;
             return tileCount / 2 * gridSize - correction;
         };
+
+        // _mainTheme.Play(); // TODO play this to milk your ears
     }
 }

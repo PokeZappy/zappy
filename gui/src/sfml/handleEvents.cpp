@@ -39,12 +39,13 @@ namespace Zappy
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             _view.zoom(0.95f);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            _view.rotate(-2);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            _view.rotate(2);
-        }
+        //TODO uncomment this before keynote pleaaaaase
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        //     _view.rotate(-2);
+        // }
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        //     _view.rotate(2);
+        // }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             _window.close();
         }

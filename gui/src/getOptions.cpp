@@ -14,7 +14,7 @@ namespace Zappy
     {
         int opt;
 
-        while ((opt = getopt(argc, argv, "p:h:")) != -1) {
+        while ((opt = getopt(argc, argv, "p:h:d")) != -1) {
             switch (opt) {
             case 'p':
                 if (_port != -1)
@@ -25,6 +25,9 @@ namespace Zappy
                 if (_machine != "")
                     throw DoubleOptionException();
                 _machine = optarg;
+                break;
+            case 'd':
+                _graphics = std::make_shared<Sfml>();
                 break;
             default:
                 throw InvalidOptionException(); break;
