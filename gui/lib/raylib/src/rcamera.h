@@ -473,7 +473,7 @@ void UpdateCamera(Camera *camera, int mode)
             if (mouseDelta.y > 0.0f) CameraMoveUp(camera, -CAMERA_PAN_SPEED);
             if (mouseDelta.y < 0.0f) CameraMoveUp(camera, CAMERA_PAN_SPEED);
         }
-        else
+        else if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
             // Mouse support
             CameraYaw(camera, -mousePositionDelta.x*CAMERA_MOUSE_MOVE_SENSITIVITY, rotateAroundTarget);

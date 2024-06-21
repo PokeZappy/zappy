@@ -20,7 +20,6 @@ namespace Zappy {
             _camera.BeginMode();
             _shader.BeginMode();
 
-
             debugMode->drawModel();
 
             _shader.EndMode();

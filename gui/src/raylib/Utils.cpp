@@ -68,7 +68,7 @@ namespace Zappy
         raylib::Vector3 sunPosition;
         // sunPosition.x = SUN_PEAK_WIDTH * (timeInCycle / cycle_duration_sec) - SUN_PEAK_WIDTH / 2;
         sunPosition.y = SUN_PEAK_HEIGHT * sin(angle);
-        sunPosition.z = 0.0;
+        sunPosition.z = 1500.0;
         if (timeInCycle < HALF_CYCLE) {
             sunPosition.x = -SUN_PEAK_WIDTH / 2 + (SUN_PEAK_WIDTH * (timeInCycle / HALF_CYCLE)) + _mapX * _gridSize / 2;
         } else {

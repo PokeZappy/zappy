@@ -40,10 +40,10 @@ namespace Zappy {
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        float ambientLight = 0.3f;
+        float ambientLight = 0.5f;
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
-        debugMode = std::make_unique<DebugMode>();
+        debugMode = std::make_unique<DebugMode>(_shader);
         _hudMode = std::make_unique<HudMode>();
         _window.ToggleFullscreen();
 

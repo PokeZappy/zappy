@@ -4,7 +4,6 @@ import random
 from abc import abstractmethod
 from datetime import datetime
 
-import ai.src.mvt.tsp as tsp
 from ai.src.zappy_ai import Bot
 from ai.src.gameplay.enum_gameplay import Directions as dir
 from ai.src.mvt.path import Path
