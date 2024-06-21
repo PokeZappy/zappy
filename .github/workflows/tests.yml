@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - dev-ia
 
 jobs:
   build:
@@ -15,9 +16,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
     - name: Install pytest
-      run: pip install pytest
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-    - name: Build & do test
-      run: |
-        make tests_run
+      run: pip install pytest pytest-cov pytest-mock
+    - name: Make unit tests
+      run: make tests_run
