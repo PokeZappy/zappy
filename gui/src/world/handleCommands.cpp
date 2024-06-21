@@ -104,11 +104,11 @@ namespace Zappy
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} succeeded", getPlayer(id));
             }
-            else
+            else {
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
             }
-        }
+    }
         else if (commandName == "pfk") { // egg laying by the player
 
         }
