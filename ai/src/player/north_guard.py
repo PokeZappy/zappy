@@ -3,15 +3,15 @@ from abc import ABC
 
 from ai.src.player.player import Player
 from ai.src.mvt import path
-from ai.src.utils.info_look import look_resources
 
 
 class NorthGuard(Player):
 
-    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False, yo: bool = False):
+    def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False, first: bool = False):
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
         self.first: bool = False
+        self.take_the_pole()
 
     def say_the_north(self):
         """
@@ -21,12 +21,15 @@ class NorthGuard(Player):
         self.queue.append('Broadcast')
         self.life -= self.ACTION
 
-    def return_to_the_north(self):
-        """
-
-        """
-    #     TODO - si poussé retourne sur sa casse Est ou Ouest avec la clear queue
-        pass
+    def take_the_pole(self) -> None:
+        if not self.first:
+            self.turn_to_the_north()
+        self.eject_security = False
+        self.queue.append('Forward')
+        self.queue.append('Forward')
+        self.life -= self.ACTION * 2
+        self.first = True
+        self.eject_security = True
 
     def make_action(self) -> None:
         """
@@ -34,11 +37,8 @@ class NorthGuard(Player):
         """
         if len(self.actions) >= 1 or len(self.queue) > 6:
             return
-        # TODO - rajouter la grille
-        if not self.first:
-            self.queue.append('Forward')
-            self.life -= self.ACTION
-            self.first = True
-        else:
-            self.say_the_north()
+        if self.life <= 142:
+            self.message.buf_messages(message='Ego plus viribus')
+            self.queue.append('Broadcast')
+        self.say_the_north()
         self.apply_action()

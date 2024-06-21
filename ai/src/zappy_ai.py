@@ -124,6 +124,17 @@ class Bot(object):
         if self.debug_mode:
             print('message send')
 
+    def broadcast_bis(self) -> None:
+        """
+         Send a broadcast message to all bots.
+
+         :return: None
+         """
+        self.life -= self.ACTION
+        self.send_action(f'{self.message.send_buf_bis()}\n')
+        if self.debug_mode:
+            print('message send')
+
     def nbr_of_slot(self) -> None:
         """
         Send a 'Connect_nbr' command to check the number of team unused slots.

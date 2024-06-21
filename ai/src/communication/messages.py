@@ -32,6 +32,7 @@ class Messages(object):
         self.cipher: Cipher = cipher
         self.language: Latin = language
         self.msg: str = 'Broadcast "'
+        self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
 
     def send_coord(self, message: str, pos: tuple[int, int]) -> str:
@@ -152,7 +153,7 @@ class Messages(object):
         return 'broadcast', result
 
     def buf_messages(self, message: str, coord: tuple[int, int] = None,
-                     infos: list[list[str, str]] = None, my_id: int = -1) -> None:
+                     infos: list[list[str, str]] = None, my_id: int = -1, bis: bool = False) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
@@ -160,6 +161,7 @@ class Messages(object):
         :param coord: tuple[int, int] - The coordinates of the message.
         :param infos: list[list[str, str] | any] - Additional information related to the message.
         :param my_id: int - Additional id related to the message
+        :param bis: bool - Additional buffer, avoid a broadcast with two messages in conflict
         :return: None
         """
         if coord is not None:
@@ -168,13 +170,14 @@ class Messages(object):
             message += f'#{"~".join(";".join(info) for info in infos)}'
         if my_id != -1:
             message += f'#{my_id}'
-        self.buf_msg_default(message)
+        self.buf_msg_default(message, bis)
 
-    def buf_msg_default(self, message: str) -> None:
+    def buf_msg_default(self, message: str, bis: bool) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
         :param message: str - The message to be sent.
+        :param bis: bool - Additional buffer, avoid a broadcast with two messages in conflict
         :return: None
         """
         new_uuid: str = ""
@@ -183,10 +186,16 @@ class Messages(object):
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
         encrypted_msg = self.cipher.encryption(message)
-        if self.msg == 'Broadcast "':
-            self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+        if bis is False:
+            if self.msg == 'Broadcast "':
+                self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            else:
+                self.msg += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
         else:
-            self.msg += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            if self.msg_bis == 'Broadcast "':
+                self.msg_bis += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            else:
+                self.msg_bis += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
 
     def send_buf(self) -> str:
         """
@@ -196,4 +205,14 @@ class Messages(object):
         """
         result = self.msg + '"'
         self.msg = 'Broadcast "'
+        return result
+
+    def send_buf_bis(self) -> str:
+        """
+        Format and return the buffered messages for broadcasting.
+
+        :return: str - A formatted string representing the buffered messages for broadcasting.
+        """
+        result = self.msg_bis + '"'
+        self.msg_bis = 'Broadcast "'
         return result

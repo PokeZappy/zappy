@@ -47,7 +47,7 @@ class Player(Bot):
         self.path = Path(self.limit, (0, 0), (0, 0))
         self.death: any = False
         self.got_id: int = 0
-        # self.got_id: bool = False
+        self.eject_security = True
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -136,13 +136,16 @@ class Player(Bot):
             return
         if self.path.facing == dir.EAST.value:
             self.queue.append('Left')
+            self.life -= self.ACTION
             self.path.facing = dir.NORTH.value
         if self.path.facing == dir.WEST.value:
             self.queue.append('Right')
+            self.life -= self.ACTION
             self.path.facing = dir.NORTH.value
         if self.path.facing == dir.SOUTH.value:
             self.queue.append('Right')
             self.queue.append('Right')
+            self.life -= self.ACTION * 2
             self.path.facing = dir.NORTH.value
 
     def move_to(self, pos: tuple[int, int]) -> None:
@@ -159,9 +162,13 @@ class Player(Bot):
     def get_id(self, message: str) -> None:
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
 
     def apply_action(self) -> None:
         """
@@ -189,6 +196,8 @@ class Player(Bot):
             self.nbr_of_slot()
         elif action == 'Broadcast':
             self.broadcast()
+        elif action == 'Broadcast bis':
+            self.broadcast_bis()
         elif action == 'Forward':
             self.forward()
         elif action == 'Right':
@@ -285,7 +294,7 @@ class Player(Bot):
     def broadcast_traitement(self, msg: tuple | str) -> None:
         pass
 
-    def global_message(self, message: tuple | str | dict) -> None:
+    def global_message(self, message: tuple | str | dict = None) -> None:
         # TODO - faire les messages globaux comme le changement de metier
         pass
 
@@ -295,12 +304,14 @@ class Player(Bot):
         :param msg:
         :return:
         """
+        if self.eject_security is False:
+            return
         direction = int(msg)
+        self.queue.insert(0, 'Forward')
         if direction == 3:
-            self.queue.append('Left')
+            self.queue.insert(0, 'Left')
         if direction == 7:
-            self.queue.append('Right')
+            self.queue.insert(0, 'Right')
         if direction == 5:
-            self.queue.append('Right')
-            self.queue.append('Right')
-        self.queue.append('Forward')
+            self.queue.insert(0, 'Right')
+            self.queue.insert(0, 'Right')

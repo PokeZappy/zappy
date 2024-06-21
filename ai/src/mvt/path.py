@@ -85,10 +85,10 @@ class Path(object):
         :return: None
         """
         if west and eastward - 1 <= westward or not west:
-            self.path = [['Forward' * eastward]]
+            self.path = [['Forward'] * eastward]
             self.path_facing = [face.EAST.value]
         else:
-            self.path = [['Forward' * westward]]
+            self.path = [['Forward'] * westward]
             self.path_facing = [face.WEST.value]
         if north:
             self.path += [['Forward'] * northward]
