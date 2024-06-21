@@ -141,7 +141,7 @@ class Messages(object):
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
-                print(f'after recv ttt: {result}')
+                # print(f'after recv ttt: {result}')
         if not result:
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result

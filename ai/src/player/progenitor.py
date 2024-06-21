@@ -12,32 +12,19 @@ class Progenitor(Player):
         self.pos = (0, 0)
         self.the_place_to_be = (0, 0)
         self.nbr_of_child_to_create = -1
-
-
-    def recv_treatment(self, buf: str) -> None:
-        """
-        This method treats the received message.
-
-        :param buf: str - The received message.
-        :return: None
-        """
-        self.actions.pop(0)
     
     def make_action(self) -> None:
-        if self.the_place_to_be != self.pos:
-            self.move_to(self.the_place_to_be)
-        elif self.need_eat > 0:
-            self.need_eat -= 1
-            self.queue = [ele for ele in self.queue if ele != 'Fork']
+        if len(self.queue) > 0:
+            self.apply_action()
+        if len(self.actions) > 2:
+            return
+        if self.life <= self.INCANTATION + self.FORK:
             self.queue.append(['Take', 'food'])
         else:
             if self.nbr_of_child_to_create > 0 or self.nbr_of_child_to_create == -1:
                 self.queue.append('Fork')
                 if self.nbr_of_child_to_create != -1:
                     self.nbr_of_child_to_create -= 1
-        if len(self.queue) > 0:
-            print(f'actions progenitor : {self.actions}')
-            self.apply_action()
     
     def broadcast_traitement(self, message: tuple | str) -> None:
         self.global_message()

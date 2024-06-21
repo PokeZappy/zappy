@@ -50,13 +50,11 @@ class Pusher(Player):
         if len(self.actions) > 1:
             return
         if self.life <= 300:
-            print("life")
-            self.queue.append('Take food')
+            self.queue.append(('Take', 'food'))
         elif self.goto is None:
             self.message.buf_messages('Pusher')
             self.message.buf_messages('Quo ego vado')
             self.queue.append('Broadcast')
-            print("after_broadcast")
             # self.goto = not None
         elif not self.is_in_position:
             #TODO: ask for a direction to go to

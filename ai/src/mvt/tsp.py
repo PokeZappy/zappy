@@ -47,7 +47,7 @@ class HeldKrap(object):
         action = []
         valid_road = False
         for ele in road:
-            print(f"ele tsp: {ele}")
+            # print(f"ele tsp: {ele}")
             if ele[0] != 'Take':
                 action.append(Path(self.limit, pos, ele).opti_path()[0])
                 pos = ele

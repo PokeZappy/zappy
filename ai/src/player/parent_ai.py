@@ -18,7 +18,7 @@ class ParentAI(Player):
             # RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.NORTH_GUARD,
-            # RoleInGame.INCANTATOR,
+            RoleInGame.INCANTATOR,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
@@ -38,7 +38,7 @@ class ParentAI(Player):
             # RoleInGame.COLLECTOR,
             # RoleInGame.COLLECTOR,
             ]
-    DEFAULT_ROLE = RoleInGame.PNJ
+    DEFAULT_ROLE = RoleInGame.COLLECTOR
 
     BIND = {
         RoleInGame.PROGENITOR: Progenitor,
@@ -159,24 +159,15 @@ class ParentAI(Player):
         else:
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
-            if recv_type == 'ok' or recv_type == 'ko':
-                # TODO: make brodacast with cyprien
-                # if self.is_broadcast(buf):
-                #     self.apply_broadcast(buf)
-                #     return
-                # self.apply_action(buf)
-                l = 1
-            else:
-                #TODO: communication broadcast
-                continue
-            self.actions.pop(0)
+            if recv_type == 'ok' or recv_type == 'slots':
+                self.actions.pop(0)
+            # else:
+            #     #TODO: communication broadcast
+            #     continue
 
 
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
-        print(buf)
-        print(self.queue)
-        print(self.actions)
         if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
             for _ in range(0, int(buf)):
                 self.real_fork()
@@ -198,7 +189,6 @@ class ParentAI(Player):
         self.queue.append('Fork')
         if self.counter > 0:
             self.counter -= self.FORK_ACTION
-        print (self.counter)
         if self.counter <= 0:
             self.queue.append('Slots')
             self.fork_gave += 1
@@ -228,15 +218,9 @@ class ParentAI(Player):
         """
         This is being used when parent_ai is a mastermind
         """
-        if len(self.queue) > 0 and len(self.actions) < 8:
-            self.apply_action()
-        if len(self.actions) > 0:
-            return
-        print('action as mastermind')
         if self.life <= 300:
             self.queue.append(('Take', 'food'))
         elif not self.communicate_orders():
-            print('communicate orders')
             self.queue.append('Look')
         self.queue.append('Slots')
 
@@ -252,9 +236,16 @@ class ParentAI(Player):
         if self.first_round[1]:
             return
         if self.role == RoleInGame.PROGENITOR:
+            if len(self.queue) > 0:
+                self.apply_action()
+            if len(self.actions) > 0:
+                return
             self.action_as_progenitor()
-            self.apply_action()
         elif self.role == RoleInGame.MASTERMIND:
+            if len(self.queue) > 0 and len(self.actions) == 0:
+                self.apply_action()
+            if len(self.actions) > 0:
+                return
             self.action_as_mastermind()
 
     def get_broadcast(self, broadcast_recv: str):

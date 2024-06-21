@@ -243,8 +243,11 @@ class Player(Bot):
                 self.looked = True
                 self.environment = msgs
             if recv_type == 'inventory':
-                print("inventory")
+                if self.debug_mode:
+                    print("inventory")
             if recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue

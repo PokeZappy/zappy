@@ -206,13 +206,13 @@ class Collector(Player):
                 self.go_to_start()
         if message['msg'] == 'Ego sum publicani ibi' and self.got_id < 3:
             self.id += 1
-            print(f'message id inc is {message}|end')
-            print(message['nbr'][0])
+            # print(f'message id inc is {message}|end')
+            # print(message['nbr'][0])
             # TODO - ADD parser id to replace missing id if collector died in :message['nbr'][0]
-            print(f'my id is now: {self.id}')
+            # print(f'my id is now: {self.id}')
         if message['msg'] == 'Quot publicani ibi sunt?':
-            print([self.id])
-            print(type([self.id]))
+            # print([self.id])
+            # print(type([self.id]))
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
         #     TODO - Change the string to have the real string send by incantator or M&M's

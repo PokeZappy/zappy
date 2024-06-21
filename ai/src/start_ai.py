@@ -37,14 +37,14 @@ def start_ai():
             elif sys.argv[i - 1] != '-p' and sys.argv[i - 1] != '-n' and sys.argv[i - 1] != '-h':
                 raise ValueError("Invalid argument")
         server_info, cli_socket = connection(port, name, machine)
-        # mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
+        mybot = ParentAI(server_info, cli_socket, debug, machine, port, name)
         # mybot = Pnj(server_info, cli_socket, debug)
         # mybot = Pusher(server_info, cli_socket, debug)
         # mybot = Collector(server_info, cli_socket, debug)
         # mybot = First_born(server_info, cli_socket, debug)
         # mybot = NorthGuard(server_info, cli_socket, debug)
         # mybot = Incantator(server_info, cli_socket, debug)
-        mybot = Progenitor(server_info, cli_socket, debug)
+        # mybot = Progenitor(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError) as e:
         print(f"NOP: {e}")

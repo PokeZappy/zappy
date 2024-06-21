@@ -39,7 +39,6 @@ class First_born(Player):
         self.debug_mode = debug_mode
 
     def change_role(self) -> None:
-        print(f'bind: {[self.BIND[self.role[0]][1]]}')
         self.message.buf_messages('Ego me transform : ', infos=[[self.BIND[self.role[0]][1]]])
         self.queue.append('Broadcast')
         self.transformation = True
@@ -58,10 +57,10 @@ class First_born(Player):
         if i != 0:
             self.queue.append('Forward')
         if i == 1:
-            self.queue.append('Left')
+            self.queue.append('Right')
             self.queue.append('Forward')
         elif i == 3:
-            self.queue.append('Right')
+            self.queue.append('Left')
             self.queue.append('Forward')
         self.queue.append('Newborn')
     
@@ -111,9 +110,9 @@ class First_born(Player):
             if rd != 0 or rd != 6:
                 self.queue.append('Forward')
         if rd < 3:
-            self.queue.append('Left')
-        elif rd > 3:
             self.queue.append('Right')
+        elif rd > 3:
+            self.queue.append('Left')
         if rd != 3:
             self.queue.append('Forward')
             if rd == 0 or rd == 6:
@@ -152,21 +151,15 @@ class First_born(Player):
             self.goto(rd)        
 
     def recv_treatment(self, buf: str) -> None:
-        print('paret au traitement')
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
-            if self.debug_mode:
-                print(f"Received action: {recv_type} {msgs}")
-            print('test test test test test test test test test')
             if recv_type == 'look':
-                print('look is here')
                 self.update_map(msgs)
                 self.update_actions()
             elif recv_type == 'ok':
-                print('ok is here')
                 if msgs == 'Forward':
                     if self.dir == 0:
                         self.pos[0] = (self.pos[0] + 1) % self.limit[0]
@@ -176,26 +169,22 @@ class First_born(Player):
                         self.pos[0] = (self.pos[0] - 1) % self.limit[0]
                     else:
                         self.pos[1] = (self.pos[1] - 1) % self.limit[1]
-                if msgs == 'Right':
-                    self.dir = (self.dir + 1) % 4
                 if msgs == 'Left':
+                    self.dir = (self.dir + 1) % 4
+                if msgs == 'Right':
                     self.dir = (self.dir - 1) % 4
                 if msgs == 'Broadcast':
-                    print('present')
                     if self.transformation:
                         if len(self.role) > 0:
                             self.death = self.role[0]
                         else:
                             self.death = self.DEFAULT_ROLE
             elif recv_type == 'broadcast':
-                print('broadcast is here but before')
                 if msgs[0] == 'ko':
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
-                print('broadcast is here and done')
                 continue
-            print('this is the end')
             self.actions.pop(0)
 
     def broadcast_traitement(self, msg: dict[str, str] | str | tuple) -> None:

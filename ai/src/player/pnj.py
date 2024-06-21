@@ -15,7 +15,6 @@ class Pnj(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.goto = None
         self.dir = None
-        self.allowed_to_move = True
         self.first_round = True
     
     # def recv_treatment(self, buf: str) -> None:
@@ -51,12 +50,12 @@ class Pnj(Player):
             if self.path.facing is None:
                 self.get_north(message['direction'])
                 if self.path.facing == 0:
-                    self.queue.append('Right')
+                    self.queue.append('Left')
                     self.queue.append('Forward')
-                elif self.path.facing == 1:
+                elif self.path.facing == 3:
                     self.queue.append('Forward')
                 elif self.path.facing == 2:
-                    self.queue.append('Left')
+                    self.queue.append('Right')
                     self.queue.append('Forward')
                 else:
                     self.queue.append('Right')
@@ -72,9 +71,9 @@ class Pnj(Player):
         if self.first_round:
             self.queue.append(('Set', 'food'))
             self.first_round = False
-        if not self.allowed_to_move:
-            return
-        while len(self.queue) > 0:
+        if len(self.queue) > 0 and len(self.actions) < 1:
             self.apply_action()
-        self.allowed_to_moove = False
+        if len(self.actions) > 0:
+            return
+        
 
