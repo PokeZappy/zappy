@@ -14,7 +14,7 @@ void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p)
     sprintf(buffer, "pic %d %d %d\n", p->_pos._x,
     p->_pos._y, p->_level);
     for (int i = 0; i < c->number_of_participants; i++) {
-        sprintf(buffer, "%s %d", buffer ,
+        sprintf(buffer, "%s %d", buffer,
         c->participants[i]->socket);
         dprintf(c->participants[i]->socket,
                 "Elevation underway\n");
