@@ -137,7 +137,7 @@ namespace Zappy {
                 _eggs[i]->kill();
             }
             _eggs[i]->update();
-            if (_eggs[i]->getHeight() > 2000) {
+            if (_eggs[i]->isDying()) {
                 _eggs.erase(_eggs.begin() + i - decal);
                 decal++;
             }

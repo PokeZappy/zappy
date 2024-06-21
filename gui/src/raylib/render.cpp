@@ -16,11 +16,10 @@ namespace Zappy
         _hudMode->setTile(nullptr);
         _hudMode->clearPlayers();
         if (debugMode->activated()) {
-            renderDebug(world);
+            renderDebug();
             return;
         }
         raylib::Color textColor = raylib::Color::Black();
-        raylib::Ray ray(GetMousePosition(), _camera);
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::SkyBlue());
@@ -38,22 +37,6 @@ namespace Zappy
 
             _sun.Draw(_lights[0].position, 10);
             _moon.Draw(_lights[1].position, 20);
-
-            for (int y = 0; y < _mapY; y++) {
-                for (int x = 0; x < _mapX; x++) {
-                    if (!_hudMode->activated()) {
-                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
-                        continue;
-                    }
-                    raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
-                    if (meshHit.hit) {
-                        _hudMode->setTile(std::make_shared<Tile>(world.getTiles()[x][y]));
-                        DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
-                    } else {
-                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(y * _gridSize, 0.0f, x * _gridSize));
-                    }
-                }
-            }
 
             drawTiles(world.getTiles());
 
@@ -94,7 +77,7 @@ namespace Zappy
 
             if (_hudMode->activated())
                 drawGui(world);
-            
+
             // if (_selectionMode)
             //     GuiWindowBox(r, "Actions");
             // int a = 0;
@@ -103,8 +86,15 @@ namespace Zappy
             // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
             // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-            textColor.DrawText(raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
-            textColor.DrawText(raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
+            raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 800, 250);
+
+            textColor.DrawText("Cam Position: " + raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
+            textColor.DrawText("Cam Target: " + raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
+            textColor.DrawText("Cam Up: " + raylib::Vector3(_camera.GetUp()).ToString(), 50, 110, 25);
+            textColor.DrawText("Player count (Graphical): " + std::to_string(_players.size()), 50, 140, 25);
+            textColor.DrawText("Player count (World): " + std::to_string(world.getPlayers().size()), 50, 170, 25);
+            textColor.DrawText("Egg count (Graphical): " + std::to_string(_eggs.size()), 50, 200, 25);
+            textColor.DrawText("Egg count (World): " + std::to_string(world.getEggs().size()), 50, 230, 25);
             _window.DrawFPS();
         }
         _window.EndDrawing();

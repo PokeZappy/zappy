@@ -11,12 +11,31 @@ namespace Zappy
 {
     void Raylib::drawTiles(const std::vector<std::vector<Tile>> &tiles)
     {
-        _rockModel.UpdateAnimation(_rockAnimations[0], _rockAnimationFrame);
+        _rockModel.UpdateAnimation(_rockAnimations[_rockAnimationIndex], _rockAnimationFrame);
+        _rockAnimationFrame++;
+        if (_rockAnimationFrame >= _rockAnimations[_rockAnimationIndex].frameCount) {
+            _rockAnimationIndex = rand() % 9 + 3;
+            _rockAnimationFrame = 0;
+        }
+
+        raylib::Ray ray(GetMousePosition(), _camera);
 
         float x_pos = 0;
         float y_pos = 0;
         for (size_t y = 0; y < tiles.size(); y++) {
             for (size_t x = 0; x < tiles[y].size(); x++) {
+                if (!_hudMode->activated()) {
+                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                    continue;
+                }
+                raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                if (meshHit.hit) {
+                    _hudMode->setTile(std::make_unique<Tile>(tiles[y][x]));
+                    DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                } else {
+                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                }
+
                 x_pos = x * _gridSize - _gridSize / 4;
                 y_pos = y * _gridSize - _gridSize / 4;
                 drawFood(x_pos, y_pos, tiles[y][x].getItem(0));

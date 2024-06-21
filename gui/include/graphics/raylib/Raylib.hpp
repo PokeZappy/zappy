@@ -26,6 +26,9 @@
 #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
 #define ARENA_MODEL_PATH "assets/local/arena.glb"
 
+// #define TILE_TEXTURE_PATH "assets/textures/pokemon_tile.png"
+#define TILE_TEXTURE_PATH "assets/textures/ice_tile.png"
+
 namespace Zappy {
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
@@ -33,7 +36,7 @@ namespace Zappy {
         public:
             Raylib();
             void render(const World &world) override;
-            void renderDebug(const World &world);
+            void renderDebug(void);
             void update(const World &world) override;
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
@@ -92,6 +95,7 @@ namespace Zappy {
             raylib::Model _rockModel;
             std::vector<Texture2D> _rockTextures;
             std::vector<raylib::ModelAnimation> _rockAnimations;
+            size_t _rockAnimationIndex = 4;
             size_t _rockAnimationFrame = 0;
 
             // Food

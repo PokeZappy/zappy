@@ -43,7 +43,7 @@ namespace Zappy {
         float ambientLight = 0.8f;
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
-        debugMode = std::make_unique<DebugMode>();
+        debugMode = std::make_unique<DebugMode>(_shader);
         _hudMode = std::make_unique<HudMode>();
         _window.ToggleFullscreen();
 
@@ -67,7 +67,7 @@ namespace Zappy {
         // DisableCursor();
 
         // Load floor texture
-        _floorTexture = raylib::Texture2D("assets/textures/pokemon_tile.png");
+        _floorTexture = raylib::Texture2D(TILE_TEXTURE_PATH);
         _floorMesh = GenMeshPlane(_gridSize, _gridSize, 1, 1);
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;

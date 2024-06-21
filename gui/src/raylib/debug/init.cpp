@@ -9,8 +9,10 @@
 
 namespace Zappy
 {
-    DebugMode::DebugMode(void) : _model(raylib::Model("assets/models/pokemons/ditto.glb")),
-                                 _animations(raylib::ModelAnimation::Load("assets/models/pokemons/ditto.glb"))
+    DebugMode::DebugMode(raylib::Shader &shader) :
+        _model(raylib::Model("assets/models/pokemons/ditto.glb")),
+        _animations(raylib::ModelAnimation::Load("assets/models/pokemons/ditto.glb")),
+        _shader(shader)
     {
         changeAnimation(0);
         for (const auto &entry : std::filesystem::directory_iterator("assets/models/pokemons/"))

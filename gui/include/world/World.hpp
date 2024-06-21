@@ -26,7 +26,7 @@ namespace Zappy {
         void updateTile(size_t x, size_t y, const Tile &tile);
         void updateTileInventory(size_t x, size_t y, const Inventory &inventory);
 
-        void handleCommand(std::string &command);
+        bool handleCommand(std::string &command);
         const std::vector<std::vector<Tile>> &getTiles() const { return (_tiles); }
         TeamType determineTeamType(const std::string &teamName);
 
