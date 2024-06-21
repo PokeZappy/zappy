@@ -86,10 +86,20 @@ namespace Zappy
             addShellCommand("T" + std::to_string(id) + " says: " + message, getPlayer(id));
         }
         else if (commandName == "pic") { // start of an incantation (by the first player)
-            ss >> x >> y >> id;
+            size_t level;
+            size_t otherId;
+            std::string colleagues;
+            ss >> x >> y >> level >> id;
             getPlayer(id)->setIncanting(true);
-            addShellCommand("Incantation started at {x: " + std::to_string(x) + ", y: " +
-                std::to_string(y) + "} by T" + std::to_string(id), getPlayer(id));
+            while (ss >> otherId) {
+                getPlayer(otherId)->setIncanting(true);
+                colleagues += ", T" + std::to_string(otherId);
+            }
+
+            addShellCommand("Incantation started of level " + std::to_string(level) +
+                " at {x: " + std::to_string(x) + ", y: " +
+                std::to_string(y) + "} by T" + std::to_string(id) + " with his colleagues" +
+                colleagues, getPlayer(id));
         }
         else if (commandName == "pie") { // end of an incantation
             std::string result;
@@ -97,14 +107,21 @@ namespace Zappy
             for (auto player : getPlayers(x, y)) {
                 player->setIncanting(false);
             }
-            if (result == "ok") {
-                addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
-                    std::to_string(y) + "} succeeded", getPlayer(id));
-            }
-            else
+
+            std::cout << "Incantation result: " << result << std::endl;
+
+            try {
+                size_t value = std::stoull(result);
+                if (value >= 2 && value <= 8) {
+                    addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
+                        std::to_string(y) + "} succeeded", getPlayer(id));
+                } else {
+                    throw std::out_of_range("The number is out of range for size_t.");
+                }
+            } catch (const std::exception& e) {
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
-            std::cout << command << std::endl;
+            }
         }
         else if (commandName == "pfk") { // egg laying by the player
 

@@ -55,7 +55,7 @@ class ParentAI(Player):
         self.serv_info = serv_info
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
-        self.counter = self.INCUBATION_TIME + self.FORK_ACTION
+        self.counter = self.INCUBATION_TIME
         self.gave_birth = 0
         self.role = RoleInGame.PROGENITOR
         self.machine = machine

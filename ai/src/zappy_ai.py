@@ -40,9 +40,10 @@ class Bot(object):
         self.language = latin.Latin()
         self.message = messages.Messages(self.cipher, self.cli_num, self.language)
         self.life = 10 * self.FOOD
-        print(self.cli_num)
-        print(self.dimensions)
-        print(self.cli_socket)
+        if self.debug_mode:
+            print(self.cli_num)
+            print(self.dimensions)
+            print(self.cli_socket)
 
     def send_action(self, action: str) -> None:
         """
@@ -61,10 +62,10 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        rec: str = self.cli_socket.recv(1024).decode()
+        rec: str = self.cli_socket.recv((8000)).decode()
         if self.debug_mode:
             print(f"Received action: {rec}")
-        if rec == "":
+        if rec == "" or rec == "dead\n":
             print("Server disconnected")
             sys.exit(84)
         return rec

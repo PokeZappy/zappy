@@ -42,7 +42,7 @@ class Incantator(Player):
             self.queue.append('Right')
             self.queue.append('Forward')
         self.queue.append(('Take', 'linemate'))
-    
+
     def addapt_map(self, vision : str) -> None:
         """
         This method adapts the map to the look message.
@@ -76,16 +76,17 @@ class Incantator(Player):
                 else:
                     x = (self.pos[0] + horizontal) % self.limit[0]
                     y = (self.pos[1] + vertical) % self.limit[1]
-                print (f'x: {x} and y: {y}')
-                print (f'pos: {self.pos}')
-                print (f'dir: {self.dir}')
+                if self.debug_mode:
+                    print (f'x: {x} and y: {y}')
+                    print (f'pos: {self.pos}')
+                    print (f'dir: {self.dir}')
                 self.map[x][y] = 1
-                for k in self.map:
-                    for j in k:
-                        print(j, end=' ')
-                    print()
-                print('-------------------------------------------------')
-
+                if self.debug_mode:
+                    for k in self.map:
+                        for j in k:
+                            print(j, end=' ')
+                        print()
+                    print('-------------------------------------------------')
 
     def goto_01(self) -> None:
         """
@@ -93,13 +94,11 @@ class Incantator(Player):
 
         :return: None
         """
-        print('goto_01 :', self.queue)
         self.queue = self.comback
         self.queue.insert(0, 'Right')
         self.queue.insert(0, 'Right')
         self.comback = []
-        print('after: ', self.queue)
-        
+
     def npos(self, old_pos :tuple[int, int]) -> list[int, int]:
         pos = [old_pos[0], old_pos[1]]
         if self.dir == 0:
@@ -124,6 +123,8 @@ class Incantator(Player):
         else:
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
+            if self.debug_mode:
+                print(f'recv_type: {recv_type} and msgs: {msgs}')
             if recv_type == 'ok':
                 if msgs == 'Incantation':
                     self.level += 1
@@ -152,6 +153,11 @@ class Incantator(Player):
             elif recv_type == 'look':
                 if self.ready == False:
                     self.addapt_map(msgs)
+            elif recv_type == 'elevation':
+                if self.debug_mode:
+                    print('elevation: ', msgs)
+                if int(msgs[-1]) > 1:
+                    continue
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
@@ -159,8 +165,6 @@ class Incantator(Player):
                     self.broadcast_traitement(msg)
                 continue
             self.actions.pop(0)
-
-
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'facultates positas carmina':
@@ -217,7 +221,6 @@ class Incantator(Player):
                 self.comback.insert(0, 'Left')
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
-            print('queue: ', self.queue)
             self.apply_action()
         if len(self.actions) > 0:
             return
