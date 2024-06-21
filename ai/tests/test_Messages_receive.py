@@ -1,5 +1,3 @@
-import pytest
-
 from ai.src.communication.latin import Latin
 from ai.src.communication.cipher import Cipher
 from ai.src.communication.messages import Messages

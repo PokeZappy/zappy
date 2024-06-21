@@ -1,5 +1,4 @@
 import uuid
-import pytest
 
 from ai.src.communication.cipher import Cipher
 from ai.src.communication.messages import Messages
