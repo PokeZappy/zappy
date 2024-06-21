@@ -19,18 +19,17 @@ namespace Zappy {
         STEEL,
         FAIRY,
         SIZE,
-        NONE
     };
     class Team {
     public:
         Team() = default;
-        Team(const std::string &name, TeamType type = TeamType::NONE) : _name(name), _type(type) {}
+        Team(const std::string &name, TeamType type = TeamType::SIZE) : _name(name), _type(type) {}
         ~Team() = default;
 
         const std::string &getName() const { return _name; }
         TeamType getType() const { return _type; }
     private:
         std::string _name;
-        TeamType _type = TeamType::NONE;
+        TeamType _type = TeamType::SIZE;
     };
 } // namespace Zappy

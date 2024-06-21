@@ -196,7 +196,7 @@ RLAPI Matrix GetCameraProjectionMatrix(Camera* camera, float aspect);
 //----------------------------------------------------------------------------------
 // Defines and Macros
 //----------------------------------------------------------------------------------
-#define CAMERA_MOVE_SPEED                               2.0f
+#define CAMERA_MOVE_SPEED                               20.0f
 #define CAMERA_ROTATION_SPEED                           0.04f
 #define CAMERA_PAN_SPEED                                0.2f
 

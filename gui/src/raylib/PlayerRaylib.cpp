@@ -9,12 +9,16 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo, size_t gridSize)
-        : worldPlayer(worldPlayer), _model("assets/models/pokemons/" + pkInfo.id + ".glb"), _gridSize(gridSize)
+    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
+        PokemonInfo &pkInfo, size_t gridSize, raylib::Shader &shader)
+        : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
+        _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
+        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb"))
     {
         color = raylib::Color::White();
         infos = pkInfo;
-        loadTextureAndModel();
+        loadShinyTexture();
+        _model.materials[1].shader = shader;
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
@@ -26,26 +30,25 @@ namespace Zappy
 
         _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
         _animationIndexes["walk"] = getAnimationIndex({"ground_run", "ground_walk"});
+        // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
+
+        for (int i = 0; i < _modelAnimations.size(); i++) {
+            // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
+        }
 
         _height += rand() % 20;
     }
 
-    int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
-    {
-        for (size_t i = 0; i < _modelAnimation.size(); i++) {
-            for (size_t j = 0; j < names.size(); j++) {
-                std::string animName(_modelAnimation[i].name);
-                if (animName.find(names[j]) != std::string::npos) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    void PlayerRaylib::loadTextureAndModel(void)
+    void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
     {
         _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
+        loadShinyTexture();
+        _model.materials[1].shader = shader;
+        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
+    }
+
+    void PlayerRaylib::loadShinyTexture(void)
+    {
         if (infos.shiny)
         {
             std::string path = "assets/textures/" + infos.id + "_shiny.png";
@@ -53,7 +56,6 @@ namespace Zappy
 
             _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
         }
-        _modelAnimation = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
     }
 
     float PlayerRaylib::getRotation(void) const
@@ -80,11 +82,11 @@ namespace Zappy
             _verticalRotation = 0;
         }
         // Text
-        if (worldPlayer->getId() != _level) {
-            _level = worldPlayer->getId();
+        if (worldPlayer->getLevel() != _level) {
+            _level = worldPlayer->getLevel();
             _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
-            _textImage.DrawText(std::to_string(_level), 10, 10, 80, raylib::Color::Black());
-            _textImage.DrawText(std::string("Level ") + std::to_string(worldPlayer->getLevel()), 10, 80, 50, raylib::Color::Black());
+            _textImage.DrawText(std::to_string(worldPlayer->getId()), 10, 10, 80, raylib::Color::Black());
+            _textImage.DrawText(std::string("Level ") + std::to_string(_level), 10, 80, 50, raylib::Color::Black());
             _textTexture.Update(_textImage.data);
         }
 
@@ -122,7 +124,7 @@ namespace Zappy
         }
     }
 
-    void PlayerRaylib::draw(const raylib::Camera camera)
+    void PlayerRaylib::draw(const raylib::Camera camera, bool selectionMode)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
@@ -134,19 +136,26 @@ namespace Zappy
             _altitude + std::abs(_verticalRotation * 5),
             _currentPos.y * _gridSize + offset.y};
         if (_animIndex != -1) {
-            _model.UpdateAnimation(_modelAnimation[_animIndex], _animFrame);
+            _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
         }
         _model.Draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
-            raylib::Vector3(_scale, _scale, _scale));
+            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 5.0f));
         playerPos.y += _height + 5;
-        _textTexture.DrawBillboard(camera, playerPos, 15);
+        if (selectionMode)
+            _textTexture.DrawBillboard(camera, playerPos, 15);
     }
 
-    void PlayerRaylib::move(raylib::Vector3 vector)
+    int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
     {
-        _currentPos.x += vector.x;
-        _currentPos.y += vector.z;
-        _altitude = vector.y;
+        for (size_t i = 0; i < _modelAnimations.size(); i++) {
+            std::string animName(_modelAnimations[i].name);
+            for (size_t j = 0; j < names.size(); j++) {
+                if (animName.find(names[j]) != std::string::npos) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 } // namespace Zappy

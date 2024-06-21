@@ -46,6 +46,7 @@ namespace Zappy {
         const std::vector<ShellCommand> &getShellCommands(void) const;
         void addShellCommand(const std::string &text, std::shared_ptr<IEntity> entity = nullptr);
         bool containsPlayer(size_t id) const;
+        bool containsEgg(size_t id) const;
         int _mapX = -1;
         int _mapY = -1;
     private:

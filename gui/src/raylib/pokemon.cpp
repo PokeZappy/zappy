@@ -20,10 +20,12 @@ namespace Zappy {
             pkInfo.displayName = pokeName;
             pkInfo.id = pokeId;
             pkInfo.stage = stage;
-            libconfig::Setting &evos = pokemon["evolutions"];
-            for (int i = 0; i < evos.getLength(); i++)
-            {
-                pkInfo.evolutions.push_back(parsePokemon(evos[i]));
+            if (pokemon.exists("evolutions")) {
+                libconfig::Setting &evos = pokemon["evolutions"];
+                for (int i = 0; i < evos.getLength(); i++)
+                {
+                    pkInfo.evolutions.push_back(parsePokemon(evos[i]));
+                }
             }
         }
         catch (libconfig::SettingNotFoundException &ex)
@@ -44,10 +46,10 @@ namespace Zappy {
     {
         std::string t = team;
 
-        if (std::find(listTypes.begin(), listTypes.end(), team) == listTypes.end())
+        if (std::find(_listTypes.begin(), _listTypes.end(), team) == _listTypes.end())
         {
             // pas trouvé
-            t = listTypes[Utils::random(0, listTypes.size() - 1)];
+            t = _listTypes[Utils::random(0, _listTypes.size() - 1)];
         }
         try
         {
@@ -101,7 +103,7 @@ namespace Zappy {
                 PokemonInfo pickedEvolution = infos.evolutions[Utils::random(0, infos.evolutions.size() - 1)];
                 pickedEvolution.shiny = infos.shiny;
                 infos = pickedEvolution;
-                graphicPlayer->loadTextureAndModel();
+                graphicPlayer->loadTextureAndModel(_shader);
             }
         }
     }
