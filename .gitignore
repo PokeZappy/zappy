@@ -10,6 +10,15 @@ __pycache__
 zappy_ref-2-0-2
 *.log
 *.elf
+*.coverage
+__pycache__/
+.venv
+
+*.a
+.vscode/
+vgcore*
+storage/
+my_main.c
 zappy_test/
 *.d
 *.txt
@@ -23,3 +32,5 @@ pointer-constraints*
 fractional*
 relative-pointer*
 idle-inhibit*
+
+sys

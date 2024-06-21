@@ -5,13 +5,12 @@
 ## HEADER
 ##
 
-SRC	=	./src/zappy_ai.py
+SRC	=	./src/main.py
 
 NAME =	zappy_ai
 
 $(NAME)	:
-			cp $(SRC) ./
-			mv zappy_ai.py zappy_ai
+			cp $(SRC) ./zappy_ai
 
 all: $(NAME)
 
@@ -22,4 +21,7 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re
+tests_run:
+	pytest --cov=src/ tests/
+
+.PHONY: all clean fclean re tests_run

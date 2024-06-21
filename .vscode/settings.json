@@ -55,6 +55,9 @@
         "codecvt": "cpp",
         "ratio": "cpp",
         "iomanip": "cpp",
-        "*.h++": "cpp"
+        "*.h++": "cpp",
+        "utils.h": "c",
+        "commands.h": "c",
+        "server.h": "c"
     }
 }

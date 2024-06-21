@@ -5,11 +5,13 @@ on:
     branches:
       - main
       - dev
+      - dev-ia
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container:
+      image: epitechcontent/epitest-docker
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4

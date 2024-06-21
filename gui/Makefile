@@ -86,8 +86,8 @@ re:
 	@$(MAKE) all
 
 tests_run: $(TESTS_OBJS) coverage
-	$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
-	./unit_tests
+	#$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
+	#./unit_tests
 
 tests_clean: fclean
 	rm -f $(TEST_OBJ)

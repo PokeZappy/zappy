@@ -66,7 +66,19 @@ namespace Zappy {
         }
 
         if (debugMode->getType() != CHAT)
-            _camera.Update(CAMERA_FIRST_PERSON);
+            _camera.Update(CAMERA_THIRD_PERSON);
+
+        if (!_players.empty() && !_players[0]->isDying()) {
+            for (auto &player : _players) {
+                if (_players[0]->worldPlayer->getId() == 0) {
+                    _camera.target = player->getPosition() * _gridSize;
+                    TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
+                    break;
+                }
+            }
+            // _camera.target = _players[0]->getPosition() * _gridSize;
+            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
+        }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
@@ -89,10 +101,6 @@ namespace Zappy {
             UpdateLightValues(_shader, _lights[i]);
         }
 
-        if (!_players.empty() && !_players[0]->isDying()) {
-            // _camera.target = _players[0]->getPosition() * _gridSize;
-            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        }
         updatePlayers(world);
         updateEggs(world);
         testEvolution();

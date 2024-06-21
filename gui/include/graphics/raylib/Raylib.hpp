@@ -22,8 +22,10 @@
 #define FOOD_MODEL_PATH "assets/models/pecha_berry.glb"
 #define GAMEBOY_MODEL_PATH "assets/models/nintendo_game_boy.glb"
 #define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
-#define SUN_MODEL_PATH "assets/models/sun.glb"
-#define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
+// #define SUN_MODEL_PATH "assets/models/sun.glb"
+// #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
+#define SUN_MODEL_PATH "assets/models/pokemons/solrock.glb"
+#define MOON_MODEL_PATH "assets/models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "assets/local/arena.glb"
 
 // #define TILE_TEXTURE_PATH "assets/textures/pokemon_tile.png"
