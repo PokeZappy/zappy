@@ -26,6 +26,7 @@ namespace Zappy {
                 }
 
                 if (_selectedPlayers.empty()) {
+                    _selectedPlayer = nullptr;
                     white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
                 } else {
                     if (_selectedPlayer == nullptr) {
