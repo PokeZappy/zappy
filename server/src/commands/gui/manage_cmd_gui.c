@@ -22,6 +22,9 @@ static const command_t commands_gui[] = {
     {"HACK_POS", hack_player_pos, 0},
     {"CLIENT_LIST", print_client_list, 0},
     {"EGG_LIST", print_egg_list, 0},
+    {"HACK_GIVE", hack_player_give, 0},
+    {"HACK_HEALTH", hack_player_health, 0},
+    {"KILL", kill_player, 0},
     {NULL, NULL, 0}
 };
 
@@ -39,20 +42,14 @@ client_socket_t *get_gui(server_t *server)
 
 void manage_cmd_gui(char *command, client_socket_t *client, server_t *server)
 {
-    command_t *cmd = (command_t *)malloc(sizeof(command_t));
-    timeval_t wait;
-
     for (int i = 0; commands_gui[i].name != NULL; i++) {
         if (strncmp(command, commands_gui[i].name,
                     strlen(commands_gui[i].name)) == 0) {
-            commands_gui[i].ptr(server, command, client);
-            break;
+            return commands_gui[i].ptr(server, command, client);
         }
         if (commands_gui[i + 1].name == NULL) {
             dprintf(client->socket, "suc\n");
-            free(cmd);
             return;
         }
     }
-    free(cmd);
 }

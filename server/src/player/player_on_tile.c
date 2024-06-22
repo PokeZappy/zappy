@@ -15,8 +15,10 @@ int nb_player_on_tile(server_t *server, vector_t tile_pos)
     vector_t pos;
 
     while (current) {
-        if (!current->player)
+        if (!current->player) {
+            current = TAILQ_NEXT(current, entries);
             continue;
+        }
         pos = current->player->_pos;
         if (pos._x == tile_pos._x && pos._y == tile_pos._y)
             nb++;

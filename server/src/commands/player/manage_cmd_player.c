@@ -22,7 +22,6 @@ static const command_t commands[] = {
     {"Set", cmd_set, 7},
     {"Incantation", cmd_pre_incant, 0},
     {"EXIT", exit_command, 0},
-    {"test", cmd_forward, 300},
     {NULL, NULL, 0}
 };
 
