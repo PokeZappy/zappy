@@ -241,6 +241,8 @@ class Player(Bot):
             if recv_type == 'inventory':
                 if self.debug_mode:
                     print("inventory")
+            if recv_type == 'elevation':
+                print('elevation :', msgs)
             if recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue

@@ -34,6 +34,7 @@ class Messages(object):
         self.msg: str = 'Broadcast "'
         self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
+        self.niktamer = None
 
     def send_coord(self, message: str, pos: tuple[int, int]) -> str:
         """
@@ -75,6 +76,7 @@ class Messages(object):
         :param action: any - Additional action related to the message.
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
         """
+        self.niktamer = message
         if message == "" or message == "\n":
             return [('ko', 'ko')]
         messages = list(filter(None, message.split('\n')))
@@ -117,8 +119,15 @@ class Messages(object):
             messages = messages.split('|')
             for msg in messages:
                 parts = msg.split()
-                if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
-                    return 'broadcast', [{'id': 0, 'msg': 'ko'}]
+                try:
+                    if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
+                        return 'broadcast', [{'id': 0, 'msg': 'ko'}]
+                except Exception as e:
+                    print(f'Error: {e}')
+                    print(f'Error: {parts}')
+                    print(f'Error: {message}')
+                    print(f'Error nikela: |{self.niktamer}|')
+                    exit(84)
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])

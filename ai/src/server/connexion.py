@@ -1,4 +1,4 @@
-import socket
+from socket import socket, AF_INET, SOCK_STREAM
 
 
 def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
@@ -11,7 +11,7 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     :return: A tuple containing a list of integers and the socket object used for the connection.
     """
     # TODO - add security when server not open
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((host, int(port)))
     welcome_message = client_socket.recv(1024).decode().strip()
     # print(f"Received: {welcome_message}")
