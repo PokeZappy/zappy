@@ -59,7 +59,7 @@ namespace Zappy {
         int _modelIndex = 0;
         raylib::Model _model;
         std::vector<raylib::ModelAnimation> _animations;
-        double _scaleModel = 20.0f;
+        double _scaleModel = 1.f;
         bool _activated = false;
         bool _shiny = false;
         int _animIndex = -1;

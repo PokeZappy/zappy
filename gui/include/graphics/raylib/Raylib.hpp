@@ -26,7 +26,7 @@
 // #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
 #define SUN_MODEL_PATH "assets/models/pokemons/solrock.glb"
 #define MOON_MODEL_PATH "assets/models/pokemons/lunatone.glb"
-#define ARENA_MODEL_PATH "assets/local/arena.glb"
+#define ARENA_MODEL_PATH "assets/models/arena.glb"
 
 // #define TILE_TEXTURE_PATH "assets/textures/pokemon_tile.png"
 #define TILE_TEXTURE_PATH "assets/textures/ice_tile.png"

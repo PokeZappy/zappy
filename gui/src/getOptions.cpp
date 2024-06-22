@@ -33,11 +33,11 @@ namespace Zappy
                 throw InvalidOptionException(); break;
             }
         }
-        if (_machine.empty() || _port == -1) {
-            throw MissingOptionException();
-        }
         if (_graphics == nullptr) {
             _graphics = std::make_shared<Raylib>();
+        }
+        if (_machine.empty() || _port == -1) {
+            _machine = "127.0.0.1";
         }
     }
 } // namespace Zappy

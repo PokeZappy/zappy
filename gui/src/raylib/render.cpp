@@ -42,8 +42,8 @@ namespace Zappy
 
             for (auto &player : _players) {
                 if ((_hudMode->getTile() != nullptr) &&
-                (_hudMode->getTile()->getX() == player->worldPlayer->getX()) &&
-                (_hudMode->getTile()->getY() == player->worldPlayer->getY()))
+                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
                     _hudMode->addPlayer(player);
                 player->draw(_camera, _hudMode->activated());
             }

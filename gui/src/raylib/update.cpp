@@ -10,9 +10,7 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
-        // _mapX = world._mapX;
-        // _mapY = world._mapY;
-        float moveYSpeed = 5;
+        float moveYSpeed = 2;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += moveYSpeed;
