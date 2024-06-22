@@ -21,8 +21,8 @@ TESTS_OBJS := $(TESTS_SRC:%.c=%.o)
 
 NAME = zappy_server
 
-CXXFLAGS = -Wall -Wextra -g3 -Iinclude
-CXXFLAGS += -lpthread
+CFLAGS = -Wall -Wextra -g3 -Iinclude -fsanitize=address
+CFLAGS += -lpthread
 EXTRAFLAGS = -lcurses
 
 LDLIBS += -L./criterion/lib -lcriterion
@@ -38,7 +38,7 @@ DEFAULT = "\033[0m"
 all: $(NAME)
 
 $(NAME):	$(OBJ)
-	@ $(CC) -o $(NAME) $(MAIN) $(OBJ) $(CXXFLAGS) && \
+	@ $(CC) -o $(NAME) $(MAIN) $(OBJ) $(CFLAGS) && \
 	$(ECHO) $(GREEN) "ZAPPY_SERVER COMPILED" || \
 	$(ECHO) $(RED) "ZAPPY_SERVER NON COMPILED"
 

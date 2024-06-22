@@ -48,7 +48,7 @@ void cmd_mct(server_t *server, char *args, client_socket_t *client)
             free(response);
         }
     }
-    printf("mct\n");
+    // printf("mct\n");
 }
 
 void cmd_tna(server_t *server, char *args, client_socket_t *client)
