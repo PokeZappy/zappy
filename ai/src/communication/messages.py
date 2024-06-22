@@ -107,7 +107,7 @@ class Messages(object):
                 result.append(('ko', action))
             else:
                 result.append(self.broadcast_received(message))
-            print(result)
+            # print(result)
         return result
 
     def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
