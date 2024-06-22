@@ -20,7 +20,7 @@
 
 #define POKEBALL_MODEL_PATH "assets/models/poke_ball.glb"
 #define FOOD_MODEL_PATH "assets/models/pecha_berry.glb"
-#define GAMEBOY_MODEL_PATH "assets/models/nintendo_game_boy.glb"
+#define GAMEBOY_MODEL_PATH "assets/models/dsi1.glb"
 #define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
 // #define SUN_MODEL_PATH "assets/models/sun.glb"
 // #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
@@ -89,11 +89,11 @@ namespace Zappy {
             raylib::Model _moon;
 
             // Gameboy & Arena
-            raylib::Model _tv;
+            // raylib::Model _tv;
             raylib::Model _arena;
             float _arenaScale = 1.0f;
             float _arenaAltitudeScale = 0.0f;
-            float (*getArenaOffset)(size_t tileCount, size_t gridSize);
+            float (*getArenaOffset)(size_t tileCount, float gridSize);
 
             // Rocks (pokeballs)
             raylib::Model _rockModel;

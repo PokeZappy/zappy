@@ -9,11 +9,14 @@
 
 namespace Zappy
 {
-    DebugMode::DebugMode(raylib::Shader &shader) :
+    DebugMode::DebugMode(raylib::Shader &shader, float gridSize) :
+        _gridSize(gridSize),
         _model(raylib::Model("assets/models/pokemons/ditto.glb")),
         _animations(raylib::ModelAnimation::Load("assets/models/pokemons/ditto.glb")),
         _shader(shader)
     {
+        _scaleModel = _gridSize;
+
         changeAnimation(0);
         for (const auto &entry : std::filesystem::directory_iterator("assets/models/pokemons/"))
         {

@@ -6,11 +6,12 @@
 */
 
 #include "Raylib.hpp"
+#include <chrono>
 
 namespace Zappy {
     void Raylib::update(const World &world)
     {
-        float moveYSpeed = 2;
+        float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += moveYSpeed;
@@ -45,9 +46,9 @@ namespace Zappy {
                 _arena = LoadModel("assets/local/boxing_ring.glb");
                 for (int i = 0; i < _arena.materialCount; i++)
                     _arena.materials[i].shader = _shader;
-                _arenaScale = 1.35;
+                _arenaScale = _gridSize * 1.35;
                 _arenaAltitudeScale = 0.2;
-                getArenaOffset = [](size_t tileCount, size_t gridSize) -> float {
+                getArenaOffset = [](size_t tileCount, float gridSize) -> float {
                     (void)gridSize;
                     return - 30 - (float)tileCount * 7.;
                 };
@@ -92,8 +93,9 @@ namespace Zappy {
 
         // Sun & Moon
         size_t revolution = 1789 / 10;
+        auto currentTime = std::chrono::system_clock::now().time_since_epoch() / 1000000.;
         for (int i = 0; i < 2; i++) {
-            _lights[i].position = getSunPosition(GetTime() + revolution / (1 + i), revolution);
+            _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
             _lights[i].color =  newColor.Brightness(_lights[i].position.y * 1.f / 1000.f - (i == 0 ? 0.6f : 0.8f));
             // if (_lights[i].position.y <= 20) _lights[i].enabled = false;

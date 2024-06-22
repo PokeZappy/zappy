@@ -30,8 +30,8 @@ namespace Zappy
 
                 return distr(gen);
             }
-            static float generateRandomFloat(size_t delta) {
-                return (float)(rand() % delta) - delta / 2;
+            static float generateRandomFloat(float delta) {
+                return fmod(rand(),  delta) - delta / 2.;
             }
 
         static std::string remove_extension(const std::string& filename) {

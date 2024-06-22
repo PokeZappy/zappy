@@ -177,7 +177,7 @@ namespace Zappy
         else if (commandName == "seg") { // end of game
             addShellCommand("Game ended");
             std::cout << "Game ended" << std::endl;
-            return true;
+            // return true;
         }
         else if (commandName == "smg") { // message from the server
             std::string message;

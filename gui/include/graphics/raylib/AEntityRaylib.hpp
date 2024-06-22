@@ -14,7 +14,9 @@ namespace Zappy
     class AEntityRaylib : public IEntityRaylib
     {
     public:
-        AEntityRaylib(size_t gridSize) : _gridSize(gridSize) {};
+        AEntityRaylib(float gridSize) : _gridSize(gridSize) {
+            _scale = _gridSize;
+        };
         
         void kill(void) { _isDying = true; }
         bool isDying(void) const { return _isDying; }
@@ -23,13 +25,13 @@ namespace Zappy
         void move(raylib::Vector3 vector);
         raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _altitude, _currentPos.y); }
     protected:
-        size_t _gridSize;
+        float _gridSize;
         int _animIndex = -1;
         int _animFrame = 0;
         bool _isDying = false;
-        float _scale = 1.5;
+        float _scale = 1;
         float _altitude;
-        float _height = 30;
+        float _height;
         bool _hasIdleAnim = false;
         raylib::Color color;
         raylib::Vector2 offset;

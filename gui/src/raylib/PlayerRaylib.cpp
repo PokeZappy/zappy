@@ -10,11 +10,13 @@
 namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
-        PokemonInfo &pkInfo, size_t gridSize, raylib::Shader &shader)
+        PokemonInfo &pkInfo, float gridSize, raylib::Shader &shader)
         : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
         _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
         _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb"))
     {
+        _scale = _gridSize / 32;
+        _height = _gridSize * 2;
         color = raylib::Color::White();
         infos = pkInfo;
         loadShinyTexture();
@@ -93,7 +95,7 @@ namespace Zappy
         // die
         if (_isDying) {
             move(raylib::Vector3((float)(rand() % 3 - 1) / 20,
-                _altitude * 1.04 + 0.01, (float)(rand() % 3 - 1) / 20));
+                _altitude * 1.04 + _gridSize * 0.01, (float)(rand() % 3 - 1) / 20));
             _scale *= 0.997;
         }
 
@@ -130,7 +132,6 @@ namespace Zappy
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
 
         // draw
-        float scale = 0.5;
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
             _altitude + std::abs(_verticalRotation * 5),
@@ -140,8 +141,8 @@ namespace Zappy
         }
         _model.Draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
-            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 5.0f));
-        playerPos.y += _height + 5;
+            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
+        playerPos.y += _height + _gridSize;
         if (selectionMode)
             _textTexture.DrawBillboard(camera, playerPos, 15);
     }

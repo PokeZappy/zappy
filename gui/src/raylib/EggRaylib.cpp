@@ -14,7 +14,7 @@ namespace Zappy {
         : worldEgg(egg), _model(model), _modelAnimations(animations), _tint(tint),
         AEntityRaylib(gridSize)
     {
-        _scale = 2.0f;
+        _scale = _gridSize * 2;
 
         _model.materials[1].shader = shader;
 

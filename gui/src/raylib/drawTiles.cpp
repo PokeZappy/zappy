@@ -48,15 +48,17 @@ namespace Zappy
 
     void Raylib::drawFood(float x, float y, size_t quantity)
     {
+        float scale = _gridSize / 6;
         for (size_t i = 0; i < std::clamp(quantity, (size_t)0, (size_t)7); i++)
-            _foodModel.Draw(raylib::Vector3(x + i * 3, 2, y), raylib::Vector3(1, 0, 0),
-                0, raylib::Vector3(4.0f, 4.0f, 4.0f));
+            _foodModel.Draw(raylib::Vector3(x + i * 3, scale / 2.2, y), raylib::Vector3(1),
+                0, raylib::Vector3(scale, true));
     }
 
     void Raylib::drawRock(float x, float y, size_t id, size_t quantity)
     {
+        float scale = _gridSize / 8;
         _rockModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = _rockTextures[id - 1];
         for (size_t i = 0; i < std::clamp(quantity, (size_t)0, (size_t)5); i++)
-            _rockModel.Draw(raylib::Vector3(x + i * 3, 0, y + id * 5), 4.0f);
+            _rockModel.Draw(raylib::Vector3(x + i * _gridSize / 10, 0, y + id * _gridSize / 10), scale);
     }
 } // namespace Zappy

@@ -14,7 +14,7 @@ namespace Zappy {
         _eggModel(raylib::Model(EGG_MODEL_PATH)),
         _sun(raylib::Model(SUN_MODEL_PATH)),
         _moon(raylib::Model(MOON_MODEL_PATH)),
-        _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
+        // _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
         _arena(raylib::Model(EGG_MODEL_PATH)),
         _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(FOOD_MODEL_PATH)),
@@ -44,12 +44,12 @@ namespace Zappy {
         float ambientLight = 0.5f;
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
-        debugMode = std::make_unique<DebugMode>(_shader);
+        debugMode = std::make_unique<DebugMode>(_shader, _gridSize);
         _hudMode = std::make_unique<HudMode>();
         _window.ToggleFullscreen();
 
         // Create lights
-        float lightHeight = 100.0f;
+        float lightHeight = _gridSize * 10.0f;
         float extremity = _gridSize * 30;
         _lights[0] = CreateLight(LIGHT_POINT, (Vector3){ extremity, lightHeight, extremity }, Vector3Zero(), SUN_COLOR, _shader);
         _lights[1] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, extremity }, Vector3Zero(), MOON_COLOR, _shader);
@@ -60,8 +60,8 @@ namespace Zappy {
         // _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
         // _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
 
-        _camera.SetPosition(Vector3{(215.0F), (55.0F), (600.0F)});
-        _camera.SetTarget(Vector3{(223.0F), (1.0F), (350.0F)});
+        _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
+        _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
         // 30x30
         // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
         // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
@@ -78,7 +78,6 @@ namespace Zappy {
         _hitGridMaterial = LoadMaterialDefault();
         _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
 
-        _tv.materials[2].shader = _shader;
         if (std::filesystem::exists(ARENA_MODEL_PATH))
             _arena = raylib::Model(ARENA_MODEL_PATH);
         for (int i = 0; i < _arena.materialCount; i++)
@@ -116,11 +115,12 @@ namespace Zappy {
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
 
+        // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
 
         _arenaAltitudeScale = -(1. / 10.);
-        _arenaScale = 40;
-        getArenaOffset = [](size_t tileCount, size_t gridSize) -> float {
+        _arenaScale = _gridSize;
+        getArenaOffset = [](size_t tileCount, float gridSize) -> float {
             float correction = tileCount % 2 == 0 ? gridSize / 2 : 0;
             return tileCount / 2 * gridSize - correction;
         };
