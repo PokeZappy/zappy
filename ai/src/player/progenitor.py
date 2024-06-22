@@ -19,7 +19,7 @@ class Progenitor(Player):
         if len(self.actions) > 2:
             return
         if self.life <= self.INCANTATION + self.FORK:
-            self.queue.append(['Take', 'food'])
+            self.queue.append(('Take', 'food'))
         else:
             if self.nbr_of_child_to_create > 0 or self.nbr_of_child_to_create == -1:
                 self.queue.append('Fork')

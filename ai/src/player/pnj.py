@@ -74,5 +74,8 @@ class Pnj(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        
+        if self.level >= 3:
+            self.queue.append('Look')
+        else:
+            self.queue.append('Inventory')
 

@@ -77,8 +77,8 @@ class Messages(object):
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
         """
         self.niktamer = message
-        if message == "" or message == "\n":
-            return [('ko', 'ko')]
+        # if message == "" or message == "\n":
+        #     return [('ko', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
@@ -114,7 +114,7 @@ class Messages(object):
         save_msg: str = message
         match = re.search(r'\d+, ', message)
         if message == "" or message == "\n":
-            return ('ko', 'ko')
+            return ('broadcast', 'ko')
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
@@ -122,7 +122,8 @@ class Messages(object):
             for msg in messages:
                 parts = msg.split()
                 if len(parts) != 4:
-                    return ('ko', 'ko')
+                    result.append({'msg': 'ko'})
+                    continue
                 if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
                     return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])

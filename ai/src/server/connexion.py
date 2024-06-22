@@ -13,10 +13,10 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     # TODO - add security when server not open
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((host, int(port)))
-    welcome_message = client_socket.recv(1024).decode().strip()
+    welcome_message = client_socket.recv(1_000_000).decode().strip()
     # print(f"Received: {welcome_message}")
     client_socket.send(f"{team_name}\n".encode())
-    cli_number = client_socket.recv(1024).decode()
+    cli_number = client_socket.recv(1_000_000).decode()
     # print(f"Received: {cli_number}")
     new = cli_number.split()
     # print(new)

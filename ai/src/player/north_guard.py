@@ -12,6 +12,7 @@ class NorthGuard(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.first: bool = first
         self.take_the_pole()
+        self.said = False
 
     def say_the_north(self):
         """
@@ -45,8 +46,9 @@ class NorthGuard(Player):
         """
         if len(self.actions) >= 1 or len(self.queue) > 6:
             return
-        if self.life <= 142:
+        if self.life <= 142 and self.said is False:
             self.message.buf_messages(message='Ego plus viribus')
             self.queue.append('Broadcast')
+            self.said = True
         self.say_the_north()
         self.apply_action()
