@@ -52,6 +52,7 @@ void cmd_look(server_t *server, char *args, client_socket_t *client)
     response = player_look(server, client->player);
     dprintf(client->socket, "%s\n", response);
     free(response);
+    printf("look\n");
 }
 
 void cmd_inventory(server_t *server, char *args, client_socket_t *client)

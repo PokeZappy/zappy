@@ -35,6 +35,7 @@ class RoleInGame(Enum):
     PNJ = 6
     FIRST_BORN = 7
     NORTH_GUARD = 8
+    HANSEL = 9
 
 
 TESTUDO = [

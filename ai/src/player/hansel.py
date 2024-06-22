@@ -22,4 +22,5 @@ class Hansel(Player):
     def make_action(self) -> None:
         if len(self.actions) >= 1:
             return
-        self.apply_action()
+        if len(self.queue) > 0:
+            self.apply_action()

@@ -23,6 +23,7 @@ NAME = zappy_server
 
 CXXFLAGS = -Wall -Wextra -g3 -Iinclude
 CXXFLAGS += -lpthread
+EXTRAFLAGS = -lcurses
 
 LDLIBS += -L./criterion/lib -lcriterion
 
