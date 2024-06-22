@@ -10,7 +10,7 @@ class NorthGuard(Player):
     def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False, first: bool = False):
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
-        self.first: bool = False
+        self.first: bool = first
         self.take_the_pole()
 
     def say_the_north(self):
@@ -23,6 +23,7 @@ class NorthGuard(Player):
 
     def take_the_pole(self) -> None:
         if not self.first:
+            # TODO - possibilité de mettre un return self.path.facing is None ?
             self.turn_to_the_north()
         self.eject_security = False
         self.queue.append('Forward')
@@ -30,6 +31,13 @@ class NorthGuard(Player):
         self.life -= self.ACTION * 2
         self.first = True
         self.eject_security = True
+
+    def broadcast_traitement(self, message: tuple | str) -> None:
+        if message['msg'] == 'est dominus aquilonis':
+            if self.path.facing is None:
+                self.path.get_north(message['direction'])
+                self.turn_to_the_north()
+        self.global_message(message)
 
     def make_action(self) -> None:
         """

@@ -48,6 +48,7 @@ class Player(Bot):
         self.death: any = False
         self.got_id: int = 0
         self.eject_security = True
+        self.new_born = True
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -295,8 +296,10 @@ class Player(Bot):
         pass
 
     def global_message(self, message: tuple | str | dict = None) -> None:
-        # TODO - faire les messages globaux comme le changement de metier
-        pass
+        if message and message['msg'] == 'haec est historia imperii ACCMST' and self.new_born is True:
+            self.message.uuid_used = [uuid for uuid in message['infos'] if uuid not in self.message.uuid_used] + self.message.uuid_used
+            print(f'new self.uuid: {self.message.uuid_used}')
+            self.new_born = False
 
     def back_on_track(self, msg):
         """

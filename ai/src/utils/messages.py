@@ -16,7 +16,7 @@ def get_infos(text: list[str]) -> tuple | None:
     Returns:
     - A tuple of lists containing parsed information.
     """
-    if len(text) == 2 and text[1][0:1].isnumeric() or len(text) < 2:
+    if (len(text) == 2 and text[1][0:1].isnumeric() and validate_uuid_pattern(text[1]) is True) or len(text) < 2:
         return None, None
     if len(text) == 2 and validate_id_pattern(text[1]):
         return None, re.match(r'^\[(\d+)\]$', text[1]).group(1)
@@ -74,7 +74,7 @@ def validate_inventory_pattern(s) -> bool:
         int: 1 if the input string matches the pattern, 0 otherwise.
     """
     pattern = r'^\[\s*food\s+\d+,\s+linemate\s+\d+,\s+deraumere\s+\d+,\s+sibur\s+\d+,\s+mendiane\s+\d+,\s+phiras\s+\d+,\s+thystame\s+\d+\s*\]$'
-    return True if re.match(pattern, s) else False
+    return True if re.fullmatch(pattern, s) else False
 
 
 def validate_number_pattern(s) -> bool:
@@ -94,7 +94,7 @@ def validate_elevation(s) -> bool:
     :param s: Input string to be validated.
     :return: True if the input string represents a valid elevation level, False otherwise.
     """
-    if s == 'Elevation underway' or re.match(r'^Current level: (\d+)$', s):
+    if s == 'Elevation underway' or re.fullmatch(r'^Current level: (\d+)$', s):
         return True
     return False
 
@@ -105,4 +105,13 @@ def validate_eject_pattern(s) -> bool:
     :param s:
     :return:
     """
-    return bool(re.match(r'eject: [7135]', s))
+    return bool(re.fullmatch(r'eject: [7135]', s))
+
+
+def validate_uuid_pattern(s) -> bool:
+    """
+
+    :param s:
+    :return:
+    """
+    return bool(re.fullmatch(r'^([a-f0-9]{7})(;0~[a-f0-9]{7})*$', s))

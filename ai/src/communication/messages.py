@@ -10,7 +10,7 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    extract_direction,
                                    validate_number_pattern,
                                    validate_elevation,
-                                   validate_eject_pattern)
+                                   validate_eject_pattern, validate_uuid_pattern)
 
 
 class Messages(object):
@@ -27,7 +27,7 @@ class Messages(object):
         :param debug: bool - flag for debug prints
         :return: None
         """
-        self.uuid_used: list[str] = ["", ]
+        self.uuid_used: list[str] = []
         self.id: str = id_nbr
         self.cipher: Cipher = cipher
         self.language: Latin = language
@@ -136,24 +136,22 @@ class Messages(object):
                         nbr = None
                     else:
                         infos, nbr = res
-
                     result.append({
                         'id': int(parts[1]),
                         'msg': text[0],
-                        **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and text[
-                            1][0].isnumeric() else {}),
+                        **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and
+                            text[1][0].isnumeric() and validate_uuid_pattern(text[1]) is True else {}),
                         **({'infos': list(infos)} if infos is not None else {}),
                         **({'nbr': list(nbr)} if nbr is not None else {})
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
-                # print(f'after recv ttt: {result}')
         if not result:
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
 
     def buf_messages(self, message: str, coord: tuple[int, int] = None,
-                     infos: list[list[str, str]] = None, my_id: int = -1, bis: bool = False) -> None:
+                     infos: list[list[str]] = None, my_id: int = -1, bis: bool = False) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
@@ -180,9 +178,9 @@ class Messages(object):
         :param bis: bool - Additional buffer, avoid a broadcast with two messages in conflict
         :return: None
         """
-        new_uuid: str = ""
+        new_uuid: str = uuid.uuid4().__str__()[:7]
         while new_uuid in self.uuid_used:
-            new_uuid = uuid.uuid4().__str__()
+            new_uuid = uuid.uuid4().__str__()[:7]
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
         encrypted_msg = self.cipher.encryption(message)

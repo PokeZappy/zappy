@@ -88,6 +88,9 @@ class Latin(object):
                                         #PNJ to Incant
                                         'J\'ai bougé': 'motus sum',
 
+                                        # Elder to all
+                                        'Voici l\'histoire de l\'Empire ACCMST': 'haec est historia imperii ACCMST',
+
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',
 
