@@ -36,8 +36,8 @@ void client_eat(server_t *server, client_socket_t *client)
         client->player->_inventory[0] -= 1;
         client->player->_health = 126;
     } else {
-        client_dead(server, client);
         client->player->_team->_current_clients--;
+        client_dead(server, client);
     }
 }
 
