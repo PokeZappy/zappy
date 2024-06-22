@@ -47,7 +47,7 @@ class Pnj(Player):
             self.goto = message['info']
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
-                self.get_north(message['direction'])
+                self.path.get_north(message['direction'])
                 if self.path.facing == 0:
                     self.queue.append('Left')
                     self.queue.append('Forward')

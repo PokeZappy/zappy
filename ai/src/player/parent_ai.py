@@ -73,6 +73,7 @@ class ParentAI(Player):
         self.new_focus = False
         self.ressources_focus = {}
         self.allow_incantation = False
+        self.in_depot: int = -1
     
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -152,6 +153,35 @@ class ParentAI(Player):
             pass
         if message['msg'] == 'felix carmen':
             self.level_incant += 1
+        if message['msg'] == 'situm intrare':
+            self.enter_depot()
+        if message['msg'] == 'sum extra domum':
+            self.exit_depot()
+        if message['msg'] == 'Ego plus viribus':
+    #         TODO - faire un North gurad qui va au Nord
+            pass
+    def enter_depot(self) -> None:
+        """
+
+        :return:
+        """
+        if self.in_depot == -1:
+            self.in_depot = 0
+        self.in_depot += 1
+
+    def exit_depot(self) -> None:
+        """
+
+        :return:
+        """
+        if self.in_depot == -1:
+            return
+        self.in_depot -= 1
+        if self.in_depot == 0:
+            self.message.buf_messages(message='Non Potes dominum facti')
+            self.queue.append('Broadcast')
+            self.life -= self.ACTION
+            self.in_depot = -1
 
     def progenitor_treatment(self, buf: str) -> None:
         if len(self.actions) == 0:

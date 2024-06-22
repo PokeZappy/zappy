@@ -62,7 +62,7 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        rec: str = self.cli_socket.recv((80000)).decode()
+        rec: str = self.cli_socket.recv(1_000_000).decode()
         if self.debug_mode:
             print(f"Received action: {rec}")
         if rec == "" or rec == "dead\n":
@@ -122,6 +122,17 @@ class Bot(object):
          """
         self.life -= self.ACTION
         self.send_action(f'{self.message.send_buf()}\n')
+        if self.debug_mode:
+            print('message send')
+
+    def broadcast_bis(self) -> None:
+        """
+         Send a broadcast message to all bots.
+
+         :return: None
+         """
+        self.life -= self.ACTION
+        self.send_action(f'{self.message.send_buf_bis()}\n')
         if self.debug_mode:
             print('message send')
 

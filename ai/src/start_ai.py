@@ -41,10 +41,7 @@ def start_ai():
         # mybot = Pnj(server_info, cli_socket, debug)
         # mybot = Pusher(server_info, cli_socket, debug)
         # mybot = Collector(server_info, cli_socket, debug)
-        # mybot = First_born(server_info, cli_socket, debug)
-        # mybot = NorthGuard(server_info, cli_socket, debug)
-        # mybot = Incantator(server_info, cli_socket, debug)
-        # mybot = Progenitor(server_info, cli_socket, debug)
+        # mybot = Depot(server_info, cli_socket, debug)
         mybot.run()
     except (ValueError, AssertionError, ConnectionError, ConnectionRefusedError, Exception) as e:
         print(f"NOP: {e}")

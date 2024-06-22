@@ -19,10 +19,10 @@ class Latin(object):
                                        'inventaire des explorateur': 'quid habes ut nobis offerat',
                                         'demande de ressources': 'vade ad me aliquid : ',
 
-                                        #  Push to coll
-                                        'Vous pouvez passez maître': 'Potes dominum facti',
+                                        #  M&M's to coll
+                                        'Vous ne pouvez pas passer maître': 'Non Potes dominum facti',
 
-                                        # Coock to ALL
+                                        # Cook to ALL
                                         # TODO - ajouter le nombre pour chaque avec l'id
                                         'Vous êtes servi maître': 'dominus servivit : ',
 
@@ -35,22 +35,20 @@ class Latin(object):
                                         'incantation raté': 'defecit carmen',
                                         'incantation réussie': 'felix carmen', # Incant to PNJ
 
-                                        # COOCK to Incant
+                                        # COOK to Incant
                                         'j\'ai besoin de nourriture': 'cibo opus est',
-                                        'mange pour incanter : ': 'comedent ut incant : ', #COOCK to PNJ
+                                        'mange pour incanter : ': 'comedent ut incant : ', #COOK to PNJ
 
 
                                         # Coll to MM
                                         'ressources déposées : ': 'opes deposita : ',
                                         # TODO - parse l'inventaire
                                         'Je suis positionné pour le dépot': 'situm intrare',
-                                        # TODO - compter le nombre de collecteur pour désactiver la sécurité
                                        'Je suis sortie du dépot': 'sum extra domum',
-                                        # TODO - savoir si l'envoies au M&Ms ou Pousseur et tt le monde l'envoie où non
                                         'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
 
-                                        #   TODO - envoie de l'inventaire au M&Ms
                                         'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
+
                                         # All to push
                                         'confirmation id': 'sum socius senatus',
 
@@ -63,6 +61,8 @@ class Latin(object):
 
                                         # North_guard to ALL
                                         'voici le nord': 'est dominus aquilonis',
+                                        # North guard to M&M's or progenitor
+                                        'je ai plus de force': 'Ego plus viribus',
 
                                         # Coll to Coll
                                         'Qui est collecteur ?': 'Quot publicani ibi sunt?',
@@ -87,6 +87,9 @@ class Latin(object):
 
                                         #PNJ to Incant
                                         'J\'ai bougé': 'motus sum',
+
+                                        # Elder to all
+                                        'Voici l\'histoire de l\'Empire ACCMST': 'haec est historia imperii ACCMST',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',

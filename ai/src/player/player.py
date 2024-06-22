@@ -47,7 +47,8 @@ class Player(Bot):
         self.path = Path(self.limit, (0, 0), (0, 0))
         self.death: any = False
         self.got_id: int = 0
-        # self.got_id: bool = False
+        self.eject_security = True
+        self.new_born = True
 
         #TODO: seed is it necessary?
         random.seed(datetime.now().timestamp())
@@ -121,21 +122,6 @@ class Player(Bot):
             else:
                 self.move_without_watching(dire, dir.WEST, dir.EAST, dir.NORTH)
 
-    def get_north(self, direction: int):
-        """
-        Set the player's facing direction based on the input direction.
-
-        :param direction: int - The direction value to set the player's facing direction.
-        """
-        if direction == 1:
-            self.path.facing = dir.NORTH.value
-        if direction == 5:
-            self.path.facing = dir.SOUTH.value
-        if direction == 3:
-            self.path.facing = dir.EAST.value
-        if direction == 7:
-            self.path.facing = dir.WEST.value
-
     def turn_to_the_north(self) -> None:
         """
         Turn the player to face the North direction.
@@ -151,13 +137,16 @@ class Player(Bot):
             return
         if self.path.facing == dir.EAST.value:
             self.queue.append('Left')
+            self.life -= self.ACTION
             self.path.facing = dir.NORTH.value
         if self.path.facing == dir.WEST.value:
             self.queue.append('Right')
+            self.life -= self.ACTION
             self.path.facing = dir.NORTH.value
         if self.path.facing == dir.SOUTH.value:
             self.queue.append('Right')
             self.queue.append('Right')
+            self.life -= self.ACTION * 2
             self.path.facing = dir.NORTH.value
 
     def move_to(self, pos: tuple[int, int]) -> None:
@@ -174,9 +163,13 @@ class Player(Bot):
     def get_id(self, message: str) -> None:
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
 
     def apply_action(self) -> None:
         """
@@ -204,6 +197,8 @@ class Player(Bot):
             self.nbr_of_slot()
         elif action == 'Broadcast':
             self.broadcast()
+        elif action == 'Broadcast bis':
+            self.broadcast_bis()
         elif action == 'Forward':
             self.forward()
         elif action == 'Right':
@@ -212,6 +207,8 @@ class Player(Bot):
             self.left()
         elif action == 'Inventory':
             self.check_inventory()
+        elif action == 'Eject':
+            self.eject()
         elif isinstance(action, tuple):
             self.move(action, self.dir)
 
@@ -252,6 +249,8 @@ class Player(Bot):
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
+            if recv_type == 'eject':
+                self.back_on_track(msgs[-1])
             if len(self.actions) != 0:
                 self.actions.pop(0)
 
@@ -298,6 +297,26 @@ class Player(Bot):
     def broadcast_traitement(self, msg: tuple | str) -> None:
         pass
 
-    def global_message(self) -> None:
-        # TODO - faire les messages globaux comme le changement de metier
-        pass
+    def global_message(self, message: tuple | str | dict = None) -> None:
+        if message and message['msg'] == 'haec est historia imperii ACCMST' and self.new_born is True:
+            self.message.uuid_used = [uuid for uuid in message['infos'] if uuid not in self.message.uuid_used] + self.message.uuid_used
+            print(f'new self.uuid: {self.message.uuid_used}')
+            self.new_born = False
+
+    def back_on_track(self, msg):
+        """
+
+        :param msg:
+        :return:
+        """
+        if self.eject_security is False:
+            return
+        direction = int(msg)
+        self.queue.insert(0, 'Forward')
+        if direction == 3:
+            self.queue.insert(0, 'Left')
+        if direction == 7:
+            self.queue.insert(0, 'Right')
+        if direction == 5:
+            self.queue.insert(0, 'Right')
+            self.queue.insert(0, 'Right')

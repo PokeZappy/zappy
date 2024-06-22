@@ -87,8 +87,9 @@ class Depot(Player):
         self.broadcast()
 
     def make_action(self) -> None:
-        if len(self.actions) >= 1:
+        if 0 < len(self.queue):
+            self.apply_action()
+        if len(self.actions) > 0:
             return
-        self.message.buf_messages('collectio rerum : ', coord=(1, 103))
-        self.queue.append('Broadcast')
-        self.apply_action()
+        # self.message.buf_messages('collectio rerum : ', coord=(1, 103))
+        # self.queue.append('Broadcast')

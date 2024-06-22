@@ -27,4 +27,4 @@ class Progenitor(Player):
                     self.nbr_of_child_to_create -= 1
     
     def broadcast_traitement(self, message: tuple | str) -> None:
-        self.global_message()
+        self.global_message(message)

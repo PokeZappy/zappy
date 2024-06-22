@@ -9,7 +9,8 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    get_infos,
                                    extract_direction,
                                    validate_number_pattern,
-                                   validate_elevation)
+                                   validate_elevation,
+                                   validate_eject_pattern, validate_uuid_pattern)
 
 
 class Messages(object):
@@ -26,11 +27,12 @@ class Messages(object):
         :param debug: bool - flag for debug prints
         :return: None
         """
-        self.uuid_used: list[str] = ["", ]
+        self.uuid_used: list[str] = []
         self.id: str = id_nbr
         self.cipher: Cipher = cipher
         self.language: Latin = language
         self.msg: str = 'Broadcast "'
+        self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
         self.niktamer = None
 
@@ -75,6 +77,8 @@ class Messages(object):
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
         """
         self.niktamer = message
+        if message == "" or message == "\n":
+            return [('ko', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
@@ -86,6 +90,8 @@ class Messages(object):
                 result.append(('look', message))
             elif validate_elevation(message):
                 result.append(('elevation', message))
+            elif validate_eject_pattern(message):
+                result.append(('eject', message))
             elif message == 'ok':
                 if self.debug:
                     print(f'ok: {action}')
@@ -107,21 +113,18 @@ class Messages(object):
         """
         save_msg: str = message
         match = re.search(r'\d+, ', message)
+        if message == "" or message == "\n":
+            return ('ko', 'ko')
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')
             for msg in messages:
                 parts = msg.split()
-                try:
-                    if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
-                        return 'broadcast', [{'id': 0, 'msg': 'ko'}]
-                except Exception as e:
-                    print(f'Error: {e}')
-                    print(f'Error: {parts}')
-                    print(f'Error: {message}')
-                    print(f'Error nikela: |{self.niktamer}|')
-                    exit(84)
+                if len(parts) != 4:
+                    return ('ko', 'ko')
+                if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
+                    return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
@@ -139,24 +142,22 @@ class Messages(object):
                         nbr = None
                     else:
                         infos, nbr = res
-
                     result.append({
                         'id': int(parts[1]),
                         'msg': text[0],
-                        **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and text[
-                            1][0].isnumeric() else {}),
+                        **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and
+                            text[1][0].isnumeric() and validate_uuid_pattern(text[1]) is True else {}),
                         **({'infos': list(infos)} if infos is not None else {}),
                         **({'nbr': list(nbr)} if nbr is not None else {})
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
-                # print(f'after recv ttt: {result}')
         if not result:
             result = [{'id': 0, 'msg': 'ko'}]
         return 'broadcast', result
 
     def buf_messages(self, message: str, coord: tuple[int, int] = None,
-                     infos: list[list[str, str]] = None, my_id: int = -1) -> None:
+                     infos: list[list[str]] = None, my_id: int = -1, bis: bool = False) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
@@ -164,6 +165,7 @@ class Messages(object):
         :param coord: tuple[int, int] - The coordinates of the message.
         :param infos: list[list[str, str] | any] - Additional information related to the message.
         :param my_id: int - Additional id related to the message
+        :param bis: bool - Additional buffer, avoid a broadcast with two messages in conflict
         :return: None
         """
         if coord is not None:
@@ -172,25 +174,32 @@ class Messages(object):
             message += f'#{"~".join(";".join(info) for info in infos)}'
         if my_id != -1:
             message += f'#{my_id}'
-        self.buf_msg_default(message)
+        self.buf_msg_default(message, bis)
 
-    def buf_msg_default(self, message: str) -> None:
+    def buf_msg_default(self, message: str, bis: bool) -> None:
         """
         Append an encrypted message to the buffer for broadcasting.
 
         :param message: str - The message to be sent.
+        :param bis: bool - Additional buffer, avoid a broadcast with two messages in conflict
         :return: None
         """
-        new_uuid: str = ""
+        new_uuid: str = uuid.uuid4().__str__()[:7]
         while new_uuid in self.uuid_used:
-            new_uuid = uuid.uuid4().__str__()
+            new_uuid = uuid.uuid4().__str__()[:7]
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
         encrypted_msg = self.cipher.encryption(message)
-        if self.msg == 'Broadcast "':
-            self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+        if bis is False:
+            if self.msg == 'Broadcast "':
+                self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            else:
+                self.msg += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
         else:
-            self.msg += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            if self.msg_bis == 'Broadcast "':
+                self.msg_bis += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
+            else:
+                self.msg_bis += f'|ACCMST {self.id} {new_uuid} {encrypted_msg}'
 
     def send_buf(self) -> str:
         """
@@ -200,4 +209,14 @@ class Messages(object):
         """
         result = self.msg + '"'
         self.msg = 'Broadcast "'
+        return result
+
+    def send_buf_bis(self) -> str:
+        """
+        Format and return the buffered messages for broadcasting.
+
+        :return: str - A formatted string representing the buffered messages for broadcasting.
+        """
+        result = self.msg_bis + '"'
+        self.msg_bis = 'Broadcast "'
         return result

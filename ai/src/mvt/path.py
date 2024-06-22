@@ -166,3 +166,18 @@ class Path(object):
                 self.path.insert(len(self.path) - 1, 'Right')
                 self.facing = (self.facing + 1) % 4
         return self.path
+
+    def get_north(self, direction: int):
+        """
+        Set the player's facing direction based on the input direction.
+
+        :param direction: int - The direction value to set the player's facing direction.
+        """
+        if direction == 1:
+            self.facing = face.NORTH.value
+        if direction == 5:
+            self.facing = face.SOUTH.value
+        if direction == 3:
+            self.facing = face.EAST.value
+        if direction == 7:
+            self.facing = face.WEST.value

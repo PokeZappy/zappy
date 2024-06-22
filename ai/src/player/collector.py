@@ -70,6 +70,7 @@ class Collector(Player):
         self.pos[0], self.pos[1] = self.path.end
         for move in self.start_path:
             self.queue.append(move)
+            self.life -= self.ACTION
         if self.debug_mode:
             print(f'queue with path: {self.queue}')
             print(f'start path: {self.start_path}')
@@ -90,10 +91,13 @@ class Collector(Player):
             for resource in tile:
                 if resource in self.focus:
                     self.queue.append(("Take", resource))
+                    self.life -= self.ACTION
+            self.deactivate_pusher()
             if (self.pos == self.start_pos and self.id != 0 and not self.empty and not
                (self.id == 1 and not self.lvl_one)):
                 break
             self.queue.append('Forward')
+            self.life -= self.ACTION
             self.pos[0] = (self.pos[0] + 1) % (self.limit[0] - 1)
             if self.debug_mode:
                 print(f'lim: {self.limit[0]}')
@@ -139,23 +143,35 @@ class Collector(Player):
         :return: None
         """
         self.empty = True
-        for move in self.deposit_path:
+        forward_count = 0
+        before_depot = len(self.deposit_path) - 2
+        for index, move in enumerate(self.deposit_path):
+            if index == before_depot and self.id > 2:
+                self.message.buf_messages('situm intrare')
+                self.queue.append('Broadcast')
+                self.life -= self.ACTION
             self.queue.append(move)
-        for resource in self.inventory:
-            if resource != 'food':
-                for _ in range(self.inventory[resource]):
-                    self.queue.append(('Set', resource.__str__()))
-                    self.inventory[resource] -= 1
+            self.life -= self.ACTION
+        self.deposit_ressources()
         if self.id % 2 == 0 and self.id != 0:
             self.queue.append('Right')
+            self.life -= self.ACTION
         elif self.id % 2 == 1:
             self.queue.append('Left')
+            self.life -= self.ACTION
         for move in self.start_path:
             if move == 'Left':
                 self.path.facing = (self.path.facing - 1) % 4
             if move == 'Right':
                 self.path.facing = (self.path.facing + 1) % 4
             self.queue.append(move)
+            if move == 'Forward':
+                forward_count += 1
+                if forward_count == 2 and self.id > 2:
+                    self.message.buf_messages(message='sum extra domum', bis=True)
+                    self.queue.insert(2, 'Broadcast bis')
+                    self.life -= self.ACTION
+        self.life -= self.ACTION
         self.turn_to_the_north()
 
     def make_action(self) -> None:
@@ -172,6 +188,7 @@ class Collector(Player):
             return
         if not self.looked and 'Look' not in self.queue and self.start is not False:
             self.queue.append('Look')
+            self.life -= self.ACTION
         if self.looked:
             if len(self.queue) == 0:
                 self.moving_straight()
@@ -191,8 +208,8 @@ class Collector(Player):
         if message['msg'] == 'focus in his opibus : ':
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
-        #     TODO clear la queue -> nop we can clear path to deposit or something else
         if message['msg'] == 'collectio rerum : ':
+            # TODO - pas fait
             self.depot = message['coord']
         if message['msg'] == 'Potes dominum facti':
             self.queue.append('Forward')
@@ -200,22 +217,47 @@ class Collector(Player):
             self.deposits_resources()
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
-                self.get_north(message['direction'])
+                self.path.get_north(message['direction'])
                 self.turn_to_the_north()
             if self.got_id > 2 and self.start is False:
                 self.go_to_start()
         if message['msg'] == 'Ego sum publicani ibi' and self.got_id < 3:
             self.id += 1
-            # print(f'message id inc is {message}|end')
-            # print(message['nbr'][0])
             # TODO - ADD parser id to replace missing id if collector died in :message['nbr'][0]
-            # print(f'my id is now: {self.id}')
+
         if message['msg'] == 'Quot publicani ibi sunt?':
-            # print([self.id])
-            # print(type([self.id]))
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
+
         #     TODO - Change the string to have the real string send by incantator or M&M's
         if message['msg'] == 'INCANTATION LVL 1 DONE':
             self.lvl_one = True
-        self.global_message()
+        self.global_message(message)
+
+    def deactivate_pusher(self):
+        """
+
+        :return:
+        """
+        if ((0 < self.id < 3 and self.pos[0] == (self.start_pos[0] - 2) % (self.limit[0] - 1)) or
+                (self.id == 0 and self.pos[0] == (self.start_pos[0] - 3) % (self.limit[0] - 1))):
+            self.message.buf_messages('situm intrare')
+            self.queue.append('Broadcast')
+            self.life -= self.ACTION
+        if ((0 < self.id < 3 and self.pos[0] == (self.start_pos[0]) % (self.limit[0] - 1)) or
+                (self.id == 0 and self.pos[0] == (self.start_pos[0] + 1) % (self.limit[0] - 1))):
+            self.message.buf_messages(message='sum extra domum', bis=True)
+            self.queue.insert(2, 'Broadcast bis')
+            self.life -= self.ACTION
+
+    def deposit_ressources(self):
+        """
+
+        :return:
+        """
+        for resource in self.inventory:
+            if resource != 'food':
+                for _ in range(self.inventory[resource]):
+                    self.queue.append(('Set', resource.__str__()))
+                    self.inventory[resource] -= 1
+                    self.life -= self.ACTION
