@@ -80,7 +80,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
             return;
         }
         dprintf(client->socket, "%d\n%d %d\n", get_client_rest(client->player
-            ->_team), client->player->_pos._x, client->player->_pos._y);
+            ->_team), server->grid->_width, server->grid->_height);
         cmd_pnw(server, NULL, client);
     }
     if (client->_is_gui == 0)
@@ -106,7 +106,7 @@ static int handle_client_message(client_socket_t *client,
         return -1;
     }
     buffer[bytes - 1] = '\0';
-    printf("Received from {%d}: {%s}\n", client->_id, buffer);
+    // printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
     return 0;
 }

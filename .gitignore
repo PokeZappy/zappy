@@ -22,6 +22,8 @@ my_main.c
 zappy_test/
 *.d
 *.txt
+root
+venv
 
 # Fichiers raylib indésirables
 

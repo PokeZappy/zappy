@@ -32,7 +32,7 @@ void cmd_eject(server_t *server, char *args, client_socket_t *client)
         dprintf(client->socket, "ok\n");
     } else
         dprintf(client->socket, "ko\n");
-    printf("eject\n");
+    // printf("eject\n");
 }
 
 void cmd_take(server_t *server, char *args, client_socket_t *client)
@@ -50,7 +50,7 @@ void cmd_take(server_t *server, char *args, client_socket_t *client)
     if (!get_gui(server))
         return;
     dprintf(get_gui(server)->socket, "pgt %d %d\n", client->_id, result);
-    printf("take\n");
+    // printf("take\n");
 }
 
 void cmd_set(server_t *server, char *args, client_socket_t *client)
@@ -68,5 +68,5 @@ void cmd_set(server_t *server, char *args, client_socket_t *client)
     if (!get_gui(server))
         return;
     dprintf(get_gui(server)->socket, "pdr %d %d\n", client->_id, result);
-    printf("set\n");
+    // printf("set\n");
 }

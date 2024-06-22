@@ -10,6 +10,7 @@
 
 void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
 {
+    printf("INCANTATION\n");
     command_t *cmd = (command_t *)malloc(sizeof(command_t));
     player_t *player = client->player;
 
@@ -40,6 +41,7 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
 {
     player_t *player = client->player;
     cmd_incantation_t *current = find_incantation(server, client);
+    printf("POST INCANTATION\n");
 
     if (!check_post_incantation(server, client)) {
         dprintf(client->socket, "ko\n");

@@ -37,7 +37,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
 
     if (client->player->_team->_max_clients >= 1024) {
         free(egg);
-        printf("ko\n");
+        // printf("ko\n");
         return;
     }
     create_egg(egg, client, server);
@@ -51,7 +51,7 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
 
 void cmd_dead(server_t *server, char *args, client_socket_t *client)
 {
-    printf("dead\n");
+    // printf("dead\n");
 }
 
 void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
@@ -62,5 +62,5 @@ void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(client->socket, "%d\n",
     player->_team->_max_clients - player->_team->_current_clients);
-    printf("connect_nbr\n");
+    // printf("connect_nbr\n");
 }
