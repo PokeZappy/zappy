@@ -23,7 +23,7 @@ class NorthGuard(Player):
 
     def take_the_pole(self) -> None:
         if not self.first:
-            # TODO - possibilité de mettre un return self.path.facing is None ?
+            # TODO - ajuster les conditions
             self.turn_to_the_north()
         self.eject_security = False
         self.queue.append('Forward')
@@ -33,7 +33,7 @@ class NorthGuard(Player):
         self.eject_security = True
 
     def broadcast_traitement(self, message: tuple | str) -> None:
-        if message['msg'] == 'est dominus aquilonis':
+        if message['msg'] == 'est dominus aquilonis' and self.first is False:
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
                 self.turn_to_the_north()

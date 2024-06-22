@@ -47,7 +47,7 @@ class TestMessages:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result_empty = messages.receive('', "hello")
-        assert result_empty == []
+        assert result_empty == [('ko', 'ko')]
 
         # TODO - Find why isn't working
         # latin = Latin()
@@ -63,9 +63,9 @@ class TestReceive:
         cipher = Cipher("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum posuere leo eget iaculis bibendu")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        processed_message = messages.receive('message 1, "ACCMST 1 cfcba69f-887b-444d-bdd0-850fd47ffbdd yo_la_team"', "hello")
+        processed_message = messages.receive('message 1, "ACCMST 1 cfcba69f yo_la_team"', "hello")
         assert isinstance(processed_message, list)
-        assert processed_message == [('ko', 'ko')]
+        assert processed_message == [('broadcast', [{'id': 0, 'msg': 'ko'}])]
 
     #  returns the original message if it matches the predefined pattern
     def test_returns_original_message_if_matches_predefined_pattern(self):

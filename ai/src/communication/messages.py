@@ -113,21 +113,18 @@ class Messages(object):
         """
         save_msg: str = message
         match = re.search(r'\d+, ', message)
+        if message == "" or message == "\n":
+            return ('ko', 'ko')
         result: list[dict[str, str | int]] = []
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')
             for msg in messages:
                 parts = msg.split()
-                try:
-                    if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
-                        return 'broadcast', [{'id': 0, 'msg': 'ko'}]
-                except Exception as e:
-                    print(f'Error: {e}')
-                    print(f'Error: {parts}')
-                    print(f'Error: {message}')
-                    print(f'Error nikela: |{self.niktamer}|')
-                    exit(84)
+                if len(parts) != 4:
+                    return ('ko', 'ko')
+                if parts[0] != 'ACCMST' or parts[2] in self.uuid_used or validate_encryption_pattern(parts[3]):
+                    return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])

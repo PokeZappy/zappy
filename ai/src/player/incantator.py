@@ -182,7 +182,7 @@ class Incantator(Player):
             self.goto = message['info']
         if self.dir is None and message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
-                self.get_north(message['direction'])
+                self.path.get_north(message['direction'])
                 self.dir = self.path.facing #if self.path.facing % 2 == 0 else (self.path.facing + 2) % 4
         if message['msg'] == 'motus sum':
             self.count_pos += 1
