@@ -92,6 +92,7 @@ void hack_player_dir(server_t *server, char *args, client_socket_t *client);
 void print_egg_list(server_t *server, char *args, client_socket_t *client);
 void hack_player_give(server_t *server, char *args, client_socket_t *client);
 void hack_player_health(server_t *server, char *args, client_socket_t *client);
+void kill_player(server_t *server, char *args, client_socket_t *client);
 
 // -- DELAYED -- //
 // Add Command to List

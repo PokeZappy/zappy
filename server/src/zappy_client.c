@@ -83,7 +83,7 @@ static void handle_client_message(client_socket_t *client,
         close(client_socket);
         return;
     }
-    buffer[bytes - 1] = '\0';
+    buffer[bytes - 2] = '\0';
     printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
 }
