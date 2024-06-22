@@ -122,8 +122,6 @@ class Collector(Player):
         if self.pos == self.start_pos:
             self.deposits_resources()
             self.turn_to_the_north()
-        # TODO - check if food needed -> search_food()
-        #  sécu si pas de bouffe sur le chemin.
 
     def reset_focus(self) -> None:
         """
@@ -209,7 +207,6 @@ class Collector(Player):
             self.focus = message['infos']
             self.nbr_focus = message['nbr']
         if message['msg'] == 'collectio rerum : ':
-            # TODO - pas fait
             self.depot = message['coord']
         if message['msg'] == 'Potes dominum facti':
             self.queue.append('Forward')
@@ -223,8 +220,6 @@ class Collector(Player):
                 self.go_to_start()
         if message['msg'] == 'Ego sum publicani ibi' and self.got_id < 3:
             self.id += 1
-            # TODO - ADD parser id to replace missing id if collector died in :message['nbr'][0]
-
         if message['msg'] == 'Quot publicani ibi sunt?':
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')

@@ -74,6 +74,7 @@ class ParentAI(Player):
         self.ressources_focus = {}
         self.allow_incantation = False
         self.in_depot: int = -1
+        self.pusher_count = 4
     
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -133,7 +134,7 @@ class ParentAI(Player):
                 continue
             self.actions.pop(0)
 
-    def broadcast_traitement(self, message: tuple | str) -> None:
+    def broadcast_traitement(self, message: tuple | str | dict) -> None:
         if message['msg'] == 'opes in meo inventario sunt : ':
             if message['id'] not in self.coll_ressources.keys():
                 self.coll_ressources[message['id']] = self.based_ressources
@@ -160,6 +161,7 @@ class ParentAI(Player):
         if message['msg'] == 'Ego plus viribus':
     #         TODO - faire un North gurad qui va au Nord
             pass
+
     def enter_depot(self) -> None:
         """
 
@@ -194,7 +196,6 @@ class ParentAI(Player):
             # else:
             #     #TODO: communication broadcast
             #     continue
-
 
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
@@ -254,7 +255,6 @@ class ParentAI(Player):
             self.queue.append('Look')
         self.queue.append('Slots')
 
-
     def make_action(self) -> None:
         """
         This method makes the action of the player.
@@ -280,3 +280,9 @@ class ParentAI(Player):
 
     def get_broadcast(self, broadcast_recv: str):
         print(broadcast_recv)
+
+    def satus_testudo(self) -> None:
+        # TODO - @Matthias implémenter la fonction dans une boucle avec la limite de pusher_count == 24
+        self.message.buf_messages('satus testudo : ', id=self.pusher_count)
+        self.queue.append('Broadcast')
+        self.pusher_count += 1
