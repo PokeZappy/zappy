@@ -19,9 +19,7 @@
 namespace Zappy {
     class Core {
     public:
-        Core(bool isRaylib = false) {
-            _graphics = std::make_shared<Raylib>();
-        };
+        Core() = default;
         ~Core() = default;
         void setPort(int port) { _port = port; }
         void setMachine(std::string &machine) { _machine = machine; }

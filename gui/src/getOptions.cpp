@@ -36,5 +36,8 @@ namespace Zappy
         if (_machine.empty() || _port == -1) {
             throw MissingOptionException();
         }
+        if (_graphics == nullptr) {
+            _graphics = std::make_shared<Raylib>();
+        }
     }
 } // namespace Zappy
