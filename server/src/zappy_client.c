@@ -32,6 +32,27 @@ static void close_all_clients(struct server_s *server)
     }
 }
 
+static void send_all_info(struct server_s *server, int gui_socket)
+{
+    egg_t *e = TAILQ_FIRST(&server->_head_egg);
+    client_socket_t *p = TAILQ_FIRST(&server->_head_client_sockets);
+
+    while (p != NULL) {
+        if (p->_is_gui == 1) {
+            p = TAILQ_NEXT(p, entries);
+            continue;
+        }
+        dprintf(gui_socket, "ppo %d %d %d %d\n", p->_id, p->player->_pos._x,
+            p->player->_pos._y, p->player->_direction + 1);
+        p = TAILQ_NEXT(p, entries);
+    }
+    while (e != NULL) {
+        dprintf(gui_socket, "enw %d %d %d %d\n", e->_id, e->_client_id,
+            e->_pos._x, e->_pos._y);
+        e = TAILQ_NEXT(e, _entries);
+    }
+}
+
 static void handle_gui_client(client_socket_t *client, struct server_s *server)
 {
     int x = server->grid->_width;
@@ -42,6 +63,7 @@ static void handle_gui_client(client_socket_t *client, struct server_s *server)
     cmd_sgt(server, NULL, client);
     cmd_mct(server, NULL, client);
     cmd_tna(server, NULL, client);
+    send_all_info(server, client->socket);
 }
 
 static void handle_client_cmd(char *commands, client_socket_t *client,
