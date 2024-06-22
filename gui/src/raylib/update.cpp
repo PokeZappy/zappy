@@ -69,13 +69,15 @@ namespace Zappy {
             _camera.Update(CAMERA_FIRST_PERSON);
 
         if (!_players.empty() && !_players[0]->isDying()) {
-            for (auto &player : _players) {
-                if (_players[0]->worldPlayer->getId() == 0) {
-                    _camera.target = player->getPosition() * _gridSize;
-                    TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
-                    break;
-                }
-            }
+            //* Follow the player with id 0
+            // for (auto &player : _players) {
+            //     if (_players[0]->worldPlayer->getId() == 0) {
+            //         _camera.target = player->getPosition() * _gridSize;
+            //         TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
+            //         break;
+            //     }
+            // }
+            //* Follow the first player
             // _camera.target = _players[0]->getPosition() * _gridSize;
             // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
         }
