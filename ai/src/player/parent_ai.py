@@ -142,7 +142,7 @@ class ParentAI(Player):
                         self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
-                    print('I take food')
+                    # print('I take food')
                     self.life += self.FOOD
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
