@@ -142,7 +142,7 @@ class ParentAI(Player):
                         self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
-                    print('I take food')
+                    # print('I take food')
                     self.life += self.FOOD
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
@@ -306,7 +306,8 @@ class ParentAI(Player):
             self.action_as_mastermind()
 
     def get_broadcast(self, broadcast_recv: str):
-        print(broadcast_recv)
+        # print(broadcast_recv)
+        pass
 
     def satus_testudo(self) -> None:
         # TODO - @Matthias implémenter la fonction dans une boucle avec la limite de pusher_count == 24
