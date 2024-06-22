@@ -210,5 +210,5 @@ def display_help() -> None:
 
 def connection(port: str, name: str, machine: str):
         server_info, cli_socket = connexion.connect(port, name, machine)
-        print(f"Connected to {machine}:{port}")
+        # print(f"Connected to {machine}:{port}")
         return server_info, cli_socket
