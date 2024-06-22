@@ -26,14 +26,14 @@ namespace Zappy
             for (size_t x = 0; x < tiles[y].size(); x++) {
                 if (!_hudMode->activated()) {
                     DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
-                    continue;
-                }
-                raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
-                if (meshHit.hit) {
-                    _hudMode->setTile(std::make_unique<Tile>(tiles[y][x]));
-                    DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
                 } else {
-                    DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                    raylib::RayCollision meshHit = ray.GetCollision(_floorMesh, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                    if (meshHit.hit) {
+                        _hudMode->setTile(std::make_unique<Tile>(tiles[y][x]));
+                        DrawMesh(_floorMesh, _hitGridMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                    } else {
+                        DrawMesh(_floorMesh, _floorMaterial, MatrixTranslate(x * _gridSize, 0.0f, y * _gridSize));
+                    }
                 }
 
                 x_pos = x * _gridSize - _gridSize / 4;

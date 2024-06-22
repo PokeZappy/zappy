@@ -66,7 +66,7 @@ namespace Zappy {
         }
 
         if (debugMode->getType() != CHAT)
-            _camera.Update(CAMERA_THIRD_PERSON);
+            _camera.Update(CAMERA_FIRST_PERSON);
 
         if (!_players.empty() && !_players[0]->isDying()) {
             for (auto &player : _players) {
