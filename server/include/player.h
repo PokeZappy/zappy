@@ -8,6 +8,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include "client.h"
 #include "direction.h"
 #include "vector.h"
 #include "constant.h"
@@ -18,6 +19,18 @@
 
 struct server_s;
 typedef struct server_s server_t;
+
+struct team_s;
+typedef struct team_s team_t;
+
+struct cmd_incantation_s;
+typedef struct cmd_incantation_s cmd_incantation_t;
+
+struct client_socket_s;
+typedef struct client_socket_s client_socket_t;
+
+struct delayed_command_s;
+typedef struct delayed_command_s delayed_command_t;
 
 typedef struct player_s {
     int _id; // id of the player
@@ -50,7 +63,14 @@ char *player_look(server_t *server, player_t *player);
 void player_look_loop(server_t *server, player_t *p, int i, char *result);
 int nb_player_on_tile(server_t *server, vector_t tile_pos);
 bool check_incantation(server_t *server, player_t *player);
+bool check_post_incantation(server_t *server, client_socket_t *client);
+void create_current_incantation(server_t *server, player_t *player);
+bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl);
+void free_incantation(server_t *server, cmd_incantation_t *current);
 void check_death(server_t *server);
+cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c);
+delayed_command_t *ficbcq(server_t *s, client_socket_t *c);
+void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p);
 
 // -- GRID RELATED -- //
 int player_take_item(player_t *player, tiles_t *tile, char *item);
