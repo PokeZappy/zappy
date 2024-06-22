@@ -13,6 +13,8 @@ void cmd_forward(server_t *server, char *args, client_socket_t *client)
         return;
     player_move(client->player, server->grid->_width, server->grid->_height);
     dprintf(client->socket, "ok\n");
+    if (!get_gui(server))
+        return;
     dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
         client->player->_pos._x, client->player->_pos._y,
         client->player->_direction + 1);
@@ -25,6 +27,8 @@ void cmd_right(server_t *server, char *args, client_socket_t *client)
         return;
     player_orientation(client->player, 1);
     dprintf(client->socket, "ok\n");
+    if (!get_gui(server))
+        return;
     dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
         client->player->_pos._x, client->player->_pos._y,
         client->player->_direction + 1);
@@ -37,6 +41,8 @@ void cmd_left(server_t *server, char *args, client_socket_t *client)
         return;
     player_orientation(client->player, 0);
     dprintf(client->socket, "ok\n");
+    if (!get_gui(server))
+        return;
     dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
         client->player->_pos._x, client->player->_pos._y,
         client->player->_direction + 1);
@@ -63,6 +69,8 @@ void cmd_inventory(server_t *server, char *args, client_socket_t *client)
         return;
     response = print_player_inventory(client->player);
     dprintf(client->socket, "%s\n", response);
+    if (!get_gui(server))
+        return;
     dprintf(get_gui(server)->socket, "pin %d %d %d %s\n", client->_id,
         client->player->_pos._x, client->player->_pos._y, response);
     free(response);
