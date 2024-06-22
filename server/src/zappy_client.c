@@ -47,9 +47,6 @@ static void handle_gui_client(client_socket_t *client, struct server_s *server)
 static void handle_client_cmd(char *commands, client_socket_t *client,
     struct server_s *server)
 {
-    player_t *new_player;
-    int client_socket = client->socket;
-
     if (client->player == NULL && client->_is_gui == 0) {
         if (strcmp(commands, "GRAPHIC") == 0) {
             handle_gui_client(client, server);

@@ -7,8 +7,22 @@
 
 #include "../../include/server.h"
 
+int relative_push(player_t *pusher, player_t *pushed)
+{
+    int direction_map[4][4] = {
+            {5, 3, 1, 7},
+            {7, 5, 3, 1},
+            {1, 7, 5, 3},
+            {3, 1, 7, 5}
+    };
+
+    return direction_map[pusher->_direction][pushed->_direction];
+}
+
 void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
 {
+    int relative = relative_push(pusher, pushed->player);
+
     if (pusher->_direction == UP)
         pushed->player->_pos._y -= 1;
     if (pusher->_direction == DOWN)
@@ -17,7 +31,7 @@ void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
         pushed->player->_pos._x -= 1;
     if (pusher->_direction == RIGHT)
         pushed->player->_pos._x += 1;
-    dprintf(pushed->socket, "eject: %d\n", pusher->_direction);
+    dprintf(pushed->socket, "eject: %d\n", relative);
     dprintf(get_gui(server)->socket, "pex %d\n", pushed->_id);
 }
 

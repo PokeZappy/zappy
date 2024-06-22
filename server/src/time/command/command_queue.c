@@ -44,19 +44,12 @@ void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args)
 {
     delayed_command_t *delayed_command = (delayed_command_t *)
     malloc(sizeof(delayed_command_t));
-    int how_many = how_many_in_queue(server, c);
 
     delayed_command->_func = cmd->ptr;
     delayed_command->_args = strdup(args);
     delayed_command->_client = c;
     delayed_command->_delay = cmd->delay;
-    if (how_many < 10) {
-        if (how_many != 0)
-            calc_delay(server, c, cmd->delay);
-    } else {
-        delete_last_cmd(server, c);
-        calc_delay(server, c, cmd->delay);
-    }
+    add_delay(server, c, delayed_command);
     TAILQ_INSERT_TAIL(&server->_head_delayed_commands, delayed_command,
     entries);
     print_queue(server);

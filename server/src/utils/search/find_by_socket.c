@@ -7,12 +7,12 @@
 
 #include "../../../include/server.h"
 
-client_socket_t *find_client_by_playerid(server_t *server, int id)
+client_socket_t *find_client_by_player(server_t *server, player_t *player)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
     TAILQ_FOREACH(current, &server->_head_client_sockets, entries) {
-        if (current->player && current->player->_id == id)
+        if (current->player == player)
             return current;
     }
     return NULL;

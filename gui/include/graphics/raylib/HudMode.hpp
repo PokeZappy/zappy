@@ -19,6 +19,10 @@
 #define LUXEBALL_HUD_PATH "assets/textures/hud/luxury_ball.png"
 #define MASTERBALL_HUD_PATH "assets/textures/hud/master_ball.png"
 #define FOOD_HUD_PATH "assets/textures/hud/pecha_berry.png"
+#define TYPES_HUD_PATH "assets/textures/hud/types.png"
+#define TYPESFR_HUD_PATH "assets/textures/hud/types_fr.png"
+#define NOT_ENCANTING_HUD_PATH "assets/textures/hud/evolution_icon_disabled.png"
+#define ENCANTING_HUD_PATH "assets/textures/hud/evolution_icon_enabled.png"
 
 namespace Zappy {
     class HudMode {
@@ -32,9 +36,12 @@ namespace Zappy {
                         _honorBallTexture(HONORBALL_HUD_PATH),
                         _luxeBallTexture(LUXEBALL_HUD_PATH),
                         _masterBallTexture(MASTERBALL_HUD_PATH),
-                        _foodTexture(FOOD_HUD_PATH)
+                        _typesTexture(TYPES_HUD_PATH),
+                        _foodTexture(FOOD_HUD_PATH),
+                        _notEncantingTexture(NOT_ENCANTING_HUD_PATH),
+                        _encantingTexture(ENCANTING_HUD_PATH)
                         {
-            };
+            }
             void switchState() { _activated = !_activated; }
             bool activated() { return _activated; }
             void setTile(std::shared_ptr<Tile> tile) { _selectedTile = tile; }
@@ -45,6 +52,9 @@ namespace Zappy {
             void drawBackground();
             void drawInventory(bool player);
             void drawPlayers();
+            void drawPokemons();
+            void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
+            void drawType(std::string type, int y);
 
         private:
             bool _activated = false;
@@ -59,9 +69,13 @@ namespace Zappy {
             raylib::Texture2D _luxeBallTexture;
             raylib::Texture2D _masterBallTexture;
             raylib::Texture2D _foodTexture;
+            raylib::Texture2D _typesTexture;
+            raylib::Texture2D _notEncantingTexture;
+            raylib::Texture2D _encantingTexture;
             Rectangle rectangle;
 
             std::shared_ptr<Tile> _selectedTile = nullptr;
             std::vector<std::shared_ptr<PlayerRaylib>> _selectedPlayers;
+            std::shared_ptr<PlayerRaylib> _selectedPlayer;
     };
 }
