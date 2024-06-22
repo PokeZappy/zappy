@@ -10,14 +10,15 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    extract_direction,
                                    validate_number_pattern,
                                    validate_elevation,
-                                   validate_eject_pattern, validate_uuid_pattern)
+                                   validate_eject_pattern,
+                                   validate_uuid_pattern)
 
 
 class Messages(object):
     """
     This class handles sending and receiving messages using encryption.
     """
-    def __init__(self, cipher: Cipher, id_nbr: str, language: Latin, debug: bool = False) -> None:
+    def __init__(self, cipher: Cipher, id_nbr: str, language: Latin, debug: bool = False, parrot: bool = False) -> None:
         """
         Initialize a Messages instance with a cipher and an ID number.
 
@@ -34,6 +35,7 @@ class Messages(object):
         self.msg: str = 'Broadcast "'
         self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
+        self.parrot = parrot
         self.niktamer = None
 
     def send_coord(self, message: str, pos: tuple[int, int]) -> str:
@@ -68,13 +70,16 @@ class Messages(object):
         encrypted_msg = self.cipher.encryption(message)
         return f'Broadcast "ACCMST {self.id} {new_uuid} {encrypted_msg}"'
 
-    def receive(self, message: str, action: any = None) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+    def receive(self,
+                message: str,
+                action: any = None) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
         :param message: str - The message received.
         :param action: any - Additional action related to the message.
-        :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status and processed message details.
+        :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status
+        and processed message details.
         """
         self.niktamer = message
         if message == "" or message == "\n":
@@ -102,20 +107,24 @@ class Messages(object):
                 result.append(('ko', action))
             else:
                 result.append(self.broadcast_received(message))
+            print(result)
         return result
 
-    def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]:
+    def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
         """
         Process the received broadcast message and extract relevant information.
 
         :param message: str - The received broadcast message.
-        :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]]]] - A tuple containing the status and processed message details.
+        :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]] - A tuple containing the status
+        and processed message details.
         """
         save_msg: str = message
         match = re.search(r'\d+, ', message)
         if message == "" or message == "\n":
-            return ('ko', 'ko')
+            return 'ko', 'ko'
         result: list[dict[str, str | int]] = []
+        if self.parrot is True:
+            return ('broadcast', [message[match.end() + 1:-1]])
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')
