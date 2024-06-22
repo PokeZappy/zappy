@@ -15,7 +15,6 @@ class Incantator(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.allowed_incantation_mns = 1
         self.goto = (0, self.limit[1] - 1)
-        # TODO: self.dir == None
         self.dir = None
         self.first_round = True
         self.pos = [0, 0]
@@ -141,9 +140,8 @@ class Incantator(Player):
                     self.dir = (self.dir + 1) % 4
             elif recv_type == 'ko':
                 if msgs == 'Incantation':
-                    self.allowed_incantation_mns -= 1
-                    self.message.buf_messages('defecit carmen')
-                    self.queue.append('Broadcast')
+                    self.queue.append('Inventory')
+                    self.queue.append('Incantation')
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     self.message.buf_messages('cibo opus est')
                     self.waiting_food = True
@@ -152,6 +150,7 @@ class Incantator(Player):
                 if self.ready == False:
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
+                print(msgs)
                 if self.debug_mode:
                     print('elevation: incant', msgs)
                 if msgs == 'Elevation underway':
@@ -180,13 +179,14 @@ class Incantator(Player):
             self.allowed_incantation_mns += 1
         if message['msg'] == 'movere ad : ':
             self.goto = message['info']
-        if self.dir is None and message['msg'] == 'est dominus aquilonis':
+        if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
+                if self.dir is not None:
+                    self.unset = False
                 self.path.get_north(message['direction'])
-                self.dir = self.path.facing #if self.path.facing % 2 == 0 else (self.path.facing + 2) % 4
+                self.dir = self.path.facing
         if message['msg'] == 'motus sum':
             self.count_pos += 1
-        # TODO: see utility of self.global_message()
 
     def set_path_to_watch_linemate(self) -> None:
         """
@@ -201,17 +201,9 @@ class Incantator(Player):
                     self.queue.append('Right')
                     self.queue.append('Look')
                     return
-                elif self.map[pos[0]][(self.pos[1] - 1) % self.limit[1]] == 0:
-                    self.queue.append('Left')
-                    self.queue.append('Look')
-                    return
             else:
                 if self.map[(self.pos[0] - 1) % self.limit[1] ][pos[1]] == 0:
                     self.queue.append('Right')
-                    self.queue.append('Look')
-                    return
-                elif self.map[(self.pos[0] + 1) % self.limit[1]][pos[1]] == 0:
-                    self.queue.append('Left')
                     self.queue.append('Look')
                     return
             self.queue.append('Forward')
@@ -231,7 +223,7 @@ class Incantator(Player):
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
             self.apply_action()
-        if len(self.actions) > 0:
+        if len(self.actions) > 0 or self.dir is None:
             return
         if self.first_round:
             self.queue.append(('Set', 'food'))
@@ -255,10 +247,10 @@ class Incantator(Player):
             else:
                 self.queue.append('Look')
         if self.have_linemate and not self.ready:
-            if self.dir != 0 and self.unset:
-                self.queue.append('Right')
-                self.unset = False
+            if self.unset:
+                self.path.facing = None
                 return
+            self.turn_to_the_north()
             self.queue.append('Left')
             self.queue.append('Forward')
             self.ready = True
