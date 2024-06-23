@@ -106,6 +106,10 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+
+        for (auto &model : _models) {
+            model.second->update();
+        }
         _mainTheme.Update();
     }
 
