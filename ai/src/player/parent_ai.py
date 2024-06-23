@@ -52,8 +52,9 @@ class ParentAI(Player):
                     ]
     
     DEFENDER_ROLE = [
-                    RoleInGame.PUSHER,
-                    RoleInGame.PUSHER,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
 
