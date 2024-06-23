@@ -74,8 +74,10 @@ class Pnj(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if self.level >= 3:
-            self.queue.append('Look')
-        else:
+        if self.life <= 400:
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+        if self.level >= 2:
             self.queue.append('Inventory')
 

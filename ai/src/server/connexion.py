@@ -16,5 +16,8 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     client_socket.send(f"{team_name}\n".encode())
     cli_number = client_socket.recv(1_000_000).decode()
     new = cli_number.split()
-    result = list(map(int, filter(None, new[:3])))
+    try:
+        result = list(map(int, filter(None, new[:3])))
+    except ValueError as e:
+        result = [0, 30, 30]
     return result, client_socket
