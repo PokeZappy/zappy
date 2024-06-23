@@ -45,7 +45,7 @@ namespace Zappy {
                     _models[Animations::SLEEP] = std::make_shared<RaylibModel>(id, shader, _animations[indexSleep]);
                 }
                 if (indexCry != -1) {
-                    _models[Animations::CRY] = std::make_shared<RaylibModel>(id, shader, _animations[indexSleep]);
+                    _models[Animations::CRY] = std::make_shared<RaylibModel>(id, shader, _animations[indexCry]);
                 }
                 for (const auto &model : _models) {
                 _normalTexture = model.second->getTexture();

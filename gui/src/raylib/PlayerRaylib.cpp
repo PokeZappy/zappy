@@ -6,6 +6,7 @@
 */
 
 #include "PlayerRaylib.hpp"
+#include <chrono>
 
 namespace Zappy
 {
@@ -13,10 +14,10 @@ namespace Zappy
         PokemonInfo &pkInfo,
         std::shared_ptr<RaylibModels> models,
         float gridSize) : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
-        _models(models),
         _successGif("assets/textures/success.gif", false),
         _failureGif("assets/textures/failure.gif", false)
     {
+        _models = models;
         _scale = _gridSize / 32;
         _height = _gridSize;
         color = raylib::Color::White();
@@ -61,7 +62,9 @@ namespace Zappy
     void PlayerRaylib::update(void)
     {
         if (worldPlayer->getIncantationState() == Incantation::INCANTING) {
-            _verticalRotation = sin(GetTime() * 2) * 10;
+        // auto currentTime = std::chrono::system_clock::now().time_since_epoch() / 1000000.;
+        auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
+        _verticalRotation = sin(currentTime.count() * 2) * 10;
         } else {
             _verticalRotation = 0;
         }
@@ -96,13 +99,13 @@ namespace Zappy
         // if (meteoriteValue > 5)
         //     _verticalRotation = meteoriteValue;
         // _altitude = (deltaMove.x * deltaMove.x + deltaMove.y * deltaMove.y) * 100;
-        if (_models->hasAnim(Animations::WALK) > 0)
+        if (_models->hasAnim(Animations::WALK))
             _animIndex = Animations::WALK;
         if (std::abs(_currentPos.x - posGoal.x) < 0.01 && std::abs(_currentPos.y - posGoal.y) < 0.01) {
             _currentPos = posGoal;
         }
         if (_hasIdleAnim && _currentPos == posGoal) {
-            if (_models->hasAnim(Animations::IDLE) > 0) {
+            if (_models->hasAnim(Animations::IDLE)) {
                 _animIndex = Animations::IDLE;
             }
         }

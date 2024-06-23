@@ -26,7 +26,7 @@ namespace Zappy {
     private:
         float getRotation(void) const;
 
-        std::shared_ptr<RaylibModels> &_models;
+        std::shared_ptr<RaylibModels> _models;
         size_t _currentOrientation;
         size_t _level = 0;
         float _verticalRotation = 0.0;

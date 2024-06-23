@@ -7,6 +7,8 @@
 
 #include "EggRaylib.hpp"
 
+
+//TODO changer la classe pour qu'elle prenne des RaylibModels voilà
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,

@@ -62,6 +62,9 @@ all: $(NAME)
 dbg: CXXFLAGS += $(DBGFLAGS)
 dbg: all
 
+prof: CXXFLAGS += -pg
+prof: all
+
 dbgs: CFLAGS += $(DBGFLAGS) -fsanitize=address
 dbgs: $(NAME)
 
@@ -72,7 +75,7 @@ dbgs: $(NAME)
 
 $(NAME):	$(OBJ)
 	@$(MAKE) -C lib/raylib/src
-	$(CC) -pg -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
+	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 	cp $(NAME) ../
 
 clean:
