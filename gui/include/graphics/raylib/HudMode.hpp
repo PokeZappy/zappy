@@ -30,7 +30,7 @@
 namespace Zappy {
     class HudMode {
     public:
-        HudMode(const std::string &assetsRoot) :
+        HudMode(const std::string &assetsRoot, double gridSize) :
             _backgroundHudTexture(assetsRoot + BASEWINDOW_HUD_PATH),
             _inventoryHudTexture(assetsRoot + INVENTORY_HUD_PATH),
             _attackHudTexture(assetsRoot + ATTACK_HUD_PATH),
@@ -43,8 +43,13 @@ namespace Zappy {
             _foodTexture(assetsRoot + FOOD_HUD_PATH),
             _typesTexture(assetsRoot + TYPES_HUD_PATH),
             _notEncantingTexture(assetsRoot + NOT_ENCANTING_HUD_PATH),
-            _encantingTexture(assetsRoot + ENCANTING_HUD_PATH) {}
-        void switchState() { _activated = !_activated; }
+            _encantingTexture(assetsRoot + ENCANTING_HUD_PATH),
+            _gridSize(gridSize) {}
+        void switchState() { 
+            _activated = !_activated;
+            if (_targetedPlayer != nullptr)
+                _targetedPlayer = nullptr;
+            }
         bool activated() { return _activated; }
         void setTile(std::shared_ptr<Tile> tile) { _selectedTile = tile; }
         std::shared_ptr<Tile> getTile() { return _selectedTile; }
@@ -60,6 +65,8 @@ namespace Zappy {
         void scrollUp(float wheel);
         void scrollDown(float wheel);
         void drawType(std::string type, int y);
+        void setFirstPokemonTarget();
+        void followTarget(raylib::Camera &camera);
 
     private:
         bool _activated = false;
@@ -82,7 +89,9 @@ namespace Zappy {
         std::shared_ptr<Tile> _selectedTile = nullptr;
         std::vector<std::shared_ptr<PlayerRaylib>> _selectedPlayers;
         std::shared_ptr<PlayerRaylib> _selectedPlayer;
-        int _scrollIndex = 0;
+        std::shared_ptr<PlayerRaylib> _targetedPlayer = nullptr;
+        size_t _scrollIndex = 0;
         double _howManyScroll = 0.0f;
+        double _gridSize;
     };
 }

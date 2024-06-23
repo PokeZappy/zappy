@@ -27,6 +27,7 @@ namespace Zappy {
         if (IsKeyPressed(KEY_N)) {
             _hudMode->switchState();
         }
+
         if (IsKeyPressed(KEY_P)) {
             if (debugMode->activated() && debugMode->getType() == NONE) {
                 debugMode->desactive(_camera);
@@ -114,6 +115,12 @@ namespace Zappy {
                 (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
                     _hudMode->addPlayer(player);
         }
+
+        if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            _hudMode->setFirstPokemonTarget();
+        
+        if (_hudMode->activated())
+            _hudMode->followTarget(_camera);
 
         float wheel = GetMouseWheelMove();
         if (wheel > 0 && _hudMode->activated()) {
