@@ -41,6 +41,5 @@ namespace Zappy
                 }
                 return filename.substr(0, last_dot);
             }
-
     };
 }

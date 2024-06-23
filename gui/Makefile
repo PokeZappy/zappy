@@ -68,7 +68,7 @@ dbgs: $(NAME)
 -include $(DEPS)
 
 %.o: %.cpp
-	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@ $(LDFLAGS)
+	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJ)
 	@$(MAKE) -C lib/raylib/src

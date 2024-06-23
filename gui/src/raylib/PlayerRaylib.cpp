@@ -9,13 +9,16 @@
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
-        PokemonInfo &pkInfo, float gridSize, raylib::Shader &shader)
-        : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
-        _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _successGif("assets/textures/success.gif", false),
-        _failureGif("assets/textures/failure.gif", false)
+    PlayerRaylib::PlayerRaylib(
+        const std::shared_ptr<Player> worldPlayer,
+        const std::string &assetsRoot,
+        PokemonInfo &pkInfo, float gridSize, raylib::Shader &shader) :
+        worldPlayer(worldPlayer), AEntityRaylib(gridSize),
+        _assetsRoot(assetsRoot),
+        _model(raylib::Model(_assetsRoot + "models/pokemons/" + pkInfo.id + ".glb")),
+        _modelAnimations(raylib::ModelAnimation::Load(_assetsRoot + "models/pokemons/" + pkInfo.id + ".glb")),
+        _successGif(_assetsRoot + "textures/success.gif", false),
+        _failureGif(_assetsRoot + "textures/failure.gif", false)
     {
         _scale = _gridSize / 32.;
         _height = _gridSize;
@@ -45,17 +48,17 @@ namespace Zappy
 
     void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
     {
-        _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
+        _model = raylib::Model(_assetsRoot + "models/pokemons/" + infos.id + ".glb");
         loadShinyTexture();
         _model.materials[1].shader = shader;
-        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
+        _modelAnimations = raylib::ModelAnimation::Load(_assetsRoot + "models/pokemons/" + infos.id + ".glb");
     }
 
     void PlayerRaylib::loadShinyTexture(void)
     {
         if (infos.shiny)
         {
-            std::string path = "assets/textures/pokemons/" + infos.id + "_shiny.png";
+            std::string path = _assetsRoot + "textures/pokemons/" + infos.id + "_shiny.png";
             Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
 
             _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;

@@ -6,8 +6,6 @@
 */
 
 #include "Raylib.hpp"
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 
 namespace Zappy
 {

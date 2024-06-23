@@ -9,39 +9,38 @@
 
 #include "Raylib.hpp"
 
-#define BASEWINDOW_HUD_PATH "assets/textures/hud/base_window.png"
-#define INVENTORY_HUD_PATH "assets/textures/hud/inventory.png"
-#define ATTACK_HUD_PATH "assets/textures/hud/attack.png"
-#define POKEBALL_HUD_PATH "assets/textures/hud/poke_ball.png"
-#define SUPERBALL_HUD_PATH "assets/textures/hud/great_ball.png"
-#define HYPERBALL_HUD_PATH "assets/textures/hud/ultra_ball.png"
-#define HONORBALL_HUD_PATH "assets/textures/hud/premier_ball.png"
-#define LUXEBALL_HUD_PATH "assets/textures/hud/luxury_ball.png"
-#define MASTERBALL_HUD_PATH "assets/textures/hud/master_ball.png"
-#define FOOD_HUD_PATH "assets/textures/hud/pecha_berry.png"
-#define TYPES_HUD_PATH "assets/textures/hud/types.png"
-#define TYPESFR_HUD_PATH "assets/textures/hud/types_fr.png"
-#define NOT_ENCANTING_HUD_PATH "assets/textures/hud/evolution_icon_disabled.png"
-#define ENCANTING_HUD_PATH "assets/textures/hud/evolution_icon_enabled.png"
+#define BASEWINDOW_HUD_PATH "textures/hud/base_window.png"
+#define INVENTORY_HUD_PATH "textures/hud/inventory.png"
+#define ATTACK_HUD_PATH "textures/hud/attack.png"
+#define POKEBALL_HUD_PATH "textures/hud/poke_ball.png"
+#define SUPERBALL_HUD_PATH "textures/hud/great_ball.png"
+#define HYPERBALL_HUD_PATH "textures/hud/ultra_ball.png"
+#define HONORBALL_HUD_PATH "textures/hud/premier_ball.png"
+#define LUXEBALL_HUD_PATH "textures/hud/luxury_ball.png"
+#define MASTERBALL_HUD_PATH "textures/hud/master_ball.png"
+#define FOOD_HUD_PATH "textures/hud/pecha_berry.png"
+#define TYPES_HUD_PATH "textures/hud/types.png"
+#define TYPESFR_HUD_PATH "textures/hud/types_fr.png"
+#define NOT_ENCANTING_HUD_PATH "textures/hud/evolution_icon_disabled.png"
+#define ENCANTING_HUD_PATH "textures/hud/evolution_icon_enabled.png"
 
 namespace Zappy {
     class HudMode {
     public:
-        HudMode() : _backgroundHudTexture(BASEWINDOW_HUD_PATH),
-                    _inventoryHudTexture(INVENTORY_HUD_PATH),
-                    _attackHudTexture(ATTACK_HUD_PATH),
-                    _pokeBallTexture(POKEBALL_HUD_PATH),
-                    _superBallTexture(SUPERBALL_HUD_PATH),
-                    _hyperBallTexture(HYPERBALL_HUD_PATH),
-                    _honorBallTexture(HONORBALL_HUD_PATH),
-                    _luxeBallTexture(LUXEBALL_HUD_PATH),
-                    _masterBallTexture(MASTERBALL_HUD_PATH),
-                    _typesTexture(TYPES_HUD_PATH),
-                    _foodTexture(FOOD_HUD_PATH),
-                    _notEncantingTexture(NOT_ENCANTING_HUD_PATH),
-                    _encantingTexture(ENCANTING_HUD_PATH)
-                    {
-        }
+        HudMode(const std::string &assetsRoot) :
+            _backgroundHudTexture(assetsRoot + BASEWINDOW_HUD_PATH),
+            _inventoryHudTexture(assetsRoot + INVENTORY_HUD_PATH),
+            _attackHudTexture(assetsRoot + ATTACK_HUD_PATH),
+            _pokeBallTexture(assetsRoot + POKEBALL_HUD_PATH),
+            _superBallTexture(assetsRoot + SUPERBALL_HUD_PATH),
+            _hyperBallTexture(assetsRoot + HYPERBALL_HUD_PATH),
+            _honorBallTexture(assetsRoot + HONORBALL_HUD_PATH),
+            _luxeBallTexture(assetsRoot + LUXEBALL_HUD_PATH),
+            _masterBallTexture(assetsRoot + MASTERBALL_HUD_PATH),
+            _typesTexture(assetsRoot + TYPES_HUD_PATH),
+            _foodTexture(assetsRoot + FOOD_HUD_PATH),
+            _notEncantingTexture(assetsRoot + NOT_ENCANTING_HUD_PATH),
+            _encantingTexture(assetsRoot + ENCANTING_HUD_PATH) {}
         void switchState() { _activated = !_activated; }
         bool activated() { return _activated; }
         void setTile(std::shared_ptr<Tile> tile) { _selectedTile = tile; }

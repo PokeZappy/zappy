@@ -27,14 +27,14 @@ namespace Zappy
                 _machine = optarg;
                 break;
             case 'd':
-                _graphics = std::make_shared<Sfml>();
+                _graphics = std::make_shared<Sfml>(_assetsRoot);
                 break;
             default:
                 throw InvalidOptionException(); break;
             }
         }
         if (_graphics == nullptr) {
-            _graphics = std::make_shared<Raylib>();
+            _graphics = std::make_shared<Raylib>(_assetsRoot);
         }
         if (_machine.empty() || _port == -1) {
             _machine = "127.0.0.1";

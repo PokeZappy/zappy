@@ -23,7 +23,7 @@ namespace Zappy {
 
     class Sfml : public AGraphicalModule {
     public:
-        Sfml();
+        Sfml(const std::string &assetsRoot);
         void update(const World &world) override;
         void render(const World &world) override;
         bool isOpen(void) override { return (_window.isOpen()); }
@@ -47,7 +47,6 @@ namespace Zappy {
         sf::Color getRandomColor(void) {
             return sf::Color(50 + rand() % 205, 50 + rand() % 205, 50 + rand() % 205);
         }
-
 
         sf::RenderWindow _window;
         sf::View _view;

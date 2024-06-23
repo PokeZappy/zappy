@@ -43,7 +43,7 @@ namespace Zappy {
                 _mapX--;
                 _mapY--;
             } else if (IsKeyPressed(KEY_THREE)) {
-                _arena = LoadModel("assets/local/boxing_ring.glb");
+                _arena = raylib::Model(_assetsRoot + "local/boxing_ring.glb");
                 for (int i = 0; i < _arena.materialCount; i++)
                     _arena.materials[i].shader = _shader;
                 _arenaScale = _gridSize * 1.35;
@@ -115,7 +115,7 @@ namespace Zappy {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize, _shader));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, _assetsRoot, pokemon, _gridSize, _shader));
             }
         }
 

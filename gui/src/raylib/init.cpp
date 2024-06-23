@@ -9,21 +9,23 @@
 #include <filesystem>
 
 namespace Zappy {
-     Raylib::Raylib() : _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
+     Raylib::Raylib(const std::string &assetsRoot) :
+        _assetsRoot(assetsRoot),
+        _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
-        _eggModel(raylib::Model(EGG_MODEL_PATH)),
-        _sun(raylib::Model(SUN_MODEL_PATH)),
-        _moon(raylib::Model(MOON_MODEL_PATH)),
-        // _tv(raylib::Model(GAMEBOY_MODEL_PATH)),
-        _arena(raylib::Model(EGG_MODEL_PATH)),
-        _rockModel(raylib::Model(POKEBALL_MODEL_PATH)),
-        _foodModel(raylib::Model(FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load("assets/shaders/lighting.vs", "assets/shaders/lighting.fs"))
+        _eggModel(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
+        _sun(raylib::Model(_assetsRoot + SUN_MODEL_PATH)),
+        _moon(raylib::Model(_assetsRoot + MOON_MODEL_PATH)),
+        // _tv(raylib::Model(_assetsRoot + GAMEBOY_MODEL_PATH)),
+        _arena(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
+        _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
+        _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
+        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs"))
     {
         _window.SetTargetFPS(60);
         try
         {
-            _configuration.readFile("assets/pokemons.cfg");
+            _configuration.readFile(_assetsRoot + "pokemons.cfg");
         }
         catch (const libconfig::FileIOException &fioex)
         {
@@ -43,8 +45,8 @@ namespace Zappy {
         float ambientLight = 0.5f;
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
-        debugMode = std::make_unique<DebugMode>(_shader, _gridSize);
-        _hudMode = std::make_unique<HudMode>();
+        debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
+        _hudMode = std::make_unique<HudMode>(_assetsRoot);
         _window.ToggleFullscreen();
 
         // Create lights
@@ -71,29 +73,28 @@ namespace Zappy {
         // DisableCursor();
 
         // Load floor texture
-        _floorTexture = raylib::Texture2D(TILE_TEXTURE_PATH);
+        _floorTexture = raylib::Texture2D(_assetsRoot + TILE_TEXTURE_PATH);
         _floorMesh = GenMeshPlane(_gridSize, _gridSize, 1, 1);
         _floorMaterial = LoadMaterialDefault();
         _floorMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _floorTexture;
         _floorMaterial.shader = _shader;
 
-        _hitGridTexture = raylib::Texture2D("assets/textures/pokemon_hit_tile.png");
+        _hitGridTexture = raylib::Texture2D(_assetsRoot + "textures/pokemon_hit_tile.png");
         _hitGridMaterial = LoadMaterialDefault();
         _hitGridMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _hitGridTexture;
 
-        if (std::filesystem::exists(ARENA_MODEL_PATH))
-            _arena = raylib::Model(ARENA_MODEL_PATH);
+        _arena = raylib::Model(_assetsRoot + ARENA_MODEL_PATH);
         for (int i = 0; i < _arena.materialCount; i++)
             _arena.materials[i].shader = _shader;
 
         // -- Rocks --
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/poke_ball.png"));
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/great_ball.png"));
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/ultra_ball.png"));
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/premier_ball.png"));
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/luxury_ball.png"));
-        _rockTextures.push_back(LoadTexture("assets/textures/pokeball/master_ball.png"));
-        _rockAnimations = raylib::ModelAnimation::Load(POKEBALL_MODEL_PATH);
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/poke_ball.png");
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/great_ball.png");
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/ultra_ball.png");
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/premier_ball.png");
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/luxury_ball.png");
+        _rockTextures.push_back(_assetsRoot + "textures/pokeball/master_ball.png");
+        _rockAnimations = raylib::ModelAnimation::Load(_assetsRoot + POKEBALL_MODEL_PATH);
         _rockModel.materials[1].shader = _shader;
 
         // -- Food --
@@ -106,17 +107,17 @@ namespace Zappy {
                       "rock", "ghost", "fly",
                       "eevee", "mustebeh"};
         _listTypesColors = {
-            (Color){107, 190, 48}, (Color){231, 59, 12}, (Color){48, 144, 241},
-            (Color){179, 179, 194}, (Color){113, 89, 215}, (Color){250, 179, 21},
-            (Color){148, 162, 18}, (Color){234, 67, 125}, (Color){203, 171, 82},
-            (Color){79, 57, 43}, (Color){126, 50, 26}, (Color){239, 172, 241},
-            (Color){126, 218, 244}, (Color){197, 191, 180}, (Color){146, 66, 144},
-            (Color){181, 161, 88}, (Color){89, 92, 169}, (Color){138, 159, 239},
+            (Color){107, 190, 48, 255}, (Color){231, 59, 12, 255}, (Color){48, 144, 241, 255},
+            (Color){179, 179, 194, 255}, (Color){113, 89, 215, 255}, (Color){250, 179, 21, 255},
+            (Color){148, 162, 18, 255}, (Color){234, 67, 125, 255}, (Color){203, 171, 82, 255},
+            (Color){79, 57, 43, 255}, (Color){126, 50, 26, 255}, (Color){239, 172, 241, 255},
+            (Color){126, 218, 244, 255}, (Color){197, 191, 180, 255}, (Color){146, 66, 144, 255},
+            (Color){181, 161, 88, 255}, (Color){89, 92, 169, 255}, (Color){138, 159, 239, 255},
             raylib::Color::White(), raylib::Color::Orange(),
         };
 
         // -- Eggs --
-        _eggModelAnimations = raylib::ModelAnimation::Load(EGG_MODEL_PATH);
+        _eggModelAnimations = raylib::ModelAnimation::Load(_assetsRoot + EGG_MODEL_PATH);
 
         // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
@@ -129,7 +130,7 @@ namespace Zappy {
         };
 
         InitAudioDevice();
-        _mainTheme = raylib::Music(MAIN_THEME_PATH);
+        _mainTheme = raylib::Music(_assetsRoot + MAIN_THEME_PATH);
         _mainTheme.Play();
         _mainTheme.SetLooping(true);
         float randNum = Utils::random(80, 120) / 100.;
