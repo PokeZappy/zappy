@@ -143,7 +143,7 @@ class ParentAI(Player):
         list_vision = vi.split(',')
         case = list_vision[0].split(' ')
         for need in self.need_ressources.keys():
-            if case[need].count(need) < self.need_ressources[need]:
+            if case.count(need) < self.need_ressources[need]:
                 return
         self.sencond_phase = True
 
