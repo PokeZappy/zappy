@@ -16,7 +16,6 @@ class NorthGuard(Player):
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
         self.exist_north: bool = exist_north
-        print(f'first: {self.exist_north}')
         self.said: bool = False
         self.in_pos: bool = False
 
@@ -55,10 +54,8 @@ class NorthGuard(Player):
         if len(self.actions) >= 1 or len(self.queue) > 6:
             return
         if (self.exist_north is False or self.path.facing is not None) and self.in_pos is False:
-            print(f'gonna to the pole')
             self.take_the_pole()
         if self.life < 260 and self.said is False:
-            print("gonna die")
             self.message.buf_messages(message='Ego plus viribus')
             self.queue.insert(0, 'Broadcast')
             self.said = True
