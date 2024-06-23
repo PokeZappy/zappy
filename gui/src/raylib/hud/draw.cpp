@@ -28,14 +28,26 @@ namespace Zappy {
 
         if (_selectedPlayers.empty()) {
             _selectedPlayer = nullptr;
+            _scrollIndex = 0;
             white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
         } else {
             if (_selectedPlayer == nullptr) {
                 _selectedPlayer = _selectedPlayers[0];
+            } else {
+                verifyPlayerPosition();
             }
             drawPokemons();
             drawInventory(true);
             _attackHudTexture.Draw(_attackSrc, _attackDest);
+        }
+    }
+
+    void HudMode::verifyPlayerPosition()
+    {
+        if (std::find(_selectedPlayers.begin(), _selectedPlayers.end(), _selectedPlayer) == _selectedPlayers.end()) {
+            if (_scrollIndex >= _selectedPlayers.size())
+                _scrollIndex = _selectedPlayers.size() - 1;
+            _selectedPlayer = _selectedPlayers[_scrollIndex];
         }
     }
 

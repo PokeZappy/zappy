@@ -7,7 +7,10 @@
 
 #pragma once
 
-#include "Raylib.hpp"
+#include "raylib-cpp.hpp"
+#include <memory>
+#include "Tile.hpp"
+#include "PlayerRaylib.hpp"
 
 #define BASEWINDOW_HUD_PATH "textures/hud/base_window.png"
 #define INVENTORY_HUD_PATH "textures/hud/inventory.png"
@@ -51,8 +54,11 @@ namespace Zappy {
         void drawBackground();
         void drawInventory(bool player);
         void drawPlayers();
+        void verifyPlayerPosition();
         void drawPokemons();
         void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
+        void scrollUp();
+        void scrollDown();
         void drawType(std::string type, int y);
 
     private:
@@ -76,5 +82,6 @@ namespace Zappy {
         std::shared_ptr<Tile> _selectedTile = nullptr;
         std::vector<std::shared_ptr<PlayerRaylib>> _selectedPlayers;
         std::shared_ptr<PlayerRaylib> _selectedPlayer;
+        int _scrollIndex = 0;
     };
 }

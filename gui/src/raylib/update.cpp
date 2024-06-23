@@ -11,6 +11,7 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
+        _hudMode->clearPlayers();
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
@@ -106,6 +107,21 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+
+        for (auto &player : _players) {
+                if ((_hudMode->getTile() != nullptr) &&
+                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
+                    _hudMode->addPlayer(player);
+        }
+
+        float wheel = GetMouseWheelMove();
+        if (wheel == 1 && _hudMode->activated()) {
+            _hudMode->scrollUp();
+        } else if (wheel == -1 && _hudMode->activated()) {
+            _hudMode->scrollDown();
+        }
+
 
         for (auto &model : _models) {
             model.second->update();
