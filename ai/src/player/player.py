@@ -243,16 +243,17 @@ class Player(Bot):
                     print("inventory")
             if recv_type == 'elevation':
                 print('elevation :', msgs)
+                continue
             if recv_type == 'broadcast':
-                if msgs[0] == 'ko':
+                if msgs == 'ko' or msgs[0] == 'ko':
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
             if recv_type == 'eject':
                 self.back_on_track(msgs[-1])
-            if len(self.actions) != 0:
-                self.actions.pop(0)
+                continue
+            self.actions.pop(0)
 
     @abstractmethod
     def make_action(self) -> None:

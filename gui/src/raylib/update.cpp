@@ -6,13 +6,12 @@
 */
 
 #include "Raylib.hpp"
+#include <chrono>
 
 namespace Zappy {
     void Raylib::update(const World &world)
     {
-        // _mapX = world._mapX;
-        // _mapY = world._mapY;
-        float moveYSpeed = 5;
+        float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += moveYSpeed;
@@ -44,12 +43,12 @@ namespace Zappy {
                 _mapX--;
                 _mapY--;
             } else if (IsKeyPressed(KEY_THREE)) {
-                _arena = LoadModel("assets/local/boxing_ring.glb");
+                _arena = raylib::Model(_assetsRoot + "local/boxing_ring.glb");
                 for (int i = 0; i < _arena.materialCount; i++)
                     _arena.materials[i].shader = _shader;
-                _arenaScale = 1.35;
+                _arenaScale = _gridSize * 1.35;
                 _arenaAltitudeScale = 0.2;
-                getArenaOffset = [](size_t tileCount, size_t gridSize) -> float {
+                getArenaOffset = [](size_t tileCount, float gridSize) -> float {
                     (void)gridSize;
                     return - 30 - (float)tileCount * 7.;
                 };
@@ -94,8 +93,9 @@ namespace Zappy {
 
         // Sun & Moon
         size_t revolution = 1789 / 10;
+        auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
         for (int i = 0; i < 2; i++) {
-            _lights[i].position = getSunPosition(GetTime() + revolution / (1 + i), revolution);
+            _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
             _lights[i].color =  newColor.Brightness(_lights[i].position.y * 1.f / 1000.f - (i == 0 ? 0.6f : 0.8f));
             // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
@@ -106,6 +106,7 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+        _mainTheme.Update();
     }
 
     void Raylib::updatePlayers(const World &world) {
@@ -114,7 +115,12 @@ namespace Zappy {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize, _shader));
+
+                if (_models.count(pokemon.id) <= 0) {
+                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
+                }
+
+                _players.push_back(std::make_unique<PlayerRaylib>(player, _assetsRoot, pokemon, _models[pokemon.id], _gridSize));
             }
         }
 

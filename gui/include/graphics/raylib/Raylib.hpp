@@ -14,31 +14,37 @@
 #include <libconfig.h++>
 #include "DebugMode.hpp"
 #include "HudMode.hpp"
+#include "RaylibModel.hpp"
+#include "RaylibModels.hpp"
 
+#include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
 
-#define POKEBALL_MODEL_PATH "assets/models/poke_ball.glb"
-#define FOOD_MODEL_PATH "assets/models/pecha_berry.glb"
-#define GAMEBOY_MODEL_PATH "assets/models/nintendo_game_boy.glb"
-#define EGG_MODEL_PATH "assets/models/pokemons/ditto.glb"
-// #define SUN_MODEL_PATH "assets/models/sun.glb"
-// #define MOON_MODEL_PATH "assets/models/pokemons/dusclops.glb"
-#define SUN_MODEL_PATH "assets/models/pokemons/solrock.glb"
-#define MOON_MODEL_PATH "assets/models/pokemons/lunatone.glb"
-#define ARENA_MODEL_PATH "assets/local/arena.glb"
+#define POKEBALL_MODEL_PATH "models/poke_ball.glb"
+#define FOOD_MODEL_PATH "models/pecha_berry.glb"
+#define GAMEBOY_MODEL_PATH "models/dsi1.glb"
+#define EGG_MODEL_PATH "models/pokemons/ditto.glb"
+// #define SUN_MODEL_PATH "models/sun.glb"
+// #define MOON_MODEL_PATH "models/pokemons/dusclops.glb"
+#define SUN_MODEL_PATH "models/pokemons/solrock.glb"
+#define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
+#define ARENA_MODEL_PATH "models/arena.glb"
 
-// #define TILE_TEXTURE_PATH "assets/textures/pokemon_tile.png"
-#define TILE_TEXTURE_PATH "assets/textures/ice_tile.png"
+// #define TILE_TEXTURE_PATH "textures/pokemon_tile.png"
+#define TILE_TEXTURE_PATH "textures/ice_tile.png"
 
-#define MAIN_THEME_PATH "assets/menu/SouthProvince.ogg"
+#define MAIN_THEME_PATH "menu/SouthProvince.ogg"
 
 namespace Zappy {
+
+
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
+    #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
     class Raylib : public AGraphicalModule {
         public:
-            Raylib();
+            Raylib(const std::string &assetsRoot);
             void render(const World &world) override;
             void renderDebug(void);
             void update(const World &world) override;
@@ -62,6 +68,7 @@ namespace Zappy {
             void drawFood(float x, float y, size_t quantity);
             void drawRock(float x, float y, size_t id, size_t quantity);
 
+            const std::string &_assetsRoot;
             raylib::Window _window;
             raylib::Camera _camera;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
@@ -83,21 +90,22 @@ namespace Zappy {
             Material _hitGridMaterial;
 
             // -- Models --
+            std::unordered_map<std::string, std::shared_ptr<RaylibModels>> _models;
 
             // Sun & moon
             raylib::Model _sun;
             raylib::Model _moon;
 
             // Gameboy & Arena
-            raylib::Model _tv;
+            // raylib::Model _tv;
             raylib::Model _arena;
             float _arenaScale = 1.0f;
             float _arenaAltitudeScale = 0.0f;
-            float (*getArenaOffset)(size_t tileCount, size_t gridSize);
+            float (*getArenaOffset)(size_t tileCount, float gridSize);
 
             // Rocks (pokeballs)
             raylib::Model _rockModel;
-            std::vector<Texture2D> _rockTextures;
+            std::vector<raylib::Texture2D> _rockTextures;
             std::vector<raylib::ModelAnimation> _rockAnimations;
             size_t _rockAnimationIndex = 4;
             size_t _rockAnimationFrame = 0;
@@ -116,5 +124,7 @@ namespace Zappy {
 
             // Sounds and Themes
             raylib::Music _mainTheme;
+
+            raylib::Color _itemColors[4] = ITEM_COLORS;
     };
 }

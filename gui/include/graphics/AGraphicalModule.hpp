@@ -25,6 +25,6 @@ namespace Zappy
     protected:
         int _mapX = -1;
         int _mapY = -1;
-        size_t _gridSize = 50;
+        float _gridSize = 0.01;
     };
 };

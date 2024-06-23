@@ -25,7 +25,7 @@ namespace Zappy
             _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = _oldTexture;
             return;
         }
-        std::string path = "assets/textures/pokemons/" + _modelsId[_modelIndex] + "_shiny.png";
+        std::string path = _assetsRoot + "textures/pokemons/" + _modelsId[_modelIndex] + "_shiny.png";
         Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
 
         _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;

@@ -6,8 +6,6 @@
 */
 
 #include "Raylib.hpp"
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 
 namespace Zappy
 {
@@ -27,7 +25,7 @@ namespace Zappy
             _camera.BeginMode();
             _shader.BeginMode();
 
-            _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize - 50, 80, -(float)(_gridSize * 4)), 2000);
+            // _tv.Draw(raylib::Vector3(_mapX / 2 * _gridSize, _gridSize * 2, -(float)(_gridSize * 4)), _gridSize);
             float scale = _mapX * _arenaScale;
             _arena.Draw(raylib::Vector3(
                     getArenaOffset(_mapX, _gridSize),
@@ -35,25 +33,24 @@ namespace Zappy
                     getArenaOffset(_mapY, _gridSize)),
                 raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
 
-            _sun.Draw(_lights[0].position, 10);
-            _moon.Draw(_lights[1].position, 20);
+            _sun.Draw(_lights[0].position, _gridSize * 0.8);
+            float moonScale = _gridSize * 2;
+            _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30, raylib::Vector3(moonScale, true));
 
             drawTiles(world.getTiles());
 
+            for (auto &egg : _eggs) {
+                egg->draw(_camera);
+            }
+
             for (auto &player : _players) {
                 if ((_hudMode->getTile() != nullptr) &&
-                (_hudMode->getTile()->getX() == player->worldPlayer->getX()) &&
-                (_hudMode->getTile()->getY() == player->worldPlayer->getY()))
+                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
                     _hudMode->addPlayer(player);
                 player->draw(_camera, _hudMode->activated());
             }
 
-            for (auto &egg : _eggs) {
-                // if ((_hudMode->getTile() != nullptr) &&
-                // (_hudMode->getTile()->getX() == egg->worldEgg->getX()) &&
-                // (_hudMode->getTile()->getY() == egg->worldEgg->getY()))
-                egg->draw(_camera);
-            }
 
             _shader.EndMode();
 
@@ -86,7 +83,7 @@ namespace Zappy
             // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
             // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-            raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 800, 250);
+            raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 850, 250);
 
             textColor.DrawText("Cam Position: " + raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
             textColor.DrawText("Cam Target: " + raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);

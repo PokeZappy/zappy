@@ -21,7 +21,7 @@ namespace Zappy {
 
     class DebugMode {
     public:
-        DebugMode(raylib::Shader &shader);
+        DebugMode(const std::string &assetsRoot, raylib::Shader &shader, float gridSize);
         void activate(raylib::Camera &camera);
         void desactive(raylib::Camera &camera);
         void changeAnimation(int index);
@@ -52,6 +52,8 @@ namespace Zappy {
         void updateFrameStepper();
         void updateChat();
     private:
+        const std::string &_assetsRoot;
+        float _gridSize;
         DebugType _type = NONE;
         std::string _pokemonInput = "";
         Texture2D _oldTexture;
@@ -59,7 +61,7 @@ namespace Zappy {
         int _modelIndex = 0;
         raylib::Model _model;
         std::vector<raylib::ModelAnimation> _animations;
-        double _scaleModel = 20.0f;
+        double _scaleModel = 1.f;
         bool _activated = false;
         bool _shiny = false;
         int _animIndex = -1;

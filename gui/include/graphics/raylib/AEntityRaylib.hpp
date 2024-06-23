@@ -8,13 +8,16 @@
 #pragma once
 
 #include "IEntityRaylib.hpp"
+#include "RaylibModels.hpp"
 
 namespace Zappy
 {
     class AEntityRaylib : public IEntityRaylib
     {
     public:
-        AEntityRaylib(size_t gridSize) : _gridSize(gridSize) {};
+        AEntityRaylib(float gridSize) : _gridSize(gridSize) {
+            _scale = _gridSize;
+        };
         
         void kill(void) { _isDying = true; }
         bool isDying(void) const { return _isDying; }
@@ -23,20 +26,19 @@ namespace Zappy
         void move(raylib::Vector3 vector);
         raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _altitude, _currentPos.y); }
     protected:
-        size_t _gridSize;
-        int _animIndex = -1;
+        float _gridSize;
+        Animations::Type _animIndex = Animations::NONE;
         int _animFrame = 0;
         bool _isDying = false;
-        float _scale = 1.5;
-        float _altitude;
-        float _height = 30;
+        float _scale = 1;
+        float _altitude = 0;
+        float _height;
         bool _hasIdleAnim = false;
         raylib::Color color;
         raylib::Vector2 offset;
         std::unordered_map<std::string, int> _animationIndexes;
-        raylib::Image _textImage;
-        raylib::Texture2D _textTexture;
-        raylib::RenderTexture2D _textRenderTexture;
+        // raylib::Image _textImage;
+        // raylib::Texture2D _textTexture;
         raylib::Vector2 _currentPos;
     };
 }

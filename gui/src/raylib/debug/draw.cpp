@@ -10,10 +10,10 @@
 namespace Zappy {
     void DebugMode::drawModel(void) {
         if (_animIndex != -1)
-                _model.UpdateAnimation(_animations[_animIndex], _animFrame);
-            _model.Draw((Vector3) {0, 0, 0},
-            raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scaleModel, _scaleModel, _scaleModel));
+            _model.UpdateAnimation(_animations[_animIndex], _animFrame);
+        _model.Draw((Vector3) {0, 0, 0},
+        raylib::Vector3(0, 1, 0), 0,
+        raylib::Vector3(_scaleModel, _scaleModel, _scaleModel));
     }
 
     void DebugMode::drawAnimations(void) {

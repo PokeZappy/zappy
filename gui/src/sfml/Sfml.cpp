@@ -11,15 +11,12 @@
 
 namespace Zappy
 {
-    Sfml::Sfml() : _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI") {
+    Sfml::Sfml(const std::string &assetsRoot) :
+        _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI")
+    {
         resetViewPos();
         _window.setFramerateLimit(60);
-        if (std::filesystem::exists("assets"))
-            _font.loadFromFile("assets/Type Machine.ttf");
-        else if (std::filesystem::exists("gui/assets"))
-            _font.loadFromFile("gui/assets/Type Machine.ttf");
-        else
-            throw std::runtime_error("Assets not found");
+        _font.loadFromFile(assetsRoot + std::string("Type Machine.ttf"));
 
         _tileSelector.setFillColor(sf::Color::Transparent);
         _tileSelector.setOutlineColor(sf::Color::Red);

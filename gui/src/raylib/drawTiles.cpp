@@ -36,11 +36,12 @@ namespace Zappy
                     }
                 }
 
-                x_pos = x * _gridSize - _gridSize / 4;
-                y_pos = y * _gridSize - _gridSize / 4;
-                drawFood(x_pos, y_pos, tiles[y][x].getItem(0));
+                x_pos = x * _gridSize - _gridSize / 2 + _gridSize / 8;
+                y_pos = y * _gridSize - _gridSize / 2 + _gridSize / 8;
+                drawFood(x * _gridSize + _gridSize / 2 - _gridSize / 8, y_pos,
+                    tiles[y][x].getItem(0));
                 for (size_t i = 1; i < 7; i++) {
-                    drawRock(x_pos, y_pos, i, tiles[y][x].getItem(i));
+                    drawRock(x_pos, y_pos + _gridSize / 20, i, tiles[y][x].getItem(i));
                 }
             }
         }
@@ -48,15 +49,41 @@ namespace Zappy
 
     void Raylib::drawFood(float x, float y, size_t quantity)
     {
-        for (size_t i = 0; i < std::clamp(quantity, (size_t)0, (size_t)7); i++)
-            _foodModel.Draw(raylib::Vector3(x + i * 3, 2, y), raylib::Vector3(1, 0, 0),
-                0, raylib::Vector3(4.0f, 4.0f, 4.0f));
+        float scale = _gridSize / 8.;
+        for (size_t height = 1; height <= quantity; height *= 10) {
+            size_t heightIndex = std::log10(height);
+            for (size_t i = 0; i < 9; i++) {
+                if (i >= (quantity / height) % 10)
+                    break;
+                _foodModel.Draw(raylib::Vector3(
+                        x - i * _gridSize / 11.,
+                        scale / 2.2 + (heightIndex * _gridSize / 16.),
+                        y
+                    ),
+                    raylib::Vector3(1), 0, raylib::Vector3(scale, true),
+                    _itemColors[heightIndex]);
+            }
+        }
     }
 
     void Raylib::drawRock(float x, float y, size_t id, size_t quantity)
     {
+        float scale = _gridSize / 7;
         _rockModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = _rockTextures[id - 1];
-        for (size_t i = 0; i < std::clamp(quantity, (size_t)0, (size_t)5); i++)
-            _rockModel.Draw(raylib::Vector3(x + i * 3, 0, y + id * 5), 4.0f);
+
+        float offset = _gridSize / 11.;
+        for (size_t height = 1; height <= quantity; height *= 10) {
+            size_t heightIndex = std::log10(height);
+            for (size_t i = 0; i < 9; i++) {
+                if (i >= (quantity / height) % 10)
+                    break;
+                _rockModel.Draw(raylib::Vector3(
+                        x + i * offset,
+                        heightIndex * offset,
+                        y + id * offset
+                    ),
+                    scale, _itemColors[heightIndex]);
+            }
+        }
     }
 } // namespace Zappy

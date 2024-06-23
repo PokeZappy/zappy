@@ -3,7 +3,7 @@
 
 int displayUsage(void)
 {
-    printf("USAGE: ./zappy_gui -p port -h machine\n");
+    std::cerr << "USAGE: ./zappy_gui -p port -h machine" << std::endl;
     return (84);
 }
 
@@ -30,7 +30,19 @@ int main(int ac, char **av)
         return displayUsage();
     SetTraceLogCallback(LogColored);
     SetTraceLogLevel(LOG_ERROR);
-    Zappy::Core core;
+
+    std::string assetsRoot;
+
+    if (std::filesystem::exists("assets")) {
+        assetsRoot = "assets/";
+    } else if (std::filesystem::exists("gui/assets")) {
+        assetsRoot = "gui/assets/";
+    } else {
+        std::cerr << "Folder assets not found, please put this binary and assets in the same folder" << std::endl;
+        return (84);
+    }
+
+    Zappy::Core core(assetsRoot);
 
     try {
         core.getOptions(ac, av);

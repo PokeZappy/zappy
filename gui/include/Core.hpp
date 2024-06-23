@@ -19,7 +19,7 @@
 namespace Zappy {
     class Core {
     public:
-        Core() = default;
+        Core(const std::string &assetsRoot) : _assetsRoot(assetsRoot) {};
         ~Core() = default;
         void setPort(int port) { _port = port; }
         void setMachine(std::string &machine) { _machine = machine; }
@@ -49,5 +49,6 @@ namespace Zappy {
         ClientSocket _socket;
         std::shared_ptr<IGraphicalModule> _graphics;
         World _world;
+        std::string _assetsRoot;
     };
 }

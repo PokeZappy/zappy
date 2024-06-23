@@ -53,7 +53,7 @@ MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15
+	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15 -D MACBOOK
 	LDFLAGS += $(MACSFMLLIB)
 endif
 
@@ -62,13 +62,16 @@ all: $(NAME)
 dbg: CXXFLAGS += $(DBGFLAGS)
 dbg: all
 
+prof: CXXFLAGS += -pg
+prof: all
+
 dbgs: CFLAGS += $(DBGFLAGS) -fsanitize=address
 dbgs: $(NAME)
 
 -include $(DEPS)
 
 %.o: %.cpp
-	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@ $(LDFLAGS)
+	$(CC) $(CXXFLAGS) $(DEPSFLAGS) -c $< -o $@
 
 $(NAME):	$(OBJ)
 	@$(MAKE) -C lib/raylib/src
