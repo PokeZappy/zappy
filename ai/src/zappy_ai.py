@@ -208,6 +208,7 @@ def display_help() -> None:
     """
     print('USAGE: ./zappy_ai.py -p port -n name -h machine')
 
+
 def connection(port: str, name: str, machine: str):
         server_info, cli_socket = connexion.connect(port, name, machine)
         # print(f"Connected to {machine}:{port}")
