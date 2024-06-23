@@ -22,9 +22,9 @@ namespace Zappy {
                 Utils::generateRandomFloat(gridSize / 3),
                 Utils::generateRandomFloat(gridSize / 3));
         _currentPos = raylib::Vector2(worldEgg->getX(), worldEgg->getY());
-        _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        _textTexture = raylib::Texture2D(_textImage);
-        _textRenderTexture = LoadRenderTexture(256, 256);
+        // _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
+        // _textTexture = raylib::Texture2D(_textImage);
+        // _textRenderTexture = LoadRenderTexture(256, 256);
 
         _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
         _animationIndexes["faint"] = getAnimationIndex({"faint"});

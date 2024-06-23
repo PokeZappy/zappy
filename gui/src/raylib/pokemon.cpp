@@ -105,9 +105,9 @@ namespace Zappy {
                 infos = pickedEvolution;
 
                 if (_models.count(infos.id) <= 0) {
-                    _models[infos.id] = std::make_shared<RaylibModel>(infos.id, _shader);
+                    _models[infos.id] = std::make_shared<RaylibModels>(infos.id, _shader);
                 }
-                graphicPlayer->updateModel(_models[infos.id]);
+                graphicPlayer->updateModels(_models[infos.id]);
             }
         }
     }

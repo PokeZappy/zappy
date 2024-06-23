@@ -11,9 +11,9 @@ namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
         PokemonInfo &pkInfo,
-        std::shared_ptr<RaylibModel> model,
+        std::shared_ptr<RaylibModels> models,
         float gridSize) : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
-        _model(model),
+        _models(models),
         _successGif("assets/textures/success.gif", false),
         _failureGif("assets/textures/failure.gif", false)
     {
@@ -28,20 +28,18 @@ namespace Zappy
                 Utils::generateRandomFloat(gridSize / 3),
                 Utils::generateRandomFloat(gridSize / 3));
         _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
-        _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        _textTexture = raylib::Texture2D(_textImage);
-        _textRenderTexture = LoadRenderTexture(256, 256);
+        // _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
+        // _textTexture = raylib::Texture2D(_textImage);
+        // _textRenderTexture = LoadRenderTexture(256, 256);
 
-        _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
-        _animationIndexes["walk"] = getAnimationIndex({"ground_run", "ground_walk"});
         // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
 
         _height += (rand() % 20) * _gridSize / 20;
     }
 
-    void PlayerRaylib::updateModel(std::shared_ptr<RaylibModel> model)
+    void PlayerRaylib::updateModels(std::shared_ptr<RaylibModels> models)
     {
-        _model = model;
+        _models = models;
     }
 
     float PlayerRaylib::getRotation(void) const
@@ -70,10 +68,10 @@ namespace Zappy
         // Text
         if (worldPlayer->getLevel() != _level) {
             _level = worldPlayer->getLevel();
-            _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
-            _textImage.DrawText(std::to_string(worldPlayer->getId()), 10, 10, 80, raylib::Color::Black());
-            _textImage.DrawText(std::string("Level ") + std::to_string(_level), 10, 80, 50, raylib::Color::Black());
-            _textTexture.Update(_textImage.data);
+            // _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
+            // _textImage.DrawText(std::to_string(worldPlayer->getId()), 10, 10, 80, raylib::Color::Black());
+            // _textImage.DrawText(std::string("Level ") + std::to_string(_level), 10, 80, 50, raylib::Color::Black());
+            // _textTexture.Update(_textImage.data);
         }
 
         // die
@@ -98,14 +96,14 @@ namespace Zappy
         // if (meteoriteValue > 5)
         //     _verticalRotation = meteoriteValue;
         // _altitude = (deltaMove.x * deltaMove.x + deltaMove.y * deltaMove.y) * 100;
-        if (_animationIndexes["walk"] != -1)
-            _animIndex = _animationIndexes["walk"];
+        if (_models->hasAnim(Animations::WALK) > 0)
+            _animIndex = Animations::WALK;
         if (std::abs(_currentPos.x - posGoal.x) < 0.01 && std::abs(_currentPos.y - posGoal.y) < 0.01) {
             _currentPos = posGoal;
         }
         if (_hasIdleAnim && _currentPos == posGoal) {
-            if (_animationIndexes["idle"] != -1) {
-                _animIndex = _animationIndexes["idle"];
+            if (_models->hasAnim(Animations::IDLE) > 0) {
+                _animIndex = Animations::IDLE;
             }
         }
         if (worldPlayer->getIncantationState() != _graphicalIncantingState) {
@@ -132,37 +130,23 @@ namespace Zappy
             _currentPos.y * _gridSize + offset.y};
 
         // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
-        if (_animIndex != -1) {
-            _model->updateAnimation(_animIndex, _animFrame);
-        }
+        // if (_animIndex != NONE) {
+        //     _model->updateAnimation(_animIndex, _animFrame);
+        // }
 
 
         if (infos.shiny) {
-            _model->setShinyTexture();
+            _models->setShinyTexture(_animIndex);
         } else {
-            _model->setNormalTexture();
+            _models->setNormalTexture(_animIndex);
         }
-        _model->draw(playerPos,
+        _models->getModelByAnimation(_animIndex)->draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
             raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
         playerPos.y += _height + _gridSize;
         if (selectionMode)
-            _textTexture.DrawBillboard(camera, playerPos, _gridSize / 2);
+            // _textTexture.DrawBillboard(camera, playerPos, _gridSize / 2);
         _successGif.draw(camera, playerPos, _gridSize);
         _failureGif.draw(camera, playerPos, _gridSize);
-    }
-
-    int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
-    {
-        std::vector<raylib::ModelAnimation> &animations = _model->getAnimations();
-        for (size_t i = 0; i < animations.size(); i++) {
-            std::string animName(animations[i].name);
-            for (size_t j = 0; j < names.size(); j++) {
-                if (animName.find(names[j]) != std::string::npos) {
-                    return i;
-                }
-            }
-        }
-        return -1;
     }
 } // namespace Zappy

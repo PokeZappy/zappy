@@ -72,7 +72,7 @@ dbgs: $(NAME)
 
 $(NAME):	$(OBJ)
 	@$(MAKE) -C lib/raylib/src
-	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
+	$(CC) -pg -o $(NAME) $(OBJ) $(CXXFLAGS) $(LDFLAGS)
 	cp $(NAME) ../
 
 clean:

@@ -36,3 +36,6 @@ idle-inhibit*
 sys
 .DS_Store
 zappy_*.dSYM
+
+callgrind*
+gmon.out

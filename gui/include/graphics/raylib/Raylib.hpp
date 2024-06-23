@@ -15,6 +15,7 @@
 #include "DebugMode.hpp"
 #include "HudMode.hpp"
 #include "RaylibModel.hpp"
+#include "RaylibModels.hpp"
 
 #define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
@@ -35,6 +36,7 @@
 #define MAIN_THEME_PATH "assets/menu/SouthProvince.ogg"
 
 namespace Zappy {
+
 
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
@@ -85,7 +87,7 @@ namespace Zappy {
             Material _hitGridMaterial;
 
             // -- Models --
-            std::unordered_map<std::string, std::shared_ptr<RaylibModel>> _models;
+            std::unordered_map<std::string, std::shared_ptr<RaylibModels>> _models;
 
             // Sun & moon
             raylib::Model _sun;

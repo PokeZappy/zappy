@@ -8,6 +8,7 @@
 #pragma once
 
 #include "IEntityRaylib.hpp"
+#include "RaylibModels.hpp"
 
 namespace Zappy
 {
@@ -26,7 +27,7 @@ namespace Zappy
         raylib::Vector3 getPosition(void) const { return raylib::Vector3(_currentPos.x, _altitude, _currentPos.y); }
     protected:
         float _gridSize;
-        int _animIndex = -1;
+        Animations::Type _animIndex = Animations::NONE;
         int _animFrame = 0;
         bool _isDying = false;
         float _scale = 1;
@@ -36,9 +37,8 @@ namespace Zappy
         raylib::Color color;
         raylib::Vector2 offset;
         std::unordered_map<std::string, int> _animationIndexes;
-        raylib::Image _textImage;
-        raylib::Texture2D _textTexture;
-        raylib::RenderTexture2D _textRenderTexture;
+        // raylib::Image _textImage;
+        // raylib::Texture2D _textTexture;
         raylib::Vector2 _currentPos;
     };
 }
