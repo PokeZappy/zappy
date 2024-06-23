@@ -62,6 +62,9 @@ class Pnj(Player):
                     self.queue.append('Forward')
                 self.message.buf_messages('motus sum')
                 self.queue.append('Broadcast')
+                self.queue.append(('Take', 'food'))
+                self.queue.append(('Take', 'food'))
+                self.queue.append(('Take', 'food'))
 
     def make_action(self) -> None:
         """
@@ -71,6 +74,7 @@ class Pnj(Player):
             self.queue.append(('Set', 'food'))
             self.first_round = False
         if len(self.queue) > 0 and len(self.actions) < 1:
+            # print(self.queue[0])
             self.apply_action()
         if len(self.actions) > 0:
             return
@@ -78,6 +82,7 @@ class Pnj(Player):
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
-        if self.level >= 2:
+        if self.level >= 1:
+            print('I , here')
             self.queue.append('Inventory')
 

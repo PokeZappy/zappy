@@ -12,11 +12,11 @@ from ai.src.player.north_guard import NorthGuard
 class First_born(Player):
 
     ROLE = [
-        RoleInGame.NORTH_GUARD,
-        RoleInGame.PROGENITOR
+        # RoleInGame.NORTH_GUARD,
+        # RoleInGame.PROGENITOR
     ]
 
-    DEFAULT_ROLE = RoleInGame.COLLECTOR
+    DEFAULT_ROLE = RoleInGame.PNJ
 
     BIND = {
         RoleInGame.PROGENITOR: [Progenitor, 'Progenitor'],

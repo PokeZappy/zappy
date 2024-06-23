@@ -115,7 +115,7 @@ class ParentAI(Player):
         pid = fork()
         if pid == 0:
             if self.first_round[1]:
-                self.fork(RoleInGame.FIRST_BORN)
+                self.fork(RoleInGame.HANSEL)
             else:
                 if self.sencond_phase:
                     self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])

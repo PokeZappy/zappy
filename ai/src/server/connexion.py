@@ -19,5 +19,6 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     try:
         result = list(map(int, filter(None, new[:3])))
     except ValueError as e:
+        print(f"Error: {e}")
         result = [0, 30, 30]
     return result, client_socket
