@@ -18,7 +18,6 @@ void cmd_ppo(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(client->socket, "ppo %d %d %d %d\n", cl->_id, cl->player->_pos._x,
     cl->player->_pos._y, cl->player->_direction + 1);
-    printf("ppo\n");
 }
 
 void cmd_plv(server_t *server, char *args, client_socket_t *client)
@@ -30,7 +29,6 @@ void cmd_plv(server_t *server, char *args, client_socket_t *client)
     if (!client || !is_client_gui(client) || !cl->player)
         return;
     dprintf(client->socket, "plv %d %d\n", cl->_id, cl->player->_level);
-    printf("plv\n");
 }
 
 void cmd_pin(server_t *server, char *args, client_socket_t *client)
@@ -46,10 +44,4 @@ void cmd_pin(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "pin %d %d %d %s\n", cl->_id,
     cl->player->_pos._x, cl->player->_pos._y, response);
     free(response);
-    printf("pin\n");
-}
-
-void cmd_pex(server_t *server, char *args, client_socket_t *client)
-{
-    printf("pex\n");
 }

@@ -40,8 +40,8 @@ namespace Zappy {
             _honorBallTexture(assetsRoot + HONORBALL_HUD_PATH),
             _luxeBallTexture(assetsRoot + LUXEBALL_HUD_PATH),
             _masterBallTexture(assetsRoot + MASTERBALL_HUD_PATH),
-            _typesTexture(assetsRoot + TYPES_HUD_PATH),
             _foodTexture(assetsRoot + FOOD_HUD_PATH),
+            _typesTexture(assetsRoot + TYPES_HUD_PATH),
             _notEncantingTexture(assetsRoot + NOT_ENCANTING_HUD_PATH),
             _encantingTexture(assetsRoot + ENCANTING_HUD_PATH) {}
         void switchState() { _activated = !_activated; }

@@ -18,14 +18,7 @@ class Latin(object):
                                         'point de dépot': 'collectio rerum : ',
                                        'inventaire des explorateur': 'quid habes ut nobis offerat',
                                         'demande de ressources': 'vade ad me aliquid : ',
-
-                                        #  M&M's to coll
                                         'Vous ne pouvez pas passer maître': 'Non Potes dominum facti',
-
-                                        # Cook to ALL
-                                        # TODO - ajouter le nombre pour chaque avec l'id
-                                        'Vous êtes servi maître': 'dominus servivit : ',
-
 
                                         # MM to Incant
                                         'deplace-toi vers : ': 'movere ad : ',
@@ -34,11 +27,6 @@ class Latin(object):
                                         # Incant to MM
                                         'incantation raté': 'defecit carmen',
                                         'incantation réussie': 'felix carmen', # Incant to PNJ
-
-                                        # COOK to Incant
-                                        'j\'ai besoin de nourriture': 'cibo opus est',
-                                        'mange pour incanter : ': 'comedent ut incant : ', #COOK to PNJ
-
 
                                         # Coll to MM
                                         'ressources déposées : ': 'opes deposita : ',
@@ -49,7 +37,7 @@ class Latin(object):
 
                                         'Les ressources de mon inventaire sont : ': 'opes in meo inventario sunt : ',
 
-                                        # All to push
+                                        # All to push or firstborn
                                         'confirmation id': 'sum socius senatus',
 
                                         # COOCK to push
@@ -67,7 +55,6 @@ class Latin(object):
                                         # Coll to Coll
                                         'Qui est collecteur ?': 'Quot publicani ibi sunt?',
                                         'Je suis collecteur': 'Ego sum publicani ibi',
-
 
                                         # Push to Push
                                         'Qui est un pusher': 'Quis est puer interfector?',
@@ -90,6 +77,9 @@ class Latin(object):
 
                                         # Elder to all
                                         'Voici l\'histoire de l\'Empire ACCMST': 'haec est historia imperii ACCMST',
+
+                                        # M&M's to Pusher
+                                        'formation tortue': 'satus testudo : ',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',

@@ -67,7 +67,7 @@ class Bot(object):
             print(f"Received action: {rec}")
         if rec == "" or rec == "dead\n":
             print("Server disconnected")
-            sys.exit(84)
+            sys.exit(0)
         return rec
 
     def forward(self) -> None:

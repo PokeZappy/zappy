@@ -24,7 +24,7 @@ namespace Zappy {
         DebugMode(const std::string &assetsRoot, raylib::Shader &shader, float gridSize);
         void activate(raylib::Camera &camera);
         void desactive(raylib::Camera &camera);
-        void changeAnimation(int index);
+        void changeAnimationIndex(size_t index);
         void changeAnimation(bool increments);
         void changeModel(std::string idModel);
         void nextModel();
@@ -33,7 +33,6 @@ namespace Zappy {
             _shiny = !_shiny;
             changeTexture();
         }
-        void changeScale(double newScale) {};
         void changeTexture();
         void loadModel();
         bool activated(void) { return _activated; };

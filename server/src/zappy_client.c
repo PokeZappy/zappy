@@ -80,7 +80,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
             return;
         }
         dprintf(client->socket, "%d\n%d %d\n", get_client_rest(client->player
-            ->_team), client->player->_pos._x, client->player->_pos._y);
+            ->_team), server->grid->_width, server->grid->_height);
         cmd_pnw(server, NULL, client);
     }
     if (client->_is_gui == 0)
@@ -88,7 +88,7 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
     manage_cmd_gui(commands, client, server);
 }
 
-static void handle_client_message(client_socket_t *client,
+static int handle_client_message(client_socket_t *client,
     struct server_s *server)
 {
     int client_socket = client->socket;
@@ -98,19 +98,30 @@ static void handle_client_message(client_socket_t *client,
     if (bytes == -1) {
         fprintf(stderr, "handle_client_message: Receive failed.\n");
         close(client_socket);
-        return;
+        return -1;
     }
     if (bytes == 0) {
         printf("Client disconnected\n");
         close(client_socket);
-        return;
+        return -1;
     }
     buffer[bytes - 1] = '\0';
-    printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
+    return 0;
 }
 
-static int loop_all_client(struct server_s *server, fd_set readfds)
+static void handle(struct server_s *server, fd_set *readfds,
+    client_socket_t *client)
+{
+    if (handle_client_message(client, server) == -1) {
+        FD_CLR(client->socket, readfds);
+        close(client->socket);
+        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+        free(client);
+    }
+}
+
+static int loop_all_client(struct server_s *server, fd_set *readfds)
 {
     client_socket_t *tmp;
     client_socket_t *client;
@@ -118,8 +129,8 @@ static int loop_all_client(struct server_s *server, fd_set readfds)
     client = TAILQ_FIRST(&server->_head_client_sockets);
     while (client != NULL) {
         tmp = TAILQ_NEXT(client, entries);
-        if (FD_ISSET(client->socket, &readfds))
-            handle_client_message(client, server);
+        if (FD_ISSET(client->socket, readfds))
+            handle(server, readfds, client);
         client = tmp;
     }
     time_manager(server);
@@ -170,5 +181,5 @@ int handle_client(struct server_s *server, int max_sd, fd_set readfds)
     }
     if (FD_ISSET(server->socket, &readfds))
         wait_for_client(server);
-    return loop_all_client(server, readfds);
+    return loop_all_client(server, &readfds);
 }

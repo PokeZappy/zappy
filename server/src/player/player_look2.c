@@ -43,7 +43,7 @@ void print_nb_looked_players(char *result, int nb)
     if (result[strlen(result) - 1] == '[')
         sprintf(result, "%splayer", result);
     else
-        sprintf(result, "%s player", result);
+        sprintf(result, "%splayer", result);
 }
 
 void print_looked_items_on_tile(char *result, tiles_t *tile)

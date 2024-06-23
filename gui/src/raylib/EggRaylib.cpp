@@ -12,9 +12,8 @@
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,
-        float gridSize, raylib::Shader &shader, raylib::Color tint)
-        : worldEgg(egg), _model(model), _modelAnimations(animations), _tint(tint),
-        AEntityRaylib(gridSize)
+        float gridSize, raylib::Shader &shader, raylib::Color tint) :
+        AEntityRaylib(gridSize), worldEgg(egg), _model(model), _tint(tint), _modelAnimations(animations)
     {
         _scale = _gridSize * 0.06;
 
@@ -34,9 +33,9 @@ namespace Zappy {
         _animationIndexes["cry"] = getAnimationIndex({"cry"});
         // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
 
-        for (int i = 0; i < _modelAnimations.size(); i++) {
+        // for (int i = 0; i < _modelAnimations.size(); i++) {
             // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
-        }
+        // }
     }
 
     void EggRaylib::update(void)
@@ -44,7 +43,7 @@ namespace Zappy {
         _animFrame++;
     }
 
-    void EggRaylib::draw(const raylib::Camera camera)
+    void EggRaylib::draw(void)
     {
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{

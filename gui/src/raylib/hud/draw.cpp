@@ -91,7 +91,7 @@ namespace Zappy {
     }
 
     void HudMode::drawPokemons() {
-        for (int i = 0; i < 4 && i < _selectedPlayers.size(); i++) {
+        for (size_t i = 0; i < 4 && i < _selectedPlayers.size(); i++) {
             drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (i * 43));
         }
     }

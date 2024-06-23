@@ -36,9 +36,7 @@ namespace Zappy {
 
         EntityType getType(void) const override { return EntityType::PLAYER; }
 
-        void setPos(size_t x, size_t y, Orientation orientation = Orientation::NONE) {
-            _x = x;
-            _y = y;
+        void setOrientation(Orientation orientation) {
             if (orientation != Orientation::NONE)
                 _orientation = orientation;
         }

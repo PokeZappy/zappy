@@ -56,12 +56,13 @@ void add_delay_participants(server_t *server, client_socket_t *client)
 
 client_socket_t **rip(server_t *server, player_t *player)
 {
-    int players_count = player_same_pos_and_level(server, player);
+    int players_count = player_same_pos_and_level(server, player) + 1;
     client_socket_t **participants = (client_socket_t **)
-    calloc(players_count, sizeof(player_t *));
+    malloc(sizeof(player_t *) * (players_count + 1));
     client_socket_t *current;
     int i = 0;
 
+    participants[players_count - 1] = NULL;
     for (current = TAILQ_FIRST(&server->_head_client_sockets);
     current; current = TAILQ_NEXT(current, entries)) {
         if (!current->player)

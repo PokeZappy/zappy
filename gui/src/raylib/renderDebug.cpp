@@ -9,7 +9,6 @@
 
 namespace Zappy {
     void Raylib::renderDebug(void) {
-        raylib::Color textColor = raylib::Color::Black();
         DebugType type = debugMode->getType();
         _window.BeginDrawing();
         {
