@@ -57,8 +57,8 @@ namespace Zappy {
         void verifyPlayerPosition();
         void drawPokemons();
         void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
-        void scrollUp();
-        void scrollDown();
+        void scrollUp(float wheel);
+        void scrollDown(float wheel);
         void drawType(std::string type, int y);
 
     private:
@@ -83,5 +83,6 @@ namespace Zappy {
         std::vector<std::shared_ptr<PlayerRaylib>> _selectedPlayers;
         std::shared_ptr<PlayerRaylib> _selectedPlayer;
         int _scrollIndex = 0;
+        double _howManyScroll = 0.0f;
     };
 }

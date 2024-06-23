@@ -116,10 +116,10 @@ namespace Zappy {
         }
 
         float wheel = GetMouseWheelMove();
-        if (wheel == 1 && _hudMode->activated()) {
-            _hudMode->scrollUp();
-        } else if (wheel == -1 && _hudMode->activated()) {
-            _hudMode->scrollDown();
+        if (wheel > 0 && _hudMode->activated()) {
+            _hudMode->scrollUp(wheel);
+        } else if (wheel < 0 && _hudMode->activated()) {
+            _hudMode->scrollDown(wheel);
         }
 
 

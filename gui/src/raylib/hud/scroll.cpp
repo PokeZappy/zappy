@@ -8,20 +8,30 @@
 #include "HudMode.hpp"
 
 namespace Zappy {
-    void HudMode::scrollUp() {
+    void HudMode::scrollUp(float wheel) {
         if (_selectedPlayer == nullptr)
             return;
+        
         if (_scrollIndex > 0) {
-            _scrollIndex--;
-            _selectedPlayer = _selectedPlayers[_scrollIndex];
+            _howManyScroll += wheel;
+            if (_howManyScroll >= 0.5f) {
+                _scrollIndex--;
+                _selectedPlayer = _selectedPlayers[_scrollIndex];
+                _howManyScroll = 0.0f;
+            }
         }
     }
 
-    void HudMode::scrollDown() {
+    void HudMode::scrollDown(float wheel) {
         if (_selectedPlayer == nullptr)
             return;
-        if (_scrollIndex < _selectedPlayers.size()) {
-            _scrollIndex++;
+        if (_scrollIndex < _selectedPlayers.size() - 1) {
+            _howManyScroll += wheel;
+            if (_howManyScroll <= -0.5f) {
+                _scrollIndex++;
+                _selectedPlayer = _selectedPlayers[_scrollIndex];
+                _howManyScroll = 0.0f;
+            }
         }
     }
 }
