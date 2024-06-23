@@ -61,6 +61,10 @@ namespace Zappy {
 
         _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
         _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
+
+        // TODO remove this two lines
+        _camera.SetPosition(raylib::Vector3(8.9 * _gridSize, 0.9 * _gridSize, 4.7 * _gridSize));
+        _camera.SetTarget(raylib::Vector3(8.9 * _gridSize, -0.1 * _gridSize, 6.1 * _gridSize));
         // 30x30
         // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
         // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
