@@ -12,7 +12,6 @@ namespace Zappy
     void Raylib::render(const World &world)
     {
         _hudMode->setTile(nullptr);
-        _hudMode->clearPlayers();
         if (debugMode->activated()) {
             renderDebug();
             return;
@@ -44,10 +43,6 @@ namespace Zappy
             }
 
             for (auto &player : _players) {
-                if ((_hudMode->getTile() != nullptr) &&
-                (_hudMode->getTile()->getY() == static_cast<int>(player->worldPlayer->getX())) &&
-                (_hudMode->getTile()->getX() == static_cast<int>(player->worldPlayer->getY())))
-                    _hudMode->addPlayer(player);
                 player->draw();
             }
 
