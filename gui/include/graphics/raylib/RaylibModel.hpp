@@ -26,7 +26,10 @@ namespace Zappy
             Texture2D getTexture() { return _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture; }
             void setNormalTexture(Texture2D &texture) { _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = texture; }
             void setShinyTexture(Texture2D &texture) { _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = texture; }
-            void updateAnimation(std::vector<raylib::ModelAnimation> &animations) { _model.UpdateAnimation(animations[_animIndex], _frame); _frame++; }
+            void updateAnimation(std::vector<raylib::ModelAnimation> &animations) { 
+                if (_animIndex != -1)
+                    _model.UpdateAnimation(animations[_animIndex], _frame); 
+                _frame++; }
             void draw(raylib::Vector3 position, raylib::Vector3 rotation, float angle, raylib::Vector3 scale) {
                  _model.Draw(position, rotation, angle, scale);
             }
