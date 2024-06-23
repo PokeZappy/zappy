@@ -162,6 +162,8 @@ class Incantator(Player):
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
+                        self.message.buf_messages(message='nobilis incantatio')
+                        self.queue.append('Broadcast')
                         self.ready = True
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))

@@ -63,7 +63,9 @@ class Latin(object):
                                         # First Born to MM
                                         'Je me vais me transormer en : ': 'Ego me transform : ',
 
+                                        # Incantator to Collecteur
                                         'évo de niveau': 'nobilis incantatio',
+
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
                                         'Incantator': 'Incantator',

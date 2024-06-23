@@ -223,9 +223,7 @@ class Collector(Player):
         if message['msg'] == 'Quot publicani ibi sunt?':
             self.message.buf_messages('Ego sum publicani ibi', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
-
-        #     TODO - Change the string to have the real string send by incantator or M&M's
-        if message['msg'] == 'INCANTATION LVL 1 DONE':
+        if message['msg'] == 'nobilis incantatio':
             self.lvl_one = True
         self.global_message(message)
 
