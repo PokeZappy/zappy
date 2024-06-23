@@ -58,7 +58,7 @@ client_socket_t **rip(server_t *server, player_t *player)
 {
     int players_count = player_same_pos_and_level(server, player) + 1;
     client_socket_t **participants = (client_socket_t **)
-    calloc(players_count, sizeof(player_t *));
+    malloc(sizeof(player_t *) * (players_count + 1));
     client_socket_t *current;
     int i = 0;
 

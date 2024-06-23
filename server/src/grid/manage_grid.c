@@ -25,7 +25,7 @@ double *create_density(int tile_nbr)
     return densities;
 }
 
-grid_t *init_grid(int width, int height)
+grid_t *init_grid(server_t *server, int width, int height)
 {
     grid_t *grid = (grid_t *)malloc(sizeof(grid_t));
 
@@ -38,7 +38,7 @@ grid_t *init_grid(int width, int height)
             grid->_tiles[i][j] =
                 init_tile();
     }
-    generate_resource(grid);
+    generate_resource(server, grid);
     return grid;
 }
 
