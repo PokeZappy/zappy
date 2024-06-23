@@ -8,6 +8,7 @@
 #pragma once
 
 #include <iostream>
+#include "raylib-cpp.hpp"
 
 namespace Zappy
 {

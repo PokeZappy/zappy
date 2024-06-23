@@ -17,6 +17,7 @@
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
 
+#include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
 
