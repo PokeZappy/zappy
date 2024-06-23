@@ -24,6 +24,7 @@ static const command_t commands_gui[] = {
     {"EGG_LIST", print_egg_list, 0},
     {"HACK_GIVE", hack_player_give, 0},
     {"HACK_HEALTH", hack_player_health, 0},
+    {"KILL", kill_player, 0},
     {NULL, NULL, 0}
 };
 
@@ -31,7 +32,7 @@ client_socket_t *get_gui(server_t *server)
 {
     client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
 
-    while (current != NULL) {
+    while (current) {
         if (current->_is_gui == 1)
             return current;
         current = TAILQ_NEXT(current, entries);

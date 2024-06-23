@@ -70,6 +70,7 @@ void free_incantation(server_t *server, cmd_incantation_t *current);
 void check_death(server_t *server);
 cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c);
 delayed_command_t *ficbcq(server_t *s, client_socket_t *c);
+void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p);
 
 // -- GRID RELATED -- //
 int player_take_item(player_t *player, tiles_t *tile, char *item);

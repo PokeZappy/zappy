@@ -17,47 +17,16 @@ static int generate_player_id(void)
     return id;
 }
 
-static egg_t *check_egg_name(tiles_t *tile, char *team_name)
-{
-    egg_t *e = TAILQ_FIRST(&tile->_head_egg);
-
-    while (e != NULL) {
-        if (strcmp(e->_team->_name, team_name) == 0 && e->_available == 0) {
-            TAILQ_REMOVE(&tile->_head_egg, e, _entries);
-            return e;
-        }
-        e = TAILQ_NEXT(e, _entries);
-    }
-    return NULL;
-}
-
-static egg_t *loop_tile(server_t *server, char *team_name, int i)
-{
-    tiles_t ***tiles = server->grid->_tiles;
-    int y = server->grid->_width;
-    egg_t *tmp = NULL;
-
-    for (int j = 0; j < y; j++) {
-        tmp = check_egg_name(tiles[i][j], team_name);
-        if (tmp != NULL)
-            return tmp;
-    }
-    return tmp;
-}
-
 static egg_t *check_for_egg(server_t *server, char *team_name)
 {
-    tiles_t ***tiles = server->grid->_tiles;
-    int x = server->grid->_height;
-    int y = server->grid->_width;
-    egg_t *tmp = NULL;
+    egg_t *tmp = TAILQ_FIRST(&server->_head_egg);
 
-    for (int i = 0; i < x; i++) {
-        tmp = loop_tile(server, team_name, i);
-        if (tmp != NULL)
+    TAILQ_FOREACH(tmp, &server->_head_egg, _entries) {
+        if (strcmp(tmp->_team->_name, team_name) == 0)
             return tmp;
+        tmp = TAILQ_NEXT(tmp, _entries);
     }
-    return tmp;
+    return NULL;
 }
 
 static void remove_egg(server_t *server, egg_t *egg)
@@ -79,7 +48,8 @@ static void check_for_pos(player_t *player, server_t *server)
     } else {
         player->_pos._x = rand_egg->_pos._x;
         player->_pos._y = rand_egg->_pos._y;
-        dprintf(get_gui(server)->socket, "ebo %d\n", rand_egg->_id);
+        if (get_gui(server))
+            dprintf(get_gui(server)->socket, "ebo %d\n", rand_egg->_id);
         remove_egg(server, rand_egg);
     }
 }

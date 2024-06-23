@@ -1,52 +1,27 @@
 ##
 ## EPITECH PROJECT, 2024
-##
+## HEADER
 ## File description:
-## Makefile
+## HEADER
 ##
 
-SRC = 	$(wildcard src/*.cpp)
+SRC	=	./src/main.py
 
-OBJ = $(SRC:.cpp=.o)
+NAME =	zappy_ai
 
-TESTS_SRC = $(SRC)
-TESTS_SRC += $(wildcard tests/*.cpp)
-
-TESTS_TARGET = unit_tests
-
-TESTS_OBJS := $(TESTS_SRC:%.cpp=%.o)
-
-NAME = zappy_ai
-
-CXXFLAGS = -Wall -Wextra -g3 -Iinclude
-CXXFLAGS += -lpthread
-
-LDLIBS += -L./criterion/lib -lcriterion
-
-CC = g++
+$(NAME)	:
+			cp $(SRC) ./zappy_ai
 
 all: $(NAME)
 
-$(NAME):	$(OBJ)
-	$(CC) -o $(NAME) main.cpp $(OBJ) $(CXXFLAGS)
-
 clean:
-	rm -f $(OBJ)
+		rm -rf zappy_ai
 
-fclean: clean
-	rm -f $(NAME)
+fclean:	clean
 
-re: fclean all
+re:	fclean all
 
-tests_run: $(TESTS_OBJS) coverage
-	$(CC) -o unit_tests $(TESTS_OBJS) $(CXXFLAGS) $(LDLIBS)
-	./unit_tests
+tests_run:
+	pytest --cov=src/ tests/
 
-tests_clean: fclean
-	rm -f $(TEST_OBJ)
-	rm -f unit_test*
-
-coverage:
-	gcovr
-
-.PHONY: all clean fclean re tests_run coverage
+.PHONY: all clean fclean re tests_run

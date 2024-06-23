@@ -23,7 +23,8 @@ void client_dead(server_t *server, client_socket_t *client)
         }
     }
     dprintf(client->socket, "dead\n");
-    dprintf(get_gui(server)->socket, "pdi %d\n", client->_id);
+    if (get_gui(server))
+        dprintf(get_gui(server)->socket, "pdi %d\n", client->_id);
     close(client->socket);
     TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
     free_client(client);
@@ -35,8 +36,8 @@ void client_eat(server_t *server, client_socket_t *client)
         client->player->_inventory[0] -= 1;
         client->player->_health = 126;
     } else {
-        client_dead(server, client);
         client->player->_team->_current_clients--;
+        client_dead(server, client);
     }
 }
 

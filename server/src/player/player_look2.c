@@ -38,11 +38,12 @@ vector_t find_tile(grid_t *grid, player_t *player, int i, int j)
 
 void print_nb_looked_players(char *result, int nb)
 {
-    for (int i = 0; i < nb; i++)
-        if (result[strlen(result) - 1] == '[')
-            sprintf(result, "%splayer", result);
-        else
-            sprintf(result, "%s player", result);
+    if (nb == 0)
+        return;
+    if (result[strlen(result) - 1] == '[')
+        sprintf(result, "%splayer", result);
+    else
+        sprintf(result, "%splayer", result);
 }
 
 void print_looked_items_on_tile(char *result, tiles_t *tile)

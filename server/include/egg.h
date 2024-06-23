@@ -16,10 +16,12 @@ struct server_s;
 typedef struct server_s server_t;
 
 typedef struct egg_s {
+    int _ismatthias;
     team_t *_team;
     int _available;
     vector_t _pos;
     int _id;
+    int _client_id;
     TAILQ_ENTRY(egg_s) _entries;
 } egg_t;
 

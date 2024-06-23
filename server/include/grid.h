@@ -15,8 +15,8 @@ typedef struct grid_s {
     tiles_t ***_tiles; // 2D array of tiles
 } grid_t;
 
-grid_t *init_grid(int width, int height);
+grid_t *init_grid(server_t *server, int width, int height);
 void print_grid(grid_t *grid);
 void free_grid(grid_t *grid);
 double *create_density(int tile_nbr);
-void generate_resource(grid_t *grid);
+void generate_resource(server_t *server, grid_t *grid);
