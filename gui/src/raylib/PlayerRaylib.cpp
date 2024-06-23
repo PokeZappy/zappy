@@ -17,7 +17,7 @@ namespace Zappy
         _successGif("assets/textures/success.gif", false),
         _failureGif("assets/textures/failure.gif", false)
     {
-        _scale = _gridSize / 32;
+        _scale = _gridSize / 32.;
         _height = _gridSize;
         color = raylib::Color::White();
         infos = pkInfo;
@@ -40,7 +40,7 @@ namespace Zappy
             // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
         }
 
-        _height += (rand() % 20) * _gridSize / 20;
+        _height += (rand() % 20) * _gridSize / 20.;
     }
 
     void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
@@ -81,7 +81,7 @@ namespace Zappy
     void PlayerRaylib::update(void)
     {
         if (worldPlayer->getIncantationState() == Incantation::INCANTING) {
-            _verticalRotation = sin(GetTime() * 2) * 10;
+            _verticalRotation = sin(GetTime() * 2) * 10.;
         } else {
             _verticalRotation = 0;
         }
@@ -146,13 +146,13 @@ namespace Zappy
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude + std::abs(_verticalRotation * _gridSize / 4.f),
+            _altitude + std::abs(_verticalRotation * _gridSize / 5.f),
             _currentPos.y * _gridSize + offset.y};
         if (_animIndex != -1) {
             _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
         }
         _model.Draw(playerPos,
-            raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
+            raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel() / 2.),
             raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
         playerPos.y += _height + _gridSize;
         if (selectionMode)
