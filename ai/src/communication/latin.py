@@ -13,6 +13,8 @@ class Latin(object):
         Initialize the Latin class with a dictionary of Latin phrases and their translations.
         """
         self.verbum: dict[str, str] = {
+                                        # M&M's to M&M's
+                                        'besoin aide': 'auxilium postulo',
                                         # MM to Collector
                                         'focalisation sur ces ressources': 'focus in his opibus : ',
                                         'point de dépot': 'collectio rerum : ',
@@ -101,7 +103,6 @@ class Latin(object):
 
                                         'temps restant incantation': 'quantum temporis reliquum est carminibus',
 
-                                        'besoin aide': 'auxilium postulo',
 
                                         'confirmation action': 'hic servio tibi domino',
 

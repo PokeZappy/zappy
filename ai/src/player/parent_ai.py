@@ -1,4 +1,5 @@
 from os import fork
+from random import randint
 
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
@@ -97,8 +98,10 @@ class ParentAI(Player):
         self.exist_north = False
         self.pusher_count = 4
         self.sencond_phase = True # TODO - reset at False
-        self.count = 0
-        self.count_bis = 0
+        self.mms_id: int = 100_000_000_000
+        self.mms = []
+        self.count_mms: int = 0
+        self.mms_start: bool = False
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -225,6 +228,21 @@ class ParentAI(Player):
         if message['msg'] == 'Ego plus viribus':
     #         TODO - faire un North gurad qui va au Nord
             pass
+        if message['msg'] == 'auxilium postulo':
+            print(f'j\'ai reçu ça {self.mms[-1]}')
+            self.mms.append(message['id'])
+            self.count_mms += 1
+            self.mms.sort()
+            if self.count_mms == self.cli_num and self.mms_id is not self.mms[0]:
+                print(f"jep {self.mms}")
+                role = self.BIND[RoleInGame.HANSEL](self.serv_info, self.cli_socket, self.debug_mode).run()
+                role.run()
+                self.mms_start = True
+            elif self.count_mms == self.cli_num:
+                print(f"nooo {self.mms}")
+                self.mms_start = True
+            elif self.count_mms != self.cli_num:
+                print(f'count: {self.count_mms}\ncli_num: {self.cli_num}\nmy mms: {self.mms}')
 
     def enter_depot(self) -> None:
         """
@@ -324,11 +342,26 @@ class ParentAI(Player):
         """
         This method makes the action of the player.
         """
+        # if self.cli_num != len(self.mms):
+        #     return
         if self.first_round[0]:
+            self.mms.append(randint(0, 100_000_000))
+            self.message.buf_messages('auxilium postulo', my_id=self.mms[0])
+            print(f"hello la team je suis {self.mms[0]}")
             self.queue.append('Slots')
+            self.life -= self.ACTION
+            self.queue.append('Broadcast')
+            self.life -= self.ACTION
+            self.queue.append(('Take', 'player'))
+            self.life -= self.ACTION
+            self.queue.append(('Take', 'player'))
+            self.life -= self.ACTION
+            self.queue.append(('Take', 'player'))
             self.first_round[0] = False
             self.apply_action()
         if self.first_round[1]:
+            return
+        if self.mms_start is False:
             return
         if self.role == RoleInGame.PROGENITOR:
             if len(self.queue) > 0:
