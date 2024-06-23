@@ -10,11 +10,11 @@
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,
-        size_t gridSize, raylib::Shader &shader, raylib::Color tint)
+        float gridSize, raylib::Shader &shader, raylib::Color tint)
         : worldEgg(egg), _model(model), _modelAnimations(animations), _tint(tint),
         AEntityRaylib(gridSize)
     {
-        _scale = _gridSize * 2;
+        _scale = _gridSize * 0.06;
 
         _model.materials[1].shader = shader;
 
@@ -35,8 +35,6 @@ namespace Zappy {
         for (int i = 0; i < _modelAnimations.size(); i++) {
             // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
         }
-
-        _height += rand() % 20;
     }
 
     void EggRaylib::update(void)
@@ -49,13 +47,12 @@ namespace Zappy {
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude,
+            0,
             _currentPos.y * _gridSize + offset.y};
         _model.Draw(playerPos,
             raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scale, _scale, _scale),
+            raylib::Vector3(_scale, true),
             _tint);
-        playerPos.y += _height + 5;
     }
 
     int EggRaylib::getAnimationIndex(const std::vector<std::string> &names)

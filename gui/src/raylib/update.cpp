@@ -106,6 +106,7 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+        _mainTheme.Update();
     }
 
     void Raylib::updatePlayers(const World &world) {

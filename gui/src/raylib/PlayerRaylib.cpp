@@ -13,10 +13,12 @@ namespace Zappy
         PokemonInfo &pkInfo, float gridSize, raylib::Shader &shader)
         : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
         _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb"))
+        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb")),
+        _successGif("assets/textures/success.gif", false),
+        _failureGif("assets/textures/failure.gif", false)
     {
         _scale = _gridSize / 32;
-        _height = _gridSize * 2;
+        _height = _gridSize;
         color = raylib::Color::White();
         infos = pkInfo;
         loadShinyTexture();
@@ -38,7 +40,7 @@ namespace Zappy
             // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
         }
 
-        _height += rand() % 20;
+        _height += (rand() % 20) * _gridSize / 20;
     }
 
     void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
@@ -78,7 +80,7 @@ namespace Zappy
 
     void PlayerRaylib::update(void)
     {
-        if (worldPlayer->isIncanting()) {
+        if (worldPlayer->getIncantationState() == Incantation::INCANTING) {
             _verticalRotation = sin(GetTime() * 2) * 10;
         } else {
             _verticalRotation = 0;
@@ -124,9 +126,19 @@ namespace Zappy
                 _animIndex = _animationIndexes["idle"];
             }
         }
+        if (worldPlayer->getIncantationState() != _graphicalIncantingState) {
+            _graphicalIncantingState = worldPlayer->getIncantationState();
+            if (_graphicalIncantingState == Incantation::SUCCESS) {
+                _successGif.reset();
+            } else if (_graphicalIncantingState == Incantation::FAILURE) {
+                _failureGif.reset();
+            }
+        }
+        _successGif.update();
+        _failureGif.update();
     }
 
-    void PlayerRaylib::draw(const raylib::Camera camera, bool selectionMode)
+    void PlayerRaylib::draw(const raylib::Camera &camera, bool selectionMode)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
@@ -134,7 +146,7 @@ namespace Zappy
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude + std::abs(_verticalRotation * 5),
+            _altitude + std::abs(_verticalRotation * _gridSize / 4.f),
             _currentPos.y * _gridSize + offset.y};
         if (_animIndex != -1) {
             _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
@@ -144,7 +156,9 @@ namespace Zappy
             raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
         playerPos.y += _height + _gridSize;
         if (selectionMode)
-            _textTexture.DrawBillboard(camera, playerPos, 15);
+            _textTexture.DrawBillboard(camera, playerPos, _gridSize / 2);
+        _successGif.draw(camera, playerPos, _gridSize);
+        _failureGif.draw(camera, playerPos, _gridSize);
     }
 
     int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)

@@ -30,7 +30,7 @@ namespace Zappy
         int _animFrame = 0;
         bool _isDying = false;
         float _scale = 1;
-        float _altitude;
+        float _altitude = 0;
         float _height;
         bool _hasIdleAnim = false;
         raylib::Color color;

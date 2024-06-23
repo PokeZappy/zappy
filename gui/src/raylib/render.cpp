@@ -41,6 +41,10 @@ namespace Zappy
 
             drawTiles(world.getTiles());
 
+            for (auto &egg : _eggs) {
+                egg->draw(_camera);
+            }
+
             for (auto &player : _players) {
                 if ((_hudMode->getTile() != nullptr) &&
                 (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
@@ -49,12 +53,6 @@ namespace Zappy
                 player->draw(_camera, _hudMode->activated());
             }
 
-            for (auto &egg : _eggs) {
-                // if ((_hudMode->getTile() != nullptr) &&
-                // (_hudMode->getTile()->getX() == egg->worldEgg->getX()) &&
-                // (_hudMode->getTile()->getY() == egg->worldEgg->getY()))
-                egg->draw(_camera);
-            }
 
             _shader.EndMode();
 

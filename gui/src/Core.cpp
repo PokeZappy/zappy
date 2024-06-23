@@ -39,6 +39,7 @@ namespace Zappy
             }
             updateMapSize();
             _graphics->render(_world);
+            
         }
     }
 } // namespace Zappy

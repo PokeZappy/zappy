@@ -95,7 +95,7 @@ namespace Zappy {
 
         drawType(pokemon->worldPlayer->getTeam().getName(), y);
 
-        if (pokemon->worldPlayer->isIncanting()) {
+        if (pokemon->worldPlayer->getIncantationState() == Incantation::INCANTING) {
             _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(815, y, 22, 29));
         } else {
             _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(815, y, 22, 29));
