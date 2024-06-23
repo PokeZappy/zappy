@@ -41,6 +41,14 @@ class Player(Bot):
                                 'phiras': 0,
                                 'thystame': 0
                                 }
+        self.need_ressources = {'food': 0,
+                                'linemate': 8,
+                                'deraumere': 8,
+                                'sibur': 10,
+                                'mendiane': 5,
+                                'phiras': 6,
+                                'thystame': 1
+                                }
         self.inventory: dict[str: int] = self.based_ressources
         self.looked: bool = False
         self.environment: str = ""
