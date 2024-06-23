@@ -54,7 +54,8 @@ namespace Zappy
             ss >> id >> x >> y >> o;
             Orientation orientation = static_cast<Orientation>(o);
             std::shared_ptr<Player> player = getPlayer(id);
-            player->setPos(x, y, orientation);
+            player->setPos(x, y);
+            player->setOrientation(orientation);
 
 
             // todo : Uncomment to have player movements in the shell

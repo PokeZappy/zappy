@@ -18,7 +18,7 @@ namespace Zappy
     {
         _scaleModel = _gridSize;
 
-        changeAnimation(0);
+        changeAnimationIndex(0);
         for (const auto &entry : std::filesystem::directory_iterator(_assetsRoot + "models/pokemons/"))
         {
             if (entry.is_regular_file())

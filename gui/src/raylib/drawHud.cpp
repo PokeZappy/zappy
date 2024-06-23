@@ -2,13 +2,13 @@
 ** EPITECH PROJECT, 2023
 ** zappy
 ** File description:
-** drawGui.cpp
+** drawHud.cpp
 */
 
 #include "Raylib.hpp"
 
 namespace Zappy {
-    void Raylib::drawGui(const World &world) {
+    void Raylib::drawHud() {
         _hudMode->drawBackground();
     }
 }
