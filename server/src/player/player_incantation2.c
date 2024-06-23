@@ -11,7 +11,7 @@
 bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl)
 {
     for (int i = 0; cu->participants[i] != NULL; i++) {
-        if (cu->participants[i] == cl)
+        if (cu->participants[i]->socket == cl->socket)
             return true;
     }
     return false;

@@ -1,6 +1,7 @@
 from socket import socket
 
 from ai.src.player.player import Player
+from ai.src.gameplay.enum_gameplay import TESTUDO
 
 
 class Pusher(Player):
@@ -16,8 +17,10 @@ class Pusher(Player):
             super().__init__(serv_info, cli_socket, debug_mode)
         self.you_should_not_pass = True
         self.id = 0
+        # TODO - blocage ici avec les 4 premiers à moins de les placés comme les autres
         self.get_id('Quis est puer interfector?')
         self.start: bool = False
+        self.hard_push = False
 
     def go_to_start(self) -> None:
         if self.id == 1:
@@ -32,7 +35,13 @@ class Pusher(Player):
             self.life -= self.ACTION * 2
         self.queue.append('Forward')
         self.life -= self.ACTION
+        self.start = True
 
+    def testudo_formation(self):
+        # TODO - commence par la ligne exterieur.
+        # TODO - rand 6 pour le nbr d'inventaire pour le décalage une fois sur sa case.
+
+        pass
 
     def make_action(self) -> None:
         """
@@ -46,11 +55,11 @@ class Pusher(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if self.you_should_not_pass:
+        if self.you_should_not_pass is True:
             self.queue.append('Eject')
             self.life -= self.ACTION
 
-    def broadcast_traitement(self, message: tuple | str) -> None:
+    def broadcast_traitement(self, message: tuple | str | dict) -> None:
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
@@ -58,15 +67,22 @@ class Pusher(Player):
             if self.got_id > 2 and self.start is False:
                 self.go_to_start()
         if message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3:
-            # TODO - ADD parser id to replace missing id if collector died in :message['nbr'][0]
             self.id += 1
         if message['msg'] == 'Quis est puer interfector?':
             self.message.buf_messages('Ego sum puer inteffector', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
             self.life -= self.ACTION
-        if message['msg'] == 'situm intrare':
+        if message['msg'] == 'situm intrare' and self.hard_push is False:
             if self.you_should_not_pass is True:
                 self.you_should_not_pass = False
         if message['msg'] == 'Non Potes dominum facti':
             self.you_should_not_pass = True
+        if message['mgs'] == 'satus testudo : ':
+            if self.id == 0 and self.start is True:
+                self.you_should_not_pass = False
+            elif self.start is False and self.path.facing:
+                self.id = message['id']
+                for move in TESTUDO[self.id]:
+                    self.queue.append(move)
+            self.hard_push = True
         self.global_message(message)

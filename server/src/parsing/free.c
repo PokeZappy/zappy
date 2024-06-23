@@ -53,6 +53,18 @@ static void free_server_team(server_t *server)
     }
 }
 
+static void free_server_commands(server_t *server)
+{
+    delayed_command_t *d = TAILQ_FIRST(&server->_head_delayed_commands);
+
+    while (d != NULL) {
+        TAILQ_REMOVE(&server->_head_delayed_commands, d, entries);
+        free(d->_args);
+        free(d);
+        d = TAILQ_FIRST(&server->_head_delayed_commands);
+    }
+}
+
 void free_server(server_t *server)
 {
     if (!server)
@@ -60,6 +72,7 @@ void free_server(server_t *server)
     free_server_arg(server->arguments);
     free_server_client(server);
     free_server_team(server);
+    free_server_commands(server);
     free_grid(server->grid);
     free(server);
 }

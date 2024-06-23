@@ -19,18 +19,18 @@ class Elder(Player):
             self.message.buf_messages(message='haec est historia imperii ACCMST', infos=[(uuid, '0') for uuid in self.message.uuid_used])
             self.queue.append('Broadcast')
             self.life -= self.ACTION
-            self.queue.append(('Take', 'player'))
-            self.life -= self.ACTION
+            # self.queue.append(('Take', 'player'))
+            # self.life -= self.ACTION
 
     def make_action(self) -> None:
         """
 
         """
-        if len(self.actions) >= 1 or len(self.queue) > 6:
+        if len(self.actions) >= 1:
             return
         if 0 < len(self.queue) and len(self.actions) < 1:
             self.apply_action()
         # if self.life <= 300:
         #     self.queue.append(('Take', 'food'))
         # else:
-        #     self.explain_the_history()
+        self.explain_the_history()
