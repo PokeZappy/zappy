@@ -306,8 +306,7 @@ class ParentAI(Player):
             self.action_as_mastermind()
 
     def get_broadcast(self, broadcast_recv: str):
-        # print(broadcast_recv)
-        pass
+        print(broadcast_recv)
 
     def satus_testudo(self) -> None:
         # TODO - @Matthias implémenter la fonction dans une boucle avec la limite de pusher_count == 24
