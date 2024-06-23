@@ -6,6 +6,7 @@
 */
 
 #include "Raylib.hpp"
+#include "HudMode.hpp"
 
 namespace Zappy {
      void HudMode::drawBackground() {

@@ -7,6 +7,8 @@
 
 #include "EggRaylib.hpp"
 
+
+//TODO changer la classe pour qu'elle prenne des RaylibModels voilà
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,
@@ -22,9 +24,9 @@ namespace Zappy {
                 Utils::generateRandomFloat(gridSize / 1.3),
                 Utils::generateRandomFloat(gridSize / 10) + gridSize / 3);
         _currentPos = raylib::Vector2(worldEgg->getX(), worldEgg->getY());
-        _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        _textTexture = raylib::Texture2D(_textImage);
-        _textRenderTexture = LoadRenderTexture(256, 256);
+        // _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
+        // _textTexture = raylib::Texture2D(_textImage);
+        // _textRenderTexture = LoadRenderTexture(256, 256);
 
         _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
         _animationIndexes["faint"] = getAnimationIndex({"faint"});

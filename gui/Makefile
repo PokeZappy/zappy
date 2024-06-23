@@ -62,6 +62,9 @@ all: $(NAME)
 dbg: CXXFLAGS += $(DBGFLAGS)
 dbg: all
 
+prof: CXXFLAGS += -pg
+prof: all
+
 dbgs: CFLAGS += $(DBGFLAGS) -fsanitize=address
 dbgs: $(NAME)
 
