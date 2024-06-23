@@ -14,8 +14,9 @@ namespace Zappy
 {
     class RaylibModel {
         public:
-            RaylibModel(std::string id, raylib::Shader &shader, raylib::ModelAnimation &animation) :
-            _model("assets/models/pokemons/" + id + ".glb"),
+            RaylibModel(const std::string &assetsRoot, std::string id,
+                raylib::Shader &shader, raylib::ModelAnimation &animation) :
+                _model(assetsRoot + "models/pokemons/" + id + ".glb"),
                 _animation(animation)
             {
 

@@ -117,7 +117,7 @@ namespace Zappy {
                 // pokemon.shiny = true;
 
                 if (_models.count(pokemon.id) <= 0) {
-                    _models[pokemon.id] = std::make_shared<RaylibModels>(pokemon.id, _shader);
+                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
                 }
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player, _assetsRoot, pokemon, _models[pokemon.id], _gridSize));
