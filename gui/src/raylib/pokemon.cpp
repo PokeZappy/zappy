@@ -103,7 +103,11 @@ namespace Zappy {
                 PokemonInfo pickedEvolution = infos.evolutions[Utils::random(0, infos.evolutions.size() - 1)];
                 pickedEvolution.shiny = infos.shiny;
                 infos = pickedEvolution;
-                graphicPlayer->loadTextureAndModel(_shader);
+
+                if (_models.count(infos.id) <= 0) {
+                    _models[infos.id] = std::make_shared<RaylibModel>(infos.id, _shader);
+                }
+                graphicPlayer->updateModel(_models[infos.id]);
             }
         }
     }

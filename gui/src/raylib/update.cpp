@@ -115,7 +115,12 @@ namespace Zappy {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _gridSize, _shader));
+
+                if (_models.count(pokemon.id) <= 0) {
+                    _models[pokemon.id] = std::make_shared<RaylibModel>(pokemon.id, _shader);
+                }
+
+                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _models[pokemon.id], _gridSize));
             }
         }
 

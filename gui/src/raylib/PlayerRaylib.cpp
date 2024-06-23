@@ -10,10 +10,10 @@
 namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
-        PokemonInfo &pkInfo, float gridSize, raylib::Shader &shader)
-        : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
-        _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb")),
+        PokemonInfo &pkInfo,
+        std::shared_ptr<RaylibModel> model,
+        float gridSize) : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
+        _model(model),
         _successGif("assets/textures/success.gif", false),
         _failureGif("assets/textures/failure.gif", false)
     {
@@ -21,8 +21,8 @@ namespace Zappy
         _height = _gridSize;
         color = raylib::Color::White();
         infos = pkInfo;
-        loadShinyTexture();
-        _model.materials[1].shader = shader;
+
+
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
@@ -36,30 +36,12 @@ namespace Zappy
         _animationIndexes["walk"] = getAnimationIndex({"ground_run", "ground_walk"});
         // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
 
-        for (int i = 0; i < _modelAnimations.size(); i++) {
-            // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
-        }
-
         _height += (rand() % 20) * _gridSize / 20;
     }
 
-    void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
+    void PlayerRaylib::updateModel(std::shared_ptr<RaylibModel> model)
     {
-        _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
-        loadShinyTexture();
-        _model.materials[1].shader = shader;
-        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
-    }
-
-    void PlayerRaylib::loadShinyTexture(void)
-    {
-        if (infos.shiny)
-        {
-            std::string path = "assets/textures/pokemons/" + infos.id + "_shiny.png";
-            Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
-
-            _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
-        }
+        _model = model;
     }
 
     float PlayerRaylib::getRotation(void) const
@@ -148,10 +130,19 @@ namespace Zappy
             _currentPos.x * _gridSize + offset.x,
             _altitude + std::abs(_verticalRotation * _gridSize / 4.f),
             _currentPos.y * _gridSize + offset.y};
+
+        // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
         if (_animIndex != -1) {
-            _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
+            _model->updateAnimation(_animIndex, _animFrame);
         }
-        _model.Draw(playerPos,
+
+
+        if (infos.shiny) {
+            _model->setShinyTexture();
+        } else {
+            _model->setNormalTexture();
+        }
+        _model->draw(playerPos,
             raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
             raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
         playerPos.y += _height + _gridSize;
@@ -163,8 +154,9 @@ namespace Zappy
 
     int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
     {
-        for (size_t i = 0; i < _modelAnimations.size(); i++) {
-            std::string animName(_modelAnimations[i].name);
+        std::vector<raylib::ModelAnimation> &animations = _model->getAnimations();
+        for (size_t i = 0; i < animations.size(); i++) {
+            std::string animName(animations[i].name);
             for (size_t j = 0; j < names.size(); j++) {
                 if (animName.find(names[j]) != std::string::npos) {
                     return i;
