@@ -10,7 +10,7 @@
 namespace Zappy {
     void RaylibModels::update() {
         for (auto &pair : _models) {
-            pair.second->updateAnimation();
+            pair.second->updateAnimation(_animations);
         }
     }
 

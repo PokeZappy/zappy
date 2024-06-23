@@ -25,7 +25,7 @@ namespace Zappy {
         _window.SetTargetFPS(60);
         try
         {
-            _configuration.readFile(_assetsRoot + "pokemons.cfg");
+            _configuration.readFile((_assetsRoot + "pokemons.cfg").c_str());
         }
         catch (const libconfig::FileIOException &fioex)
         {
