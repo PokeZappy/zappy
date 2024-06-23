@@ -59,8 +59,8 @@ namespace Zappy
     raylib::Vector3 Raylib::getSunPosition(double elapsedTime, double cycle_duration_sec)
     {
         const double HALF_CYCLE = cycle_duration_sec / 2.0;
-        const double SUN_PEAK_HEIGHT = 50.0 * _gridSize;
-        const double SUN_PEAK_WIDTH = 80.0 * _gridSize;
+        const double SUN_PEAK_HEIGHT = 5.0 * _gridSize * _mapX;
+        const double SUN_PEAK_WIDTH = 8.0 * _gridSize * _mapY;
 
         double timeInCycle = fmod(elapsedTime, cycle_duration_sec);
 

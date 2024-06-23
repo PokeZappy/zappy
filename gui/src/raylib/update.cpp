@@ -93,7 +93,7 @@ namespace Zappy {
 
         // Sun & Moon
         size_t revolution = 1789 / 10;
-        auto currentTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch());
+        auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
         for (int i = 0; i < 2; i++) {
             _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;

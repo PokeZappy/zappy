@@ -41,7 +41,7 @@ namespace Zappy {
     void HudMode::drawInventory(bool player) {
         Inventory inventory;
         int x = player ? 900 : 0;
-        std::string title = player ? "Pokemon" : "Tile";
+        std::string title = player ? "Pokemon" : std::string("Tile ") + std::to_string(_selectedTile->getY()) + " " + std::to_string(_selectedTile->getX());
         raylib::Color white = raylib::Color::White();
         raylib::Rectangle _inventorySrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
         raylib::Rectangle _inventoryDest(x, GUI_HEIGHT - 200, 265, 200);
@@ -104,7 +104,7 @@ namespace Zappy {
 
     void HudMode::drawType(std::string type, int y) {
         raylib::Color white = raylib::Color::White();
-        raylib::Rectangle src;                                                                                                                                                                          
+        raylib::Rectangle src;
         raylib::Rectangle dest(701, y, 85, 30);
         if (type == "bug") {
             src = raylib::Rectangle(0, 14, _typesTexture.width, 14);

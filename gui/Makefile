@@ -53,7 +53,7 @@ MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15
+	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15 -D MACBOOK
 	LDFLAGS += $(MACSFMLLIB)
 endif
 

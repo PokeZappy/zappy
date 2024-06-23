@@ -19,8 +19,8 @@ namespace Zappy {
         _model.materials[1].shader = shader;
 
         offset = raylib::Vector2(
-                Utils::generateRandomFloat(gridSize / 3),
-                Utils::generateRandomFloat(gridSize / 3));
+                Utils::generateRandomFloat(gridSize / 1.3),
+                Utils::generateRandomFloat(gridSize / 10) + gridSize / 3);
         _currentPos = raylib::Vector2(worldEgg->getX(), worldEgg->getY());
         _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
         _textTexture = raylib::Texture2D(_textImage);
