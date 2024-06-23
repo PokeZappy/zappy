@@ -66,7 +66,7 @@ class Bot(object):
         if self.debug_mode:
             print(f"Received action: {rec}")
         if rec == "" or rec == "dead\n":
-            print("Server disconnected")
+            # print("Server disconnected")
             sys.exit(0)
         return rec
 

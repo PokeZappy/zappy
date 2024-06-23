@@ -20,6 +20,9 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     # print(f"Received: {cli_number}")
     new = cli_number.split()
     # print(new)
-    result = list(map(int, filter(None, new)))
+    try:
+        result = list(map(int, filter(None, new[:3])))
+    except ValueError as e:
+        result = [0, 30, 30]
     # print(result)
     return result, client_socket

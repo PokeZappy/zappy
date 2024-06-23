@@ -115,3 +115,19 @@ def validate_uuid_pattern(s) -> bool:
     :return:
     """
     return bool(re.fullmatch(r'^([a-f0-9]{7})(;0~[a-f0-9]{7})*$', s))
+
+
+def extract_inventory(s) -> dict:
+    pattern = r'\[\s*food\s+(\d+),\s+linemate\s+(\d+),\s+deraumere\s+(\d+),\s+sibur\s+(\d+),\s+mendiane\s+(\d+),\s+phiras\s+(\d+),\s+thystame\s+(\d+)\s*\]'
+
+    match = re.search(pattern, s)
+    food, linemate, deraumere, sibur, mendiane, phiras, thystame = map(int, match.groups())
+    return {
+        'food': food,
+        'linemate': linemate,
+        'deraumere': deraumere,
+        'sibur': sibur,
+        'mendiane': mendiane,
+        'phiras': phiras,
+        'thystame': thystame
+    }

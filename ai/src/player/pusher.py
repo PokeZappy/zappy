@@ -55,7 +55,7 @@ class Pusher(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if self.you_should_not_pass is True:
+        if self.you_should_not_pass is True and self.start is True:
             self.queue.append('Eject')
             self.life -= self.ACTION
 
@@ -64,7 +64,8 @@ class Pusher(Player):
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
                 self.turn_to_the_north()
-            if self.got_id > 2 and self.start is False:
+            if self.got_id > 2 and self.start is False and self.path.facing:
+                print("Go TO START")
                 self.go_to_start()
         if message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3:
             self.id += 1
@@ -77,7 +78,7 @@ class Pusher(Player):
                 self.you_should_not_pass = False
         if message['msg'] == 'Non Potes dominum facti':
             self.you_should_not_pass = True
-        if message['mgs'] == 'satus testudo : ':
+        if message['msg'] == 'satus testudo : ':
             if self.id == 0 and self.start is True:
                 self.you_should_not_pass = False
             elif self.start is False and self.path.facing:
