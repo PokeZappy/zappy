@@ -10,6 +10,7 @@ all:
 	cp ./ai/zappy_ai ./zappy_ai
 	$(MAKE) -C ./gui
 	$(MAKE) -C ./server
+	@ cp ./server/zappy_server ./
 
 ai:
 	$(MAKE) -C ./ai
@@ -20,6 +21,7 @@ gui:
 
 server:
 	$(MAKE) -C ./server
+	@ cp ./server/zappy_server ./
 
 clean:
 	$(MAKE) -C ./ai clean
@@ -31,11 +33,13 @@ fclean:
 	rm -f zappy_ai
 	$(MAKE) -C ./gui fclean
 	$(MAKE) -C ./server fclean
+	@ rm -f zappy_server
 
 re:
 	$(MAKE) -C ./ai re
 	$(MAKE) -C ./gui re
 	$(MAKE) -C ./server re
+	@ cp ./server/zappy_server ./
 
 tests_run:
 	PYTHONPATH=$(shell pwd):$$PYTHONPATH $(MAKE) -C ./ai tests_run

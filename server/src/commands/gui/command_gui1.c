@@ -14,7 +14,6 @@ void cmd_msz(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(client->socket, "msz %d %d\n", server->grid->_width,
         server->grid->_height);
-    // printf("msz\n");
 }
 
 void cmd_bct(server_t *server, char *args, client_socket_t *client)
@@ -32,7 +31,6 @@ void cmd_bct(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "bct %d %d %s\n", x, y, response);
     free(response);
     free_str_array(parse_command);
-    // printf("bct\n");
 }
 
 void cmd_mct(server_t *server, char *args, client_socket_t *client)
@@ -48,7 +46,6 @@ void cmd_mct(server_t *server, char *args, client_socket_t *client)
             free(response);
         }
     }
-    // printf("mct\n");
 }
 
 void cmd_tna(server_t *server, char *args, client_socket_t *client)
@@ -61,7 +58,6 @@ void cmd_tna(server_t *server, char *args, client_socket_t *client)
         dprintf(client->socket, "tna %s\n", current->_name);
         current = TAILQ_NEXT(current, _entries);
     }
-    // printf("tna\n");
 }
 
 void cmd_pnw(server_t *server, char *args, client_socket_t *client)

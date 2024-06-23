@@ -106,7 +106,6 @@ static int handle_client_message(client_socket_t *client,
         return -1;
     }
     buffer[bytes - 1] = '\0';
-    // printf("Received from {%d}: {%s}\n", client->_id, buffer);
     handle_client_cmd(buffer, client, server);
     return 0;
 }

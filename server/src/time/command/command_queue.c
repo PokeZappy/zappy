@@ -52,6 +52,5 @@ void actl(server_t *server, client_socket_t *c, command_t *cmd, char *args)
     add_delay(server, c, delayed_command);
     TAILQ_INSERT_TAIL(&server->_head_delayed_commands, delayed_command,
     entries);
-    // print_queue(server);
     free(cmd);
 }

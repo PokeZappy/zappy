@@ -10,5 +10,4 @@
 void cmd_sgt(server_t *server, char *args, client_socket_t *client)
 {
     dprintf(client->socket, "sgt %d\n", server->arguments->_f);
-    // printf("sgt\n");
 }

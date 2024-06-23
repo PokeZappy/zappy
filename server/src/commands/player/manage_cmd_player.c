@@ -16,7 +16,6 @@ static const command_t commands[] = {
     {"Broadcast", cmd_broadcast, 7},
     {"Fork", cmd_fork, 42},
     {"Eject", cmd_eject, 7},
-    {"dead", cmd_dead, 0},
     {"Connect_nbr", cmd_connect_nbr, 0},
     {"Take", cmd_take, 7},
     {"Set", cmd_set, 7},
