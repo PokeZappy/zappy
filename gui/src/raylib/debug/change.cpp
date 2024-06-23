@@ -34,9 +34,9 @@ namespace Zappy
     void DebugMode::nextModel()
     {
         _modelIndex++;
-        if (_modelIndex >= _modelsId.size())
+        if (_modelIndex >= static_cast<int>(_modelsId.size()))
             _modelIndex = 0;
-        changeAnimation(0);
+        changeAnimationIndex(0);
         loadModel();
     }
 
@@ -45,11 +45,11 @@ namespace Zappy
         _modelIndex--;
         if (_modelIndex < 0)
             _modelIndex = _modelsId.size() - 1;
-        changeAnimation(0);
+        changeAnimationIndex(0);
         loadModel();
     }
 
-    void DebugMode::changeAnimation(int index) {
+    void DebugMode::changeAnimationIndex(size_t index) {
         if (index < _animations.size())
             _animIndex = index;
     };
@@ -57,7 +57,7 @@ namespace Zappy
     void DebugMode::changeAnimation(bool increments) {
         if (increments) {
             _animIndex++;
-            if (_animIndex >= _animations.size()) 
+            if (_animIndex >= static_cast<int>(_animations.size()))
                 _animIndex = 0;
         } else {
             _animIndex--;

@@ -15,7 +15,7 @@ namespace Zappy {
         EggRaylib(const std::shared_ptr<Egg> &worldEgg, raylib::Model &model,
             std::vector<raylib::ModelAnimation> &animations,
             float gridSize, raylib::Shader &shader, raylib::Color tint);
-        void draw(const raylib::Camera camera);
+        void draw(void);
 
         void update(void);
         int getAnimationIndex(const std::vector<std::string> &names);

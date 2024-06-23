@@ -16,10 +16,10 @@ namespace raylib {
             _image(path.c_str(), &_frames),
             _texture(_image),
             _loop(loop),
-            _currentFrame(_frames),
             _maxFrameDelay(frameDelay),
             _frameDelay(frameDelay)
             {
+                _currentFrame = _frames;
                 if (loop)
                     _animEnded = false;
             }

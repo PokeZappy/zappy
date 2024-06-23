@@ -106,6 +106,10 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+
+        for (auto &model : _models) {
+            model.second->update();
+        }
         _mainTheme.Update();
     }
 
@@ -120,7 +124,7 @@ namespace Zappy {
                     _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
                 }
 
-                _players.push_back(std::make_unique<PlayerRaylib>(player, _assetsRoot, pokemon, _models[pokemon.id], _gridSize));
+                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _models[pokemon.id], _gridSize));
             }
         }
 

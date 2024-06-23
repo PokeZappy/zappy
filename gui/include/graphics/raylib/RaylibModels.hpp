@@ -36,27 +36,25 @@ namespace Zappy {
             int indexSleep = getAnimationIndex({"sleep"});
             int indexCry = getAnimationIndex({"cry"});
             if (indexIdle != -1) {
-                _models[Animations::IDLE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, _animations[indexIdle]);
+                _models[Animations::IDLE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexIdle);
             }
             if (indexWalk != -1) {
-                _models[Animations::WALK] = std::make_shared<RaylibModel>(assetsRoot, id, shader, _animations[indexWalk]);
+                _models[Animations::WALK] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexWalk);
             }
             if (indexSleep != -1) {
-                _models[Animations::SLEEP] = std::make_shared<RaylibModel>(assetsRoot, id, shader, _animations[indexSleep]);
+                _models[Animations::SLEEP] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexSleep);
             }
             if (indexCry != -1) {
-                _models[Animations::CRY] = std::make_shared<RaylibModel>(assetsRoot, id, shader, _animations[indexCry]);
+                _models[Animations::CRY] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexCry);
             }
-            // _models[Animations::NONE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, _animations[indexCry]);
-
-            for (const auto &model : _models) {
-                _normalTexture = model.second->getTexture();
-                break;
-            }
+            _models[Animations::NONE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, -1);
+            
+            _normalTexture = _models[Animations::NONE]->getTexture();
         }
         void update();
         bool hasAnim(Animations::Type anim);
         void setShinyTexture(Animations::Type anim) { _models[anim]->setShinyTexture(_shinyTexture); };
+        void updateAnimation(Animations::Type anim) { _models[anim]->updateAnimation(_animations); };
         std::shared_ptr<RaylibModel> getModelByAnimation(Animations::Type anim) { return _models[anim]; }
         void setNormalTexture(Animations::Type anim) { _models[anim]->setNormalTexture(_normalTexture); };
 

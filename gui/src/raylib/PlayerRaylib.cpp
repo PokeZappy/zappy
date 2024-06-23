@@ -12,12 +12,11 @@ namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(
         const std::shared_ptr<Player> worldPlayer,
-        const std::string &assetsRoot,
         PokemonInfo &pkInfo,
         std::shared_ptr<RaylibModels> models,
         float gridSize) :
         AEntityRaylib(gridSize),
-        worldPlayer(worldPlayer), _assetsRoot(_assetsRoot)
+        worldPlayer(worldPlayer)
         // _successGif(_assetsRoot + "textures/success.gif", false),
         // _failureGif(_assetsRoot + "textures/failure.gif", false)
     {
@@ -46,16 +45,12 @@ namespace Zappy
 
     float PlayerRaylib::getRotation(void) const
     {
-        switch (worldPlayer->getOrientation())
-        {
-        case Orientation::NORTH:
-            return 180;
-        case Orientation::EAST:
-            return 270;
-        case Orientation::SOUTH:
-            return 0;
-        case Orientation::WEST:
-            return 90;
+        switch (worldPlayer->getOrientation()) {
+        case Orientation::NORTH: return 180;
+        case Orientation::EAST: return 270;
+        case Orientation::SOUTH: return 0;
+        case Orientation::WEST: return 90;
+        default: return 0;
         }
         return 0;
     }
@@ -109,7 +104,7 @@ namespace Zappy
         // _failureGif.update();
     }
 
-    void PlayerRaylib::draw(const raylib::Camera &camera, bool selectionMode)
+    void PlayerRaylib::draw()
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;

@@ -25,7 +25,7 @@ namespace Zappy {
         _window.SetTargetFPS(60);
         try
         {
-            _configuration.readFile(_assetsRoot + "pokemons.cfg");
+            _configuration.readFile((_assetsRoot + "pokemons.cfg").c_str());
         }
         catch (const libconfig::FileIOException &fioex)
         {
@@ -47,7 +47,7 @@ namespace Zappy {
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot);
-        // _window.ToggleFullscreen();
+        _window.ToggleFullscreen();
 
         // Create lights
         float lightHeight = _gridSize * 10.0f;
@@ -64,9 +64,6 @@ namespace Zappy {
         _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
         _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
 
-        // TODO remove this two lines
-        _camera.SetPosition(raylib::Vector3(8.9 * _gridSize, 0.9 * _gridSize, 4.7 * _gridSize));
-        _camera.SetTarget(raylib::Vector3(8.9 * _gridSize, -0.1 * _gridSize, 6.1 * _gridSize));
         // 30x30
         // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
         // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
@@ -135,6 +132,6 @@ namespace Zappy {
         _mainTheme.SetLooping(true);
         float randNum = Utils::random(80, 120) / 100.;
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);
-        _mainTheme.SetVolume(0.03);
+        _mainTheme.SetVolume(0.07);
     }
 }

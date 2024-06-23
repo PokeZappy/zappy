@@ -40,15 +40,15 @@ namespace Zappy
             drawTiles(world.getTiles());
 
             for (auto &egg : _eggs) {
-                egg->draw(_camera);
+                egg->draw();
             }
 
             for (auto &player : _players) {
                 if ((_hudMode->getTile() != nullptr) &&
-                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
-                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
+                (_hudMode->getTile()->getY() == static_cast<int>(player->worldPlayer->getX())) &&
+                (_hudMode->getTile()->getX() == static_cast<int>(player->worldPlayer->getY())))
                     _hudMode->addPlayer(player);
-                player->draw(_camera, _hudMode->activated());
+                player->draw();
             }
 
 
@@ -63,17 +63,17 @@ namespace Zappy
 
             _camera.EndMode();
 
-            Rectangle r = {
-                0,
-                GUI_HEIGHT - 250,
-                GUI_WIDTH,
-                250
-            };
+            // Rectangle r = {
+            //     0,
+            //     GUI_HEIGHT - 250,
+            //     GUI_WIDTH,
+            //     250
+            // };
 
             // GuiButton(r, "Follow");
 
             if (_hudMode->activated())
-                drawGui(world);
+                drawHud();
 
             // if (_selectionMode)
             //     GuiWindowBox(r, "Actions");

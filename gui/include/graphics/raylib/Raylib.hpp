@@ -53,7 +53,7 @@ namespace Zappy {
 
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-            void drawGui(const World &world);
+            void drawHud(void);
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
