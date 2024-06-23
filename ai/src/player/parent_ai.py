@@ -8,6 +8,7 @@ from ai.src.player.pnj import Pnj
 from ai.src.player.first_born import First_born
 from ai.src.player.north_guard import NorthGuard
 from ai.src.player.hansel import Hansel
+from ai.src.player.pusher import Pusher
 from ai.src.zappy_ai import connection
 from socket import socket
 from ai.src.gameplay.enum_gameplay import RoleInGame
@@ -31,6 +32,7 @@ class ParentAI(Player):
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
+            # TODO: uncomment this (PUSHER)
             # RoleInGame.PUSHER,
             # RoleInGame.PUSHER,
             # RoleInGame.PUSHER,
@@ -41,9 +43,16 @@ class ParentAI(Player):
             # RoleInGame.COLLECTOR,
             # RoleInGame.COLLECTOR,
             ]
-    DEFAULT_ROLE = [RoleInGame.COLLECTOR,
+    DEFAULT_ROLE = [
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL, # RoleInGame.PUSHER, (exchange hansel and pusher)
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
+                    ]
+    
+    DEFENDER_ROLE = [
+                    RoleInGame.PUSHER,
+                    RoleInGame.PUSHER,
                     RoleInGame.HANSEL,
                     ]
 
@@ -55,6 +64,7 @@ class ParentAI(Player):
         RoleInGame.PNJ: Pnj,
         RoleInGame.FIRST_BORN: First_born,
         RoleInGame.HANSEL: Hansel,
+        RoleInGame.PUSHER: Pusher,
     }
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False,
@@ -84,6 +94,7 @@ class ParentAI(Player):
         self.in_depot: int = -1
         self.exist_north = False
         self.pusher_count = 4
+        self.sencond_phase = False
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -104,7 +115,12 @@ class ParentAI(Player):
             if self.first_round[1]:
                 self.fork(RoleInGame.FIRST_BORN)
             else:
-                self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
+                if self.sencond_phase:
+                    self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
+                    if len(self.give_role) == 0 and self.pusher_count <= 24:
+                        self.satus_testudo()
+                else:
+                    self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
 
 
     # def apply_action(self, buf: str) -> None:
@@ -121,7 +137,15 @@ class ParentAI(Player):
         if len(self.give_role) == 0:
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
-        
+    
+    def count_element(self, vision: str) -> None:
+        vi = vision.replace('[', '').replace(']', '')
+        list_vision = vi.split(',')
+        case = list_vision[0].split(' ')
+        for need in self.need_ressources.keys():
+            if case[need].count(need) < self.need_ressources[need]:
+                return
+        self.sencond_phase = True
 
     def mastermind_treatment(self, buf) -> bool:
         """"
@@ -151,7 +175,7 @@ class ParentAI(Player):
                     self.broadcast_traitement(msg)
                 continue
             elif recv_type == 'look':
-                pass
+                self.count_element(msgs)
             elif recv_type == 'ko':
                 pass
             else:
@@ -309,7 +333,6 @@ class ParentAI(Player):
         print(broadcast_recv)
 
     def satus_testudo(self) -> None:
-        # TODO - @Matthias implémenter la fonction dans une boucle avec la limite de pusher_count == 24
         self.message.buf_messages('satus testudo : ', id=self.pusher_count)
         self.queue.append('Broadcast')
         self.pusher_count += 1
