@@ -14,31 +14,6 @@
 #include <regex>
 
 namespace raylib {
-    static bool naturalOrderCompare(const std::filesystem::directory_entry& entryA, const std::filesystem::directory_entry& entryB) {
-        static const std::regex regexPattern(R"((\d+)|(\D+))");
-        const std::string fileNameA = entryA.path().filename().string();
-        const std::string fileNameB = entryB.path().filename().string();
-
-        std::sregex_token_iterator iteratorA(fileNameA.begin(), fileNameA.end(), regexPattern);
-        std::sregex_token_iterator iteratorB(fileNameB.begin(), fileNameB.end(), regexPattern);
-        std::sregex_token_iterator end;
-
-        while (iteratorA != end && iteratorB != end) {
-            const std::string tokenA = iteratorA->str();
-            const std::string tokenB = iteratorB->str();
-
-            if (tokenA != tokenB) {
-                if (isdigit(tokenA[0]) && isdigit(tokenB[0])) {
-                    return std::stoi(tokenA) < std::stoi(tokenB);
-                }
-                return tokenA < tokenB;
-            }
-            ++iteratorA;
-            ++iteratorB;
-        }
-        return fileNameA.size() < fileNameB.size();
-    }
-
     class Gif {
     public:
         Gif(void) = default;
@@ -58,7 +33,12 @@ namespace raylib {
                         return;
                     }
 
-                    std::sort(entries.begin(), entries.end(), naturalOrderCompare);
+                    std::sort(entries.begin(), entries.end(),
+                        [](const std::filesystem::directory_entry &a,
+                        const std::filesystem::directory_entry &b) {
+                            return a.path().string() < b.path().string();
+                        }
+                    );
 
                     _frames = 0;
                     for (size_t i = 0; i < entries.size() && i < 2; i++) {
