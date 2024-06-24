@@ -22,6 +22,7 @@ class Vector3 : public ::Vector3 {
     Vector3(float x, float y, float z) : ::Vector3{x, y, z} {}
     Vector3(float x, float y) : ::Vector3{x, y, 0} {}
     Vector3(float x) : ::Vector3{x, 0, 0} {}
+    Vector3(float x, bool fill) : ::Vector3{x, fill ? x : 0, fill ? x : 0} {}
     Vector3() {}
 
     Vector3(::Color color) {

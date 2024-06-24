@@ -13,6 +13,8 @@ zappy_ref-2-0-2
 *.coverage
 __pycache__/
 .venv
+root
+venv
 
 *.a
 .vscode/
@@ -35,3 +37,7 @@ idle-inhibit*
 
 sys
 .DS_Store
+zappy_*.dSYM
+
+callgrind*
+gmon.out

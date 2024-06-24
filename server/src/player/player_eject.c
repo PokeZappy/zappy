@@ -32,6 +32,8 @@ void push_player(client_socket_t *pushed, player_t *pusher, server_t *server)
     if (pusher->_direction == RIGHT)
         pushed->player->_pos._x += 1;
     dprintf(pushed->socket, "eject: %d\n", relative);
+    if (!get_gui(server))
+        return;
     dprintf(get_gui(server)->socket, "pex %d\n", pushed->_id);
 }
 

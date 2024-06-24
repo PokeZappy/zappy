@@ -27,7 +27,7 @@ namespace Zappy
             }
             textColor.a = alpha;
             alpha -= 4;
-            _shellText.setColor(textColor);
+            _shellText.setFillColor(textColor);
             _shellText.setString(command.text);
             _shellText.setPosition(defaultOffsetX, defaultOffsetY);
             defaultOffsetY -= 20;

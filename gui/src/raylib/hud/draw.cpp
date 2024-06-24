@@ -6,145 +6,214 @@
 */
 
 #include "Raylib.hpp"
+#include "HudMode.hpp"
 
 namespace Zappy {
      void HudMode::drawBackground() {
-                raylib::Color white = raylib::Color::White();
-                raylib::Rectangle _backgroundSrc(0, 0, _backgroundHudTexture.width, _backgroundHudTexture.height);
-                raylib::Rectangle _backgroundDest(0, GUI_HEIGHT - 200, GUI_WIDTH, 200);
+        raylib::Color white = raylib::Color::White();
+        raylib::Rectangle _backgroundSrc(0, 0, _backgroundHudTexture.width, _backgroundHudTexture.height);
+        raylib::Rectangle _backgroundDest(0, GUI_HEIGHT - 200, GUI_WIDTH, 200);
 
-                raylib::Rectangle _attackSrc(0, 0, _attackHudTexture.width, _attackHudTexture.height);
-                raylib::Rectangle _attackDest(GUI_WIDTH - 700, GUI_HEIGHT - 200, 700, 200);
+        raylib::Rectangle _attackSrc(0, 0, _attackHudTexture.width, _attackHudTexture.height);
+        raylib::Rectangle _attackDest(GUI_WIDTH - 700, GUI_HEIGHT - 200, 700, 200);
 
-                _backgroundHudTexture.Draw(_backgroundSrc, _backgroundDest);
+        _backgroundHudTexture.Draw(_backgroundSrc, _backgroundDest);
 
-                if (_selectedTile != nullptr) {
-                    drawInventory(false);
-                } else {
-                    white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
-                    return;
-                }
 
-                if (_selectedPlayers.empty()) {
-                    _selectedPlayer = nullptr;
-                    white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
-                } else {
-                    if (_selectedPlayer == nullptr) {
-                        _selectedPlayer = _selectedPlayers[0];
-                    }
-                    drawPokemons();
-                    drawInventory(true);
-                    _attackHudTexture.Draw(_attackSrc, _attackDest);
-                }
+        std::cout << _chat << std::endl;
+        if (_chat)
+            drawChat();
+
+        if (_selectedTile != nullptr) {
+            drawInventory(false);
+        } else {
+            // white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
+            // return;
+        }
+
+        if (_selectedPlayers.empty()) {
+            if (_targetedPlayer == nullptr) {
+                 _selectedPlayer = nullptr;
+                _scrollIndex = 0;
+            } else {
+                _selectedPlayer = _targetedPlayer;
+                _scrollIndex = 0;
             }
-
-            void HudMode::drawInventory(bool player) {
-                Inventory inventory;
-                int x = player ? 900 : 0;
-                std::string title = player ? "Pokemon" : "Tile";
-                raylib::Color white = raylib::Color::White();
-                raylib::Rectangle _inventorySrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
-                raylib::Rectangle _inventoryDest(x, GUI_HEIGHT - 200, 265, 200);
-
-                if (player) {
-                    inventory = _selectedPlayer->worldPlayer->getInventory();
-                } else {
-                    inventory = _selectedTile->getInventory();
-                }
-                _inventoryHudTexture.Draw(_inventorySrc, _inventoryDest);
-                white.DrawText(title, x + 32, GUI_HEIGHT - 160, 20);
-
-
-                _pokeBallTexture.Draw(x + 39, GUI_HEIGHT - 129);
-                white.DrawText(std::to_string(inventory.getItem(1)), x + 75, GUI_HEIGHT - 129, 20);
-
-                _superBallTexture.Draw(x + 39, GUI_HEIGHT - 98);
-                white.DrawText(std::to_string(inventory.getItem(2)), x + 75, GUI_HEIGHT - 98, 20);
-
-                _hyperBallTexture.Draw(x + 39, GUI_HEIGHT - 67);
-                white.DrawText(std::to_string(inventory.getItem(3)), x + 75, GUI_HEIGHT - 67, 20);
-
-                _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
-                white.DrawText(std::to_string(inventory.getItem(0)), x + 183, GUI_HEIGHT - 160, 20);
-
-                _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
-                white.DrawText(std::to_string(inventory.getItem(4)), x + 183, GUI_HEIGHT - 129, 20);
-
-                _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
-                white.DrawText(std::to_string(inventory.getItem(5)), x + 183, GUI_HEIGHT - 98, 20);
-
-                _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
-                white.DrawText(std::to_string(inventory.getItem(6)), x + 183, GUI_HEIGHT - 67, 20);
+        }
+        if (_selectedPlayer == nullptr) {
+            if (_targetedPlayer != nullptr) {
+                // setSelectedPlayerToTarget();
+                _selectedPlayer = _targetedPlayer;
+            } else if (!_selectedPlayers.empty()){
+                _selectedPlayer = _selectedPlayers[0];
             }
+        } else {
+            verifyPlayerPosition();
+        }
+        if (_selectedPlayer != nullptr) {
+            drawPokemons();
+            drawInventory(true);
+            _attackHudTexture.Draw(_attackSrc, _attackDest);
+            drawAttacks();
+        } else if (_selectedTile == nullptr) {
+            white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
+        } else {
+            white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
+        }
+    }
 
-            void HudMode::drawPokemons() {
-                for (int i = 0; i < 4 && i < _selectedPlayers.size(); i++) {
-                    drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (i * 43));
-                }
-            }
+    void HudMode::drawAttacks() {
+        raylib::Color white = raylib::Color::White();
 
-            void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y) {
-                raylib::Color white = raylib::Color::White();
+        white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        if (_targetedPlayer == _selectedPlayer)
+            white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
+        else
+            white.DrawText("Follow (2)", 1607, GUI_HEIGHT - 156, 40);
+        white.DrawText("Heal (3)", 1288, GUI_HEIGHT - 95, 40);
+        white.DrawText("Kill (4)", 1607, GUI_HEIGHT - 95, 40);
+    }
 
-                if (pokemon == _selectedPlayer) {
-                    white.DrawText(">", 286, y, 30);
-                }
-                white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
-                white.DrawText(pokemon->infos.displayName, 402, y, 25);
-                white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 582, y, 25);
+    void HudMode::verifyPlayerPosition()
+    {
+        if (_selectedPlayer == _targetedPlayer)
+            return;
+        if (std::find(_selectedPlayers.begin(), _selectedPlayers.end(), _selectedPlayer) == _selectedPlayers.end()) {
+            if (_scrollIndex >= _selectedPlayers.size())
+                _scrollIndex = _selectedPlayers.size() - 1;
+            _selectedPlayer = _selectedPlayers[_scrollIndex];
+        }
+    }
 
-                drawType(pokemon->worldPlayer->getTeam().getName(), y);
+    void HudMode::drawInventory(bool player) {
+        Inventory inventory;
+        int x = player ? 900 : 0;
+        std::string title = player ? "Pokemon" : std::string("Tile ") + std::to_string(_selectedTile->getY()) + " " + std::to_string(_selectedTile->getX());
+        raylib::Color white = raylib::Color::White();
+        raylib::Rectangle _inventorySrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
+        raylib::Rectangle _inventoryDest(x, GUI_HEIGHT - 200, 265, 200);
+        raylib::Rectangle ballSrc(0, 0, _pokeBallTexture.width, _pokeBallTexture.height);
 
-                if (pokemon->worldPlayer->isIncanting()) {
-                    _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(815, y, 22, 29));
-                } else {
-                    _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(815, y, 22, 29));
-                }
-            }
+        if (player) {
+            inventory = _selectedPlayer->worldPlayer->getInventory();
+        } else {
+            inventory = _selectedTile->getInventory();
+        }
+        _inventoryHudTexture.Draw(_inventorySrc, _inventoryDest);
+        white.DrawText(title, x + 32, GUI_HEIGHT - 160, 20);
 
-            void HudMode::drawType(std::string type, int y) {
-                raylib::Color white = raylib::Color::White();
-                raylib::Rectangle src;                                                                                                                                                                          
-                raylib::Rectangle dest(701, y, 85, 30);
-                if (type == "bug") {
-                    src = raylib::Rectangle(0, 14, _typesTexture.width, 14);
-                } else if (type == "dark") {
-                    src = raylib::Rectangle(0, 28, _typesTexture.width, 14);
-                } else if (type == "dragon") {
-                    src = raylib::Rectangle(0, 42, _typesTexture.width, 14);
-                } else if (type == "electric") {
-                    src = raylib::Rectangle(0, 56, _typesTexture.width, 14);
-                } else if (type == "fairy") {
-                    src = raylib::Rectangle(0, 70, _typesTexture.width, 14);
-                } else if (type == "fight") {
-                    src = raylib::Rectangle(0, 84, _typesTexture.width, 14);
-                } else if (type == "fire") {
-                    src = raylib::Rectangle(0, 98, _typesTexture.width, 14);
-                } else if (type == "fly") {
-                    src = raylib::Rectangle(0, 112, _typesTexture.width, 14);
-                } else if (type == "ghost") {
-                    src = raylib::Rectangle(0, 126, _typesTexture.width, 14);
-                } else if (type == "grass") {
-                    src = raylib::Rectangle(0, 140, _typesTexture.width, 14);
-                } else if (type == "ground") {
-                    src = raylib::Rectangle(0, 154, _typesTexture.width, 14);
-                } else if (type == "ice") {
-                    src = raylib::Rectangle(0, 168, _typesTexture.width, 14);
-                } else if (type == "normal") {
-                    src = raylib::Rectangle(0, 182, _typesTexture.width, 14);
-                } else if (type == "poison") {
-                    src = raylib::Rectangle(0, 196, _typesTexture.width, 14);
-                } else if (type == "psychic") {
-                    src = raylib::Rectangle(0, 210, _typesTexture.width, 14);
-                } else if (type == "rock") {
-                    src = raylib::Rectangle(0, 224, _typesTexture.width, 14);
-                } else if (type == "steel") {
-                    src = raylib::Rectangle(0, 238, _typesTexture.width, 14);
-                } else if (type == "water") {
-                    src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
-                } else {
-                    white.DrawText(type, 701, y, 25);
-                }
-                _typesTexture.Draw(src, dest);
-            }
+        int xLeftBalls = 28;
+        int xLeftText = xLeftBalls + 35;
+        int xRightBalls = 130;
+        int xRightText = xRightBalls + 35;
+
+        _pokeBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 129, 30, 30));
+        // _pokeBallTexture.Draw(x + 45, GUI_HEIGHT - 129);
+        white.DrawText(std::to_string(inventory.getItem(1)), x + xLeftText, GUI_HEIGHT - 124, 20);
+
+        _superBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 98, 30, 30));
+        // _superBallTexture.Draw(x + 45, GUI_HEIGHT - 98);
+        white.DrawText(std::to_string(inventory.getItem(2)), x + xLeftText, GUI_HEIGHT - 93, 20);
+
+        _hyperBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 67, 30, 30));
+        // _hyperBallTexture.Draw(x + 45, GUI_HEIGHT - 67);
+        white.DrawText(std::to_string(inventory.getItem(3)), x + xLeftText, GUI_HEIGHT - 62, 20);
+
+        _foodTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 160, 30, 30));
+        // _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
+        white.DrawText(std::to_string(inventory.getItem(0)), x + xRightText, GUI_HEIGHT - 155, 20);
+
+        _honorBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 129, 30, 30));
+        // _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
+        white.DrawText(std::to_string(inventory.getItem(4)), x + xRightText, GUI_HEIGHT - 124, 20);
+
+        _luxeBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 98, 30, 30));
+        // _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
+        white.DrawText(std::to_string(inventory.getItem(5)), x + xRightText, GUI_HEIGHT - 93, 20);
+
+        _masterBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 67, 30, 30));
+        // _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
+        white.DrawText(std::to_string(inventory.getItem(6)), x + xRightText, GUI_HEIGHT - 62, 20);
+    }
+
+    void HudMode::drawPokemons() {
+        int pokemon_drawn = 0;
+        for (size_t i = _scrollIndex; i < _scrollIndex + 4 && i < _selectedPlayers.size(); i++) {
+            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43));
+        }
+    }
+
+    void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y) {
+        raylib::Color white = raylib::Color::White();
+
+        if (pokemon == _selectedPlayer) {
+            white.DrawText(">", 286, y, 30);
+        }
+        white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
+        white.DrawText(pokemon->infos.displayName, 402, y, 25);
+        white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 582, y, 25);
+
+        drawType(pokemon->worldPlayer->getTeam().getName(), y);
+
+        if (pokemon->worldPlayer->getIncantationState() == Incantation::INCANTING) {
+            _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(815, y, 22, 29));
+        } else {
+            _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(815, y, 22, 29));
+        }
+    }
+
+    void HudMode::drawChat()
+    {
+        raylib::Color black = raylib::Color(0, 0, 0, 50);
+        raylib::Color white = raylib::Color::White();
+
+        black.DrawRectangle((Vector2) {0, GUI_HEIGHT - 248}, (Vector2) {554, 41});
+        white.DrawText("> " + _inputString, 13, GUI_HEIGHT - 243, 30);
+    }
+
+    void HudMode::drawType(std::string type, int y) {
+        raylib::Color white = raylib::Color::White();
+        raylib::Rectangle src;
+        raylib::Rectangle dest(701, y, 85, 30);
+        if (type == "bug") {
+            src = raylib::Rectangle(0, 14, _typesTexture.width, 14);
+        } else if (type == "dark") {
+            src = raylib::Rectangle(0, 28, _typesTexture.width, 14);
+        } else if (type == "dragon") {
+            src = raylib::Rectangle(0, 42, _typesTexture.width, 14);
+        } else if (type == "electric") {
+            src = raylib::Rectangle(0, 56, _typesTexture.width, 14);
+        } else if (type == "fairy") {
+            src = raylib::Rectangle(0, 70, _typesTexture.width, 14);
+        } else if (type == "fight") {
+            src = raylib::Rectangle(0, 84, _typesTexture.width, 14);
+        } else if (type == "fire") {
+            src = raylib::Rectangle(0, 98, _typesTexture.width, 14);
+        } else if (type == "fly") {
+            src = raylib::Rectangle(0, 112, _typesTexture.width, 14);
+        } else if (type == "ghost") {
+            src = raylib::Rectangle(0, 126, _typesTexture.width, 14);
+        } else if (type == "grass") {
+            src = raylib::Rectangle(0, 140, _typesTexture.width, 14);
+        } else if (type == "ground") {
+            src = raylib::Rectangle(0, 154, _typesTexture.width, 14);
+        } else if (type == "ice") {
+            src = raylib::Rectangle(0, 168, _typesTexture.width, 14);
+        } else if (type == "normal") {
+            src = raylib::Rectangle(0, 182, _typesTexture.width, 14);
+        } else if (type == "poison") {
+            src = raylib::Rectangle(0, 196, _typesTexture.width, 14);
+        } else if (type == "psychic") {
+            src = raylib::Rectangle(0, 210, _typesTexture.width, 14);
+        } else if (type == "rock") {
+            src = raylib::Rectangle(0, 224, _typesTexture.width, 14);
+        } else if (type == "steel") {
+            src = raylib::Rectangle(0, 238, _typesTexture.width, 14);
+        } else if (type == "water") {
+            src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
+        } else {
+            white.DrawText(type, 701, y, 25);
+        }
+        _typesTexture.Draw(src, dest);
+    }
 }

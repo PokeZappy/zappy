@@ -19,62 +19,36 @@ namespace Zappy {
     }
 
     void DebugMode::updateNone() {
-        if (IsKeyPressed(KEY_ONE)) {
-                changeAnimation(0);
-            } else if (IsKeyPressed(KEY_TWO)) {
-                changeAnimation(1);
-            } else if (IsKeyPressed(KEY_THREE)) {
-                changeAnimation(2);
-            } else if (IsKeyPressed(KEY_FOUR)) {
-                changeAnimation(3);
-            } else if (IsKeyPressed(KEY_FIVE)) {
-                changeAnimation(4);
-            } else if (IsKeyPressed(KEY_SIX)) {
-                changeAnimation(5);
-            } else if (IsKeyPressed(KEY_SEVEN)) {
-                changeAnimation(6);
-            } else if (IsKeyPressed(KEY_EIGHT)) {
-                changeAnimation(7);
-            } else if (IsKeyPressed(KEY_NINE)) {
-                changeAnimation(8);
-            }else if (IsKeyPressed(KEY_ZERO)) {
-                switchShiny();
-            } else if (IsKeyPressed(KEY_I)) {
-                changeAnimation(false);
-            } else if (IsKeyPressed(KEY_K)) {
-                changeAnimation(true);
-            } else if (IsKeyPressed(KEY_J)) {
-                lastModel();
-            } else if (IsKeyPressed(KEY_L)) {
-                nextModel();
-            } else if (IsKeyPressed(KEY_F)) {
-                _type = FRAMESTEPPER;
-                _animFrame = 0;
-            } else if (IsKeyPressed(KEY_T)) {
-                _type = CHAT;
+        for (int i = 0; i < 9; i++) {
+            if (IsKeyPressed(KEY_ONE + i)) {
+                changeAnimationIndex(i);
             }
+        }
+        if (IsKeyPressed(KEY_ZERO)) {
+            switchShiny();
+        } else if (IsKeyPressed(KEY_I)) {
+            changeAnimation(false);
+        } else if (IsKeyPressed(KEY_K)) {
+            changeAnimation(true);
+        } else if (IsKeyPressed(KEY_J)) {
+            lastModel();
+        } else if (IsKeyPressed(KEY_L)) {
+            nextModel();
+        } else if (IsKeyPressed(KEY_F)) {
+            _type = FRAMESTEPPER;
+            _animFrame = 0;
+        } else if (IsKeyPressed(KEY_T)) {
+            _type = CHAT;
+        }
     }
 
     void DebugMode::updateFrameStepper() {
-         if (IsKeyPressed(KEY_ONE)) {
-                changeAnimation(0);
-        } else if (IsKeyPressed(KEY_TWO)) {
-            changeAnimation(1);
-        } else if (IsKeyPressed(KEY_THREE)) {
-            changeAnimation(2);
-        } else if (IsKeyPressed(KEY_FOUR)) {
-            changeAnimation(3);
-        } else if (IsKeyPressed(KEY_FIVE)) {
-            changeAnimation(4);
-        } else if (IsKeyPressed(KEY_SIX)) {
-            changeAnimation(5);
-        } else if (IsKeyPressed(KEY_SEVEN)) {
-            changeAnimation(6);
-        } else if (IsKeyPressed(KEY_EIGHT)) {
-            changeAnimation(7);
-        } else if (IsKeyPressed(KEY_NINE)) {
-            changeAnimation(8);
-        } else if (IsKeyPressed(KEY_ZERO)) {
+        for (int i = 0; i < 9; i++) {
+            if (IsKeyPressed(KEY_ONE + i)) {
+                changeAnimationIndex(i);
+            }
+        }
+        if (IsKeyPressed(KEY_ZERO)) {
             switchShiny();
         } else if (IsKeyPressed(KEY_F)) {
             _type = NONE;

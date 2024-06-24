@@ -19,6 +19,16 @@ static int calc_egg_id(server_t *server)
     return id + 1;
 }
 
+static void create_egg(egg_t *egg, client_socket_t *client, server_t *server)
+{
+    egg->_ismatthias = 0;
+    egg->_available = 600;
+    egg->_team = client->player->_team;
+    egg->_pos = client->player->_pos;
+    egg->_client_id = client->_id;
+    egg->_id = calc_egg_id(server);
+}
+
 void cmd_fork(server_t *server, char *args, client_socket_t *client)
 {
     int x = client->player->_pos._x;
@@ -27,24 +37,15 @@ void cmd_fork(server_t *server, char *args, client_socket_t *client)
 
     if (client->player->_team->_max_clients >= 1024) {
         free(egg);
-        printf("ko\n");
         return;
     }
-    client->player->_team->_max_clients += 1;
-    egg->_available = 600;
-    egg->_team = client->player->_team;
-    egg->_pos = client->player->_pos;
-    egg->_id = calc_egg_id(server);
+    create_egg(egg, client, server);
     TAILQ_INSERT_TAIL(&server->grid->_tiles[x][y]->_head_egg, egg, _entries);
     TAILQ_INSERT_TAIL(&server->_head_egg, egg, _entries);
-    dprintf(get_gui(server)->socket, "enw %d %d %d %d\n", egg->_id,
+    if (get_gui(server))
+        dprintf(get_gui(server)->socket, "enw %d %d %d %d\n", egg->_id,
         client->_id, client->player->_pos._x, client->player->_pos._y);
     dprintf(client->socket, "ok\n");
-}
-
-void cmd_dead(server_t *server, char *args, client_socket_t *client)
-{
-    printf("dead\n");
 }
 
 void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
@@ -55,5 +56,4 @@ void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(client->socket, "%d\n",
     player->_team->_max_clients - player->_team->_current_clients);
-    printf("connect_nbr\n");
 }

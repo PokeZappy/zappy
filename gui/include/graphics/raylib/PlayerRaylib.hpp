@@ -11,27 +11,29 @@
 #include "Player.hpp"
 #include "PokemonInfo.hpp"
 #include "AEntityRaylib.hpp"
+#include "rgif.hpp"
 
 namespace Zappy {
     class PlayerRaylib : public AEntityRaylib {
     public:
-        PlayerRaylib(const std::shared_ptr<Player> &worldPlayer, PokemonInfo &pkInfo,
-            size_t gridSize, raylib::Shader &shader);
-        void draw(const raylib::Camera camera, bool selectionMode);
+        PlayerRaylib(const std::shared_ptr<Player> worldPlayer,
+            PokemonInfo &pkInfo, std::shared_ptr<RaylibModels> models,
+            float gridSize);
+        void draw(void);
         void update(void);
-        void loadTextureAndModel(raylib::Shader &shader);
+        void updateModels(std::shared_ptr<RaylibModels> models);
 
-        void loadShinyTexture(void);
-        int getAnimationIndex(const std::vector<std::string> &names);
         const std::shared_ptr<Player> worldPlayer;
         PokemonInfo infos;
     private:
         float getRotation(void) const;
 
-        raylib::Model _model;
-        std::vector<raylib::ModelAnimation> _modelAnimations;
+        std::shared_ptr<RaylibModels> _models;
         size_t _currentOrientation;
         size_t _level = 0;
         float _verticalRotation = 0.0;
+        // Incantation _graphicalIncantingState = Incantation::NONE;
+        // raylib::Gif _successGif;
+        // raylib::Gif _failureGif;
     };
 } // namespace Zappy

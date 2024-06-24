@@ -7,24 +7,25 @@
 
 #include "EggRaylib.hpp"
 
+
+//TODO changer la classe pour qu'elle prenne des RaylibModels voilà
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,
-        size_t gridSize, raylib::Shader &shader, raylib::Color tint)
-        : worldEgg(egg), _model(model), _modelAnimations(animations), _tint(tint),
-        AEntityRaylib(gridSize)
+        float gridSize, raylib::Shader &shader, raylib::Color tint) :
+        AEntityRaylib(gridSize), worldEgg(egg), _model(model), _tint(tint), _modelAnimations(animations)
     {
-        _scale = 2.0f;
+        _scale = _gridSize * 0.06;
 
         _model.materials[1].shader = shader;
 
         offset = raylib::Vector2(
-                Utils::generateRandomFloat(gridSize / 3),
-                Utils::generateRandomFloat(gridSize / 3));
+                Utils::generateRandomFloat(gridSize / 1.3),
+                Utils::generateRandomFloat(gridSize / 10) + gridSize / 3);
         _currentPos = raylib::Vector2(worldEgg->getX(), worldEgg->getY());
-        _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        _textTexture = raylib::Texture2D(_textImage);
-        _textRenderTexture = LoadRenderTexture(256, 256);
+        // _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
+        // _textTexture = raylib::Texture2D(_textImage);
+        // _textRenderTexture = LoadRenderTexture(256, 256);
 
         _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
         _animationIndexes["faint"] = getAnimationIndex({"faint"});
@@ -32,30 +33,32 @@ namespace Zappy {
         _animationIndexes["cry"] = getAnimationIndex({"cry"});
         // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
 
-        for (int i = 0; i < _modelAnimations.size(); i++) {
+        // for (int i = 0; i < _modelAnimations.size(); i++) {
             // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
-        }
-
-        _height += rand() % 20;
+        // }
     }
 
     void EggRaylib::update(void)
     {
         _animFrame++;
+        if (_isDying) {
+            _animatedScale -= _gridSize / 1000.;
+        } else if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
+        }
     }
 
-    void EggRaylib::draw(const raylib::Camera camera)
+    void EggRaylib::draw(void)
     {
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude,
+            0,
             _currentPos.y * _gridSize + offset.y};
         _model.Draw(playerPos,
             raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scale, _scale, _scale),
+            raylib::Vector3(_animatedScale, true),
             _tint);
-        playerPos.y += _height + 5;
     }
 
     int EggRaylib::getAnimationIndex(const std::vector<std::string> &names)

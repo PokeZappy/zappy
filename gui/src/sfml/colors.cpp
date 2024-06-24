@@ -41,7 +41,7 @@ namespace Zappy
             switch (entityType) {
             case EntityType::PLAYER: {
                 Player *player = static_cast<Player *>(entity.get());
-                if (player->isIncanting()) {
+                if (player->getIncantationState() == Incantation::INCANTING) {
                     return sf::Color(rand() % 255, rand() % 255, rand() % 255);
                 }
                 return _entityGraphics[std::pair(EntityType::PLAYER, entityId)].color;

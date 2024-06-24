@@ -11,8 +11,7 @@ void launch_timed_function(server_t *server, int time_unit)
 {
     execute_command(server);
     if (time_unit % 20 == 0) {
-        generate_resource(server->grid);
-        cmd_mct(server, NULL, get_gui(server));
+        generate_resource(server, server->grid);
     }
 }
 

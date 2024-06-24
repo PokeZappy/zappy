@@ -10,20 +10,20 @@
 namespace Zappy {
     void DebugMode::drawModel(void) {
         if (_animIndex != -1)
-                _model.UpdateAnimation(_animations[_animIndex], _animFrame);
-            _model.Draw((Vector3) {0, 0, 0},
-            raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scaleModel, _scaleModel, _scaleModel));
+            _model.UpdateAnimation(_animations[_animIndex], _animFrame);
+        _model.Draw((Vector3) {0, 0, 0},
+        raylib::Vector3(0, 1, 0), 0,
+        raylib::Vector3(_scaleModel, _scaleModel, _scaleModel));
     }
 
     void DebugMode::drawAnimations(void) {
         raylib::Color white = raylib::Color::White();
         raylib::Color green = raylib::Color::Green();
-    
+
         raylib::Vector2 startPos(1400, 100);
         white.DrawText("Animations: (I, K)", startPos.x, startPos.y - 70, 60);
         for (size_t i = 0; i < _animations.size(); i++) {
-            if (i == _animIndex) {
+            if ((int)i == _animIndex) {
                 green.DrawText("- " + std::string(_animations[i].name), startPos.x, startPos.y, 30);
             } else {
                 white.DrawText(std::string(_animations[i].name), startPos.x, startPos.y, 30);

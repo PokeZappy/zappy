@@ -59,8 +59,8 @@ namespace Zappy
     raylib::Vector3 Raylib::getSunPosition(double elapsedTime, double cycle_duration_sec)
     {
         const double HALF_CYCLE = cycle_duration_sec / 2.0;
-        const double SUN_PEAK_HEIGHT = 1000.0;
-        const double SUN_PEAK_WIDTH = 5000.0;
+        const double SUN_PEAK_HEIGHT = 5.0 * _gridSize * _mapX;
+        const double SUN_PEAK_WIDTH = 8.0 * _gridSize * _mapY;
 
         double timeInCycle = fmod(elapsedTime, cycle_duration_sec);
 
@@ -68,7 +68,7 @@ namespace Zappy
         raylib::Vector3 sunPosition;
         // sunPosition.x = SUN_PEAK_WIDTH * (timeInCycle / cycle_duration_sec) - SUN_PEAK_WIDTH / 2;
         sunPosition.y = SUN_PEAK_HEIGHT * sin(angle);
-        sunPosition.z = 1500.0;
+        sunPosition.z = _gridSize * 40.0;
         if (timeInCycle < HALF_CYCLE) {
             sunPosition.x = -SUN_PEAK_WIDTH / 2 + (SUN_PEAK_WIDTH * (timeInCycle / HALF_CYCLE)) + _mapX * _gridSize / 2;
         } else {

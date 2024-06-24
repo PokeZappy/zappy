@@ -9,8 +9,8 @@
 
 namespace Zappy {
     void DebugMode::loadModel() {
-        _model = raylib::Model("assets/models/pokemons/" + _modelsId[_modelIndex] + ".glb");
-        _animations = raylib::ModelAnimation::Load("assets/models/pokemons/" + _modelsId[_modelIndex] + ".glb");
+        _model = raylib::Model(_assetsRoot + "models/pokemons/" + _modelsId[_modelIndex] + ".glb");
+        _animations = raylib::ModelAnimation::Load(_assetsRoot + "models/pokemons/" + _modelsId[_modelIndex] + ".glb");
         _oldTexture = _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture;
         changeTexture();
         for (int i = 0; i < _model.materialCount; i++)

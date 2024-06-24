@@ -6,94 +6,68 @@
 */
 
 #include "PlayerRaylib.hpp"
+#include <chrono>
 
 namespace Zappy
 {
-    PlayerRaylib::PlayerRaylib(const std::shared_ptr<Player> &worldPlayer,
-        PokemonInfo &pkInfo, size_t gridSize, raylib::Shader &shader)
-        : worldPlayer(worldPlayer), AEntityRaylib(gridSize),
-        _model(raylib::Model("assets/models/pokemons/" + pkInfo.id + ".glb")),
-        _modelAnimations(raylib::ModelAnimation::Load("assets/models/pokemons/" + pkInfo.id + ".glb"))
+    PlayerRaylib::PlayerRaylib(
+        const std::shared_ptr<Player> worldPlayer,
+        PokemonInfo &pkInfo,
+        std::shared_ptr<RaylibModels> models,
+        float gridSize) :
+        AEntityRaylib(gridSize),
+        worldPlayer(worldPlayer)
+        // _successGif(_assetsRoot + "textures/success.gif", false),
+        // _failureGif(_assetsRoot + "textures/failure.gif", false)
     {
+        _models = models;
+        _scale = _gridSize / 32;
+        _height = _gridSize;
         color = raylib::Color::White();
         infos = pkInfo;
-        loadShinyTexture();
-        _model.materials[1].shader = shader;
+
+
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
                 Utils::generateRandomFloat(gridSize / 3));
         _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
-        _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        _textTexture = raylib::Texture2D(_textImage);
-        _textRenderTexture = LoadRenderTexture(256, 256);
 
-        _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
-        _animationIndexes["walk"] = getAnimationIndex({"ground_run", "ground_walk"});
         // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
 
-        for (int i = 0; i < _modelAnimations.size(); i++) {
-            // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
-        }
-
-        _height += rand() % 20;
+        _height += (rand() % 20) * _gridSize / 20;
     }
 
-    void PlayerRaylib::loadTextureAndModel(raylib::Shader &shader)
+    void PlayerRaylib::updateModels(std::shared_ptr<RaylibModels> models)
     {
-        _model = raylib::Model("assets/models/pokemons/" + infos.id + ".glb");
-        loadShinyTexture();
-        _model.materials[1].shader = shader;
-        _modelAnimations = raylib::ModelAnimation::Load("assets/models/pokemons/" + infos.id + ".glb");
-    }
-
-    void PlayerRaylib::loadShinyTexture(void)
-    {
-        if (infos.shiny)
-        {
-            std::string path = "assets/textures/pokemons/" + infos.id + "_shiny.png";
-            Texture2D textureShiny = LoadTexture(path.c_str()); // Load model texture
-
-            _model.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = textureShiny;
-        }
+        _models = models;
     }
 
     float PlayerRaylib::getRotation(void) const
     {
-        switch (worldPlayer->getOrientation())
-        {
-        case Orientation::NORTH:
-            return 180;
-        case Orientation::EAST:
-            return 270;
-        case Orientation::SOUTH:
-            return 0;
-        case Orientation::WEST:
-            return 90;
+        switch (worldPlayer->getOrientation()) {
+        case Orientation::NORTH: return 180;
+        case Orientation::EAST: return 270;
+        case Orientation::SOUTH: return 0;
+        case Orientation::WEST: return 90;
+        default: return 0;
         }
         return 0;
     }
 
     void PlayerRaylib::update(void)
     {
-        if (worldPlayer->isIncanting()) {
-            _verticalRotation = sin(GetTime() * 2) * 10;
+        if (worldPlayer->getIncantationState() == Incantation::INCANTING) {
+            auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
+            _verticalRotation = sin(currentTime.count() * 2) * 10;
         } else {
             _verticalRotation = 0;
-        }
-        // Text
-        if (worldPlayer->getLevel() != _level) {
-            _level = worldPlayer->getLevel();
-            _textImage.ClearBackground(raylib::Color(0, 0, 0, 0));
-            _textImage.DrawText(std::to_string(worldPlayer->getId()), 10, 10, 80, raylib::Color::Black());
-            _textImage.DrawText(std::string("Level ") + std::to_string(_level), 10, 80, 50, raylib::Color::Black());
-            _textTexture.Update(_textImage.data);
         }
 
         // die
         if (_isDying) {
             move(raylib::Vector3((float)(rand() % 3 - 1) / 20,
-                _altitude * 1.04 + 0.01, (float)(rand() % 3 - 1) / 20));
+                _altitude * 1.04 + _gridSize * 0.01, (float)(rand() % 3 - 1) / 20));
             _scale *= 0.997;
         }
 
@@ -108,54 +82,59 @@ namespace Zappy
         if (isMoving) {
             _animFrame++;
         }
-        // float meteoriteValue = std::exp((deltaMove.x + deltaMove.y) * 10);
-        // if (meteoriteValue > 5)
-        //     _verticalRotation = meteoriteValue;
-        // _altitude = (deltaMove.x * deltaMove.x + deltaMove.y * deltaMove.y) * 100;
-        if (_animationIndexes["walk"] != -1)
-            _animIndex = _animationIndexes["walk"];
+        if (_models->hasAnim(Animations::WALK))
+            _animIndex = Animations::WALK;
         if (std::abs(_currentPos.x - posGoal.x) < 0.01 && std::abs(_currentPos.y - posGoal.y) < 0.01) {
             _currentPos = posGoal;
         }
         if (_hasIdleAnim && _currentPos == posGoal) {
-            if (_animationIndexes["idle"] != -1) {
-                _animIndex = _animationIndexes["idle"];
+            if (_models->hasAnim(Animations::IDLE)) {
+                _animIndex = Animations::IDLE;
             }
+        }
+        // if (worldPlayer->getIncantationState() != _graphicalIncantingState) {
+        //     _graphicalIncantingState = worldPlayer->getIncantationState();
+        //     if (_graphicalIncantingState == Incantation::SUCCESS) {
+        //         _successGif.reset();
+        //     } else if (_graphicalIncantingState == Incantation::FAILURE) {
+        //         _failureGif.reset();
+        //     }
+        // }
+        // _successGif.update();
+        // _failureGif.update();
+        if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
         }
     }
 
-    void PlayerRaylib::draw(const raylib::Camera camera, bool selectionMode)
+    void PlayerRaylib::draw()
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
 
         // draw
-        float scale = 0.5;
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude + std::abs(_verticalRotation * 5),
+            _altitude + std::abs(_verticalRotation * _gridSize / 10.f),
             _currentPos.y * _gridSize + offset.y};
-        if (_animIndex != -1) {
-            _model.UpdateAnimation(_modelAnimations[_animIndex], _animFrame);
-        }
-        _model.Draw(playerPos,
-            raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel()),
-            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 5.0f));
-        playerPos.y += _height + 5;
-        if (selectionMode)
-            _textTexture.DrawBillboard(camera, playerPos, 15);
-    }
 
-    int PlayerRaylib::getAnimationIndex(const std::vector<std::string> &names)
-    {
-        for (size_t i = 0; i < _modelAnimations.size(); i++) {
-            std::string animName(_modelAnimations[i].name);
-            for (size_t j = 0; j < names.size(); j++) {
-                if (animName.find(names[j]) != std::string::npos) {
-                    return i;
-                }
-            }
+        // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
+        // if (_animIndex != NONE) {
+        //     _model->updateAnimation(_animIndex, _animFrame);
+        // }
+
+
+        if (infos.shiny) {
+            _models->setShinyTexture(_animIndex);
+        } else {
+            _models->setNormalTexture(_animIndex);
         }
-        return -1;
+        _models->getModelByAnimation(_animIndex)->draw(playerPos,
+            raylib::Vector3(_verticalRotation, 1, 0),
+            _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
+            raylib::Vector3(_animatedScale, true) * (1 + _level / 4.0f));
+        playerPos.y += _height + _gridSize;
+        // _successGif.draw(camera, playerPos, _gridSize);
+        // _failureGif.draw(camera, playerPos, _gridSize);
     }
 } // namespace Zappy
