@@ -17,6 +17,9 @@ namespace Zappy {
         raylib::Rectangle _attackSrc(0, 0, _attackHudTexture.width, _attackHudTexture.height);
         raylib::Rectangle _attackDest(GUI_WIDTH - 700, GUI_HEIGHT - 200, 700, 200);
 
+
+        if (_targetedPlayer != nullptr)
+            drawLegend();
         _backgroundHudTexture.Draw(_backgroundSrc, _backgroundDest);
 
 
@@ -184,6 +187,15 @@ namespace Zappy {
         for (size_t i = _scrollIndex; i < _scrollIndex + 3 && i < _selectedPlayers.size(); i++) {
             drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43), raylib::Color::White());
         }
+    }
+
+    void HudMode::drawLegend() {
+        raylib::Rectangle _tileSrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
+        raylib::Rectangle _tileDest(612, GUI_HEIGHT - 275, 265, 200);
+
+        _inventoryHudTexture.Draw(_tileSrc, _tileDest);
+        raylib::Color::Green().DrawText(">", 648, GUI_HEIGHT - 241, 30);
+        raylib::Color::White().DrawText("Followed Pokemon", 683, GUI_HEIGHT - 233, 18);
     }
 
     void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y, raylib::Color colorArrow) {

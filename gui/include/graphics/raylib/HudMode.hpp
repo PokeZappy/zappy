@@ -77,6 +77,7 @@ namespace Zappy {
         void scrollDown(float wheel);
         void drawType(std::string type, int x, int y);
         void drawChat();
+        void drawLegend();
         void drawEntityCount(size_t graphicPlayerCount, size_t graphicEggCount, size_t worldPlayerCount, size_t worldEggCount, int x, int y);
         void setFirstPokemonTarget();
         void followTarget(raylib::Camera &camera);
