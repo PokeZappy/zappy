@@ -155,7 +155,8 @@ class Incantator(Player):
                 # print(self)
             elif recv_type == 'look':
                 if self.ready == False:
-                    self.addapt_map(msgs)
+                    self.addapt_map(msgs) #TODO: @Cyprien: implement a real look, and only watch the case 0, put a condition of level up and if true call incantation
+                                          #TODO: @Cyprien: if false, call the inventory
             elif recv_type == 'elevation':
                 if self.debug_mode:
                     print('elevation: incant', msgs)
@@ -265,7 +266,7 @@ class Incantator(Player):
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
-            self.queue.append('Incantation')
+            self.queue.append('Incantation') #TODO: @Cyprien: change the incantation to look
             return
         if self.dir == None:
             self.queue.append('Look')
@@ -279,7 +280,7 @@ class Incantator(Player):
                     self.queue.append('Incantation')
                     self.have_linemate = False
                 else:
-                    self.queue.append('Incantation')
+                    self.queue.append('Incantation') #TODO: @Cyprien: change the incantation to look
                 self.ready = False
             else:
                 self.queue.append('Inventory')
@@ -294,7 +295,7 @@ class Incantator(Player):
             self.ready = True
         if self.level >= 2:
             self.queue.append('Inventory')
-            self.queue.append('Incantation')
+            self.queue.append('Incantation') #TODO: @Cyprien: change the incantation to look
         # if self.allowed_incantation > self.level:
         #     self.queue.append('Incantation')
         # else:
