@@ -26,7 +26,8 @@ void spawn_resource(server_t *server, grid_t *grid, int resource_type)
     int y = rand() % grid->height;
 
     grid->tiles[y][x]->items[resource_type] += 1;
-    bct(server, (vector_t){x, y});
+    if (!server)
+        bct(server, (vector_t){x, y});
 }
 
 void generate_resource(server_t *server, grid_t *grid)

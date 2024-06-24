@@ -47,7 +47,7 @@ static int init_server(server_t *server, server_arg_t *arguments)
     TAILQ_INIT(&server->head_client_sockets);
     TAILQ_INIT(&server->head_delayed_commands);
     TAILQ_INIT(&server->head_egg);
-    server->grid = init_grid(server, arguments->c, arguments->y);
+    server->grid = init_grid(server, arguments->x, arguments->y);
     init_all_teams(server);
     server->socket = socket(AF_INET, SOCK_STREAM, 0);
     if (server->socket == -1) {
