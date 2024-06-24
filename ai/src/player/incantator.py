@@ -174,7 +174,7 @@ class Incantator(Player):
                     self.queue.append(('Take', 'food'))
                     self.queue.append('Incantation')
             elif recv_type == 'broadcast':
-                if msgs[0] == 'ko':
+                if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)

@@ -178,7 +178,7 @@ class ParentAI(Player):
                     # print('I take food')
                     # self.life += self.FOOD
             elif recv_type == 'broadcast':
-                if msgs[0] == 'ko':
+                if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)

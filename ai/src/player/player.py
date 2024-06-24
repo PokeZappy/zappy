@@ -195,6 +195,7 @@ class Player(Bot):
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
+            print('uuuuuuuuuuuuuuuuuuuuuuuuuui')
             self.incantation()
         elif action[0] == 'Set':
             self.set_obj(action[1])
@@ -254,7 +255,7 @@ class Player(Bot):
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                # print('elevation :', msgs)
+                print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':

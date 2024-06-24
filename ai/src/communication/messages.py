@@ -82,8 +82,8 @@ class Messages(object):
         and processed message details.
         """
         self.niktamer = message
-        # if message == "" or message == "\n":
-        #     return [('ko', 'ko')]
+        if message == "" or message == "\n":
+            return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
