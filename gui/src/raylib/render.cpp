@@ -84,7 +84,7 @@ namespace Zappy
             // GuiButton(r, "Follow");
 
             if (_hudMode->activated()) {
-                drawHud();
+                drawHud(world);
 
                 // if (_selectionMode)
                 //     GuiWindowBox(r, "Actions");

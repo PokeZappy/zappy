@@ -158,7 +158,7 @@ namespace Zappy
             else
                 egg = std::make_shared<Egg>(id, idPlayer, x, y, getPlayer(idPlayer)->getTeam());
             addEgg(egg);
-            addShellCommand("New egg E" + std::to_string(id) + " laid by player",
+            addShellCommand("New egg E" + std::to_string(id) + " laid by player T" + std::to_string(idPlayer),
                 getEgg(id));
         }
         else if (commandName == "ebo") { // player connection for an egg

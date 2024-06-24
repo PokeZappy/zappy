@@ -58,6 +58,8 @@
         "*.h++": "cpp",
         "utils.h": "c",
         "commands.h": "c",
-        "server.h": "c"
+        "server.h": "c",
+        "bitset": "cpp",
+        "regex": "cpp"
     }
 }

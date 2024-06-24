@@ -22,7 +22,7 @@ namespace Zappy {
             void setInventory(const Inventory &inventory) { _inventory = inventory; }
             // void addPlayer(std::unique_ptr<Player> &player) { _players.push_back(std::move(player)); }
 
-            Inventory &getInventory() { return _inventory; }
+            const Inventory &getInventory() const { return _inventory; }
             size_t getItem(size_t index) const { return _inventory.getItem(index); }
             size_t getX() { return _x; }
             size_t getY() { return _y; }

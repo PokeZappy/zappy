@@ -11,7 +11,7 @@ namespace Zappy {
     void Raylib::handleKeys(void)
     {
         float moveYSpeed = _gridSize / 15.;
-        if (debugMode->getType() != CHAT) {
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
              if (IsKeyDown(KEY_SPACE)) {
             _camera.position.y += moveYSpeed;
             _camera.target.y += moveYSpeed;
@@ -21,19 +21,21 @@ namespace Zappy {
                 _camera.position.y -= moveYSpeed;
                 _camera.target.y -= moveYSpeed;
             }
-        }
-        if (IsKeyPressed(KEY_N)) {
+
+            if (IsKeyPressed(KEY_N)) {
             _hudMode->switchState();
+            }
+
+            if (IsKeyPressed(KEY_P)) {
+                if (debugMode->activated()) {
+                    debugMode->desactive(_camera, _defaultCameraPosition,
+                        _defaultCameraTarget, _defaultAmbientLight);
+                } else {
+                    debugMode->activate(_camera);
+                }
+        }
         }
 
-        if (IsKeyPressed(KEY_P)) {
-            if (debugMode->activated() && debugMode->getType() == NONE) {
-                debugMode->desactive(_camera, _defaultCameraPosition,
-                    _defaultCameraTarget, _defaultAmbientLight);
-            } else {
-                debugMode->activate(_camera);
-            }
-        }
         if (debugMode->activated()) {
             debugMode->update();
         } else if (!_hudMode->activated()) {

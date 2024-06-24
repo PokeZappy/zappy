@@ -31,6 +31,17 @@ namespace Zappy {
             stream >> food >> linemate >> deraumere >> sibur >> mendiane
                 >> phiras >> thystame;
         }
+        Inventory& operator+=(const Inventory& other) {
+        this->food += other.food;
+        this->linemate += other.linemate;
+        this->deraumere += other.deraumere;
+        this->sibur += other.sibur;
+        this->mendiane += other.mendiane;
+        this->phiras += other.phiras;
+        this->thystame += other.thystame;
+        return *this;  // Retourne une référence à l'objet actuel
+    }
+
         ~Inventory() = default;
         size_t getItem(size_t index) const {
             switch ((Item)index) {
