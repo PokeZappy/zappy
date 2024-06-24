@@ -12,10 +12,10 @@
 #include "server.h"
 
 typedef struct team_s {
-    char *_name; // name of the team
-    int _max_clients; // max number of clients
-    int _current_clients; // current number of clients
-    TAILQ_ENTRY(team_s) _entries; // list of teams
+    char *name; // name of the team
+    int max_clients; // max number of clients
+    int current_clients; // current number of clients
+    TAILQ_ENTRY(team_s) entries; // list of teams
 } team_t;
 
 team_t *init_team(char *name, int max_clients);

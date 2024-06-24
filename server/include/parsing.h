@@ -13,14 +13,14 @@
 #include <stdlib.h>
 
 typedef struct {
-    int _p; // port number
-    int _x; // width of the world
-    int _y; // height of the world
-    int _c; // number of authorized clients per team
-    int _f; // reciprocal of time unit for execution of actions
-    char **_n; // name of the team member
+    int p; // port number
+    int x; // width of the world
+    int y; // height of the world
+    int c; // number of authorized clients per team
+    int f; // reciprocal of time unit for execution of actions
+    char **n; // name of the team member
 
-    int _num_names; // How many names there are ?
+    int num_names; // How many names there are ?
 } server_arg_t;
 
 server_arg_t *parsing(int ac, char **av);

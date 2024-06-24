@@ -9,17 +9,17 @@
 #include "../../include/server.h"
 #include "../../include/utils.h"
 
-int player_same_pos_and_level(server_t *server, player_t *player)
+int player_samepos_and_level(server_t *server, player_t *player)
 {
     client_socket_t *current;
     int number = 0;
 
-    TAILQ_FOREACH(current, &server->_head_client_sockets, entries) {
+    TAILQ_FOREACH(current, &server->head_client_sockets, entries) {
         if (!current->player)
             continue;
-        if (current->player->_pos._x == player->_pos._x &&
-            current->player->_pos._y == player->_pos._y &&
-            current->player->_level == player->_level)
+        if (current->player->pos.x == player->pos.x &&
+            current->player->pos.y == player->pos.y &&
+            current->player->level == player->level)
             number++;
     }
     return number;
@@ -27,46 +27,46 @@ int player_same_pos_and_level(server_t *server, player_t *player)
 
 bool check_incantation(server_t *server, player_t *player)
 {
-    incantation_t incantation = incantations[player->_level - 1];
+    incantation_t incantation = incantations[player->level - 1];
     int players = 0;
-    tiles_t *tile = server->grid->_tiles[player->_pos._y][player->_pos._x];
+    tiles_t *tile = server->grid->tiles[player->pos.y][player->pos.x];
 
     for (int i = 0; i < 7; i++) {
-        if (tile->_items[i] < incantation._objects_required[i])
+        if (tile->items[i] < incantation.objects_required[i])
             return false;
     }
-    players = player_same_pos_and_level(server, player);
-    if (players < incantation._players_required)
+    players = player_samepos_and_level(server, player);
+    if (players < incantation.players_required)
         return false;
     return true;
 }
 
 void add_delay_participants(server_t *server, client_socket_t *client)
 {
-    delayed_command_t *command = TAILQ_FIRST(&server->_head_delayed_commands);
+    delayed_command_t *command = TAILQ_FIRST(&server->head_delayed_commands);
 
     while (command) {
-        if (command->_client == client)
-            add_seconds(&command->_delay, 300 / server->arguments->_f);
+        if (command->client == client)
+            add_seconds(&command->delay, 300 / server->arguments->f);
         command = TAILQ_NEXT(command, entries);
     }
 }
 
 client_socket_t **rip(server_t *server, player_t *player)
 {
-    int players_count = player_same_pos_and_level(server, player);
+    int players_count = player_samepos_and_level(server, player);
     client_socket_t **participants = (client_socket_t **)
     malloc(sizeof(player_t *) * (players_count + 1));
     client_socket_t *current;
     int i = 0;
 
-    for (current = TAILQ_FIRST(&server->_head_client_sockets);
+    for (current = TAILQ_FIRST(&server->head_client_sockets);
     current; current = TAILQ_NEXT(current, entries)) {
         if (!current->player)
             continue;
-        if (current->player->_pos._x == player->_pos._x &&
-            current->player->_pos._y == player->_pos._y &&
-            current->player->_level == player->_level) {
+        if (current->player->pos.x == player->pos.x &&
+            current->player->pos.y == player->pos.y &&
+            current->player->level == player->level) {
             participants[i] = find_client_by_player(server, current->player);
             add_delay_participants(server, participants[i]);
             i++;
@@ -80,14 +80,14 @@ void create_current_incantation(server_t *server, player_t *player)
 {
     cmd_incantation_t *cmd_incantation = (cmd_incantation_t *)
     malloc(sizeof(cmd_incantation_t));
-    vector_t pos = {player->_pos._y, player->_pos._x};
+    vector_t pos = {player->pos.y, player->pos.x};
 
     cmd_incantation->organizer = find_client_by_player(server, player);
-    cmd_incantation->_level = player->_level;
+    cmd_incantation->level = player->level;
     cmd_incantation->tile_vector = pos;
     cmd_incantation->participants = rip(server, player);
     cmd_incantation->number_of_participants =
-    player_same_pos_and_level(server, player);
+    player_samepos_and_level(server, player);
     send_gui_elevation(server, cmd_incantation, player);
-    TAILQ_INSERT_TAIL(&server->_head_incantation, cmd_incantation, entries);
+    TAILQ_INSERT_TAIL(&server->head_incantation, cmd_incantation, entries);
 }

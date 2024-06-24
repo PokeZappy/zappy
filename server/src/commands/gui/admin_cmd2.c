@@ -17,7 +17,7 @@ void hack_player_health(server_t *server, char *args, client_socket_t *client)
     if (sscanf(args + 12, "%d %d", &id, &health) == 2) {
         tmp = find_client_by_socket(server, id);
         if (tmp != NULL)
-            tmp->player->_health = health;
+            tmp->player->health = health;
     }
 }
 
@@ -28,7 +28,7 @@ void kill_player(server_t *server, char *args, client_socket_t *client)
 
     if (sscanf(args + 5, "%d", &id) == 1) {
         tmp = find_client_by_socket(server, id);
-        TAILQ_REMOVE(&server->_head_client_sockets, tmp, entries);
+        TAILQ_REMOVE(&server->head_client_sockets, tmp, entries);
         close(tmp->socket);
     }
 }

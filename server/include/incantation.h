@@ -8,9 +8,9 @@
 #pragma once
 
 typedef struct incantation_s {
-    int _level;
-    int _players_required;
-    int _objects_required[7];
+    int level;
+    int players_required;
+    int objects_required[7];
 } incantation_t;
 
 static const incantation_t incantations[] = {
