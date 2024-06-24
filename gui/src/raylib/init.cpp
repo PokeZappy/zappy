@@ -22,9 +22,9 @@ namespace Zappy {
         _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
-        _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 1, _gridSize / 2)),
-        _incantationSuccessGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 1, _gridSize / 2)),
-        _incantationFailGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 1, _gridSize / 2)),
+        _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 0, _gridSize / 2)),
+        _incantationSuccessGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
+        _incantationFailGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),
         _socket(socket)
     {
         _window.SetTargetFPS(60);
