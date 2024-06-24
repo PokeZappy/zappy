@@ -22,10 +22,6 @@ namespace Zappy {
             drawLegend();
         _backgroundHudTexture.Draw(_backgroundSrc, _backgroundDest);
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (_chat)
             drawChat();
 
