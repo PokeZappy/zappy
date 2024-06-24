@@ -15,7 +15,7 @@ char *print_player_inventory(player_t *player)
     sprintf(result, "[");
     for (int i = 1; i < ITEM_PER_TILE; i++) {
         sprintf(result, "%s%s %d", result, object_names[i],
-        player->_inventory[i]);
+        player->inventory[i]);
         if (i != 6)
             sprintf(result, "%s, ", result);
     }
@@ -27,8 +27,8 @@ char *get_player_inventory(player_t *player)
 {
     char *content = (char *)malloc(sizeof(char) * 1024);
 
-    sprintf(content, "%d %d %d %d %d %d %d", player->_inventory[0],
-        player->_inventory[1], player->_inventory[2], player->_inventory[3],
-        player->_inventory[4], player->_inventory[5], player->_inventory[6]);
+    sprintf(content, "%d %d %d %d %d %d %d", player->inventory[0],
+        player->inventory[1], player->inventory[2], player->inventory[3],
+        player->inventory[4], player->inventory[5], player->inventory[6]);
     return content;
 }

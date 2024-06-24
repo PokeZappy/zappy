@@ -7,27 +7,27 @@
 
 #include "../../include/player.h"
 
-void check_player_position(player_t *player, int map_width, int map_height)
+void check_playerposition(player_t *player, int map_width, int map_height)
 {
-    if (player->_pos._x < 0)
-        player->_pos._x = map_width - 1;
-    if (player->_pos._x >= map_width)
-        player->_pos._x = 0;
-    if (player->_pos._y < 0)
-        player->_pos._y = map_height - 1;
-    if (player->_pos._y >= map_height)
-        player->_pos._y = 0;
+    if (player->pos.x < 0)
+        player->pos.x = map_width - 1;
+    if (player->pos.x >= map_width)
+        player->pos.x = 0;
+    if (player->pos.y < 0)
+        player->pos.y = map_height - 1;
+    if (player->pos.y >= map_height)
+        player->pos.y = 0;
 }
 
 void player_move(player_t *player, int map_width, int map_height)
 {
-    if (player->_direction == UP)
-        player->_pos._y -= 1;
-    if (player->_direction == DOWN)
-        player->_pos._y += 1;
-    if (player->_direction == LEFT)
-        player->_pos._x -= 1;
-    if (player->_direction == RIGHT)
-        player->_pos._x += 1;
-    check_player_position(player, map_width, map_height);
+    if (player->direction == UP)
+        player->pos.y -= 1;
+    if (player->direction == DOWN)
+        player->pos.y += 1;
+    if (player->direction == LEFT)
+        player->pos.x -= 1;
+    if (player->direction == RIGHT)
+        player->pos.x += 1;
+    check_playerposition(player, map_width, map_height);
 }

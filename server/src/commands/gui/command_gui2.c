@@ -16,8 +16,8 @@ void cmd_ppo(server_t *server, char *args, client_socket_t *client)
 
     if (!client || !is_client_gui(client) || !cl->player)
         return;
-    dprintf(client->socket, "ppo %d %d %d %d\n", cl->_id, cl->player->_pos._x,
-    cl->player->_pos._y, cl->player->_direction + 1);
+    dprintf(client->socket, "ppo %d %d %d %d\n", cl->id, cl->player->pos.x,
+    cl->player->pos.y, cl->player->direction + 1);
 }
 
 void cmd_plv(server_t *server, char *args, client_socket_t *client)
@@ -28,7 +28,7 @@ void cmd_plv(server_t *server, char *args, client_socket_t *client)
 
     if (!client || !is_client_gui(client) || !cl->player)
         return;
-    dprintf(client->socket, "plv %d %d\n", cl->_id, cl->player->_level);
+    dprintf(client->socket, "plv %d %d\n", cl->id, cl->player->level);
 }
 
 void cmd_pin(server_t *server, char *args, client_socket_t *client)
@@ -41,7 +41,7 @@ void cmd_pin(server_t *server, char *args, client_socket_t *client)
     if (!client || !is_client_gui(client) || !cl->player)
         return;
     response = get_player_inventory(cl->player);
-    dprintf(client->socket, "pin %d %d %d %s\n", cl->_id,
-    cl->player->_pos._x, cl->player->_pos._y, response);
+    dprintf(client->socket, "pin %d %d %d %s\n", cl->id,
+    cl->player->pos.x, cl->player->pos.y, response);
     free(response);
 }

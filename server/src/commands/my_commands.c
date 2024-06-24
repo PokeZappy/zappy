@@ -10,8 +10,8 @@
 
 void exit_command(server_t *server, char *args, client_socket_t *client)
 {
-    printf("Client requested exit {%d}\n", client->_id);
+    printf("Client requested exit {%d}\n", client->id);
     close(client->socket);
-    TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+    TAILQ_REMOVE(&server->head_client_sockets, client, entries);
     free_client(client);
 }

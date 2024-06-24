@@ -19,7 +19,7 @@ bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl)
 
 cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
 {
-    cmd_incantation_t *current = TAILQ_FIRST(&s->_head_incantation);
+    cmd_incantation_t *current = TAILQ_FIRST(&s->head_incantation);
 
     while (current) {
         if (current->organizer == c)
@@ -31,7 +31,7 @@ cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
     return NULL;
 }
 
-bool player_still_on_pos(cmd_incantation_t *current)
+bool player_still_onpos(cmd_incantation_t *current)
 {
     client_socket_t *cli;
 
@@ -39,8 +39,8 @@ bool player_still_on_pos(cmd_incantation_t *current)
         if (!current->participants[i])
             return false;
         cli = current->participants[i];
-        if (cli->player->_pos._x != current->tile_vector._x ||
-        cli->player->_pos._y != current->tile_vector._y)
+        if (cli->player->pos.x != current->tile_vector.x ||
+        cli->player->pos.y != current->tile_vector.y)
             return false;
     }
     return true;
@@ -48,7 +48,7 @@ bool player_still_on_pos(cmd_incantation_t *current)
 
 void free_incantation(server_t *server, cmd_incantation_t *current)
 {
-    TAILQ_REMOVE(&server->_head_incantation, current, entries);
+    TAILQ_REMOVE(&server->head_incantation, current, entries);
     free(current->participants);
     free(current);
 }
@@ -56,16 +56,16 @@ void free_incantation(server_t *server, cmd_incantation_t *current)
 bool check_post_incantation(server_t *server, client_socket_t *client)
 {
     cmd_incantation_t *current = find_incantation(server, client);
-    incantation_t incantation = incantations[client->player->_level - 1];
-    tiles_t *tile = server->grid->_tiles[current->tile_vector._y]
-    [current->tile_vector._x];
+    incantation_t incantation = incantations[client->player->level - 1];
+    tiles_t *tile = server->grid->tiles[current->tile_vector.y]
+    [current->tile_vector.x];
 
-    if (!player_still_on_pos(current))
+    if (!player_still_onpos(current))
         return false;
     for (int i = 0; i < 7; i++) {
-        if (tile->_items[i] < incantation._objects_required[i])
+        if (tile->items[i] < incantation.objects_required[i])
             return false;
-        tile->_items[i] -= incantation._objects_required[i];
+        tile->items[i] -= incantation.objects_required[i];
     }
     return true;
 }
