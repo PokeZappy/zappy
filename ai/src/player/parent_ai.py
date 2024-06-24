@@ -147,7 +147,7 @@ class ParentAI(Player):
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
-        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.sencond_phase == False:
+        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
 
 
@@ -397,6 +397,6 @@ class ParentAI(Player):
         print(broadcast_recv)
 
     def satus_testudo(self) -> None:
-        self.message.buf_messages('satus testudo : ', id=self.pusher_count)
+        self.message.buf_messages('satus testudo : ', my_id=self.pusher_count)
         self.queue.append('Broadcast')
         self.pusher_count += 1
