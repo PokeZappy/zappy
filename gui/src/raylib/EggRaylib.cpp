@@ -41,6 +41,11 @@ namespace Zappy {
     void EggRaylib::update(void)
     {
         _animFrame++;
+        if (_isDying) {
+            _animatedScale -= _gridSize / 1000.;
+        } else if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
+        }
     }
 
     void EggRaylib::draw(void)
@@ -52,7 +57,7 @@ namespace Zappy {
             _currentPos.y * _gridSize + offset.y};
         _model.Draw(playerPos,
             raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scale, true),
+            raylib::Vector3(_animatedScale, true),
             _tint);
     }
 

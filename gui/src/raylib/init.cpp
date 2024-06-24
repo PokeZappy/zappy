@@ -58,15 +58,17 @@ namespace Zappy {
         // _lights[3] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, 0 }, Vector3Zero(), BLUE, _shader);
 
         // -- Camera --
-        // _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
-        // _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+        //* Front of the scene
+        // _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
+        // _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
+        //* Menu
+        // First proposal
+        // _camera.SetPosition(raylib::Vector3(4.4, 7.5, -5) * _gridSize);
+        // _camera.SetTarget(raylib::Vector3(4.4, 7.5, -7) * _gridSize);
 
-        _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
-        _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
+        _camera.SetPosition(raylib::Vector3(4.4, 10, -5) * _gridSize);
+        _camera.SetTarget(raylib::Vector3(4.4, 10, -7) * _gridSize);
 
-        // 30x30
-        // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
-        // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
         // DisableCursor();
 
         // Load floor texture
@@ -126,6 +128,7 @@ namespace Zappy {
             return tileCount / 2 * gridSize - correction;
         };
 
+        // Music
         InitAudioDevice();
         _mainTheme = raylib::Music(_assetsRoot + MAIN_THEME_PATH);
         _mainTheme.Play();
@@ -133,5 +136,12 @@ namespace Zappy {
         float randNum = Utils::random(80, 120) / 100.;
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);
         _mainTheme.SetVolume(0.07);
+
+        // Menu gif
+        std::string menuPath = "menu/";
+        menuPath += Utils::random(0, 1) == 0 ? "day/" : "dawn/";
+        _menuIntroGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_intro", false, 1);
+        _menuIntroGif->reset();
+        _menuGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_main", true, 1);
     }
 }
