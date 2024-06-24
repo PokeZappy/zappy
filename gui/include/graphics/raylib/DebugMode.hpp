@@ -23,7 +23,8 @@ namespace Zappy {
     public:
         DebugMode(const std::string &assetsRoot, raylib::Shader &shader, float gridSize);
         void activate(raylib::Camera &camera);
-        void desactive(raylib::Camera &camera);
+        void desactive(raylib::Camera &camera, const raylib::Vector3 &defaultCamPos,
+            const raylib::Vector3 &defaultCamTarget, float defaultAmbientLight);
         void changeAnimationIndex(size_t index);
         void changeAnimation(bool increments);
         void changeModel(std::string idModel);

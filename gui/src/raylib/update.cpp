@@ -30,7 +30,8 @@ namespace Zappy {
 
         if (IsKeyPressed(KEY_P)) {
             if (debugMode->activated() && debugMode->getType() == NONE) {
-                debugMode->desactive(_camera);
+                debugMode->desactive(_camera, _defaultCameraPosition,
+                    _defaultCameraTarget, _defaultAmbientLight);
             } else {
                 debugMode->activate(_camera);
             }
@@ -48,11 +49,11 @@ namespace Zappy {
                 _arena = raylib::Model(_assetsRoot + "local/boxing_ring.glb");
                 for (int i = 0; i < _arena.materialCount; i++)
                     _arena.materials[i].shader = _shader;
-                _arenaScale = _gridSize * 1.35;
-                _arenaAltitudeScale = 0.2;
+                _arenaScale = _gridSize * 0.0265;
+                _arenaAltitudeScale = _gridSize * 80;
                 getArenaOffset = [](size_t tileCount, float gridSize) -> float {
                     (void)gridSize;
-                    return - 30 - (float)tileCount * 7.;
+                    return - gridSize * 0.5 - (float)tileCount * 0.14 * gridSize;
                 };
             } else if (IsKeyPressed(KEY_T)) {
                 _mapX = 10;
@@ -99,7 +100,9 @@ namespace Zappy {
         for (int i = 0; i < 2; i++) {
             _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
-            _lights[i].color =  newColor.Brightness(_lights[i].position.y * 1.f / 1000.f - (i == 0 ? 0.6f : 0.8f));
+            float brightness = _lights[i].position.y / _gridSize / 50;
+            // std::cout << "i" << std::to_string(i) << " height: " << _lights[i].position.y << ", brightness value: " << brightness << std::endl;
+            _lights[i].color =  newColor.Brightness(brightness * (i == 0 ? 1.0f : 0.3f));
             // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
             // else _lights[i].enabled = true;
             UpdateLightValues(_shader, _lights[i]);

@@ -36,8 +36,6 @@
 #include "ClientSocket.hpp"
 
 namespace Zappy {
-
-
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
@@ -70,6 +68,8 @@ namespace Zappy {
             const std::string &_assetsRoot;
             raylib::Window _window;
             raylib::Camera _camera;
+            raylib::Vector3 _defaultCameraPosition;
+            raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
@@ -115,6 +115,7 @@ namespace Zappy {
             // Text
             Texture2D _textTexture;
 
+            float _defaultAmbientLight = 0.3f;
             raylib::Shader _shader;
             Light _lights[MAX_LIGHTS];
 
@@ -126,9 +127,9 @@ namespace Zappy {
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 
-            // Server socket
-            ClientSocket &_socket;
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+            // Server socket
+            ClientSocket &_socket;
     };
 }
