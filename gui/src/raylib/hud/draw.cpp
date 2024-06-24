@@ -28,14 +28,26 @@ namespace Zappy {
 
         if (_selectedPlayers.empty()) {
             _selectedPlayer = nullptr;
+            _scrollIndex = 0;
             white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
         } else {
             if (_selectedPlayer == nullptr) {
                 _selectedPlayer = _selectedPlayers[0];
+            } else {
+                verifyPlayerPosition();
             }
             drawPokemons();
             drawInventory(true);
             _attackHudTexture.Draw(_attackSrc, _attackDest);
+        }
+    }
+
+    void HudMode::verifyPlayerPosition()
+    {
+        if (std::find(_selectedPlayers.begin(), _selectedPlayers.end(), _selectedPlayer) == _selectedPlayers.end()) {
+            if (_scrollIndex >= _selectedPlayers.size())
+                _scrollIndex = _selectedPlayers.size() - 1;
+            _selectedPlayer = _selectedPlayers[_scrollIndex];
         }
     }
 
@@ -79,8 +91,9 @@ namespace Zappy {
     }
 
     void HudMode::drawPokemons() {
-        for (size_t i = 0; i < 4 && i < _selectedPlayers.size(); i++) {
-            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (i * 43));
+        int pokemon_drawn = 0;
+        for (size_t i = _scrollIndex; i < _scrollIndex + 4 && i < _selectedPlayers.size(); i++) {
+            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43));
         }
     }
 

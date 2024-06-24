@@ -46,7 +46,7 @@ namespace Zappy {
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
-        _hudMode = std::make_unique<HudMode>(_assetsRoot);
+        _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
         _window.ToggleFullscreen();
 
         // Create lights

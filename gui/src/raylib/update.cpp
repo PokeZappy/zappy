@@ -11,6 +11,7 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
+        _hudMode->clearPlayers();
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
@@ -26,6 +27,7 @@ namespace Zappy {
         if (IsKeyPressed(KEY_N)) {
             _hudMode->switchState();
         }
+
         if (IsKeyPressed(KEY_P)) {
             if (debugMode->activated() && debugMode->getType() == NONE) {
                 debugMode->desactive(_camera);
@@ -106,6 +108,27 @@ namespace Zappy {
         updatePlayers(world);
         updateEggs(world);
         testEvolution();
+
+        for (auto &player : _players) {
+                if ((_hudMode->getTile() != nullptr) &&
+                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
+                    _hudMode->addPlayer(player);
+        }
+
+        if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            _hudMode->setFirstPokemonTarget();
+        
+        if (_hudMode->activated())
+            _hudMode->followTarget(_camera);
+
+        float wheel = GetMouseWheelMove();
+        if (wheel > 0 && _hudMode->activated()) {
+            _hudMode->scrollUp(wheel);
+        } else if (wheel < 0 && _hudMode->activated()) {
+            _hudMode->scrollDown(wheel);
+        }
+
 
         for (auto &model : _models) {
             model.second->update();
