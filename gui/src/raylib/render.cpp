@@ -45,15 +45,7 @@ namespace Zappy
                     player->draw();
                 }
             }
-            //* First proposal
-            // static raylib::Vector3 menuPos = raylib::Vector3(4.4, 7.5, -9) * _gridSize;
-            // static float menuScale = _gridSize * 4;
 
-            //* Second proposal
-            // static raylib::Vector3 menuPos = raylib::Vector3(4.4, 10, -9.5) * _gridSize;
-            // static float menuScale = _gridSize * 4;
-
-            //* Third proposal
             static raylib::Vector3 menuPos = raylib::Vector3(4.4, 10, -9.5) * _gridSize;
             static float menuScale = _gridSize / 200;
 
@@ -70,6 +62,12 @@ namespace Zappy
             //     if (_lights[i].enabled) DrawSphereEx(_lights[i].position, 100, 20, 20, _lights[i].color);
             //     else DrawSphereWires(_lights[i].position, 20, 8, 8, ColorAlpha(_lights[i].color, 0.3f));
             // }
+
+            for (auto &player : _players) {
+                player->drawGifs(_camera);
+                // if (_broadcastGif.update(&player->broadcastFrame));
+                //     _broadcastGif.draw(_camera, player->getPixelPos() + raylib::Vector3(0, _gridSize * 2, 0));
+            }
 
             _camera.EndMode();
 

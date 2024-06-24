@@ -84,6 +84,7 @@ namespace Zappy
         else if (commandName == "pbc") { // broadcast
             std::string message;
             ss >> id >> message;
+            getPlayer(id)->setBroadcast(message);
             addShellCommand("T" + std::to_string(id) + " says: " + message, getPlayer(id));
         }
         else if (commandName == "pic") { // start of an incantation (by the first player)
