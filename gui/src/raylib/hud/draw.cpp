@@ -100,14 +100,19 @@ namespace Zappy {
         unsigned char alpha = 255;
         raylib::Color textColor = raylib::Color::White();
 
-        for (auto &command : shellCommands) {
+        size_t size = _chat ? shellCommands.size() : 5;
+        if (size > shellCommands.size())
+            size = shellCommands.size();
+
+        for (size_t i = 0; i < size; i++) {
+            auto &command = shellCommands[i];
             if (command.getEntity() != nullptr) {
                 drawType(command.getEntity()->getTeam().getName(), defaultOffsetX, defaultOffsetY + 5);
             }
             textColor.a = alpha;
             alpha -= 4;
-            textColor.DrawText(command.text, defaultOffsetX + 100, defaultOffsetY + 5, 20);
-            defaultOffsetY -= 40;
+            textColor.DrawText(command.text, defaultOffsetX + 75, defaultOffsetY + 10, 20);
+            defaultOffsetY -= 35;
         }
     }
 
@@ -205,15 +210,15 @@ namespace Zappy {
             colorArrow.DrawText(">", 286, y, 30);
         }
         white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
-        white.DrawText(pokemon->infos.displayName, 402, y, 25);
-        white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 582, y, 25);
+        white.DrawText(pokemon->infos.displayName, 452, y, 25);
+        white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 682, y, 25);
 
-        drawType(pokemon->worldPlayer->getTeam().getName(), 701, y);
+        drawType(pokemon->worldPlayer->getTeam().getName(), 756, y);
 
         if (pokemon->worldPlayer->getIncantationState() == Incantation::INCANTING) {
-            _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(815, y, 22, 29));
+            _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(855, y, 22, 29));
         } else {
-            _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(815, y, 22, 29));
+            _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(855, y, 22, 29));
         }
     }
 
@@ -241,7 +246,7 @@ namespace Zappy {
     void HudMode::drawType(std::string type, int x, int y) {
         raylib::Color white = raylib::Color::White();
         raylib::Rectangle src;
-        raylib::Rectangle dest(x, y, 85, 30);
+        raylib::Rectangle dest(x, y, 57, 25);
         if (type == "bug") {
             src = raylib::Rectangle(0, 14, _typesTexture.width, 14);
         } else if (type == "dark") {
