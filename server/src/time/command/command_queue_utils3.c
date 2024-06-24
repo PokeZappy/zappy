@@ -17,11 +17,11 @@ void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d)
         current = ficbcq(s, c);
         if (!current)
             return;
-        if (!strncmp(d->_args, "Incantation", 11))
+        if (!strncmp(d->args, "Incantation", 11))
             return;
         gettimeofday(&current_time, NULL);
-        delay_ms = (current->_delay.tv_sec - current_time.tv_sec) * 1000000 +
-        (current->_delay.tv_usec - current_time.tv_usec);
-        add_seconds(&d->_delay, delay_ms / 1000000.0);
+        delay_ms = (current->delay.tv_sec - current_time.tv_sec) * 1000000 +
+        (current->delay.tv_usec - current_time.tv_usec);
+        add_seconds(&d->delay, delay_ms / 1000000.0);
     }
 }

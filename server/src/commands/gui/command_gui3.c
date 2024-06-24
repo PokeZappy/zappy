@@ -6,3 +6,13 @@
 */
 
 #include "../../../include/commands.h"
+
+void bct(server_t *server, vector_t pos)
+{
+    tiles_t *tile = server->grid->tiles[pos.y][pos.x];
+    char *response = get_tile_content(tile);
+
+    dprintf(get_gui(server)->socket, "bct %d %d %s\n", pos.x, pos.y,
+    response);
+    free(response);
+}

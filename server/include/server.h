@@ -32,11 +32,11 @@ typedef struct server_s {
     fd_set read_fds; // read file descriptortypedef struct tiles_s
     fd_set write_fds; // write file descriptor
     grid_t *grid; // grid of the server
-    TAILQ_HEAD(, team_s) _head_team; // list of teams
-    TAILQ_HEAD(client_list, client_socket_s) _head_client_sockets; // players
-    TAILQ_HEAD(, delayed_command_s) _head_delayed_commands; // list of commands
-    TAILQ_HEAD(, egg_s) _head_egg; // list of egg
-    TAILQ_HEAD(, cmd_incantation_s) _head_incantation; // list of incantation
+    TAILQ_HEAD(, team_s) head_team; // list of teams
+    TAILQ_HEAD(client_list, client_socket_s) head_client_sockets; // players
+    TAILQ_HEAD(, delayed_command_s) head_delayed_commands; // list of commands
+    TAILQ_HEAD(, egg_s) head_egg; // list of egg
+    TAILQ_HEAD(, cmd_incantation_s) head_incantation; // list of incantation
 } server_t;
 
 int zappy_server(server_arg_t *arguments);
