@@ -65,7 +65,7 @@ namespace Zappy {
             }
         }
 
-        if (debugMode->getType() != CHAT)
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()))
             _camera.Update(CAMERA_FIRST_PERSON);
 
         // if (!_players.empty() && !_players[0]->isDying()) {
