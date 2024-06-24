@@ -24,5 +24,6 @@ namespace Zappy {
         raylib::Model &_model;
         raylib::Color _tint;
         std::vector<raylib::ModelAnimation> &_modelAnimations;
+        std::unordered_map<std::string, int> _animationIndexes;
     };
 } // namespace Zappy

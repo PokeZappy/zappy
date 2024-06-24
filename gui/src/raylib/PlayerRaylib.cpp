@@ -102,6 +102,9 @@ namespace Zappy
         // }
         // _successGif.update();
         // _failureGif.update();
+        if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
+        }
     }
 
     void PlayerRaylib::draw()
@@ -112,7 +115,7 @@ namespace Zappy
         // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
-            _altitude + std::abs(_verticalRotation * _gridSize / 5.f),
+            _altitude + std::abs(_verticalRotation * _gridSize / 10.f),
             _currentPos.y * _gridSize + offset.y};
 
         // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
@@ -127,8 +130,9 @@ namespace Zappy
             _models->setNormalTexture(_animIndex);
         }
         _models->getModelByAnimation(_animIndex)->draw(playerPos,
-            raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
+            raylib::Vector3(_verticalRotation, 1, 0),
+            _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
+            raylib::Vector3(_animatedScale, true) * (1 + _level / 4.0f));
         playerPos.y += _height + _gridSize;
         // _successGif.draw(camera, playerPos, _gridSize);
         // _failureGif.draw(camera, playerPos, _gridSize);

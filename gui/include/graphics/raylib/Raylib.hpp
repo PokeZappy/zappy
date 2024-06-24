@@ -25,8 +25,6 @@
 #define FOOD_MODEL_PATH "models/pecha_berry.glb"
 #define GAMEBOY_MODEL_PATH "models/dsi1.glb"
 #define EGG_MODEL_PATH "models/pokemons/ditto.glb"
-// #define SUN_MODEL_PATH "models/sun.glb"
-// #define MOON_MODEL_PATH "models/pokemons/dusclops.glb"
 #define SUN_MODEL_PATH "models/pokemons/solrock.glb"
 #define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "models/arena.glb"
@@ -126,5 +124,8 @@ namespace Zappy {
             raylib::Music _mainTheme;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
+
+            std::unique_ptr<raylib::Gif> _menuIntroGif;
+            std::unique_ptr<raylib::Gif> _menuGif;
     };
 }
