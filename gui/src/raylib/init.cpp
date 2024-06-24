@@ -28,6 +28,7 @@ namespace Zappy {
         _socket(socket)
     {
         _window.SetTargetFPS(60);
+        SetExitKey(0);
         try
         {
             _configuration.readFile((_assetsRoot + "pokemons.cfg").c_str());

@@ -17,6 +17,9 @@ namespace Zappy {
             socket.sendData(_inputString);
             _chat = false;
             _inputString = "";
+        } else if (IsKeyPressed(KEY_ESCAPE)) {
+            _chat = false;
+            _inputString = "";
         } else if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) {
             if (!_inputString.empty())
                 _inputString.pop_back();

@@ -91,7 +91,10 @@ namespace Zappy
                 // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
                 // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-                _window.DrawFPS();
+                raylib::Color(0, 0, 0, 160).DrawRectangle(1840, 358, 77, 22);
+                _window.DrawFPS(1842, 360);
+            } else {
+                raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails", 1240, GUI_HEIGHT - 35, 30);
             }
 
         }
