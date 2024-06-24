@@ -11,6 +11,7 @@
 #include <memory>
 #include "Tile.hpp"
 #include "PlayerRaylib.hpp"
+#include "ClientSocket.hpp"
 
 #define BASEWINDOW_HUD_PATH "textures/hud/base_window.png"
 #define INVENTORY_HUD_PATH "textures/hud/inventory.png"
@@ -68,7 +69,7 @@ namespace Zappy {
         void drawType(std::string type, int y);
         void setFirstPokemonTarget();
         void followTarget(raylib::Camera &camera);
-        void update(raylib::Camera &camera);
+        void update(raylib::Camera &camera, ClientSocket &socket);
         void setSelectedPlayerToTarget();
 
     private:

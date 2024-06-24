@@ -22,8 +22,8 @@ namespace Zappy {
         if (_selectedTile != nullptr) {
             drawInventory(false);
         } else {
-            white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
-            return;
+            // white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
+            // return;
         }
 
         if (_selectedPlayers.empty()) {
@@ -50,6 +50,8 @@ namespace Zappy {
             drawInventory(true);
             _attackHudTexture.Draw(_attackSrc, _attackDest);
             drawAttacks();
+        } else if (_selectedTile == nullptr) {
+            white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
         } else {
             white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
         }

@@ -9,7 +9,7 @@
 #include <filesystem>
 
 namespace Zappy {
-     Raylib::Raylib(const std::string &assetsRoot) :
+     Raylib::Raylib(const std::string &assetsRoot, ClientSocket &socket) :
         _assetsRoot(assetsRoot),
         _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
@@ -20,7 +20,8 @@ namespace Zappy {
         _arena(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
         _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs"))
+        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
+        _socket(socket)
     {
         _window.SetTargetFPS(60);
         try

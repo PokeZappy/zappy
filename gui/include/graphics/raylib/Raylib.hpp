@@ -35,6 +35,7 @@
 #define TILE_TEXTURE_PATH "textures/ice_tile.png"
 
 #define MAIN_THEME_PATH "menu/SouthProvince.ogg"
+#include "ClientSocket.hpp"
 
 namespace Zappy {
 
@@ -44,7 +45,7 @@ namespace Zappy {
     #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
     class Raylib : public AGraphicalModule {
         public:
-            Raylib(const std::string &assetsRoot);
+            Raylib(const std::string &assetsRoot, ClientSocket &socket);
             void render(const World &world) override;
             void renderDebug(void);
             void update(const World &world) override;
@@ -126,5 +127,8 @@ namespace Zappy {
             raylib::Music _mainTheme;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
+
+            // Server socket
+            ClientSocket &_socket;
     };
 }

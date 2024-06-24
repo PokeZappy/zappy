@@ -121,7 +121,7 @@ namespace Zappy {
         
         if (_hudMode->activated()) {
             _hudMode->followTarget(_camera);
-            _hudMode->update(_camera);
+            _hudMode->update(_camera, _socket);
         }
 
         float wheel = GetMouseWheelMove();
