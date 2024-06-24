@@ -59,6 +59,7 @@ namespace Zappy {
         void drawBackground();
         void drawInventory(bool player);
         void drawPlayers();
+        void drawAttacks();
         void verifyPlayerPosition();
         void drawPokemons();
         void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
@@ -67,6 +68,8 @@ namespace Zappy {
         void drawType(std::string type, int y);
         void setFirstPokemonTarget();
         void followTarget(raylib::Camera &camera);
+        void update(raylib::Camera &camera);
+        void setSelectedPlayerToTarget();
 
     private:
         bool _activated = false;

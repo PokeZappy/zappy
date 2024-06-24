@@ -27,23 +27,50 @@ namespace Zappy {
         }
 
         if (_selectedPlayers.empty()) {
-            _selectedPlayer = nullptr;
-            _scrollIndex = 0;
-            white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
-        } else {
-            if (_selectedPlayer == nullptr) {
-                _selectedPlayer = _selectedPlayers[0];
+            if (_targetedPlayer == nullptr) {
+                 _selectedPlayer = nullptr;
+                _scrollIndex = 0;
             } else {
-                verifyPlayerPosition();
+                _selectedPlayer = _targetedPlayer;
+                _scrollIndex = 0;
             }
+        }
+        if (_selectedPlayer == nullptr) {
+            if (_targetedPlayer != nullptr) {
+                // setSelectedPlayerToTarget();
+                _selectedPlayer = _targetedPlayer;
+            } else if (!_selectedPlayers.empty()){
+                _selectedPlayer = _selectedPlayers[0];
+            }
+        } else {
+            verifyPlayerPosition();
+        }
+        if (_selectedPlayer != nullptr) {
             drawPokemons();
             drawInventory(true);
             _attackHudTexture.Draw(_attackSrc, _attackDest);
+            drawAttacks();
+        } else {
+            white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
         }
+    }
+
+    void HudMode::drawAttacks() {
+        raylib::Color white = raylib::Color::White();
+
+        white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        if (_targetedPlayer == _selectedPlayer)
+            white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
+        else
+            white.DrawText("Follow (2)", 1607, GUI_HEIGHT - 156, 40);
+        white.DrawText("Heal (3)", 1288, GUI_HEIGHT - 95, 40);
+        white.DrawText("Kill (4)", 1607, GUI_HEIGHT - 95, 40);
     }
 
     void HudMode::verifyPlayerPosition()
     {
+        if (_selectedPlayer == _targetedPlayer)
+            return;
         if (std::find(_selectedPlayers.begin(), _selectedPlayers.end(), _selectedPlayer) == _selectedPlayers.end()) {
             if (_scrollIndex >= _selectedPlayers.size())
                 _scrollIndex = _selectedPlayers.size() - 1;

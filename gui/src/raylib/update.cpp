@@ -37,7 +37,7 @@ namespace Zappy {
         }
         if (debugMode->activated()) {
             debugMode->update();
-        } else {
+        } else if (!_hudMode->activated()) {
             if (IsKeyPressed(KEY_ONE)) {
                 _mapX++;
                 _mapY++;
@@ -119,8 +119,10 @@ namespace Zappy {
         if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             _hudMode->setFirstPokemonTarget();
         
-        if (_hudMode->activated())
+        if (_hudMode->activated()) {
             _hudMode->followTarget(_camera);
+            _hudMode->update(_camera);
+        }
 
         float wheel = GetMouseWheelMove();
         if (wheel > 0 && _hudMode->activated()) {
