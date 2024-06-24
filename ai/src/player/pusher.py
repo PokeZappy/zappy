@@ -67,6 +67,10 @@ class Pusher(Player):
                 if self.id >= 4 and self.start is False:
                     self.go_testudo()
             if self.got_id > 2 and self.start is False and self.first is True:
+                if self.id >= 4:
+                    self.kill_me()
+                    exit(0)
+
                 self.go_to_start()
         elif message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3:
             self.id += 1
@@ -80,9 +84,7 @@ class Pusher(Player):
         elif message['msg'] == 'Non Potes dominum facti':
             self.you_should_not_pass = True
         elif message['msg'] == 'satus testudo : ':
-            print(f"in turtle recv_id: {message['infos']}")
             if self.id == 0 and self.start is True:
-                print(f'id = {self.id} == 0, désactivation')
                 self.you_should_not_pass = False
             elif self.start is False and self.id == 0 and self.first is False:
                 self.id = get_id_testudo(message['infos'])
@@ -98,3 +100,7 @@ class Pusher(Player):
         for move in TESTUDO[self.id]['path']:
             self.queue.append(move)
         self.start = True
+
+    def kill_me(self):
+        for _ in range(self.inventory['food'] - 1):
+            self.queue.append(('Set', 'food'))

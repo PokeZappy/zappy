@@ -149,12 +149,10 @@ class Incantator(Player):
             elif recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
-                # print(f'my life is at {self.life}')
             elif recv_type == 'look':
                 if self.ready == False:
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
-                print(msgs)
                 if self.debug_mode:
                     print('elevation: incant', msgs)
                 if len(self.actions) > 0 and self.actions[0] == 'Incantation':
@@ -192,7 +190,7 @@ class Incantator(Player):
         if message['msg'] == 'facultates positas carmina':
             self.allowed_incantation_mns += 1
         if message['msg'] == 'movere ad : ':
-            self.goto = message['info']
+            self.goto = message['infos']
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 if self.dir is not None:
@@ -236,18 +234,15 @@ class Incantator(Player):
                 self.comback.insert(0, 'Left')
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
-            # print(f'queue: {self.queue}')
             self.apply_action()
         if len(self.actions) > 0 or self.dir is None:
             return
-        # print(f'queue: {self.queue}')
         if self.first_round:
             # self.queue.append(('Set', 'food'))
             self.first_round = False
         if self.level > 2:
             self.queue.append('Incantation')
         if self.life <= 400:
-            # print('I am hungry, mate')
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))

@@ -1,6 +1,8 @@
 from os import fork
 from random import randint
 
+from collections import Counter
+
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
 from ai.src.player.incantator import Incantator
@@ -11,9 +13,10 @@ from ai.src.player.north_guard import NorthGuard
 from ai.src.player.hansel import Hansel
 from ai.src.player.pusher import Pusher
 from ai.src.utils.messages import extract_inventory
+from ai.src.utils.info_look import look_resources
 from ai.src.zappy_ai import connection
 from socket import socket
-from ai.src.gameplay.enum_gameplay import RoleInGame
+from ai.src.gameplay.enum_gameplay import RoleInGame, FOCUS
 
 class ParentAI(Player):
 
@@ -28,16 +31,25 @@ class ParentAI(Player):
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
+            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.PUSHER,
+            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.PUSHER,
+            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.PUSHER,
+            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
-            # TODO: uncomment this (PUSHER)
-            # RoleInGame.PUSHER,
-            # RoleInGame.PUSHER,
-            # RoleInGame.PUSHER,
+            RoleInGame.PUSHER,
+            # RoleInGame.HANSEL,
+            # RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
             # RoleInGame.COOCKER,
             # RoleInGame.COLLECTOR,
@@ -47,7 +59,7 @@ class ParentAI(Player):
             ]
     DEFAULT_ROLE = [
                     RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL, # RoleInGame.PUSHER, (exchange hansel and pusher)
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
@@ -69,6 +81,8 @@ class ParentAI(Player):
         RoleInGame.HANSEL: Hansel,
         RoleInGame.PUSHER: Pusher,
     }
+
+
 
     def __init__(self, serv_info: list[int], cli_socket: socket, debug_mode: bool = False,
                  machine: str = None, port: str = None, name: str = None):
@@ -97,7 +111,7 @@ class ParentAI(Player):
         self.in_depot: int = -1
         self.exist_north = False
         self.pusher_count = 4
-        self.sencond_phase = True # TODO - reset at False
+        self.second_phase = False # TODO - reset at False
         self.mms_id: int = randint(0, 100_000_000)
         self.mms = [self.mms_id]
         self.count_mms: int = 0
@@ -106,8 +120,11 @@ class ParentAI(Player):
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
+        # print(f'role created : {role}') TODO - à enelever
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
+        elif role == RoleInGame.PUSHER and self.second_phase is False:
+            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, True).run()
         else:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         while role is not None:
@@ -122,7 +139,7 @@ class ParentAI(Player):
             if self.first_round[1]:
                 self.fork(RoleInGame.FIRST_BORN)
             else:
-                if self.sencond_phase:
+                if self.second_phase:
                     self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
                 else:
                     self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
@@ -150,14 +167,13 @@ class ParentAI(Player):
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
     
-    def count_element(self, vision: str) -> None:
-        vi = vision.replace('[', '').replace(']', '')
-        list_vision = vi.split(',')
-        case = list_vision[0].split(' ')
+    def count_element(self, resources: [list[str]]) -> None:
+        my_resources = dict(Counter(resources))
+        print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
-            if case.count(need) < self.need_ressources[need]:
+            if need not in my_resources or my_resources[need] < self.need_ressources[need]:
                 return
-        self.sencond_phase = True
+        self.second_phase = True
 
     def mastermind_treatment(self, buf) -> bool:
         """"
@@ -172,15 +188,14 @@ class ParentAI(Player):
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
             if recv_type == 'slots':
-                for _ in range(msgs):
+                # for _ in range(msgs):
+                if msgs != 0:
                     self.real_fork()
                     if len(self.give_role) > 0:
                         self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     pass
-                    # print('I take food')
-                    # self.life += self.FOOD
             elif recv_type == 'broadcast':
                 if msgs is None or msgs[0] == 'ko' or isinstance(msgs, str):
                     continue
@@ -188,11 +203,11 @@ class ParentAI(Player):
                     self.broadcast_traitement(msg)
                 continue
             elif recv_type == 'look':
-                self.count_element(msgs)
+                if self.second_phase is False:
+                    self.count_element(look_resources(msgs, FOCUS)[0])
             elif recv_type == 'ko':
                 pass
             elif recv_type == 'eject':
-                print('I have been ejected')
                 continue
             elif recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
@@ -201,7 +216,6 @@ class ParentAI(Player):
                     print("inventory")
             else:
                 messages = list(filter(None, msgs.split('\n')))
-                print('fucked up messages : |', buf, "| oajcaosjd |", messages, "|")
             self.actions.pop(0)
 
     def broadcast_traitement(self, message: tuple | str | dict) -> None:
@@ -217,7 +231,7 @@ class ParentAI(Player):
         if message['msg'] == 'opes deposita':
             for keys, nbrs in zip(message['info'], message['nbr']):
                 self.global_ressources[keys] -= nbrs
-                self.ressources_focus[keys]-= nbrs
+                self.ressources_focus[keys] -= nbrs
             if any(item <= 0 for item in self.ressources_focus.values()):
                 self.new_focus = True
                 self.message.buf_messages('facultates positas carmina')
@@ -234,7 +248,6 @@ class ParentAI(Player):
     #         TODO - faire un North gurad qui va au Nord
             pass
         if message['msg'] == 'auxilium postulo':
-            print('yeah')
             self.mms.append(message['id'])
 
     def enter_depot(self) -> None:
@@ -327,14 +340,12 @@ class ParentAI(Player):
         """
         This is being used when parent_ai is a mastermind
         """
-        # if self.count_bis % 200 == 0:
-        #     print(f"life: {self.life}")
-        # self.count_bis += 1
         if self.life <= 400:
             self.queue.append(('Take', 'food'))
+            self.queue.append('Look')
         elif not self.communicate_orders():
             self.queue.append('Inventory')
-            # self.queue.append('Look')
+            self.queue.append('Look')
         self.queue.append('Slots')
 
     def make_action(self) -> None:
@@ -351,7 +362,6 @@ class ParentAI(Player):
             # self.spoke = True
             self.first_round[0] = False
             self.apply_action()
-            # print('I am the mastermind')
         if self.first_round[1]:
             return
         # if self.mms_start:
@@ -380,9 +390,6 @@ class ParentAI(Player):
             if len(self.queue) > 0 and len(self.actions) == 0:
                 self.apply_action()
             if len(self.actions) > 0:
-                # if self.count % 10_000 == 0:
-                #     print(f'actions: {self.actions}')
-                # self.count += 1
                 return
             self.action_as_mastermind()
 

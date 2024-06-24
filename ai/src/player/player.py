@@ -42,8 +42,7 @@ class Player(Bot):
                                 'phiras': 0,
                                 'thystame': 0
                                 }
-        self.need_ressources = {'food': 0,
-                                'linemate': 8,
+        self.need_ressources = {'linemate': 8,
                                 'deraumere': 8,
                                 'sibur': 10,
                                 'mendiane': 5,
@@ -255,7 +254,7 @@ class Player(Bot):
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                print('elevation :', msgs)
+                # print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':

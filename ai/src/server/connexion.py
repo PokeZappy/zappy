@@ -12,7 +12,7 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     """
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((host, int(port)))
-    welcome_message = client_socket.recv(10_000_000).decode().strip()
+    welcome_message = client_socket.recv(10_000).decode().strip()
     client_socket.send(f"{team_name}\n".encode())
     cli_number = client_socket.recv(100_000).decode()
     new_ntq = cli_number.split()
@@ -21,7 +21,7 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
         if new_ntq != ['ko']:
             result = list(map(int, filter(None, new_ntq[:3])))
     except ValueError as e:
-        print(f"Error: {e}\n for: {new_ntq}")
+        print(f"Error: {e}\n for: {cli_number} or {welcome_message}")
         result = [0, 30, 30]
     if not result:
         client_socket.close()
