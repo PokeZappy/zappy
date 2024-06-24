@@ -67,7 +67,7 @@ namespace Zappy {
             }
         }
 
-        if (debugMode->getType() != CHAT)
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()))
             _camera.Update(CAMERA_FIRST_PERSON);
 
         // if (!_players.empty() && !_players[0]->isDying()) {
@@ -118,6 +118,7 @@ namespace Zappy {
                 (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
                     _hudMode->addPlayer(player);
         }
+
 
         if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             _hudMode->setFirstPokemonTarget();

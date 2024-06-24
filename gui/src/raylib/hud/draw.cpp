@@ -19,6 +19,11 @@ namespace Zappy {
 
         _backgroundHudTexture.Draw(_backgroundSrc, _backgroundDest);
 
+
+        std::cout << _chat << std::endl;
+        if (_chat)
+            drawChat();
+
         if (_selectedTile != nullptr) {
             drawInventory(false);
         } else {
@@ -155,6 +160,15 @@ namespace Zappy {
         } else {
             _notEncantingTexture.Draw(raylib::Rectangle(0, 0, _notEncantingTexture.width, _notEncantingTexture.height), raylib::Rectangle(815, y, 22, 29));
         }
+    }
+
+    void HudMode::drawChat()
+    {
+        raylib::Color black = raylib::Color(0, 0, 0, 50);
+        raylib::Color white = raylib::Color::White();
+
+        black.DrawRectangle((Vector2) {0, GUI_HEIGHT - 248}, (Vector2) {554, 41});
+        white.DrawText("> " + _inputString, 13, GUI_HEIGHT - 243, 30);
     }
 
     void HudMode::drawType(std::string type, int y) {

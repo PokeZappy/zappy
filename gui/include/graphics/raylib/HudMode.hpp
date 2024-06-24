@@ -67,13 +67,17 @@ namespace Zappy {
         void scrollUp(float wheel);
         void scrollDown(float wheel);
         void drawType(std::string type, int y);
+        void drawChat();
         void setFirstPokemonTarget();
         void followTarget(raylib::Camera &camera);
         void update(raylib::Camera &camera, ClientSocket &socket);
+        void updateChat();
         void setSelectedPlayerToTarget();
+        bool isChatEnabled() { return _chat; }
 
     private:
         bool _activated = false;
+        bool _chat = false;
 
         raylib::Texture2D _backgroundHudTexture;
         raylib::Texture2D _inventoryHudTexture;
@@ -97,5 +101,8 @@ namespace Zappy {
         size_t _scrollIndex = 0;
         double _howManyScroll = 0.0f;
         double _gridSize;
+
+
+        std::string _inputString = "";
     };
 }

@@ -8,7 +8,29 @@
 #include "HudMode.hpp"
 
 namespace Zappy {
+
+    void HudMode::updateChat() {
+        int input = GetCharPressed();
+        if (input != 0)
+            _inputString += input;
+        if (IsKeyPressed(KEY_ENTER)) {
+            // changeModel(_pokemonInput);
+            _chat = false;
+            _inputString = "";
+        } else if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) {
+            if (!_inputString.empty())
+                _inputString.pop_back();
+        }
+    }
+
     void HudMode::update(raylib::Camera &camera, ClientSocket &socket) {
+        if (_chat) {
+            updateChat();
+            return;
+        }
+        if (IsKeyPressed(KEY_T))
+            _chat = true;
+
         if (_selectedPlayer == nullptr) {
             return;
         }
