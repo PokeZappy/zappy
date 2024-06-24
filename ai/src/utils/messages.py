@@ -131,3 +131,10 @@ def extract_inventory(s) -> dict:
         'phiras': phiras,
         'thystame': thystame
     }
+
+
+def get_id_testudo(ids: list) -> int:
+    id_concat = ''
+    for single_id in ids:
+        id_concat += single_id
+    return int(id_concat)

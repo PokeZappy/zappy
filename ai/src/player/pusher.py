@@ -2,6 +2,7 @@ from socket import socket
 
 from ai.src.player.player import Player
 from ai.src.gameplay.enum_gameplay import TESTUDO
+from ai.src.utils.messages import get_id_testudo
 
 
 class Pusher(Player):
@@ -59,30 +60,41 @@ class Pusher(Player):
             self.life -= self.ACTION
 
     def broadcast_traitement(self, message: tuple | str | dict) -> None:
-        if message['msg'] == 'est dominus aquilonis':
+        if message['msg'] == 'est dominus aquilonis' and self.start is False:
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
                 self.turn_to_the_north()
+                if self.id >= 4 and self.start is False:
+                    self.go_testudo()
             if self.got_id > 2 and self.start is False and self.first is True:
                 self.go_to_start()
-        if message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3:
+        elif message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3:
             self.id += 1
-        if message['msg'] == 'Quis est puer interfector?':
+        elif message['msg'] == 'Quis est puer interfector?':
             self.message.buf_messages('Ego sum puer inteffector', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
             self.life -= self.ACTION
-        if message['msg'] == 'situm intrare' and self.hard_push is False:
+        elif message['msg'] == 'situm intrare' and self.hard_push is False:
             if self.you_should_not_pass is True:
                 self.you_should_not_pass = False
-        if message['msg'] == 'Non Potes dominum facti':
+        elif message['msg'] == 'Non Potes dominum facti':
             self.you_should_not_pass = True
-        if message['msg'] == 'satus testudo : ':
+        elif message['msg'] == 'satus testudo : ':
+            print(f"in turtle recv_id: {message['infos']}")
             if self.id == 0 and self.start is True:
+                print(f'id = {self.id} == 0, désactivation')
                 self.you_should_not_pass = False
-        elif self.start is False and self.path.facing and self.first is False:
-            self.id = message['id']
-            for move in TESTUDO[self.id]:
-                self.queue.append(move)
-            self.hard_push = True
-            self.start = True
+            elif self.start is False and self.id == 0 and self.first is False:
+                self.id = get_id_testudo(message['infos'])
+                if self.path.facing is None:
+                    return
+                for move in TESTUDO[self.id]['path']:
+                    self.queue.append(move)
+                self.hard_push = True
+                self.start = True
         self.global_message(message)
+
+    def go_testudo(self):
+        for move in TESTUDO[self.id]['path']:
+            self.queue.append(move)
+        self.start = True
