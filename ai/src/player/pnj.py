@@ -29,7 +29,7 @@ class Pnj(Player):
         match = re.match(r'Current level: (\d+)\n', buf)
         if match:
             if int(match.group(1)) == 2:
-                print('I am level 2, here')
+                # print('I am level 2, here')
                 self.queue.append('Right')
                 self.queue.append('Right')
                 self.queue.append('Forward')
@@ -62,20 +62,27 @@ class Pnj(Player):
                     self.queue.append('Forward')
                 self.message.buf_messages('motus sum')
                 self.queue.append('Broadcast')
+                self.queue.append(('Take', 'food'))
+                self.queue.append(('Take', 'food'))
+                self.queue.append(('Take', 'food'))
 
     def make_action(self) -> None:
         """
         This method makes the action.
         """
         if self.first_round:
-            self.queue.append(('Set', 'food'))
+            # self.queue.append(('Set', 'food'))
             self.first_round = False
         if len(self.queue) > 0 and len(self.actions) < 1:
+            # print(self.queue[0])
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if self.level >= 3:
-            self.queue.append('Look')
-        else:
+        if self.life <= 400:
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+        if self.level >= 1:
+            # print('I , here')
             self.queue.append('Inventory')
 

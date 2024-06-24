@@ -1,6 +1,7 @@
 from socket import socket
 
 from ai.src.player.player import Player
+from ai.src.utils.messages import extract_inventory
 
 class Incantator(Player):
     """
@@ -146,11 +147,14 @@ class Incantator(Player):
                     self.message.buf_messages('cibo opus est')
                     self.waiting_food = True
                     self.queue.append('Broadcast')
+            elif recv_type == 'inventory':
+                self.inventory = extract_inventory(msgs)
+                self.life = self.inventory['food'] * self.FOOD
             elif recv_type == 'look':
                 if self.ready == False:
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
-                print(msgs)
+                # print(msgs)
                 if self.debug_mode:
                     print('elevation: incant', msgs)
                 if msgs == 'Elevation underway':
@@ -158,14 +162,17 @@ class Incantator(Player):
                 if int(msgs[-1]) > 1:
                     self.level += 1
                     if self.level == 2:
-                        print('I am level 2, here, get out')
+                        # print('I am level 2, here, get out')
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
+                        self.message.buf_messages(message='nobilis incantatio')
+                        self.queue.append('Broadcast')
                         self.ready = True
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
+                    self.queue.append('Incantation')
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
@@ -222,17 +229,23 @@ class Incantator(Player):
                 self.comback.insert(0, 'Left')
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
+            # print(f'queue: {self.queue}')
             self.apply_action()
         if len(self.actions) > 0 or self.dir is None:
             return
+        # print(f'queue: {self.queue}')
         if self.first_round:
-            self.queue.append(('Set', 'food'))
+            # self.queue.append(('Set', 'food'))
             self.first_round = False
         if self.level > 2:
             self.queue.append('Incantation')
         if self.dir == None:
             self.queue.append('Look')
             return
+        if self.life <= 400:
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
         if self.dir is not None and self.level < 2 and self.have_linemate == False and not self.ready:
             self.set_path_to_watch_linemate()
         if self.ready:
@@ -242,10 +255,11 @@ class Incantator(Player):
                     self.queue.append('Incantation')
                     self.have_linemate = False
                 else:
+                    self.queue.append('Inventory')
                     self.queue.append('Incantation')
                 self.ready = False
             else:
-                self.queue.append('Look')
+                self.queue.append('Inventory')
         if self.have_linemate and not self.ready:
             if self.unset:
                 self.path.facing = None
@@ -254,6 +268,9 @@ class Incantator(Player):
             self.queue.append('Left')
             self.queue.append('Forward')
             self.ready = True
+        if self.level >= 2:
+            self.queue.append('Inventory')
+            self.queue.append('Incantation')
         # if self.allowed_incantation > self.level:
         #     self.queue.append('Incantation')
         # else:

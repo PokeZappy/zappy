@@ -45,9 +45,24 @@ namespace Zappy
             for (auto &player : _players) {
                 player->draw();
             }
+            //* First proposal
+            // static raylib::Vector3 menuPos = raylib::Vector3(4.4, 7.5, -9) * _gridSize;
+            // static float menuScale = _gridSize * 4;
 
+            //* Second proposal
+            // static raylib::Vector3 menuPos = raylib::Vector3(4.4, 10, -9.5) * _gridSize;
+            // static float menuScale = _gridSize * 4;
+
+            //* Third proposal
+            static raylib::Vector3 menuPos = raylib::Vector3(4.4, 10, -9.5) * _gridSize;
+            static float menuScale = _gridSize / 200;
 
             _shader.EndMode();
+
+            if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded())
+                _menuIntroGif->draw(_camera, menuPos, menuScale);
+            else if (_menuGif != nullptr)
+                _menuGif->draw(_camera, menuPos, menuScale);
 
             // Draw spheres to show where the lights are
             // for (int i = 0; i < MAX_LIGHTS; i++)
@@ -67,27 +82,29 @@ namespace Zappy
 
             // GuiButton(r, "Follow");
 
-            if (_hudMode->activated())
+            if (_hudMode->activated()) {
                 drawHud();
 
-            // if (_selectionMode)
-            //     GuiWindowBox(r, "Actions");
-            // int a = 0;
-            // GuiButton((Rectangle) {GUI_WIDTH - 125, GUI_HEIGHT - 200, 100, 60}, "Follow");
-            // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 120, 225, 60}, "Kill");
-            // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
-            // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
+                // if (_selectionMode)
+                //     GuiWindowBox(r, "Actions");
+                // int a = 0;
+                // GuiButton((Rectangle) {GUI_WIDTH - 125, GUI_HEIGHT - 200, 100, 60}, "Follow");
+                // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 120, 225, 60}, "Kill");
+                // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
+                // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-            raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 850, 250);
+                raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 800, 280);
 
-            textColor.DrawText("Cam Position: " + raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
-            textColor.DrawText("Cam Target: " + raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
-            textColor.DrawText("Cam Up: " + raylib::Vector3(_camera.GetUp()).ToString(), 50, 110, 25);
-            textColor.DrawText("Player count (Graphical): " + std::to_string(_players.size()), 50, 140, 25);
-            textColor.DrawText("Player count (World): " + std::to_string(world.getPlayers().size()), 50, 170, 25);
-            textColor.DrawText("Egg count (Graphical): " + std::to_string(_eggs.size()), 50, 200, 25);
-            textColor.DrawText("Egg count (World): " + std::to_string(world.getEggs().size()), 50, 230, 25);
-            _window.DrawFPS();
+                textColor.DrawText("Cam Position: " + raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
+                textColor.DrawText("Cam Target: " + raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
+                textColor.DrawText("Cam Up: " + raylib::Vector3(_camera.GetUp()).ToString(), 50, 110, 25);
+                textColor.DrawText("Player count (Graphical): " + std::to_string(_players.size()), 50, 140, 25);
+                textColor.DrawText("Player count (World): " + std::to_string(world.getPlayers().size()), 50, 170, 25);
+                textColor.DrawText("Egg count (Graphical): " + std::to_string(_eggs.size()), 50, 200, 25);
+                textColor.DrawText("Egg count (World): " + std::to_string(world.getEggs().size()), 50, 230, 25);
+                _window.DrawFPS();
+            }
+
         }
         _window.EndDrawing();
     }

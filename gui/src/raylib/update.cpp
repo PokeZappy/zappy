@@ -69,7 +69,7 @@ namespace Zappy {
         if (debugMode->getType() != CHAT)
             _camera.Update(CAMERA_FIRST_PERSON);
 
-        if (!_players.empty() && !_players[0]->isDying()) {
+        // if (!_players.empty() && !_players[0]->isDying()) {
             //* Follow the player with id 0
             // for (auto &player : _players) {
             //     if (_players[0]->worldPlayer->getId() == 0) {
@@ -81,7 +81,7 @@ namespace Zappy {
             //* Follow the first player
             // _camera.target = _players[0]->getPosition() * _gridSize;
             // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        }
+        // }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
@@ -136,6 +136,13 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
+        if (_menuIntroGif != nullptr) {
+            if (!_menuIntroGif->isAnimEnded())
+                _menuIntroGif->update();
+            else
+                _menuIntroGif.release();
+        } else if (_menuGif != nullptr)
+            _menuGif->update();
     }
 
     void Raylib::updatePlayers(const World &world) {
@@ -160,7 +167,7 @@ namespace Zappy {
                 _players[i]->kill();
             }
             _players[i]->update();
-            if (_players[i]->getHeight() > 2000) {
+            if (_players[i]->getHeight() > _gridSize * 100) {
                 _players.erase(_players.begin() + i - decal);
                 decal++;
             }
@@ -182,7 +189,7 @@ namespace Zappy {
                 _eggs[i]->kill();
             }
             _eggs[i]->update();
-            if (_eggs[i]->isDying()) {
+            if (_eggs[i]->getAnimatedScale() < 0) {
                 _eggs.erase(_eggs.begin() + i - decal);
                 decal++;
             }
