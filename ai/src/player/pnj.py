@@ -1,5 +1,5 @@
 from socket import socket
-import re
+from re import match
 
 from ai.src.player.player import Player
 
@@ -25,22 +25,40 @@ class Pnj(Player):
         :param buf: str - The received message.
         :return: None
         """
-        super().recv_treatment(buf)
-        match = re.match(r'Current level: (\d+)\n', buf)
-        if match:
-            self.queue = []
-            if int(match.group(1)) == 2:
-                # print('I am level 2, here')
-                self.queue.append('Right')
-                self.queue.append('Right')
-                self.queue.append('Forward')
-            self.queue.append(('Take', 'food'))
-            self.queue.append(('Take', 'food'))
-            self.queue.append(('Take', 'food'))
-            # if int(match.group(1)) == 2:
-            #     self.message.buf_messages('motus sum')
-            #     self.queue.append('Broadcast')
-
+        if len(self.actions) == 0:
+            recv_list = self.message.receive(buf)
+        else:
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'elevation':
+                matches = match(r'Current level: (\d+)', msgs)
+                if matches:
+                    self.queue = []
+                    if int(msgs[-1]) == 2:
+                        print('I am level 2, here')
+                        self.queue.append('Right')
+                        self.queue.append('Right')
+                        self.queue.append('Forward')
+                    self.queue.append(('Take', 'food'))
+                    self.queue.append(('Take', 'food'))
+                    self.queue.append(('Take', 'food'))
+                    # if int(match.group(1)) == 2:
+                    #     self.message.buf_messages('motus sum')
+                    #     self.queue.append('Broadcast')
+                continue
+            elif recv_type == 'eject':
+                continue
+            elif recv_type == 'ok':
+                if isinstance(msgs, str) and msgs[0] == 'Take' and msgs[1] == 'food':
+                    self.life += self.FOOD
+            elif recv_type == 'broadcast':
+                if msgs == 'ko':
+                    continue
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            self.actions.pop(0)
+            
         
 
     def broadcast_traitement(self, message: tuple | str) -> None:
@@ -63,9 +81,9 @@ class Pnj(Player):
                     self.queue.append('Forward')
                 self.message.buf_messages('motus sum')
                 self.queue.append('Broadcast')
-                self.queue.append(('Take', 'food'))
-                self.queue.append(('Take', 'food'))
-                self.queue.append(('Take', 'food'))
+                # self.queue.append(('Take', 'food'))
+                # self.queue.append(('Take', 'food'))
+                # self.queue.append(('Take', 'food'))
 
     def make_action(self) -> None:
         """
@@ -81,8 +99,8 @@ class Pnj(Player):
             self.apply_action()
         if len(self.actions) > 0:
              return
-        if self.life <= 400:
-            print('I am hungry')
+        if self.life <= 500:
+            # print('I am hungry')
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))

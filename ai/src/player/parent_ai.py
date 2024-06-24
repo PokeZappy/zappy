@@ -31,6 +31,7 @@ class ParentAI(Player):
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
+            # RoleInGame.HANSEL,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
@@ -65,7 +66,7 @@ class ParentAI(Player):
                     ]
     
     DEFENDER_ROLE = [
-                    RoleInGame.COLLECTOR,
+                    RoleInGame.PUSHER,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
@@ -121,6 +122,8 @@ class ParentAI(Player):
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
         # print(f'role created : {role}') TODO - à enelever
+        if role == RoleInGame.NORTH_GUARD:
+            print('North Guard is borning')
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
         elif role == RoleInGame.PUSHER and self.second_phase is False:
@@ -169,7 +172,7 @@ class ParentAI(Player):
     
     def count_element(self, resources: [list[str]]) -> None:
         my_resources = dict(Counter(resources))
-        print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
+        # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
             if need not in my_resources or my_resources[need] < self.need_ressources[need]:
                 return
@@ -188,11 +191,11 @@ class ParentAI(Player):
             recv_list = self.message.receive(buf, self.actions[0])
         for recv_type, msgs in recv_list:
             if recv_type == 'slots':
-                # for _ in range(msgs):
-                if msgs != 0:
-                    self.real_fork()
-                    if len(self.give_role) > 0:
-                        self.give_role.pop(0)
+                for _ in range(msgs):
+                    if msgs != 0:
+                        self.real_fork()
+                        if len(self.give_role) > 0:
+                            self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     pass
@@ -215,6 +218,7 @@ class ParentAI(Player):
                 if self.debug_mode:
                     print("inventory")
             else:
+                print(f"not wanted : rec {recv_type}, msgs {msgs}")
                 messages = list(filter(None, msgs.split('\n')))
             self.actions.pop(0)
 
