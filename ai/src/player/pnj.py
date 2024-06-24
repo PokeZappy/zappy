@@ -75,9 +75,9 @@ class Pnj(Player):
             # self.queue.append(('Set', 'food'))
             self.first_round = False
         if len(self.queue) > 0 and len(self.actions) < 1:
-            print(f"témort {self.queue}")
-            print(f"tamer : {self.actions}")
-            print(f"tégrenmort {self.life}")
+            # print(f"témort {self.queue}")
+            # print(f"tamer : {self.actions}")
+            # print(f"tégrenmort {self.life}")
             self.apply_action()
         if len(self.actions) > 0:
              return
