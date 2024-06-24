@@ -142,7 +142,6 @@ class Incantator(Player):
             elif recv_type == 'ko':
                 if msgs == 'Incantation':
                     self.queue.append('Inventory')
-                    self.queue.append('Incantation')
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     self.message.buf_messages('cibo opus est')
                     self.waiting_food = True
@@ -150,29 +149,37 @@ class Incantator(Player):
             elif recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
+                # print(f'my life is at {self.life}')
             elif recv_type == 'look':
                 if self.ready == False:
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
-                # print(msgs)
+                print(msgs)
                 if self.debug_mode:
                     print('elevation: incant', msgs)
-                if msgs == 'Elevation underway':
-                    continue
-                if int(msgs[-1]) > 1:
-                    self.level += 1
-                    if self.level == 2:
-                        # print('I am level 2, here, get out')
-                        self.queue.append('Right')
-                        self.queue.append('Right')
-                        self.queue.append('Forward')
-                        self.message.buf_messages(message='nobilis incantatio')
-                        self.queue.append('Broadcast')
-                        self.ready = True
-                    self.queue.append(('Take', 'food'))
-                    self.queue.append(('Take', 'food'))
-                    self.queue.append(('Take', 'food'))
-                    self.queue.append('Incantation')
+                if len(self.actions) > 0 and self.actions[0] == 'Incantation':
+                    self.actions.pop(0)
+                try:
+                    if int(msgs[-1]) > 1:
+                        self.level += 1
+                        if self.level == 2:
+                            # print('I am level 2, here, get out')
+                            self.queue.append('Right')
+                            self.queue.append('Right')
+                            self.queue.append('Forward')
+                            self.message.buf_messages(message='nobilis incantatio')
+                            self.queue.append('Broadcast')
+                            self.ready = True
+                        self.queue.append(('Take', 'food'))
+                        self.queue.append(('Take', 'food'))
+                        self.queue.append(('Take', 'food'))
+                        self.queue.append('Incantation')
+                except Exception:
+                    pass
+                print(f'level: {self.level}')
+                print(f'queue: {self.queue}')
+                print(f'actions: {self.actions}')
+                continue
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
                     continue
@@ -239,13 +246,14 @@ class Incantator(Player):
             self.first_round = False
         if self.level > 2:
             self.queue.append('Incantation')
+        if self.life <= 400:
+            # print('I am hungry, mate')
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
+            self.queue.append(('Take', 'food'))
         if self.dir == None:
             self.queue.append('Look')
             return
-        if self.life <= 400:
-            self.queue.append(('Take', 'food'))
-            self.queue.append(('Take', 'food'))
-            self.queue.append(('Take', 'food'))
         if self.dir is not None and self.level < 2 and self.have_linemate == False and not self.ready:
             self.set_path_to_watch_linemate()
         if self.ready:

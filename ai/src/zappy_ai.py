@@ -62,13 +62,19 @@ class Bot(object):
 
         :return: str - The received action command from the server.
         """
-        rec: str = self.cli_socket.recv(10_000_000).decode()
+        try:
+            rec: str = self.cli_socket.recv(10_000_000).decode()
+        except Exception:
+            # print("Server disconnected")
+            self.cli_socket.close()
+            sys.exit(0)
         if self.debug_mode:
             print(f"Received action: {rec}")
         # if rec == "" or rec == "dead\n":
         # TODO - test avoid suicide
         if rec == "dead\n":
             # print("Server disconnected")
+            self.cli_socket.close()
             sys.exit(0)
         return rec
 

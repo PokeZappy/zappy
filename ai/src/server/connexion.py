@@ -24,5 +24,6 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
         print(f"Error: {e}\n for: {new_ntq}")
         result = [0, 30, 30]
     if not result:
-        exit(6969)
+        client_socket.close()
+        exit(0)
     return result, client_socket

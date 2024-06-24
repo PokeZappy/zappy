@@ -28,6 +28,7 @@ class Pnj(Player):
         super().recv_treatment(buf)
         match = re.match(r'Current level: (\d+)\n', buf)
         if match:
+            self.queue = []
             if int(match.group(1)) == 2:
                 # print('I am level 2, here')
                 self.queue.append('Right')
@@ -74,11 +75,14 @@ class Pnj(Player):
             # self.queue.append(('Set', 'food'))
             self.first_round = False
         if len(self.queue) > 0 and len(self.actions) < 1:
-            # print(self.queue[0])
+            print(f"témort {self.queue}")
+            print(f"tamer : {self.actions}")
+            print(f"tégrenmort {self.life}")
             self.apply_action()
         if len(self.actions) > 0:
-            return
+             return
         if self.life <= 400:
+            print('I am hungry')
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))

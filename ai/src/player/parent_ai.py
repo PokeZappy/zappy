@@ -112,6 +112,7 @@ class ParentAI(Player):
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         while role is not None:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+        cli_socket.close()
         exit(0)
 
     def real_fork(self) -> None:
@@ -123,12 +124,15 @@ class ParentAI(Player):
             else:
                 if self.sencond_phase:
                     self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
-                    if len(self.give_role) == 0 and self.pusher_count <= 24:
-                        self.satus_testudo()
                 else:
                     self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
+        if pid == -1:
+            print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
+        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.sencond_phase == False:
+            self.satus_testudo()
+
 
 
     # def apply_action(self, buf: str) -> None:
@@ -178,7 +182,7 @@ class ParentAI(Player):
                     # print('I take food')
                     # self.life += self.FOOD
             elif recv_type == 'broadcast':
-                if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
+                if msgs is None or msgs[0] == 'ko' or isinstance(msgs, str):
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
