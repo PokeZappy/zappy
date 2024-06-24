@@ -16,7 +16,6 @@ namespace Zappy
             renderDebug();
             return;
         }
-        raylib::Color textColor = raylib::Color::Black();
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::SkyBlue());
@@ -94,15 +93,6 @@ namespace Zappy
                 // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
                 // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-                raylib::Color::White().Alpha(0.2).DrawRectangle(0, 0, 800, 280);
-
-                textColor.DrawText("Cam Position: " + raylib::Vector3(_camera.GetPosition()).ToString(), 50, 50, 25);
-                textColor.DrawText("Cam Target: " + raylib::Vector3(_camera.GetTarget()).ToString(), 50, 80, 25);
-                textColor.DrawText("Cam Up: " + raylib::Vector3(_camera.GetUp()).ToString(), 50, 110, 25);
-                textColor.DrawText("Player count (Graphical): " + std::to_string(_players.size()), 50, 140, 25);
-                textColor.DrawText("Player count (World): " + std::to_string(world.getPlayers().size()), 50, 170, 25);
-                textColor.DrawText("Egg count (Graphical): " + std::to_string(_eggs.size()), 50, 200, 25);
-                textColor.DrawText("Egg count (World): " + std::to_string(world.getEggs().size()), 50, 230, 25);
                 _window.DrawFPS();
             }
 

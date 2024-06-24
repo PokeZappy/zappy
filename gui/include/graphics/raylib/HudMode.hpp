@@ -72,7 +72,7 @@ namespace Zappy {
         void drawShell(const std::vector<ShellCommand> &commands);
         void verifyPlayerPosition();
         void drawPokemons();
-        void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
+        void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y, raylib::Color colorArrow);
         void scrollUp(float wheel);
         void scrollDown(float wheel);
         void drawType(std::string type, int x, int y);
@@ -81,7 +81,7 @@ namespace Zappy {
         void setFirstPokemonTarget();
         void followTarget(raylib::Camera &camera);
         void update(raylib::Camera &camera, ClientSocket &socket);
-        void updateChat();
+        void updateChat(ClientSocket &socket);
         void setSelectedPlayerToTarget();
         bool isChatEnabled() { return _chat; }
 
@@ -112,7 +112,6 @@ namespace Zappy {
         size_t _scrollIndex = 0;
         double _howManyScroll = 0.0f;
         double _gridSize;
-
 
         //chat 
         bool _chat = false;

@@ -175,17 +175,22 @@ namespace Zappy {
     }
 
     void HudMode::drawPokemons() {
-        int pokemon_drawn = 0;
-        for (size_t i = _scrollIndex; i < _scrollIndex + 4 && i < _selectedPlayers.size(); i++) {
-            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43));
+
+        int pokemon_drawn = 1;
+
+        if (_targetedPlayer != nullptr)
+            drawPokemon(_targetedPlayer, GUI_HEIGHT - 171, raylib::Color::Green());
+
+        for (size_t i = _scrollIndex; i < _scrollIndex + 3 && i < _selectedPlayers.size(); i++) {
+            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43), raylib::Color::White());
         }
     }
 
-    void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y) {
+    void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y, raylib::Color colorArrow) {
         raylib::Color white = raylib::Color::White();
 
-        if (pokemon == _selectedPlayer) {
-            white.DrawText(">", 286, y, 30);
+        if (pokemon == _selectedPlayer || pokemon == _targetedPlayer) {
+            colorArrow.DrawText(">", 286, y, 30);
         }
         white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
         white.DrawText(pokemon->infos.displayName, 402, y, 25);
@@ -207,6 +212,7 @@ namespace Zappy {
 
         std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _cursorClock;
 
+        raylib::Color(0, 0, 0, 60).DrawRectangle((Vector2) {0, 10}, (Vector2) {554, GUI_HEIGHT - 280});
         black.DrawRectangle((Vector2) {0, GUI_HEIGHT - 248}, (Vector2) {554, 41});
         int decal = _inputString.size() - 30;
         int indexSubstr = decal > 0 ? decal : 0;
