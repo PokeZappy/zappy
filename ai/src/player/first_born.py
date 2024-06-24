@@ -44,14 +44,19 @@ class First_born(Player):
         self.transformation = True
 
     def make_action(self) -> None:
-        if len(self.queue) > 0 and self.queue[0] == 'Newborn':
-            self.change_role()
-            self.queue.pop(0)
-        if len(self.queue) > 0 and len(self.actions) == 0:
+        if len(self.queue) > 0:
             self.apply_action()
         if len(self.actions) > 0:
             return
-        self.queue.append('Look')
+        self.queue.append('Forward')
+        # if len(self.queue) > 0 and self.queue[0] == 'Newborn':
+        #     self.change_role()
+        #     self.queue.pop(0)
+        # if len(self.queue) > 0 and len(self.actions) == 0:
+        #     self.apply_action()
+        # if len(self.actions) > 0:
+        #     return
+        # self.queue.append('Look')
 
     def reborn_in_collector(self, i: int) -> None:
         if i != 0:
@@ -150,42 +155,42 @@ class First_born(Player):
             rd = randint(0, len(action) - action.count(None) - 1)
             self.goto(rd)        
 
-    def recv_treatment(self, buf: str) -> None:
-        if len(self.actions) == 0:
-            recv_list = self.message.receive(buf)
-        else:
-            recv_list = self.message.receive(buf, self.actions[0])
-        for recv_type, msgs in recv_list:
-            if recv_type == 'look':
-                self.update_map(msgs)
-                self.update_actions()
-            elif recv_type == 'ok':
-                if msgs == 'Forward':
-                    if self.dir == 0:
-                        self.pos[0] = (self.pos[0] + 1) % self.limit[0]
-                    elif self.dir == 1:
-                        self.pos[1] = (self.pos[1] + 1) % self.limit[1]
-                    elif self.dir == 2:
-                        self.pos[0] = (self.pos[0] - 1) % self.limit[0]
-                    else:
-                        self.pos[1] = (self.pos[1] - 1) % self.limit[1]
-                if msgs == 'Left':
-                    self.dir = (self.dir + 1) % 4
-                if msgs == 'Right':
-                    self.dir = (self.dir - 1) % 4
-                if msgs == 'Broadcast':
-                    if self.transformation:
-                        if len(self.role) > 0:
-                            self.death = self.role[0]
-                        else:
-                            self.death = self.DEFAULT_ROLE
-            elif recv_type == 'broadcast':
-                if msgs[0] == 'ko':
-                    continue
-                for msg in msgs:
-                    self.broadcast_traitement(msg)
-                continue
-            self.actions.pop(0)
+    # def recv_treatment(self, buf: str) -> None:
+    #     if len(self.actions) == 0:
+    #         recv_list = self.message.receive(buf)
+    #     else:
+    #         recv_list = self.message.receive(buf, self.actions[0])
+    #     for recv_type, msgs in recv_list:
+    #         if recv_type == 'look':
+    #             self.update_map(msgs)
+    #             self.update_actions()
+    #         elif recv_type == 'ok':
+    #             if msgs == 'Forward':
+    #                 if self.dir == 0:
+    #                     self.pos[0] = (self.pos[0] + 1) % self.limit[0]
+    #                 elif self.dir == 1:
+    #                     self.pos[1] = (self.pos[1] + 1) % self.limit[1]
+    #                 elif self.dir == 2:
+    #                     self.pos[0] = (self.pos[0] - 1) % self.limit[0]
+    #                 else:
+    #                     self.pos[1] = (self.pos[1] - 1) % self.limit[1]
+    #             if msgs == 'Left':
+    #                 self.dir = (self.dir + 1) % 4
+    #             if msgs == 'Right':
+    #                 self.dir = (self.dir - 1) % 4
+    #             if msgs == 'Broadcast':
+    #                 if self.transformation:
+    #                     if len(self.role) > 0:
+    #                         self.death = self.role[0]
+    #                     else:
+    #                         self.death = self.DEFAULT_ROLE
+    #         elif recv_type == 'broadcast':
+    #             if msgs[0] == 'ko':
+    #                 continue
+    #             for msg in msgs:
+    #                 self.broadcast_traitement(msg)
+    #             continue
+    #         self.actions.pop(0)
 
     def broadcast_traitement(self, msg: dict[str, str] | str | tuple) -> None:
         if msg['msg'] == 'Ego me transform : ':

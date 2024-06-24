@@ -154,7 +154,7 @@ class Incantator(Player):
                 if self.ready == False:
                     self.addapt_map(msgs)
             elif recv_type == 'elevation':
-                print(msgs)
+                # print(msgs)
                 if self.debug_mode:
                     print('elevation: incant', msgs)
                 if msgs == 'Elevation underway':
@@ -162,7 +162,7 @@ class Incantator(Player):
                 if int(msgs[-1]) > 1:
                     self.level += 1
                     if self.level == 2:
-                        print('I am level 2, here, get out')
+                        # print('I am level 2, here, get out')
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
@@ -229,11 +229,13 @@ class Incantator(Player):
                 self.comback.insert(0, 'Left')
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
+            # print(f'queue: {self.queue}')
             self.apply_action()
         if len(self.actions) > 0 or self.dir is None:
             return
+        # print(f'queue: {self.queue}')
         if self.first_round:
-            self.queue.append(('Set', 'food'))
+            # self.queue.append(('Set', 'food'))
             self.first_round = False
         if self.level > 2:
             self.queue.append('Incantation')
@@ -267,8 +269,8 @@ class Incantator(Player):
             self.queue.append('Forward')
             self.ready = True
         if self.level >= 2:
-            self.queue.append('Incantation')
             self.queue.append('Inventory')
+            self.queue.append('Incantation')
         # if self.allowed_incantation > self.level:
         #     self.queue.append('Incantation')
         # else:

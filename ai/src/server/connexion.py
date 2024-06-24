@@ -12,9 +12,9 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     """
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((host, int(port)))
-    welcome_message = client_socket.recv(1_000_000).decode().strip()
+    welcome_message = client_socket.recv(10_000_000).decode().strip()
     client_socket.send(f"{team_name}\n".encode())
-    cli_number = client_socket.recv(1_000_000).decode()
+    cli_number = client_socket.recv(100_000).decode()
     new = cli_number.split()
     try:
         result = list(map(int, filter(None, new[:3])))

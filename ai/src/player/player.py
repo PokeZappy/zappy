@@ -250,11 +250,11 @@ class Player(Bot):
             if recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
-                print(f'life: {self.life}')
+                # print(f'life: {self.life}')
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                print('elevation :', msgs)
+                # print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':

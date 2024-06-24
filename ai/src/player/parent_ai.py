@@ -98,10 +98,11 @@ class ParentAI(Player):
         self.exist_north = False
         self.pusher_count = 4
         self.sencond_phase = True # TODO - reset at False
-        self.mms_id: int = 100_000_000_000
-        self.mms = []
+        self.mms_id: int = randint(0, 100_000_000)
+        self.mms = [self.mms_id]
         self.count_mms: int = 0
         self.mms_start: bool = False
+        self.spoke: bool = False
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -118,7 +119,7 @@ class ParentAI(Player):
         pid = fork()
         if pid == 0:
             if self.first_round[1]:
-                self.fork(RoleInGame.HANSEL)
+                self.fork(RoleInGame.FIRST_BORN)
             else:
                 if self.sencond_phase:
                     self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
@@ -229,20 +230,8 @@ class ParentAI(Player):
     #         TODO - faire un North gurad qui va au Nord
             pass
         if message['msg'] == 'auxilium postulo':
-            print(f'j\'ai reçu ça {self.mms[-1]}')
+            print('yeah')
             self.mms.append(message['id'])
-            self.count_mms += 1
-            self.mms.sort()
-            if self.count_mms == self.cli_num and self.mms_id is not self.mms[0]:
-                print(f"jep {self.mms}")
-                role = self.BIND[RoleInGame.HANSEL](self.serv_info, self.cli_socket, self.debug_mode).run()
-                role.run()
-                self.mms_start = True
-            elif self.count_mms == self.cli_num:
-                print(f"nooo {self.mms}")
-                self.mms_start = True
-            elif self.count_mms != self.cli_num:
-                print(f'count: {self.count_mms}\ncli_num: {self.cli_num}\nmy mms: {self.mms}')
 
     def enter_depot(self) -> None:
         """
@@ -275,6 +264,12 @@ class ParentAI(Player):
         for recv_type, msgs in recv_list:
             if recv_type == 'ok' or recv_type == 'slots':
                 self.actions.pop(0)
+            elif recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
 
     def recv_treatment(self, buf: str) -> None:
         buf = buf[:-1]
@@ -345,24 +340,32 @@ class ParentAI(Player):
         # if self.cli_num != len(self.mms):
         #     return
         if self.first_round[0]:
-            self.mms.append(randint(0, 100_000_000))
-            self.message.buf_messages('auxilium postulo', my_id=self.mms[0])
-            print(f"hello la team je suis {self.mms[0]}")
+            # self.mms.append(randint(0, 100_000_000))
+            # self.message.buf_messages('auxilium postulo', my_id=self.mms[0])
             self.queue.append('Slots')
-            self.life -= self.ACTION
-            self.queue.append('Broadcast')
-            self.life -= self.ACTION
-            self.queue.append(('Take', 'player'))
-            self.life -= self.ACTION
-            self.queue.append(('Take', 'player'))
-            self.life -= self.ACTION
-            self.queue.append(('Take', 'player'))
+            # self.queue.append('Broadcast')
+            # self.spoke = True
             self.first_round[0] = False
             self.apply_action()
+            # print('I am the mastermind')
         if self.first_round[1]:
             return
-        if self.mms_start is False:
-            return
+        # if self.mms_start:
+        #     self.mms_start = False
+        #     self.queue.append('Slots')
+        #     self.apply_action()
+        #     return
+        # if len(self.mms) <= self.cli_num:
+        #     if len(self.queue) > 0:
+        #         self.apply_action()
+        #     return
+        # if self.spoke:
+        #     self.spoke = False
+        #     self.mms = self.mms.sort()
+        #     if self.mms[0] != self.mms_id:
+        #         Pnj(self.serv_info, self.cli_socket, self.debug_mode).run()
+        #         exit(0)
+        #     return
         if self.role == RoleInGame.PROGENITOR:
             if len(self.queue) > 0:
                 self.apply_action()
