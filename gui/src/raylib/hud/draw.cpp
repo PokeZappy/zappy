@@ -22,28 +22,57 @@ namespace Zappy {
         if (_selectedTile != nullptr) {
             drawInventory(false);
         } else {
-            white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
-            return;
+            // white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
+            // return;
         }
 
         if (_selectedPlayers.empty()) {
-            _selectedPlayer = nullptr;
-            _scrollIndex = 0;
-            white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
-        } else {
-            if (_selectedPlayer == nullptr) {
-                _selectedPlayer = _selectedPlayers[0];
+            if (_targetedPlayer == nullptr) {
+                 _selectedPlayer = nullptr;
+                _scrollIndex = 0;
             } else {
-                verifyPlayerPosition();
+                _selectedPlayer = _targetedPlayer;
+                _scrollIndex = 0;
             }
+        }
+        if (_selectedPlayer == nullptr) {
+            if (_targetedPlayer != nullptr) {
+                // setSelectedPlayerToTarget();
+                _selectedPlayer = _targetedPlayer;
+            } else if (!_selectedPlayers.empty()){
+                _selectedPlayer = _selectedPlayers[0];
+            }
+        } else {
+            verifyPlayerPosition();
+        }
+        if (_selectedPlayer != nullptr) {
             drawPokemons();
             drawInventory(true);
             _attackHudTexture.Draw(_attackSrc, _attackDest);
+            drawAttacks();
+        } else if (_selectedTile == nullptr) {
+            white.DrawText("Séléctionner une tile à afficher", 491, GUI_HEIGHT - 120, 65);
+        } else {
+            white.DrawText("Aucun pokemon à afficher", 644, GUI_HEIGHT - 140, 65);
         }
+    }
+
+    void HudMode::drawAttacks() {
+        raylib::Color white = raylib::Color::White();
+
+        white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        if (_targetedPlayer == _selectedPlayer)
+            white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
+        else
+            white.DrawText("Follow (2)", 1607, GUI_HEIGHT - 156, 40);
+        white.DrawText("Heal (3)", 1288, GUI_HEIGHT - 95, 40);
+        white.DrawText("Kill (4)", 1607, GUI_HEIGHT - 95, 40);
     }
 
     void HudMode::verifyPlayerPosition()
     {
+        if (_selectedPlayer == _targetedPlayer)
+            return;
         if (std::find(_selectedPlayers.begin(), _selectedPlayers.end(), _selectedPlayer) == _selectedPlayers.end()) {
             if (_scrollIndex >= _selectedPlayers.size())
                 _scrollIndex = _selectedPlayers.size() - 1;
@@ -58,6 +87,7 @@ namespace Zappy {
         raylib::Color white = raylib::Color::White();
         raylib::Rectangle _inventorySrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
         raylib::Rectangle _inventoryDest(x, GUI_HEIGHT - 200, 265, 200);
+        raylib::Rectangle ballSrc(0, 0, _pokeBallTexture.width, _pokeBallTexture.height);
 
         if (player) {
             inventory = _selectedPlayer->worldPlayer->getInventory();
@@ -67,27 +97,38 @@ namespace Zappy {
         _inventoryHudTexture.Draw(_inventorySrc, _inventoryDest);
         white.DrawText(title, x + 32, GUI_HEIGHT - 160, 20);
 
+        int xLeftBalls = 28;
+        int xLeftText = xLeftBalls + 35;
+        int xRightBalls = 130;
+        int xRightText = xRightBalls + 35;
 
-        _pokeBallTexture.Draw(x + 39, GUI_HEIGHT - 129);
-        white.DrawText(std::to_string(inventory.getItem(1)), x + 75, GUI_HEIGHT - 129, 20);
+        _pokeBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 129, 30, 30));
+        // _pokeBallTexture.Draw(x + 45, GUI_HEIGHT - 129);
+        white.DrawText(std::to_string(inventory.getItem(1)), x + xLeftText, GUI_HEIGHT - 124, 20);
 
-        _superBallTexture.Draw(x + 39, GUI_HEIGHT - 98);
-        white.DrawText(std::to_string(inventory.getItem(2)), x + 75, GUI_HEIGHT - 98, 20);
+        _superBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 98, 30, 30));
+        // _superBallTexture.Draw(x + 45, GUI_HEIGHT - 98);
+        white.DrawText(std::to_string(inventory.getItem(2)), x + xLeftText, GUI_HEIGHT - 93, 20);
 
-        _hyperBallTexture.Draw(x + 39, GUI_HEIGHT - 67);
-        white.DrawText(std::to_string(inventory.getItem(3)), x + 75, GUI_HEIGHT - 67, 20);
+        _hyperBallTexture.Draw(ballSrc, raylib::Rectangle(x + xLeftBalls, GUI_HEIGHT - 67, 30, 30));
+        // _hyperBallTexture.Draw(x + 45, GUI_HEIGHT - 67);
+        white.DrawText(std::to_string(inventory.getItem(3)), x + xLeftText, GUI_HEIGHT - 62, 20);
 
-        _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
-        white.DrawText(std::to_string(inventory.getItem(0)), x + 183, GUI_HEIGHT - 160, 20);
+        _foodTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 160, 30, 30));
+        // _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
+        white.DrawText(std::to_string(inventory.getItem(0)), x + xRightText, GUI_HEIGHT - 155, 20);
 
-        _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
-        white.DrawText(std::to_string(inventory.getItem(4)), x + 183, GUI_HEIGHT - 129, 20);
+        _honorBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 129, 30, 30));
+        // _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
+        white.DrawText(std::to_string(inventory.getItem(4)), x + xRightText, GUI_HEIGHT - 124, 20);
 
-        _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
-        white.DrawText(std::to_string(inventory.getItem(5)), x + 183, GUI_HEIGHT - 98, 20);
+        _luxeBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 98, 30, 30));
+        // _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
+        white.DrawText(std::to_string(inventory.getItem(5)), x + xRightText, GUI_HEIGHT - 93, 20);
 
-        _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
-        white.DrawText(std::to_string(inventory.getItem(6)), x + 183, GUI_HEIGHT - 67, 20);
+        _masterBallTexture.Draw(ballSrc, raylib::Rectangle(x + xRightBalls, GUI_HEIGHT - 67, 30, 30));
+        // _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
+        white.DrawText(std::to_string(inventory.getItem(6)), x + xRightText, GUI_HEIGHT - 62, 20);
     }
 
     void HudMode::drawPokemons() {

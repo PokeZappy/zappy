@@ -9,7 +9,7 @@
 #include <filesystem>
 
 namespace Zappy {
-     Raylib::Raylib(const std::string &assetsRoot) :
+     Raylib::Raylib(const std::string &assetsRoot, ClientSocket &socket) :
         _assetsRoot(assetsRoot),
         _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
@@ -20,7 +20,8 @@ namespace Zappy {
         _arena(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
         _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs"))
+        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
+        _socket(socket)
     {
         _window.SetTargetFPS(60);
         try
@@ -42,8 +43,8 @@ namespace Zappy {
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        float ambientLight = 0.5f;
-        float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
+        float array[4] = { _defaultAmbientLight, _defaultAmbientLight,
+            _defaultAmbientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
@@ -59,8 +60,8 @@ namespace Zappy {
 
         // -- Camera --
         //* Front of the scene
-        // _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
-        // _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
+        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
+        _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
         //* Menu
         // First proposal
         // _camera.SetPosition(raylib::Vector3(4.4, 7.5, -5) * _gridSize);
@@ -121,7 +122,7 @@ namespace Zappy {
         // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
 
-        _arenaAltitudeScale = -(1. / 10.);
+        _arenaAltitudeScale = -(1. / 13.);
         _arenaScale = _gridSize;
         getArenaOffset = [](size_t tileCount, float gridSize) -> float {
             float correction = tileCount % 2 == 0 ? gridSize / 2 : 0;
@@ -143,5 +144,8 @@ namespace Zappy {
         _menuIntroGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_intro", false, 1);
         _menuIntroGif->reset();
         _menuGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_main", true, 1);
+
+        // _camera.SetPosition(_defaultCameraPosition);
+        // _camera.SetTarget(_defaultCameraTarget);
     }
 }

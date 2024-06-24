@@ -16,7 +16,7 @@ namespace Zappy
         _animations(raylib::ModelAnimation::Load(_assetsRoot + "models/pokemons/ditto.glb")),
         _shader(shader)
     {
-        _scaleModel = _gridSize;
+        _scaleModel = _gridSize / 4;
 
         changeAnimationIndex(0);
         for (const auto &entry : std::filesystem::directory_iterator(_assetsRoot + "models/pokemons/"))
