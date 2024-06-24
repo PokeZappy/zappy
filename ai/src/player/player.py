@@ -4,6 +4,7 @@ import random
 from abc import abstractmethod
 from datetime import datetime
 
+from ai.src.utils.messages import extract_inventory
 from ai.src.zappy_ai import Bot
 from ai.src.gameplay.enum_gameplay import Directions as dir
 from ai.src.mvt.path import Path
@@ -40,6 +41,14 @@ class Player(Bot):
                                 'mendiane': 0,
                                 'phiras': 0,
                                 'thystame': 0
+                                }
+        self.need_ressources = {'food': 0,
+                                'linemate': 8,
+                                'deraumere': 8,
+                                'sibur': 10,
+                                'mendiane': 5,
+                                'phiras': 6,
+                                'thystame': 1
                                 }
         self.inventory: dict[str: int] = self.based_ressources
         self.looked: bool = False
@@ -239,13 +248,17 @@ class Player(Bot):
                 self.looked = True
                 self.environment = msgs
             if recv_type == 'inventory':
+                self.inventory = extract_inventory(msgs)
+                self.life = self.inventory['food'] * self.FOOD
+                # print(f'life: {self.life}')
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                print('elevation :', msgs)
+                # print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':
+                    # TODO - on vient pas skip des messages avec ce continue ?
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
