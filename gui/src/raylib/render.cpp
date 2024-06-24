@@ -41,9 +41,10 @@ namespace Zappy
             for (auto &egg : _eggs) {
                 egg->draw();
             }
-
-            for (auto &player : _players) {
-                player->draw();
+            if (_showPlayers) {
+                for (auto &player : _players) {
+                    player->draw();
+                }
             }
             //* First proposal
             // static raylib::Vector3 menuPos = raylib::Vector3(4.4, 7.5, -9) * _gridSize;

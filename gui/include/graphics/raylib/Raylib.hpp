@@ -44,6 +44,7 @@ namespace Zappy {
             Raylib(const std::string &assetsRoot, ClientSocket &socket);
             void render(const World &world) override;
             void renderDebug(void);
+            void handleKeys(void);
             void update(const World &world) override;
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
@@ -71,6 +72,7 @@ namespace Zappy {
             raylib::Vector3 _defaultCameraPosition;
             raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
+            bool _showPlayers = true;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;

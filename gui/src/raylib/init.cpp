@@ -63,10 +63,6 @@ namespace Zappy {
         _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
         _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
         //* Menu
-        // First proposal
-        // _camera.SetPosition(raylib::Vector3(4.4, 7.5, -5) * _gridSize);
-        // _camera.SetTarget(raylib::Vector3(4.4, 7.5, -7) * _gridSize);
-
         _camera.SetPosition(raylib::Vector3(4.4, 10, -5) * _gridSize);
         _camera.SetTarget(raylib::Vector3(4.4, 10, -7) * _gridSize);
 

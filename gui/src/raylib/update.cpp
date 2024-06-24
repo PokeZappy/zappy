@@ -12,6 +12,7 @@ namespace Zappy {
     void Raylib::update(const World &world)
     {
         _hudMode->clearPlayers();
+<<<<<<< Updated upstream
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT) {
              if (IsKeyDown(KEY_SPACE)) {
@@ -93,6 +94,9 @@ namespace Zappy {
         if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
         if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
         if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
+=======
+        handleKeys();
+>>>>>>> Stashed changes
 
         // Sun & Moon
         size_t revolution = 1789 / 10;
@@ -107,8 +111,8 @@ namespace Zappy {
             // else _lights[i].enabled = true;
             UpdateLightValues(_shader, _lights[i]);
         }
-
-        updatePlayers(world);
+        if (_showPlayers)
+            updatePlayers(world);
         updateEggs(world);
         testEvolution();
 
@@ -122,7 +126,7 @@ namespace Zappy {
 
         if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             _hudMode->setFirstPokemonTarget();
-        
+
         if (_hudMode->activated()) {
             _hudMode->followTarget(_camera);
             _hudMode->update(_camera, _socket);
