@@ -31,8 +31,8 @@ static int return_case_direction(double angle)
 
 static int get_sound_direction(int w, int h, player_t *player, vector_t point)
 {
-    int dx = point._x - player->_pos._x;
-    int dy = point._y - player->_pos._y;
+    int dx = point.x - player->pos.x;
+    int dy = point.y - player->pos.y;
     double angle;
 
     if (dx == 0 && dy == 0)
@@ -40,11 +40,11 @@ static int get_sound_direction(int w, int h, player_t *player, vector_t point)
     angle = atan2(dy, dx) * 180 / M_PI;
     if (angle < 0)
         angle += 360;
-    if (player->_direction == UP)
+    if (player->direction == UP)
         angle -= 90;
-    if (player->_direction == DOWN)
+    if (player->direction == DOWN)
         angle += 90;
-    if (player->_direction == LEFT)
+    if (player->direction == LEFT)
         angle += 180;
     if (angle < 0)
         angle += 360;
@@ -65,19 +65,19 @@ static int check_for_ko(char *args, client_socket_t *client)
 void cmd_broadcast(server_t *server, char *args, client_socket_t *client)
 {
     char *text = args + 10;
-    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
 
     if (!check_for_ko(args, client))
         return;
     while (current != NULL) {
-        if (current->player && current->_id != client->_id) {
+        if (current->player && current->id != client->id) {
             dprintf(current->socket, "message %d, %s\n",
-            get_sound_direction(server->grid->_width, server->grid->_height,
-            current->player, client->player->_pos), text);
+            get_sound_direction(server->grid->width, server->grid->height,
+            current->player, client->player->pos), text);
         }
         current = TAILQ_NEXT(current, entries);
     }
     if (get_gui(server))
-        dprintf(get_gui(server)->socket, "pbc %d %s\n", client->_id, text);
+        dprintf(get_gui(server)->socket, "pbc %d %s\n", client->id, text);
     dprintf(client->socket, "ok\n");
 }

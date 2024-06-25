@@ -1,5 +1,12 @@
 
-resources = {'linemate': 0, 'deraumere': 0, 'sibur': 0, 'mendiane': 0, 'phiras': 0, 'thystame': 0, 'food': 0, 'player': 0}
+resources = {'linemate': 0,
+             'deraumere': 0,
+             'sibur': 0,
+             'mendiane': 0,
+             'phiras': 0,
+             'thystame': 0,
+             'food': 0,
+             'player': 0}
 
 
 def look_resources(around: str, focus: list[str]) -> list[list[str]]:

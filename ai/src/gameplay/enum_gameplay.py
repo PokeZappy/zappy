@@ -65,3 +65,4 @@ TESTUDO = [
     {'id': 23, 'path': ['Forward', 'Right', 'Forward']}
 ]
 
+FOCUS = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate']

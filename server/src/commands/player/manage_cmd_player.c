@@ -34,7 +34,7 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
         strlen(commands[i].name)) == 0) {
             gettimeofday(&wait, NULL);
             add_seconds(&wait, commands[i].time
-            / (float)server->arguments->_f);
+            / (float)server->arguments->f);
             cmd->ptr = commands[i].ptr;
             cmd->time = commands[i].time;
             cmd->delay = wait;

@@ -9,16 +9,16 @@
 
 void check_eggs(server_t *server)
 {
-    egg_t *egg = TAILQ_FIRST(&server->_head_egg);
+    egg_t *egg = TAILQ_FIRST(&server->head_egg);
 
     while (egg != NULL) {
-        if (egg->_available > 0) {
-            egg->_available -= 1;
+        if (egg->available > 0) {
+            egg->available -= 1;
         }
-        if (egg->_available == 0 && egg->_ismatthias == 0) {
-            egg->_ismatthias = 1;
-            egg->_team->_max_clients += 1;
+        if (egg->available == 0 && egg->is_matthias == 0) {
+            egg->is_matthias = 1;
+            egg->team->max_clients += 1;
         }
-        egg = TAILQ_NEXT(egg, _entries);
+        egg = TAILQ_NEXT(egg, entries);
     }
 }

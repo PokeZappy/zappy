@@ -13,31 +13,31 @@ team_t *init_team(char *name, int max_clients)
 {
     team_t *team = (team_t *)malloc(sizeof(team_t));
 
-    team->_name = strdup(name);
-    team->_max_clients = max_clients;
-    team->_current_clients = 0;
+    team->name = strdup(name);
+    team->max_clients = max_clients;
+    team->current_clients = 0;
     return team;
 }
 
 void free_team(team_t *team)
 {
-    free(team->_name);
+    free(team->name);
     free(team);
 }
 
 team_t *search_team(char *team_name, server_t *server)
 {
-    team_t *team = TAILQ_FIRST(&server->_head_team);
+    team_t *team = TAILQ_FIRST(&server->head_team);
 
     while (team != NULL) {
-        if (strcmp(team->_name, team_name) == 0)
+        if (strcmp(team->name, team_name) == 0)
             return team;
-        team = TAILQ_NEXT(team, _entries);
+        team = TAILQ_NEXT(team, entries);
     }
     return NULL;
 }
 
 int get_client_rest(team_t *team)
 {
-    return team->_max_clients - team->_current_clients;
+    return team->max_clients - team->current_clients;
 }

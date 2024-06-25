@@ -11,8 +11,8 @@ void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p)
 {
     char buffer[4096];
 
-    sprintf(buffer, "pic %d %d %d\n", p->_pos._x,
-    p->_pos._y, p->_level);
+    sprintf(buffer, "pic %d %d %d\n", p->pos.x,
+    p->pos.y, p->level);
     for (int i = 0; i < c->number_of_participants; i++) {
         sprintf(buffer, "%s %d", buffer,
         c->participants[i]->socket);
@@ -37,9 +37,9 @@ delayed_command_t *ficbcq(server_t *s, client_socket_t *c)
     delayed_command_t *command;
     cmd_incantation_t *incantation;
 
-    TAILQ_FOREACH(command, &s->_head_delayed_commands, entries) {
-        if (strncmp(command->_args, "Incantation", 11) == 0) {
-            incantation = find_incantation(s, command->_client);
+    TAILQ_FOREACH(command, &s->head_delayed_commands, entries) {
+        if (strncmp(command->args, "Incantation", 11) == 0) {
+            incantation = find_incantation(s, command->client);
             if (is_participant(incantation, c))
                 return command;
         }

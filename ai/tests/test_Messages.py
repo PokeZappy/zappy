@@ -47,7 +47,7 @@ class TestMessages:
         latin = Latin()
         messages = Messages(cipher, "123", latin)
         result_empty = messages.receive('', "hello")
-        assert result_empty == [('ko', 'ko')]
+        assert result_empty == [('broadcast', 'ko')]
 
         # TODO - Find why isn't working
         # latin = Latin()

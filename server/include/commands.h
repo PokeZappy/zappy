@@ -26,10 +26,10 @@ struct vector_s;
 typedef struct vector_s vector_t;
 
 typedef struct delayed_command_s {
-    void (*_func)(server_t *server, char *args, client_socket_t *client);
-    char *_args;
-    client_socket_t *_client;
-    timeval_t _delay;
+    void (*func)(server_t *server, char *args, client_socket_t *client);
+    char *args;
+    client_socket_t *client;
+    timeval_t delay;
     TAILQ_ENTRY(delayed_command_s) entries;
 } delayed_command_t;
 
@@ -37,7 +37,7 @@ typedef struct cmd_incantation_s {
     client_socket_t *organizer;
     client_socket_t **participants;
     int number_of_participants;
-    int _level;
+    int level;
     vector_t tile_vector;
     TAILQ_ENTRY(cmd_incantation_s) entries;
 } cmd_incantation_t;
@@ -61,7 +61,6 @@ void cmd_inventory(server_t *server, char *args, client_socket_t *client);
 void cmd_broadcast(server_t *server, char *args, client_socket_t *client);
 void cmd_fork(server_t *server, char *args, client_socket_t *client);
 void cmd_eject(server_t *server, char *args, client_socket_t *client);
-void cmd_dead(server_t *server, char *args, client_socket_t *client);
 void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client);
 void cmd_take(server_t *server, char *args, client_socket_t *client);
 void cmd_set(server_t *server, char *args, client_socket_t *client);
@@ -108,3 +107,4 @@ bool compare_timeval(timeval_t *a, timeval_t *b);
 bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time);
 void add_delay(server_t *server, client_socket_t *c, delayed_command_t *delay);
 void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d);
+void bct(server_t *server, vector_t pos);

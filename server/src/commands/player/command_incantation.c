@@ -22,16 +22,16 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
     }
     create_current_incantation(server, client->player);
     gettimeofday(&cmd->delay, NULL);
-    add_seconds(&cmd->delay, cmd->time / (float)server->arguments->_f);
+    add_seconds(&cmd->delay, cmd->time / (float)server->arguments->f);
     actl(server, client, cmd, args);
 }
 
 void is_win(server_t *server, client_socket_t *client, cmd_incantation_t *c)
 {
-    if (client->player->_level == 8) {
+    if (client->player->level == 8) {
         dprintf(client->socket, "win\n");
         dprintf(get_gui(server)->socket, "seg %s\n",
-        client->player->_team->_name);
+        client->player->team->name);
     }
     free_incantation(server, c);
 }
@@ -44,18 +44,18 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
     if (!check_post_incantation(server, client)) {
         dprintf(client->socket, "ko\n");
         dprintf(get_gui(server)->socket, "pie %d %d ko\n",
-        player->_pos._x, player->_pos._y);
+        player->pos.x, player->pos.y);
         return;
     }
-    dprintf(get_gui(server)->socket, "pie %d %d ok\n", player->_pos._x,
-            player->_pos._y);
+    dprintf(get_gui(server)->socket, "pie %d %d ok\n", player->pos.x,
+            player->pos.y);
     for (int i = 0; i < current->number_of_participants; i++) {
-        current->participants[i]->player->_level++;
+        current->participants[i]->player->level++;
         dprintf(current->participants[i]->socket, "Current level: %d\n",
-            current->participants[i]->player->_level);
+            current->participants[i]->player->level);
         dprintf(get_gui(server)->socket, "plv %d %d\n",
             current->participants[i]->socket,
-            current->participants[i]->player->_level);
+            current->participants[i]->player->level);
     }
     is_win(server, client, current);
 }

@@ -7,9 +7,10 @@
 
 #include "Raylib.hpp"
 #include <filesystem>
+#include <optional>
 
 namespace Zappy {
-     Raylib::Raylib(const std::string &assetsRoot) :
+     Raylib::Raylib(const std::string &assetsRoot, ClientSocket &socket) :
         _assetsRoot(assetsRoot),
         _window(GUI_WIDTH, GUI_HEIGHT, "Zappy"),
         _camera(Vector3{(10.0F), (100.0F), (10.0F)}, Vector3{(0.0F), (0.0F), (0.0F)}, Vector3{(0.0F), (1.0F), (0.0F)}, 45.0f),
@@ -20,9 +21,14 @@ namespace Zappy {
         _arena(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
         _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
-        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs"))
+        _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
+        _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 0, _gridSize / 2)),
+        _incantationSuccessGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
+        _incantationFailGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),
+        _socket(socket)
     {
         _window.SetTargetFPS(60);
+        SetExitKey(KEY_DELETE);
         try
         {
             _configuration.readFile((_assetsRoot + "pokemons.cfg").c_str());
@@ -42,11 +48,11 @@ namespace Zappy {
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        float ambientLight = 0.5f;
-        float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
+        float array[4] = { _defaultAmbientLight, _defaultAmbientLight,
+            _defaultAmbientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
-        _hudMode = std::make_unique<HudMode>(_assetsRoot);
+        _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
         _window.ToggleFullscreen();
 
         // Create lights
@@ -58,15 +64,13 @@ namespace Zappy {
         // _lights[3] = CreateLight(LIGHT_POINT, (Vector3){ 0, lightHeight, 0 }, Vector3Zero(), BLUE, _shader);
 
         // -- Camera --
-        // _camera.SetPosition(Vector3{(81.0F), (35.0F), (68.0F)});
-        // _camera.SetTarget(Vector3{(305.0F), (-60.0F), (-10.0F)});
+        //* Front of the scene
+        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
+        _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
+        //* Menu
+        _camera.SetPosition(raylib::Vector3(4.4, 10, -5) * _gridSize);
+        _camera.SetTarget(raylib::Vector3(4.4, 10, -7) * _gridSize);
 
-        _camera.SetPosition(raylib::Vector3(4.8 * _gridSize, 2.5 * _gridSize, 14.8 * _gridSize));
-        _camera.SetTarget(raylib::Vector3(4.8 * _gridSize, 2.2 * _gridSize, 13.1 * _gridSize));
-
-        // 30x30
-        // _camera.SetPosition(Vector3{(789.0F), (148.0F), (1609.0F)});
-        // _camera.SetTarget(Vector3{(817.0F), (74.0F), (1365.0F)});
         // DisableCursor();
 
         // Load floor texture
@@ -102,7 +106,7 @@ namespace Zappy {
                       "dark", "fight", "fairy",
                       "ice", "normal", "poison",
                       "rock", "ghost", "fly",
-                      "eevee", "mustebeh"};
+                      "eevee", "mustebee"};
         _listTypesColors = {
             (Color){107, 190, 48, 255}, (Color){231, 59, 12, 255}, (Color){48, 144, 241, 255},
             (Color){179, 179, 194, 255}, (Color){113, 89, 215, 255}, (Color){250, 179, 21, 255},
@@ -119,13 +123,14 @@ namespace Zappy {
         // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
 
-        _arenaAltitudeScale = -(1. / 10.);
+        _arenaAltitudeScale = -(1. / 13.);
         _arenaScale = _gridSize;
         getArenaOffset = [](size_t tileCount, float gridSize) -> float {
             float correction = tileCount % 2 == 0 ? gridSize / 2 : 0;
             return tileCount / 2 * gridSize - correction;
         };
 
+        // Music
         InitAudioDevice();
         _mainTheme = raylib::Music(_assetsRoot + MAIN_THEME_PATH);
         _mainTheme.Play();
@@ -133,5 +138,18 @@ namespace Zappy {
         float randNum = Utils::random(80, 120) / 100.;
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);
         _mainTheme.SetVolume(0.07);
+
+        // Menu gif
+        std::string menuPath = "menu/";
+        menuPath += Utils::random(0, 1) == 0 ? "day/" : "dawn/";
+        _menuIntroGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_intro", false, 0);
+        _menuIntroGif->reset();
+        _menuGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_main", true, 1);
+
+        // Broadcast gif
+        _broadcastGif.reset();
+
+        // _camera.SetPosition(_defaultCameraPosition);
+        // _camera.SetTarget(_defaultCameraTarget);
     }
 }

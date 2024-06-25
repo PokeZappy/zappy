@@ -39,12 +39,12 @@ static int count_names(char **av)
 
 static int create_tab(int ac, char **av, server_arg_t *args, int i)
 {
-    args->_n = (char **)malloc(sizeof(char *) * (args->_num_names + 1));
-    args->_n[args->_num_names] = NULL;
+    args->n = (char **)malloc(sizeof(char *) * (args->num_names + 1));
+    args->n[args->num_names] = NULL;
     i--;
-    for (int j = 0; j < args->_num_names; j++) {
+    for (int j = 0; j < args->num_names; j++) {
         i++;
-        args->_n[j] = strdup(av[i]);
+        args->n[j] = strdup(av[i]);
     }
     return i;
 }
@@ -61,15 +61,15 @@ static int is_an_arg(char *str)
 static int check_arg(int ac, char **av, server_arg_t *args, int i)
 {
     if (strcmp(av[i - 1], "-p") == 0 && i < ac && is_number(av[i]))
-        args->_p = atoi(av[i]);
+        args->p = atoi(av[i]);
     if (strcmp(av[i - 1], "-x") == 0 && i < ac && is_number(av[i]))
-        args->_x = atoi(av[i]);
+        args->x = atoi(av[i]);
     if (strcmp(av[i - 1], "-y") == 0 && i < ac && is_number(av[i]))
-        args->_y = atoi(av[i]);
+        args->y = atoi(av[i]);
     if (strcmp(av[i - 1], "-c") == 0 && i < ac && is_number(av[i]))
-        args->_c = atoi(av[i]);
+        args->c = atoi(av[i]);
     if (strcmp(av[i - 1], "-f") == 0 && i < ac && is_number(av[i]))
-        args->_f = atoi(av[i]);
+        args->f = atoi(av[i]);
     if (strcmp(av[i - 1], "-n") == 0 && i < ac)
         return create_tab(ac, av, args, i);
     if (!is_an_arg(av[i - 1]) || (i + 1 > ac)) {
@@ -92,7 +92,7 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
         }
         i = temp;
     }
-    if (args->_x < 10 || args->_x > 30 || args->_y < 10 || args->_y > 30) {
+    if (args->x < 10 || args->x > 30 || args->y < 10 || args->y > 30) {
         free_server_arg(args);
         return 84;
     }
@@ -101,15 +101,16 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
 
 static server_arg_t *parsing_av(int ac, char **av, server_arg_t *arg)
 {
-    arg->_p = -84;
-    arg->_x = -84;
-    arg->_y = -84;
-    arg->_c = -84;
-    arg->_f = -84;
-    if (parsing_arg(ac, av, arg) == 84)
+    arg->p = -84;
+    arg->x = -84;
+    arg->y = -84;
+    arg->c = -84;
+    arg->f = -84;
+    if (parsing_arg(ac, av, arg) == 84) {
         return NULL;
-    if (arg->_p == -84 || arg->_x == -84 || arg->_y == -84 ||
-        arg->_c == -84 || arg->_f == -84 || !arg->_n) {
+    }
+    if (arg->p == -84 || arg->x == -84 || arg->y == -84 ||
+        arg->c == -84 || arg->f == -84 || !arg->n) {
         return NULL;
     }
     return arg;
@@ -129,6 +130,6 @@ server_arg_t *parsing(int ac, char **av)
         free_server_arg(args);
         return NULL;
     }
-    args->_num_names = num_names;
+    args->num_names = num_names;
     return parsing_av(ac, av, args);
 }

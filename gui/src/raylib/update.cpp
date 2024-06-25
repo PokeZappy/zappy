@@ -11,85 +11,8 @@
 namespace Zappy {
     void Raylib::update(const World &world)
     {
-        float moveYSpeed = _gridSize / 15.;
-        if (debugMode->getType() != CHAT) {
-             if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += moveYSpeed;
-            _camera.target.y += moveYSpeed;
-            }
-            if (IsKeyDown(KEY_LEFT_SHIFT))
-            {
-                _camera.position.y -= moveYSpeed;
-                _camera.target.y -= moveYSpeed;
-            }
-        }
-        if (IsKeyPressed(KEY_N)) {
-            _hudMode->switchState();
-        }
-        if (IsKeyPressed(KEY_P)) {
-            if (debugMode->activated() && debugMode->getType() == NONE) {
-                debugMode->desactive(_camera);
-            } else {
-                debugMode->activate(_camera);
-            }
-        }
-        if (debugMode->activated()) {
-            debugMode->update();
-        } else {
-            if (IsKeyPressed(KEY_ONE)) {
-                _mapX++;
-                _mapY++;
-            } else if (IsKeyPressed(KEY_TWO)) {
-                _mapX--;
-                _mapY--;
-            } else if (IsKeyPressed(KEY_THREE)) {
-                _arena = raylib::Model(_assetsRoot + "local/boxing_ring.glb");
-                for (int i = 0; i < _arena.materialCount; i++)
-                    _arena.materials[i].shader = _shader;
-                _arenaScale = _gridSize * 1.35;
-                _arenaAltitudeScale = 0.2;
-                getArenaOffset = [](size_t tileCount, float gridSize) -> float {
-                    (void)gridSize;
-                    return - 30 - (float)tileCount * 7.;
-                };
-            } else if (IsKeyPressed(KEY_T)) {
-                _mapX = 10;
-                _mapY = 10;
-            } else if (IsKeyPressed(KEY_Y)) {
-                _mapX = 20;
-                _mapY = 20;
-            } else if (IsKeyPressed(KEY_U)) {
-                _mapX = 30;
-                _mapY = 30;
-            }
-        }
-
-        if (debugMode->getType() != CHAT)
-            _camera.Update(CAMERA_FIRST_PERSON);
-
-        if (!_players.empty() && !_players[0]->isDying()) {
-            //* Follow the player with id 0
-            // for (auto &player : _players) {
-            //     if (_players[0]->worldPlayer->getId() == 0) {
-            //         _camera.target = player->getPosition() * _gridSize;
-            //         TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
-            //         break;
-            //     }
-            // }
-            //* Follow the first player
-            // _camera.target = _players[0]->getPosition() * _gridSize;
-            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        }
-
-        // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
-        float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
-        SetShaderValue(_shader, _shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
-
-        // Check key inputs to enable/disable lights
-        if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
-        if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
-        if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
-        if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
+        _hudMode->clearPlayers();
+        handleKeys();
 
         // Sun & Moon
         size_t revolution = 1789 / 10;
@@ -97,20 +20,53 @@ namespace Zappy {
         for (int i = 0; i < 2; i++) {
             _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
-            _lights[i].color =  newColor.Brightness(_lights[i].position.y * 1.f / 1000.f - (i == 0 ? 0.6f : 0.8f));
+            float brightness = _lights[i].position.y / _gridSize / 50;
+            // std::cout << "i" << std::to_string(i) << " height: " << _lights[i].position.y << ", brightness value: " << brightness << std::endl;
+            _lights[i].color =  newColor.Brightness(brightness * (i == 0 ? 1.0f : 0.3f));
             // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
             // else _lights[i].enabled = true;
             UpdateLightValues(_shader, _lights[i]);
         }
-
-        updatePlayers(world);
+        if (_showPlayers)
+            updatePlayers(world);
         updateEggs(world);
         testEvolution();
+
+        for (auto &player : _players) {
+                if ((_hudMode->getTile() != nullptr) &&
+                (_hudMode->getTile()->getY() == player->worldPlayer->getX()) &&
+                (_hudMode->getTile()->getX() == player->worldPlayer->getY()))
+                    _hudMode->addPlayer(player);
+        }
+
+
+        if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            _hudMode->setFirstPokemonTarget();
+
+        if (_hudMode->activated()) {
+            _cameraViewMode = _hudMode->followTarget(_camera);
+            _hudMode->update(_camera, _socket);
+        }
+
+        float wheel = GetMouseWheelMove();
+        if (wheel > 0 && _hudMode->activated()) {
+            _hudMode->scrollUp(wheel);
+        } else if (wheel < 0 && _hudMode->activated()) {
+            _hudMode->scrollDown(wheel);
+        }
+
 
         for (auto &model : _models) {
             model.second->update();
         }
         _mainTheme.Update();
+        if (_menuIntroGif != nullptr) {
+            if (!_menuIntroGif->isAnimEnded())
+                _menuIntroGif->update();
+            else
+                _menuIntroGif.release();
+        } else if (_menuGif != nullptr)
+            _menuGif->update();
     }
 
     void Raylib::updatePlayers(const World &world) {
@@ -124,7 +80,9 @@ namespace Zappy {
                     _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
                 }
 
-                _players.push_back(std::make_unique<PlayerRaylib>(player, pokemon, _models[pokemon.id], _gridSize));
+                _players.push_back(std::make_unique<PlayerRaylib>(player,
+                    pokemon, _models[pokemon.id], _gridSize, _broadcastGif,
+                    _incantationSuccessGif, _incantationFailGif));
             }
         }
 
@@ -135,7 +93,7 @@ namespace Zappy {
                 _players[i]->kill();
             }
             _players[i]->update();
-            if (_players[i]->getHeight() > 2000) {
+            if (_players[i]->getHeight() > _gridSize * 100) {
                 _players.erase(_players.begin() + i - decal);
                 decal++;
             }
@@ -157,7 +115,7 @@ namespace Zappy {
                 _eggs[i]->kill();
             }
             _eggs[i]->update();
-            if (_eggs[i]->isDying()) {
+            if (_eggs[i]->getAnimatedScale() < 0) {
                 _eggs.erase(_eggs.begin() + i - decal);
                 decal++;
             }

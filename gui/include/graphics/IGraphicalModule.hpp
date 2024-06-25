@@ -11,7 +11,11 @@
 #include "Tile.hpp"
 #include "IEntity.hpp"
 #define GUI_WIDTH 1920
+#ifdef MACBOOK
+#define GUI_HEIGHT 1200
+#else
 #define GUI_HEIGHT 1080
+#endif
 
 namespace Zappy
 {

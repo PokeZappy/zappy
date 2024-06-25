@@ -7,7 +7,14 @@
 
 #pragma once
 
-#include "Raylib.hpp"
+#include "raylib-cpp.hpp"
+#include <memory>
+#include "Tile.hpp"
+#include "PlayerRaylib.hpp"
+#include "ClientSocket.hpp"
+#include "ShellCommand.hpp"
+#include "World.hpp"
+#include <chrono>
 
 #define BASEWINDOW_HUD_PATH "textures/hud/base_window.png"
 #define INVENTORY_HUD_PATH "textures/hud/inventory.png"
@@ -23,11 +30,13 @@
 #define TYPESFR_HUD_PATH "textures/hud/types_fr.png"
 #define NOT_ENCANTING_HUD_PATH "textures/hud/evolution_icon_disabled.png"
 #define ENCANTING_HUD_PATH "textures/hud/evolution_icon_enabled.png"
+#define PLAYER_HUD_PATH "textures/hud/player.png"
+#define EGG_HUD_PATH "textures/hud/egg.png"
 
 namespace Zappy {
     class HudMode {
     public:
-        HudMode(const std::string &assetsRoot) :
+        HudMode(const std::string &assetsRoot, double gridSize) :
             _backgroundHudTexture(assetsRoot + BASEWINDOW_HUD_PATH),
             _inventoryHudTexture(assetsRoot + INVENTORY_HUD_PATH),
             _attackHudTexture(assetsRoot + ATTACK_HUD_PATH),
@@ -40,20 +49,42 @@ namespace Zappy {
             _foodTexture(assetsRoot + FOOD_HUD_PATH),
             _typesTexture(assetsRoot + TYPES_HUD_PATH),
             _notEncantingTexture(assetsRoot + NOT_ENCANTING_HUD_PATH),
-            _encantingTexture(assetsRoot + ENCANTING_HUD_PATH) {}
-        void switchState() { _activated = !_activated; }
+            _encantingTexture(assetsRoot + ENCANTING_HUD_PATH),
+            _playerTexture(assetsRoot + PLAYER_HUD_PATH),
+            _eggTexture(assetsRoot + EGG_HUD_PATH),
+            _gridSize(gridSize),
+            _cursorClock(std::chrono::steady_clock::now()) {}
+        void switchState() { 
+            _activated = !_activated;
+            if (_targetedPlayer != nullptr)
+                _targetedPlayer = nullptr;
+            }
         bool activated() { return _activated; }
         void setTile(std::shared_ptr<Tile> tile) { _selectedTile = tile; }
         std::shared_ptr<Tile> getTile() { return _selectedTile; }
         std::vector<std::shared_ptr<PlayerRaylib>> getPlayers() { return _selectedPlayers; }
         void addPlayer(std::shared_ptr<PlayerRaylib> player) { _selectedPlayers.push_back(player); }
         void clearPlayers() { _selectedPlayers.clear(); }
-        void drawBackground();
-        void drawInventory(bool player);
+        void drawBackground(const World &world, size_t graphicPlayerCount, size_t graphicEggCount);
+        void drawInventory(Inventory inventory, int topX, int topY, std::string title);
         void drawPlayers();
+        void drawAttacks();
+        void drawShell(const std::vector<ShellCommand> &commands);
+        void verifyPlayerPosition();
         void drawPokemons();
-        void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y);
-        void drawType(std::string type, int y);
+        void drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y, raylib::Color colorArrow);
+        void scrollUp(float wheel);
+        void scrollDown(float wheel);
+        void drawType(std::string type, int x, int y);
+        void drawChat();
+        void drawLegend();
+        void drawEntityCount(size_t graphicPlayerCount, size_t graphicEggCount, size_t worldPlayerCount, size_t worldEggCount, int x, int y);
+        void setFirstPokemonTarget();
+        CameraMode followTarget(raylib::Camera &camera);
+        void update(raylib::Camera &camera, ClientSocket &socket);
+        void updateChat(ClientSocket &socket);
+        void setSelectedPlayerToTarget();
+        bool isChatEnabled() { return _chat; }
 
     private:
         bool _activated = false;
@@ -71,10 +102,26 @@ namespace Zappy {
         raylib::Texture2D _typesTexture;
         raylib::Texture2D _notEncantingTexture;
         raylib::Texture2D _encantingTexture;
+        raylib::Texture2D _playerTexture;
+        raylib::Texture2D _eggTexture;
         Rectangle rectangle;
 
         std::shared_ptr<Tile> _selectedTile = nullptr;
         std::vector<std::shared_ptr<PlayerRaylib>> _selectedPlayers;
         std::shared_ptr<PlayerRaylib> _selectedPlayer;
+        std::shared_ptr<PlayerRaylib> _targetedPlayer = nullptr;
+        size_t _scrollIndex = 0;
+        double _howManyScroll = 0.0f;
+        double _gridSize;
+
+        //chat
+        bool _chat = false;
+        std::string _inputString = "";
+        std::chrono::time_point<std::chrono::steady_clock> _cursorClock;
+
+        // Colors
+        raylib::Color _white = raylib::Color::White();
+        raylib::Color _black120 = raylib::Color(0, 0, 0, 120);
+        raylib::Color _green = raylib::Color::Green();
     };
 }

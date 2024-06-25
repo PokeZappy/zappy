@@ -10,16 +10,20 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     :param host: The hostname or IP address to connect to.
     :return: A tuple containing a list of integers and the socket object used for the connection.
     """
-    # TODO - add security when server not open
     client_socket = socket(AF_INET, SOCK_STREAM)
     client_socket.connect((host, int(port)))
-    welcome_message = client_socket.recv(1_000_000).decode().strip()
-    # print(f"Received: {welcome_message}")
+    welcome_message = client_socket.recv(10_000).decode().strip()
     client_socket.send(f"{team_name}\n".encode())
-    cli_number = client_socket.recv(1_000_000).decode()
-    # print(f"Received: {cli_number}")
-    new = cli_number.split()
-    # print(new)
-    result = list(map(int, filter(None, new)))
-    # print(result)
+    cli_number = client_socket.recv(100_000).decode()
+    new_ntq = cli_number.split()
+    result = []
+    try:
+        if new_ntq != ['ko']:
+            result = list(map(int, filter(None, new_ntq[:3])))
+    except ValueError as e:
+        print(f"Error: {e}\n for: {cli_number} or {welcome_message}")
+        result = [0, 30, 30]
+    if not result:
+        client_socket.close()
+        exit(0)
     return result, client_socket

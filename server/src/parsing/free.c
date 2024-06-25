@@ -18,8 +18,8 @@ void free_server_arg(server_arg_t *arguments)
 {
     if (arguments == NULL)
         return;
-    if (arguments->_n != NULL)
-        free_tab(arguments->_n);
+    if (arguments->n != NULL)
+        free_tab(arguments->n);
     free(arguments);
 }
 
@@ -31,37 +31,37 @@ void free_client(struct client_socket_s *client)
 
 static void free_server_client(server_t *server)
 {
-    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *client = TAILQ_FIRST(&server->head_client_sockets);
 
     while (client != NULL) {
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+        TAILQ_REMOVE(&server->head_client_sockets, client, entries);
         close(client->socket);
         free_player(client->player);
         free(client);
-        client = TAILQ_FIRST(&server->_head_client_sockets);
+        client = TAILQ_FIRST(&server->head_client_sockets);
     }
 }
 
 static void free_server_team(server_t *server)
 {
-    team_t *team = TAILQ_FIRST(&server->_head_team);
+    team_t *team = TAILQ_FIRST(&server->head_team);
 
     while (team != NULL) {
-        TAILQ_REMOVE(&server->_head_team, team, _entries);
+        TAILQ_REMOVE(&server->head_team, team, entries);
         free_team(team);
-        team = TAILQ_FIRST(&server->_head_team);
+        team = TAILQ_FIRST(&server->head_team);
     }
 }
 
 static void free_server_commands(server_t *server)
 {
-    delayed_command_t *d = TAILQ_FIRST(&server->_head_delayed_commands);
+    delayed_command_t *d = TAILQ_FIRST(&server->head_delayed_commands);
 
     while (d != NULL) {
-        TAILQ_REMOVE(&server->_head_delayed_commands, d, entries);
-        free(d->_args);
+        TAILQ_REMOVE(&server->head_delayed_commands, d, entries);
+        free(d->args);
         free(d);
-        d = TAILQ_FIRST(&server->_head_delayed_commands);
+        d = TAILQ_FIRST(&server->head_delayed_commands);
     }
 }
 

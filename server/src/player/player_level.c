@@ -9,11 +9,11 @@
 
 int get_player_level(player_t *player)
 {
-    return player->_level;
+    return player->level;
 }
 
 int increment_player_level(player_t *player)
 {
-    player->_level++;
-    return player->_level;
+    player->level++;
+    return player->level;
 }

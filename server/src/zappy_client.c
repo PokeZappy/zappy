@@ -20,45 +20,46 @@ static void send_client_message(int socket, const char *msg)
 
 static void close_all_clients(struct server_s *server)
 {
-    client_socket_t *client = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *client = TAILQ_FIRST(&server->head_client_sockets);
 
     if (!server)
         return;
     while (client != NULL) {
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+        TAILQ_REMOVE(&server->head_client_sockets, client, entries);
         close(client->socket);
         free(client);
-        client = TAILQ_FIRST(&server->_head_client_sockets);
+        client = TAILQ_FIRST(&server->head_client_sockets);
     }
 }
 
 static void send_all_info(struct server_s *server, int gui_socket)
 {
-    egg_t *e = TAILQ_FIRST(&server->_head_egg);
-    client_socket_t *p = TAILQ_FIRST(&server->_head_client_sockets);
+    egg_t *e = TAILQ_FIRST(&server->head_egg);
+    client_socket_t *p = TAILQ_FIRST(&server->head_client_sockets);
 
     while (p != NULL) {
-        if (p->_is_gui == 1) {
+        if (p->is_gui == 1) {
             p = TAILQ_NEXT(p, entries);
             continue;
         }
-        dprintf(gui_socket, "ppo %d %d %d %d\n", p->_id, p->player->_pos._x,
-            p->player->_pos._y, p->player->_direction + 1);
+        dprintf(gui_socket, "pnw %d %d %d %d %d %s\n", p->id, p->player->pos.x,
+            p->player->pos.y, p->player->direction + 1, p->player->level,
+            p->player->team->name);
         p = TAILQ_NEXT(p, entries);
     }
     while (e != NULL) {
-        dprintf(gui_socket, "enw %d %d %d %d\n", e->_id, e->_client_id,
-            e->_pos._x, e->_pos._y);
-        e = TAILQ_NEXT(e, _entries);
+        dprintf(gui_socket, "enw %d %d %d %d\n", e->id, e->client_id,
+            e->pos.x, e->pos.y);
+        e = TAILQ_NEXT(e, entries);
     }
 }
 
 static void handle_gui_client(client_socket_t *client, struct server_s *server)
 {
-    int x = server->grid->_width;
-    int y = server->grid->_height;
+    int x = server->grid->width;
+    int y = server->grid->height;
 
-    client->_is_gui = 1;
+    client->is_gui = 1;
     cmd_msz(server, NULL, client);
     cmd_sgt(server, NULL, client);
     cmd_mct(server, NULL, client);
@@ -69,7 +70,7 @@ static void handle_gui_client(client_socket_t *client, struct server_s *server)
 static void handle_client_cmd(char *commands, client_socket_t *client,
     struct server_s *server)
 {
-    if (client->player == NULL && client->_is_gui == 0) {
+    if (client->player == NULL && client->is_gui == 0) {
         if (strcmp(commands, "GRAPHIC") == 0) {
             handle_gui_client(client, server);
             return;
@@ -80,10 +81,10 @@ static void handle_client_cmd(char *commands, client_socket_t *client,
             return;
         }
         dprintf(client->socket, "%d\n%d %d\n", get_client_rest(client->player
-            ->_team), server->grid->_width, server->grid->_height);
+            ->team), server->grid->width, server->grid->height);
         cmd_pnw(server, NULL, client);
     }
-    if (client->_is_gui == 0)
+    if (client->is_gui == 0)
         return manage_cmd_play(commands, client, server);
     manage_cmd_gui(commands, client, server);
 }
@@ -116,7 +117,7 @@ static void handle(struct server_s *server, fd_set *readfds,
     if (handle_client_message(client, server) == -1) {
         FD_CLR(client->socket, readfds);
         close(client->socket);
-        TAILQ_REMOVE(&server->_head_client_sockets, client, entries);
+        TAILQ_REMOVE(&server->head_client_sockets, client, entries);
         free(client);
     }
 }
@@ -126,7 +127,7 @@ static int loop_all_client(struct server_s *server, fd_set *readfds)
     client_socket_t *tmp;
     client_socket_t *client;
 
-    client = TAILQ_FIRST(&server->_head_client_sockets);
+    client = TAILQ_FIRST(&server->head_client_sockets);
     while (client != NULL) {
         tmp = TAILQ_NEXT(client, entries);
         if (FD_ISSET(client->socket, readfds))
@@ -153,10 +154,10 @@ static void wait_for_client(struct server_s *server)
         inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
-    new_client->_is_gui = 0;
-    new_client->_id = ntohs(client_addr.sin_port);
+    new_client->is_gui = 0;
+    new_client->id = ntohs(client_addr.sin_port);
     new_client->player = NULL;
-    TAILQ_INSERT_TAIL(&server->_head_client_sockets, new_client, entries);
+    TAILQ_INSERT_TAIL(&server->head_client_sockets, new_client, entries);
     send_client_message(client_socket, "WELCOME\n");
 }
 

@@ -82,8 +82,8 @@ class Messages(object):
         and processed message details.
         """
         self.niktamer = message
-        # if message == "" or message == "\n":
-        #     return [('ko', 'ko')]
+        if message == "" or message == "\n":
+            return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
         for message in messages:
@@ -108,6 +108,8 @@ class Messages(object):
             else:
                 result.append(self.broadcast_received(message))
             # print(result)
+        if not result:
+                result = [('broadcast', 'ko')]
         return result
 
     def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
@@ -124,7 +126,7 @@ class Messages(object):
             return ('broadcast', 'ko')
         result: list[dict[str, str | int]] = []
         if self.parrot is True:
-            return ('broadcast', [message[match.end() + 1:-1]])
+            return 'broadcast', [message[match.end() + 1:-1]]
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')

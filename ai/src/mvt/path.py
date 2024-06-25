@@ -137,34 +137,38 @@ class Path(object):
         if self.facing in self.path_facing:
             self.path = self.path[::-1]
             self.path_facing = self.path_facing[::-1]
-        if self.facing not in self.path_facing and 0 < self.facing < 3:
-            if self.path_facing[0] > self.facing:
-                self.path = ['Right'] + self.path
-                self.facing = (self.facing + 1) % 4
-            else:
-                self.path = ['Left'] + self.path
-                self.facing = (self.facing - 1) % 4
-        elif self.facing not in self.path_facing and self.facing == 0 or self.facing == 3:
-            if self.path_facing[0] > self.facing:
-                self.path = ['Left'] + self.path
-                self.facing = (self.facing - 1) % 4
-            else:
-                self.path = ['Right'] + self.path
-                self.facing = (self.facing + 1) % 4
-        if 0 < self.path_facing[0] < 3:
-            if self.path_facing[1] > self.path_facing[0]:
-                self.path.insert(len(self.path) - 1, 'Right')
-                self.facing = (self.facing + 1) % 4
-            else:
-                self.path.insert(len(self.path) - 1, 'Left')
-                self.facing = (self.facing - 1) % 4
-        elif self.path_facing[0] == 0 or self.path_facing[0] == 3:
-            if self.path_facing[1] > self.path_facing[0]:
-                self.path.insert(len(self.path) - 1, 'Left')
-                self.facing = (self.facing - 1) % 4
-            else:
-                self.path.insert(len(self.path) - 1, 'Right')
-                self.facing = (self.facing + 1) % 4
+        try:
+            if self.facing not in self.path_facing and 0 < self.facing < 3:
+                if self.path_facing[0] > self.facing:
+                    self.path = ['Right'] + self.path
+                    self.facing = (self.facing + 1) % 4
+                else:
+                    self.path = ['Left'] + self.path
+                    self.facing = (self.facing - 1) % 4
+            elif self.facing not in self.path_facing and self.facing == 0 or self.facing == 3:
+                if self.path_facing[0] > self.facing:
+                    self.path = ['Left'] + self.path
+                    self.facing = (self.facing - 1) % 4
+                else:
+                    self.path = ['Right'] + self.path
+                    self.facing = (self.facing + 1) % 4
+            if 0 < self.path_facing[0] < 3:
+                if self.path_facing[1] > self.path_facing[0]:
+                    self.path.insert(len(self.path) - 1, 'Right')
+                    self.facing = (self.facing + 1) % 4
+                else:
+                    self.path.insert(len(self.path) - 1, 'Left')
+                    self.facing = (self.facing - 1) % 4
+            elif self.path_facing[0] == 0 or self.path_facing[0] == 3:
+                if self.path_facing[1] > self.path_facing[0]:
+                    self.path.insert(len(self.path) - 1, 'Left')
+                    self.facing = (self.facing - 1) % 4
+                else:
+                    self.path.insert(len(self.path) - 1, 'Right')
+                    self.facing = (self.facing + 1) % 4
+        except Exception as e:
+            print(e)
+            exit(1)
         return self.path
 
     def get_north(self, direction: int):

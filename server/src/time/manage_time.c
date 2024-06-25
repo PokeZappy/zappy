@@ -26,7 +26,7 @@ void time_manager(server_t *server)
     current_time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
     if (static_time == 0)
         static_time = current_time;
-    if (current_time - static_time >= 1000 / (float)server->arguments->_f) {
+    if (current_time - static_time >= 1000 / (float)server->arguments->f) {
         static_time = current_time;
         time_unit++;
         check_death(server);

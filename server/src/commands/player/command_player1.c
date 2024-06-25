@@ -11,13 +11,13 @@ void cmd_forward(server_t *server, char *args, client_socket_t *client)
 {
     if (!client || !client->player)
         return;
-    player_move(client->player, server->grid->_width, server->grid->_height);
+    player_move(client->player, server->grid->width, server->grid->height);
     dprintf(client->socket, "ok\n");
     if (!get_gui(server))
         return;
-    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
-        client->player->_pos._x, client->player->_pos._y,
-        client->player->_direction + 1);
+    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->id,
+        client->player->pos.x, client->player->pos.y,
+        client->player->direction + 1);
 }
 
 void cmd_right(server_t *server, char *args, client_socket_t *client)
@@ -28,9 +28,9 @@ void cmd_right(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "ok\n");
     if (!get_gui(server))
         return;
-    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
-        client->player->_pos._x, client->player->_pos._y,
-        client->player->_direction + 1);
+    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->id,
+        client->player->pos.x, client->player->pos.y,
+        client->player->direction + 1);
 }
 
 void cmd_left(server_t *server, char *args, client_socket_t *client)
@@ -41,9 +41,9 @@ void cmd_left(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "ok\n");
     if (!get_gui(server))
         return;
-    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->_id,
-        client->player->_pos._x, client->player->_pos._y,
-        client->player->_direction + 1);
+    dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", client->id,
+        client->player->pos.x, client->player->pos.y,
+        client->player->direction + 1);
 }
 
 void cmd_look(server_t *server, char *args, client_socket_t *client)
@@ -67,7 +67,7 @@ void cmd_inventory(server_t *server, char *args, client_socket_t *client)
     dprintf(client->socket, "%s\n", response);
     if (!get_gui(server))
         return;
-    dprintf(get_gui(server)->socket, "pin %d %d %d %s\n", client->_id,
-        client->player->_pos._x, client->player->_pos._y, response);
+    dprintf(get_gui(server)->socket, "pin %d %d %d %s\n", client->id,
+        client->player->pos.x, client->player->pos.y, response);
     free(response);
 }

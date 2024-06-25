@@ -33,15 +33,14 @@ struct delayed_command_s;
 typedef struct delayed_command_s delayed_command_t;
 
 typedef struct player_s {
-    int _id; // id of the player
-    int _fd; // file descriptor of the player
-    vector_t _pos; // position of the player
-    direction_t _direction; // looking direction of the player
-    int _level; // level of the player
-    int _inventory[ITEM_PER_TILE]; // list items on the tile
-    int _health; // health of the player
-    struct team_s *_team; // team of the player
-    TAILQ_ENTRY(player_s) _entries; // list of players
+    int id; // id of the player
+    vector_t pos; // position of the player
+    direction_t direction; // looking direction of the player
+    int level; // level of the player
+    int inventory[ITEM_PER_TILE]; // list items on the tile
+    int health; // health of the player
+    struct team_s *team; // team of the player
+    TAILQ_ENTRY(player_s) entries; // list of players
 } player_t;
 
 // -- PLAYER RELATED -- //
