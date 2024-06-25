@@ -36,7 +36,6 @@ class Messages(object):
         self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
         self.parrot = parrot
-        self.niktamer = None
 
     def send_coord(self, message: str, pos: tuple[int, int]) -> str:
         """
@@ -72,21 +71,27 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                action: any = None) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None, incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
         :param message: str - The message received.
-        :param action: any - Additional action related to the message.
+        :param actions: any - Additional actions related to the message.
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status
         and processed message details.
         """
-        self.niktamer = message
         if message == "" or message == "\n":
             return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
-        for message in messages:
+        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
+        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        if incantator:
+            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
+            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
+        if actions:
+            actions = actions[::-1]
+        for index, message in enumerate(msg_actions):
             if validate_number_pattern(message):
                 result.append(('slots', int(message)))
             if validate_inventory_pattern(message):
@@ -95,21 +100,37 @@ class Messages(object):
                 result.append(('look', message))
             elif validate_elevation(message):
                 result.append(('elevation', message))
-            elif validate_eject_pattern(message):
-                result.append(('eject', message))
             elif message == 'ok':
                 if self.debug:
-                    print(f'ok: {action}')
-                result.append(('ok', action))
+                    print(f'ok: {actions[index]}')
+                try:
+                    result.append(('ok', actions[index]))
+                except Exception as e:
+                    print(f'ok : Error: {e}')
+                    print(f'actions: {actions}')
+                    print(f'msgs actions: {msg_actions}')
+                    print(f'msgs all: {messages}')
             elif message == 'ko':
                 if self.debug:
-                    print(f'ko: {action}')
-                result.append(('ko', action))
+                    print(f'ko: {actions[index]}')
+                try:
+                    result.append(('ko', actions[index]))
+                except Exception as e:
+                    print(f'KO : Error: {e}')
+                    print(f'actions: {actions}')
+                    print(f'msgs actions: {msg_actions}')
+                    print(f'msgs all: {messages}')
             else:
                 result.append(self.broadcast_received(message))
-            # print(result)
+        for message in msg_broadcast:
+            if validate_eject_pattern(message):
+                result.append(('eject', message))
+            elif validate_elevation(message):
+                result.append(('elevation', message))
+            else:
+                result.append(self.broadcast_received(message))
         if not result:
-                result = [('broadcast', 'ko')]
+            result = [('broadcast', 'ko')]
         return result
 
     def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
@@ -141,7 +162,7 @@ class Messages(object):
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
                 text = text.split('#')
-                if text[0] == 'est dominus aquilonis':
+                if text[0] == 'est dominus aquilonis' or text[0] == 'Ego sum dominus tuus':
                     direction = extract_direction(save_msg)
                     result.append({
                         'msg': text[0],

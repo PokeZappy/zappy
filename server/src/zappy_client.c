@@ -42,8 +42,9 @@ static void send_all_info(struct server_s *server, int gui_socket)
             p = TAILQ_NEXT(p, entries);
             continue;
         }
-        dprintf(gui_socket, "ppo %d %d %d %d\n", p->id, p->player->pos.x,
-            p->player->pos.y, p->player->direction + 1);
+        dprintf(gui_socket, "pnw %d %d %d %d %d %s\n", p->id, p->player->pos.x,
+            p->player->pos.y, p->player->direction + 1, p->player->level,
+            p->player->team->name);
         p = TAILQ_NEXT(p, entries);
     }
     while (e != NULL) {

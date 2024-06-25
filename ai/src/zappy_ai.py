@@ -63,7 +63,7 @@ class Bot(object):
         :return: str - The received action command from the server.
         """
         try:
-            rec: str = self.cli_socket.recv(10_000_000).decode()
+            rec: str = self.cli_socket.recv(100_000).decode()
         except Exception:
             # print("Server disconnected")
             self.cli_socket.close()
@@ -76,6 +76,7 @@ class Bot(object):
             # print("Server disconnected")
             self.cli_socket.close()
             sys.exit(0)
+
         return rec
 
     def forward(self) -> None:

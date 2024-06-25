@@ -14,12 +14,15 @@ namespace Zappy
         const std::shared_ptr<Player> worldPlayer, PokemonInfo &pkInfo,
         std::shared_ptr<RaylibModels> models, float gridSize,
         const raylib::Gif &broadcastGif, const raylib::Gif &successGif,
-        const raylib::Gif &failureGif) :
+        const raylib::Gif &failureGif, const raylib::Gif &followGif,
+        const raylib::Gif &pushGif) :
         AEntityRaylib(gridSize),
         worldPlayer(worldPlayer),
         _broadcastGif(broadcastGif),
         _successGif(successGif),
-        _failureGif(failureGif)
+        _failureGif(failureGif),
+        _followGif(followGif),
+        _pushGif(pushGif)
     {
         _models = models;
         _scale = _gridSize / 32;
@@ -110,13 +113,18 @@ namespace Zappy
                 _failureGif.reset();
             }
         }
-        _successGif.update();
-        _failureGif.update();
         if (worldPlayer->getBroadcast() != _broadcastMessage) {
             _broadcastMessage = worldPlayer->getBroadcast();
             _broadcastGif.reset();
         }
+        if (worldPlayer->isPushing()) {
+            _pushGif.reset();
+        }
+        _successGif.update();
+        _failureGif.update();
         _broadcastGif.update();
+        _pushGif.update();
+
         if (_animatedScale < _scale) {
             _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
         }
@@ -133,7 +141,6 @@ namespace Zappy
         //     _model->updateAnimation(_animIndex, _animFrame);
         // }
 
-
         if (infos.shiny) {
             _models->setShinyTexture(_animIndex);
         } else {
@@ -142,8 +149,7 @@ namespace Zappy
         _models->getModelByAnimation(_animIndex)->draw(getPixelPos(),
             raylib::Vector3(_verticalRotation, 1, 0),
             _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_animatedScale, true) * (1 + _level / 4.0f));
-
+            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f));
     }
 
     void PlayerRaylib::drawGifs(const Camera &camera)
@@ -152,5 +158,22 @@ namespace Zappy
         _broadcastGif.draw(camera, gifPos);
         _successGif.draw(camera, gifPos);
         _failureGif.draw(camera, gifPos);
+        _pushGif.draw(camera, gifPos);
+    }
+
+    void PlayerRaylib::drawFollowGif(const Camera &camera)
+    {
+        raylib::Vector3 gifPos = getPixelPos() + raylib::Vector3(0, _gridSize / 1.5, 0);
+        _followGif.update();
+        _followGif.draw(camera, gifPos);
+    }
+
+    void PlayerRaylib::glow(void)
+    {
+        // Material *material = &_models->getModelByAnimation(_animIndex)->getModel().materials[1];
+        // std::cout << "-- Albedo -- color:" << raylib::Color(material->maps[MATERIAL_MAP_ALBEDO].color).ToString() << ", value: "
+        //             << std::to_string(material->maps[MATERIAL_MAP_ALBEDO].value) << std::endl;
+        // material->maps[MATERIAL_MAP_ALBEDO].value = 0.5;
+        // material->maps[MATERIAL_MAP_DIFFUSE].value = 0.2;
     }
 } // namespace Zappy

@@ -10,7 +10,6 @@
 
 namespace Zappy {
      void HudMode::drawBackground(const World &world, size_t graphicPlayerCount, size_t graphicEggCount) {
-        raylib::Color white = raylib::Color::White();
         raylib::Rectangle _backgroundSrc(0, 0, _backgroundHudTexture.width, _backgroundHudTexture.height);
         raylib::Rectangle _backgroundDest(0, GUI_HEIGHT - 200, GUI_WIDTH, 200);
 
@@ -24,6 +23,8 @@ namespace Zappy {
 
         if (_chat)
             drawChat();
+        else
+            _black120.DrawText("Appuyez sur 'T' pour ouvrir le chat", 13, GUI_HEIGHT - 241, 25);
 
         drawEntityCount(graphicPlayerCount, graphicEggCount, world.getPlayers().size(), world.getEggs().size(), 1657, 156);
         drawShell(world.getShellCommands());
@@ -68,14 +69,13 @@ namespace Zappy {
             _attackHudTexture.Draw(_attackSrc, _attackDest);
             drawAttacks();
         } else if (_selectedTile == nullptr) {
-            white.DrawText("Sélectionner une case à afficher (avec la souris)", 491, GUI_HEIGHT - 120, 45);
+            _white.DrawText("Sélectionner une case à afficher (avec la souris)", 491, GUI_HEIGHT - 120, 45);
         } else {
-            white.DrawText("Aucun pokemon trouvé sur cette case", 644, GUI_HEIGHT - 120, 45);
+            _white.DrawText("Aucun pokemon trouvé sur cette case", 644, GUI_HEIGHT - 120, 45);
         }
     }
 
     void HudMode::drawEntityCount(size_t graphicPlayerCount, size_t graphicEggCount, size_t worldPlayerCount, size_t worldEggCount, int x, int y) {
-        raylib::Color white = raylib::Color::White();
         raylib::Rectangle _tileSrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
         raylib::Rectangle _tileDest(x, y, 265, 200);
 
@@ -84,11 +84,11 @@ namespace Zappy {
         _inventoryHudTexture.Draw(_tileSrc, _tileDest);
         _playerTexture.Draw(x + 35, y + 50);
         _eggTexture.Draw(x + 32, y + 122);
-        white.DrawText("World: " + std::to_string(worldPlayerCount), x + 80, y + 58, 20);
-        white.DrawText("Graphic: " + std::to_string(graphicPlayerCount), x + 80, y + 78, 20);
+        _white.DrawText("World: " + std::to_string(worldPlayerCount), x + 80, y + 58, 20);
+        _white.DrawText("Graphic: " + std::to_string(graphicPlayerCount), x + 80, y + 78, 20);
 
-        white.DrawText("World: " + std::to_string(worldEggCount), x + 80, y + 120, 20);
-        white.DrawText("Graphic: " + std::to_string(graphicEggCount), x + 80, y + 140, 20);
+        _white.DrawText("World: " + std::to_string(worldEggCount), x + 80, y + 120, 20);
+        _white.DrawText("Graphic: " + std::to_string(graphicEggCount), x + 80, y + 140, 20);
     }
 
     void HudMode::drawShell(const std::vector<ShellCommand> &shellCommands)
@@ -116,15 +116,13 @@ namespace Zappy {
     }
 
     void HudMode::drawAttacks() {
-        raylib::Color white = raylib::Color::White();
-
-        white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        _white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
         if (_targetedPlayer == _selectedPlayer)
-            white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
+            _white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
         else
-            white.DrawText("Follow (2)", 1607, GUI_HEIGHT - 156, 40);
-        white.DrawText("Heal (3)", 1288, GUI_HEIGHT - 95, 40);
-        white.DrawText("Kill (4)", 1607, GUI_HEIGHT - 95, 40);
+            _white.DrawText("Follow (2)", 1607, GUI_HEIGHT - 156, 40);
+        _white.DrawText("Heal (3)", 1288, GUI_HEIGHT - 95, 40);
+        _white.DrawText("Kill (4)", 1607, GUI_HEIGHT - 95, 40);
     }
 
     void HudMode::verifyPlayerPosition()
@@ -139,13 +137,12 @@ namespace Zappy {
     }
 
     void HudMode::drawInventory(Inventory inventory, int topX, int topY, std::string title) {
-        raylib::Color white = raylib::Color::White();
         raylib::Rectangle _inventorySrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
         raylib::Rectangle _inventoryDest(topX, topY, 265, 200);
         raylib::Rectangle ballSrc(0, 0, _pokeBallTexture.width, _pokeBallTexture.height);
 
         _inventoryHudTexture.Draw(_inventorySrc, _inventoryDest);
-        white.DrawText(title, topX + 32, topY + 40, 20);
+        _white.DrawText(title, topX + 32, topY + 40, 20);
 
         int xLeftBalls = 28;
         int xLeftText = xLeftBalls + 35;
@@ -154,31 +151,31 @@ namespace Zappy {
 
         _pokeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 71, 30, 30));
         // _pokeBallTexture.Draw(x + 45, GUI_HEIGHT - 129);
-        white.DrawText(std::to_string(inventory.getItem(1)), topX + xLeftText, topY + 76, 20);
+        _white.DrawText(std::to_string(inventory.getItem(1)), topX + xLeftText, topY + 76, 20);
 
         _superBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 102, 30, 30));
         // _superBallTexture.Draw(x + 45, GUI_HEIGHT - 98);
-        white.DrawText(std::to_string(inventory.getItem(2)), topX + xLeftText, topY + 107, 20);
+        _white.DrawText(std::to_string(inventory.getItem(2)), topX + xLeftText, topY + 107, 20);
 
         _hyperBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 133, 30, 30));
         // _hyperBallTexture.Draw(x + 45, GUI_HEIGHT - 67);
-        white.DrawText(std::to_string(inventory.getItem(3)), topX + xLeftText, topY + 138, 20);
+        _white.DrawText(std::to_string(inventory.getItem(3)), topX + xLeftText, topY + 138, 20);
 
         _foodTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 40, 30, 30));
         // _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
-        white.DrawText(std::to_string(inventory.getItem(0)), topX + xRightText, topY + 45, 20);
+        _white.DrawText(std::to_string(inventory.getItem(0)), topX + xRightText, topY + 45, 20);
 
         _honorBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 71, 30, 30));
         // _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
-        white.DrawText(std::to_string(inventory.getItem(4)), topX + xRightText, topY + 76, 20);
+        _white.DrawText(std::to_string(inventory.getItem(4)), topX + xRightText, topY + 76, 20);
 
         _luxeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 102, 30, 30));
         // _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
-        white.DrawText(std::to_string(inventory.getItem(5)), topX + xRightText, topY + 107, 20);
+        _white.DrawText(std::to_string(inventory.getItem(5)), topX + xRightText, topY + 107, 20);
 
         _masterBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 133, 30, 30));
         // _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
-        white.DrawText(std::to_string(inventory.getItem(6)), topX + xRightText, topY + 138, 20);
+        _white.DrawText(std::to_string(inventory.getItem(6)), topX + xRightText, topY + 138, 20);
     }
 
     void HudMode::drawPokemons() {
@@ -186,10 +183,10 @@ namespace Zappy {
         int pokemon_drawn = 1;
 
         if (_targetedPlayer != nullptr)
-            drawPokemon(_targetedPlayer, GUI_HEIGHT - 171, raylib::Color::Green());
+            drawPokemon(_targetedPlayer, GUI_HEIGHT - 171, _green);
 
         for (size_t i = _scrollIndex; i < _scrollIndex + 3 && i < _selectedPlayers.size(); i++) {
-            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43), raylib::Color::White());
+            drawPokemon(_selectedPlayers[i], GUI_HEIGHT - 171 + (pokemon_drawn++ * 43), _white);
         }
     }
 
@@ -198,21 +195,19 @@ namespace Zappy {
         raylib::Rectangle _tileDest(612, GUI_HEIGHT - 275, 265, 200);
 
         _inventoryHudTexture.Draw(_tileSrc, _tileDest);
-        raylib::Color::Green().DrawText(">", 648, GUI_HEIGHT - 241, 30);
-        raylib::Color::White().DrawText("Followed Pokemon", 683, GUI_HEIGHT - 233, 18);
+        _green.DrawText(">", 648, GUI_HEIGHT - 241, 30);
+        _white.DrawText("Followed Pokemon", 683, GUI_HEIGHT - 233, 18);
     }
 
     void HudMode::drawPokemon(std::shared_ptr<PlayerRaylib> pokemon, int y, raylib::Color colorArrow) {
-        raylib::Color white = raylib::Color::White();
-
         if (pokemon == _selectedPlayer || pokemon == _targetedPlayer) {
             colorArrow.DrawText(">", 286, y, 30);
         }
-        white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
-        white.DrawText(pokemon->infos.displayName, 452, y, 25);
-        white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 682, y, 25);
+        _white.DrawText(std::to_string(pokemon->worldPlayer->getId()), 336, y, 25);
+        _white.DrawText(pokemon->infos.displayName, 452, y, 25);
+        _white.DrawText("N." + std::to_string(pokemon->worldPlayer->getLevel()), 645, y, 25);
 
-        drawType(pokemon->worldPlayer->getTeam().getName(), 756, y);
+        drawType(pokemon->worldPlayer->getTeam().getName(), 706, y);
 
         if (pokemon->worldPlayer->getIncantationState() == Incantation::INCANTING) {
             _encantingTexture.Draw(raylib::Rectangle(0, 0, _encantingTexture.width, _encantingTexture.height), raylib::Rectangle(855, y, 22, 29));
@@ -223,27 +218,23 @@ namespace Zappy {
 
     void HudMode::drawChat()
     {
-        raylib::Color black = raylib::Color(0, 0, 0, 120);
-        raylib::Color white = raylib::Color::White();
-
         std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _cursorClock;
 
         raylib::Color(0, 0, 0, 60).DrawRectangle((Vector2) {0, 10}, (Vector2) {554, GUI_HEIGHT - 280});
-        black.DrawRectangle((Vector2) {0, GUI_HEIGHT - 248}, (Vector2) {554, 41});
+        _black120.DrawRectangle((Vector2) {0, GUI_HEIGHT - 248}, (Vector2) {554, 41});
         int decal = _inputString.size() - 30;
         int indexSubstr = decal > 0 ? decal : 0;
         float blinkTime = 0.7;
+        char cursor = '\0';
         if (elapsed_seconds.count() < blinkTime) {
-            white.DrawText("> " + _inputString.substr(indexSubstr, _inputString.size()) + "|", 13, GUI_HEIGHT - 243, 30);
-        } else if (elapsed_seconds.count() > blinkTime && elapsed_seconds.count() <= blinkTime * 2) {
-        white.DrawText("> " + _inputString.substr(indexSubstr, _inputString.size()), 13, GUI_HEIGHT - 243, 30);
-        } else {
+            cursor = '|';
+        } else if (elapsed_seconds.count() > blinkTime * 2) {
             _cursorClock = std::chrono::steady_clock::now();
         }
+        _white.DrawText("> " + _inputString.substr(indexSubstr, _inputString.size()) + cursor, 13, GUI_HEIGHT - 243, 30);
     }
 
     void HudMode::drawType(std::string type, int x, int y) {
-        raylib::Color white = raylib::Color::White();
         raylib::Rectangle src;
         raylib::Rectangle dest(x, y, 57, 25);
         if (type == "bug") {
@@ -283,7 +274,7 @@ namespace Zappy {
         } else if (type == "water") {
             src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
         } else {
-            white.DrawText(type, x, y, 25);
+            _white.DrawText(type, x, y + 7, 15);
         }
         _typesTexture.Draw(src, dest);
     }

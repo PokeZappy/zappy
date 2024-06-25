@@ -44,8 +44,8 @@ namespace Zappy {
             _hudMode->setFirstPokemonTarget();
 
         if (_hudMode->activated()) {
-            _hudMode->followTarget(_camera);
-            _hudMode->update(_camera, _socket);
+            _cameraViewMode = _hudMode->followTarget(_camera);
+            _hudMode->update(_socket);
         }
 
         float wheel = GetMouseWheelMove();
@@ -82,7 +82,7 @@ namespace Zappy {
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,
                     pokemon, _models[pokemon.id], _gridSize, _broadcastGif,
-                    _incantationSuccessGif, _incantationFailGif));
+                    _successGif, _failureGif, _followGif, _pushGif));
             }
         }
 

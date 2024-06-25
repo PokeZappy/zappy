@@ -125,37 +125,57 @@ class ParentAI(Player):
         self.legione_secunda: bool = False
         self.legione_tertia: bool = False
 
-    def fork(self, role: RoleInGame) -> None:
-        serv_info, cli_socket = connection(self.port, self.name, self.machine)
-        print(f'role created : {role}') #TODO - à enelever
-        # TODO - reliquat plus besoin car j'implémente directement dan la queue le VICE Pusher
-        # if role == RoleInGame.PUSHER and self.second_phase is False:
-        #     role = self.BIND[RoleInGame.VICE_PUSHER](serv_info, cli_socket, self.debug_mode).run()
-        #     TODO - implémenter les spartiate en 2nd phase
-        # else:
-        role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+    def get_role(self, serv_info: list[int], cli_socket: socket) -> any:
+        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
+        role = 0
+        if self.first_round[1]:
+            role = RoleInGame.FIRST_BORN.value
+        elif len(self.give_role) > 0:
+            role = self.give_role[0].value
+        elif self.second_phase:
+            role = self.DEFENDER_ROLE[self.index].value
+        else:
+            role = self.DEFAULT_ROLE[self.index].value
+
+        match role:
+            case 0: return Progenitor(serv_info, cli_socket, self.debug_mode)
+            case 1: return Incantator(serv_info, cli_socket, self.debug_mode)
+            case 2: return Collector(serv_info, cli_socket, self.debug_mode)
+            case 3: return Pusher(serv_info, cli_socket, self.debug_mode)
+            case 4: return Pnj(serv_info, cli_socket, self.debug_mode)
+            case 5: return First_born(serv_info, cli_socket, self.debug_mode)
+            case 6: return NorthGuard(serv_info, cli_socket, self.debug_mode)
+            case 7: return Hansel(serv_info, cli_socket, self.debug_mode)
+            case 8: return ViceNorthGuard(serv_info, cli_socket, self.debug_mode)
+
+    def fork(self, role, cli_socket: socket) -> None:
+        # print(f'role created : {role}') #TODO - à enelever
+        # if role == RoleInGame.NORTH_GUARD:
+        #     print('North Guard is borning')
+        # print (f'role: {role}')
         while role is not None:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+            role = role.run()
         cli_socket.close()
         exit(0)
 
-    def real_fork(self) -> None:
-        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
+    def real_fork(self) -> bool:
+        serv_info, cli_socket = connection(self.port, self.name, self.machine)
+        if serv_info is None or cli_socket is None:
+            cli_socket.close()
+            print('Nope dude connard')
+            return False
         pid = fork()
         if pid == 0:
-            if self.first_round[1]:
-                self.fork(RoleInGame.FIRST_BORN)
-            else:
-                if self.second_phase:
-                    self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
-                else:
-                    self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
-        if pid == -1:
+            self.fork(self.get_role(serv_info, cli_socket), cli_socket)
+        elif pid == -1:
+            cli_socket.close()
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
+        return True
+        if message['info'], message['nbr'])
         if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
             my_id = None
             if self.legione_honoris is True:
@@ -181,13 +201,21 @@ class ParentAI(Player):
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
     
-    def count_element(self, resources: [list[str]]) -> None:
+    def count_element(self, resources: list) -> None:
         my_resources = dict(Counter(resources))
         # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
             if need not in my_resources or my_resources[need] < self.need_ressources[need]:
                 return
         self.second_phase = True
+
+    def slot_treatment(self, msgs: str) -> None:
+        for _ in range(msgs):
+            if msgs != 0:
+                has_forked = self.real_fork()
+                if len(self.give_role) > 0 and has_forked:
+                    self.give_role.pop(0)
+
 
     def mastermind_treatment(self, buf) -> bool:
         """"
@@ -199,14 +227,10 @@ class ParentAI(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'slots':
-                for _ in range(msgs):
-                    if msgs != 0:
-                        self.real_fork()
-                        if len(self.give_role) > 0:
-                            self.give_role.pop(0)
+                self.slot_treatment(msgs)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     pass
@@ -251,6 +275,10 @@ class ParentAI(Player):
         if message['msg'] == 'defecit carmen':
             #TODO: problem to make the incantation
             pass
+        if message['msg'] == 'Quis es':
+            print('Quis es')
+            self.message.buf_messages('Ego sum dominus tuus')
+            self.queue.insert(0, 'Broadcast')
         if message['msg'] == 'felix carmen':
             self.level_incant += 1
         if message['msg'] == 'situm intrare':
@@ -305,32 +333,30 @@ class ParentAI(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
-            if recv_type == 'ok' or recv_type == 'slots':
-                self.actions.pop(0)
+            if recv_type == 'eject':
+                continue
+            if recv_type == 'slots':
+                self.slot_treatment(msgs)
+                if self.first_round[1]:
+                    self.first_round[1] = False
+                    self.give_role = self.ROLE
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
+            self.actions.pop(0)
 
     def recv_treatment(self, buf: str) -> None:
-        buf = buf[:-1]
-        if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
-            for _ in range(0, int(buf)):
-                self.real_fork()
-        if self.first_round[1]:
-            self.first_round[1] = False
-            self.give_role = self.ROLE
-        elif self.role == RoleInGame.PROGENITOR:
+        if self.role == RoleInGame.PROGENITOR:
             if not self.progenitor_treatment(buf):
                 return
         elif self.role == RoleInGame.MASTERMIND:
             if not self.mastermind_treatment(buf):
                 return
-        self.actions.pop(0)
 
     def action_as_progenitor(self) -> None:
         """
@@ -370,10 +396,9 @@ class ParentAI(Player):
         """
         if self.life <= 400:
             self.queue.append(('Take', 'food'))
-            self.queue.append('Look')
+            self.queue.append('Inventory')
         elif not self.communicate_orders():
             self.queue.append('Inventory')
-            self.queue.append('Look')
         self.queue.append('Slots')
 
     def make_action(self) -> None:
