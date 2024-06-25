@@ -37,9 +37,11 @@ class ParentAI(Player):
             RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
             RoleInGame.HANSEL,
+            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
+            RoleInGame.HANSEL,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
@@ -53,7 +55,10 @@ class ParentAI(Player):
             # RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
             # RoleInGame.COOCKER,
-            # RoleInGame.COLLECTOR,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
             # RoleInGame.COLLECTOR,
             # RoleInGame.COLLECTOR,
             # RoleInGame.COLLECTOR,
@@ -67,7 +72,7 @@ class ParentAI(Player):
     
     DEFENDER_ROLE = [
                     # RoleInGame.PUSHER,
-                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
@@ -311,6 +316,9 @@ class ParentAI(Player):
                 continue
             if recv_type == 'slots':
                 self.slot_treatment(msgs)
+                if self.first_round[1]:
+                    self.first_round[1] = False
+                    self.give_role = self.ROLE
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
@@ -321,13 +329,7 @@ class ParentAI(Player):
 
     def recv_treatment(self, buf: str) -> None:
         # buf = buf[:-1]
-        if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
-            for _ in range(0, int(buf)):
-                self.real_fork()
-        if self.first_round[1]:
-            self.first_round[1] = False
-            self.give_role = self.ROLE
-        elif self.role == RoleInGame.PROGENITOR:
+        if self.role == RoleInGame.PROGENITOR:
             if not self.progenitor_treatment(buf):
                 return
         elif self.role == RoleInGame.MASTERMIND:
@@ -392,7 +394,6 @@ class ParentAI(Player):
             # self.spoke = True
             self.first_round[0] = False
             self.apply_action()
-            self.actions.pop(0)
         if self.first_round[1]:
             return
         # if self.mms_start:

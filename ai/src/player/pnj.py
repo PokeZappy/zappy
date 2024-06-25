@@ -1,5 +1,6 @@
 from socket import socket
 from re import match
+from random import randint
 
 from ai.src.player.player import Player
 from ai.src.utils.messages import extract_inventory
@@ -16,9 +17,11 @@ class Pnj(Player):
         """
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
-        self.goto = None
         self.dir = None
         self.first_round = True
+        self.id = randint(0, 1000)
+        self.previous = None
+
     
     def recv_treatment(self, buf: str) -> None:
         """
@@ -28,16 +31,17 @@ class Pnj(Player):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_list = self.message.receive(buf)
+            recv_list = self.message.receive(buf, pnj=True)
         else:
-            recv_list = self.message.receive(buf, self.actions)
+            recv_list = self.message.receive(buf, self.actions, pnj=True)
         for recv_type, msgs in recv_list:
             if recv_type == 'elevation':
+                # print (f"elevation : {msgs}")
                 matches = match(r'Current level: (\d+)', msgs)
                 if matches:
+                    self.level += 1
                     self.queue = []
                     if int(msgs[-1]) == 2:
-                        # print('I am level 2, here')
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
@@ -69,8 +73,6 @@ class Pnj(Player):
         
 
     def broadcast_traitement(self, message: tuple | str) -> None:
-        if message['msg'] == 'movere ad : ':
-            self.goto = message['info']
         if message['msg'] == 'est dominus aquilonis':
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
@@ -88,30 +90,26 @@ class Pnj(Player):
                     self.queue.append('Forward')
                 self.message.buf_messages('motus sum')
                 self.queue.append('Broadcast')
-                # self.queue.append(('Take', 'food'))
-                # self.queue.append(('Take', 'food'))
-                # self.queue.append(('Take', 'food'))
 
     def make_action(self) -> None:
         """
         This method makes the action.
         """
-        if self.first_round:
-            # self.queue.append(('Set', 'food'))
-            self.first_round = False
-        if len(self.queue) > 0 and len(self.actions) < 1:
-            # print(f"témort {self.queue}")
-            # print(f"tamer : {self.actions}")
-            # print(f"tégrenmort {self.life}")
+        if len(self.queue) > 0 and len(self.actions) == 0:
             self.apply_action()
         if len(self.actions) > 0:
-             return
+            # if self.first_round % 1000000 == 0:
+            #     print(f"témort {self.queue}")
+            #     print(f"tamer : {self.actions}")
+            #     print(f"tégrenmort {self.life}")
+            # self.first_round += 1
+            return
         if self.life <= 500:
             # print('I am hungry')
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
-        if self.level >= 1:
+        if self.level >= 2:
             # print('I , here')
             self.queue.append('Inventory')
 

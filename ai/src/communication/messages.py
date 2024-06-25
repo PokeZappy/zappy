@@ -71,7 +71,7 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                actions: list = None) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None, pnj: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
@@ -86,6 +86,10 @@ class Messages(object):
         result = []
         msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
         msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
+        if pnj:
+            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
+            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+            # print(f'actions: {msg_actions}')
         if actions:
             actions = actions[::-1]
         for index, message in enumerate(msg_actions):
@@ -102,23 +106,30 @@ class Messages(object):
                     print(f'ok: {actions[index]}')
                 try:
                     result.append(('ok', actions[index]))
-                except IndexError:
+                except Exception as e:
+                    print(f'ok : Error: {e}')
                     print(f'actions: {actions}')
-                    print(f'msgs: {msg_actions}')
+                    print(f'msgs actions: {msg_actions}')
+                    print(f'msgs all: {messages}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
                 try:
                     result.append(('ko', actions[index]))
-                except IndexError:
+                except Exception as e:
+                    print(f'KO : Error: {e}')
                     print(f'actions: {actions}')
-                    print(f'msgs: {msg_actions}')
+                    print(f'msgs actions: {msg_actions}')
+                    print(f'msgs all: {messages}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:
             if validate_eject_pattern(message):
                 result.append(('eject', message))
-            result.append(self.broadcast_received(message))
+            elif validate_elevation(message):
+                result.append(('elevation', message))
+            else:
+                result.append(self.broadcast_received(message))
         if not result:
             result = [('broadcast', 'ko')]
         return result

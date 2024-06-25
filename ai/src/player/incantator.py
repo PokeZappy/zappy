@@ -178,6 +178,7 @@ class Incantator(Player):
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
+                    self.queue.append('Inventory')
                     self.queue.append('Incantation')
                 # except Exception:
                     # pass
