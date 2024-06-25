@@ -121,9 +121,9 @@ class ParentAI(Player):
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
-        # print(f'role created : {role}') TODO - à enelever
-        if role == RoleInGame.NORTH_GUARD:
-            print('North Guard is borning')
+        # print(f'role created : {role}') #TODO - à enelever
+        # if role == RoleInGame.NORTH_GUARD:
+        #     print('North Guard is borning')
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
         elif role == RoleInGame.PUSHER and self.second_phase is False:

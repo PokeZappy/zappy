@@ -255,9 +255,9 @@ class Incantator(Player):
             # print("the queue is", self.queue,
             #       "the action is :", self.actions)
         if len(self.actions) > 0 or self.dir is None:
-            if self.count % 100007 == 0:
-                print(f"Incantator {self.level} alive")
-            self.count += 1
+            # if self.count % 100007 == 0:
+            #     print(f"Incantator {self.level} alive")
+            # self.count += 1
             return
         if self.first_round:
             # self.queue.append(('Set', 'food'))

@@ -2,6 +2,8 @@ from socket import socket
 from re import match
 
 from ai.src.player.player import Player
+from ai.src.utils.messages import extract_inventory
+
 
 class Pnj(Player):
     """
@@ -35,7 +37,7 @@ class Pnj(Player):
                 if matches:
                     self.queue = []
                     if int(msgs[-1]) == 2:
-                        print('I am level 2, here')
+                        # print('I am level 2, here')
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
@@ -48,6 +50,9 @@ class Pnj(Player):
                 continue
             elif recv_type == 'eject':
                 continue
+            elif recv_type == 'inventory':
+                self.inventory = extract_inventory(msgs)
+                self.life = self.inventory['food'] * self.FOOD
             elif recv_type == 'ok':
                 if isinstance(msgs, str) and msgs[0] == 'Take' and msgs[1] == 'food':
                     self.life += self.FOOD
