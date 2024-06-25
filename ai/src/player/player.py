@@ -179,6 +179,14 @@ class Player(Bot):
         self.queue.append(('Take', 'player'))
         self.life -= self.ACTION
 
+    def get_timing(self, message: str, delay: int) -> None:
+        for _ in range(delay):
+            self.queue.append(('Take', 'player'))
+            self.life -= self.ACTION
+        self.message.buf_messages(message)
+        self.queue.append('Broadcast')
+        self.life -= self.ACTION
+
     def apply_action(self) -> None:
         """
         This method applies the action to the player.

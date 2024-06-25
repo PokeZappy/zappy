@@ -39,16 +39,17 @@ class ParentAI(Player):
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
-            # RoleInGame.PUSHER,
+            RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
-            # RoleInGame.PUSHER,
+            RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
-            # RoleInGame.PUSHER,
+            RoleInGame.PUSHER,
+            # TODO - stop la list ici
             # RoleInGame.HANSEL,
             # RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
@@ -95,6 +96,7 @@ class ParentAI(Player):
         self.serv_info = serv_info
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
+        self.id: int = 0
         self.counter = self.INCUBATION_TIME
         self.gave_birth = 0
         self.role = RoleInGame.PROGENITOR
@@ -118,7 +120,10 @@ class ParentAI(Player):
         self.pusher_count = 4
         self.second_phase = False
         self.spoke: bool = False
-        self.id_pusher: int = 0
+        self.legione_honoris: bool = False
+        self.legione_prima: bool = False
+        self.legione_secunda: bool = False
+        self.legione_tertia: bool = False
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
@@ -152,7 +157,24 @@ class ParentAI(Player):
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
         if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
-            self.message.buf_messages('occupat exercitum : ', my_id=self.id_pusher)
+            my_id = None
+            if self.legione_honoris is True:
+                my_id = 0
+                self.legione_honoris = False
+            if self.legione_prima is True:
+                my_id = 1
+                self.legione_prima = False
+            if self.legione_secunda is True:
+                my_id = 2
+                self.legione_secunda = False
+            if self.legione_tertia is True:
+                my_id = 3
+                self.legione_tertia = False
+            if my_id is not None:
+                print(f'my id {my_id}')
+                print(f'M&Ms id {self.id}')
+                self.message.buf_messages('occupat exercitum : ', my_id=my_id)
+                self.queue.insert(0, 'Broadcast')
 
     def real_fork_addaptativ(self) -> None:
         if len(self.give_role) == 0:
@@ -235,10 +257,25 @@ class ParentAI(Player):
             self.enter_depot()
         if message['msg'] == 'sum extra domum':
             self.exit_depot()
-        if message['msg'] == 'recessi ab exercitu':
-            self.id_pusher = message['id']
+        if message['msg'] == 'Dimissus a Legione Honoris':
+            self.legione_honoris = True
             # TODO - enlever print débug
-            print(f'il va die : {self.id_pusher}')
+            print(f'il va die : 0')
+            self.give_role.insert(0, RoleInGame.VICE_PUSHER)
+        if message['msg'] == 'Dimissus a legione prima':
+            self.legione_prima = True
+            # TODO - enlever print débug
+            print(f'il va die : 1')
+            self.give_role.insert(0, RoleInGame.VICE_PUSHER)
+        if message['msg'] == 'Dimissus a legione secunda':
+            self.legione_secunda = True
+            # TODO - enlever print débug
+            print(f'il va die : 2')
+            self.give_role.insert(0, RoleInGame.VICE_PUSHER)
+        if message['msg'] == 'Dimissus a legione tertia':
+            self.legione_tertia = True
+            # TODO - enlever print débug
+            print(f'il va die : 3')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
 
     def enter_depot(self) -> None:

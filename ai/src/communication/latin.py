@@ -86,7 +86,11 @@ class Latin(object):
                                         'formation tortue': 'satus testudo : ',
 
                                         # Pusher to M&M's
-                                        'je vais mourir': 'recessi ab exercitu',
+                                        # 'je vais mourir': 'recessi ab exercitu',
+                                        'je suis démis de la 0 légion': 'Dimissus a Legione Honoris',
+                                        'je suis démis de la 1ère légion': 'Dimissus a legione prima',
+                                        'je suis démis de la 2ème légion': 'Dimissus a legione secunda',
+                                        'je suis démis de la 3ème légion': 'Dimissus a legione tertia',
                                         'remplace le pousseur : ': 'occupat exercitum : ',
 
                                         'Où vais-je': 'Quo ego vado',

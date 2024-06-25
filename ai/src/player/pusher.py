@@ -25,6 +25,7 @@ class Pusher(Player):
         self.hard_push: bool = False
         self.you_should_not_pass: bool = True
         self.dead_end: bool = False
+        self.timing: bool = True
         self.vice: bool = False
         self.spartiate: bool = False
         self.said: bool = False
@@ -59,15 +60,29 @@ class Pusher(Player):
             self.apply_action()
         if len(self.actions) > 0:
             return
-        if self.life < 260 and self.said is False:
-            # TODO -enelever print débug
+        if self.life < 260 and self.said is False and self.spartiate is False:
+            # TODO -enelever print débug et l'utilisation du timing si pas utilisé
             print(f'je vais mdr: {self.id}')
-            self.message.buf_messages('recessi ab exercitu')
+            if self.id == 0:
+                print(f'0 va vers la mort')
+                self.message.buf_messages('Dimissus a Legione Honoris')
+            if self.id == 1:
+                print(f'1 va vers la mort')
+                self.message.buf_messages('Dimissus a legione prima')
+            if self.id == 2:
+                print(f'2 va vers la mort')
+                self.message.buf_messages('Dimissus a legione secunda')
+            if self.id == 3:
+                print(f'3 va vers la mort')
+                self.message.buf_messages('Dimissus a legione tertia')
             self.queue.insert(0, 'Broadcast')
             self.said = True
         if self.you_should_not_pass is True and self.start is True:
             self.queue.append('Eject')
             self.life -= self.ACTION
+        elif self.start is True:
+            self.queue.append('Inventory')
+            self.life -= self.INVENTORY
 
     def broadcast_traitement(self, message: tuple | str | dict) -> None:
         if message['msg'] == 'est dominus aquilonis' and self.start is False:
@@ -78,12 +93,14 @@ class Pusher(Player):
                     self.go_testudo()
                     return
             if self.got_id > 2 and self.first is True or self.vice is True:
+                print(f"fox : {self.id}")
                 if self.id >= 4:
                     self.kill_me()
                     return
                 self.go_to_start()
         elif message['msg'] == 'Ego sum puer inteffector' and self.got_id < 3 and self.first is True:
             self.id += 1
+            print(f'identifiant inc : {self.id}')
         elif message['msg'] == 'Quis est puer interfector?' and self.first is True:
             self.message.buf_messages('Ego sum puer inteffector', my_id=[self.id])
             self.queue.insert(0, 'Broadcast')
@@ -105,6 +122,16 @@ class Pusher(Player):
                     self.queue.append(move)
                 self.hard_push = True
                 self.start = True
+        elif message['msg'] == 'occupat exercitum : ':
+            self.got_id = 3
+            print(f'id {message['id']}')
+            print(f'infos {message["infos"]}')
+            self.id = get_id_testudo(message['infos'])
+            print(f'Coucou chui {self.id}')
+        # TODO - ci dessous un timing pour envoyer je suis souffrant
+        # if message['msg'] == 'recessi ab exercitu' and self.said is False:
+        #     self.get_timing('recessi ab exercitu', self.id + 1)
+        #     self.said = True
         self.global_message(message)
 
     def go_testudo(self):
@@ -128,12 +155,12 @@ class VicePusher(Pusher):
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
         self.id: int = 0
-        self.got_id: int = 3
+        self.got_id: int = 1
         self.first: bool = False
         self.start: bool = False
         self.hard_push: bool = False
         self.you_should_not_pass: bool = True
-        self.dead_end: bool = False
+        self.dead_end: bool = True
         self.vice: bool = True
         self.spartiate: bool = False
 
@@ -154,6 +181,6 @@ class Spartiate(Pusher):
         self.start: bool = False
         self.hard_push: bool = False
         self.you_should_not_pass: bool = True
-        self.dead_end: bool = False
+        self.dead_end: bool = True
         self.vice: bool = False
         self.spartiate: bool = True
