@@ -120,11 +120,11 @@ class ParentAI(Player):
         self.mms_start: bool = False
         self.spoke: bool = False
 
-    def get_role(self) -> Player:
+    def get_role(self, serv_info: list[int], cli_socket: socket) -> any:
         self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         role = 0
         if self.first_round[1]:
-            role = 5
+            role = RoleInGame.FIRST_BORN.value
         elif len(self.give_role) > 0:
             role = self.give_role[0].value
         elif self.second_phase:
@@ -133,51 +133,36 @@ class ParentAI(Player):
             role = self.DEFAULT_ROLE[self.index].value
 
         match role:
-            case 0: return First_born(self.serv_info, self.cli_socket, self.debug_mode)
-            case 1: return Collector(self.serv_info, self.cli_socket, self.debug_mode)
-            case 2: return Incantator(self.serv_info, self.cli_socket, self.debug_mode)
-            case 3: return NorthGuard(self.serv_info, self.cli_socket, self.debug_mode)
-            case 4: return NorthGuard(self.serv_info, self.cli_socket, self.debug_mode)
-            case 5: return Pnj(self.serv_info, self.cli_socket, self.debug_mode)
-            case 6: return Hansel(self.serv_info, self.cli_socket, self.debug_mode)
-            case 7: return Pusher(self.serv_info, self.cli_socket, self.debug_mode)
-            case 8: return Pusher(self.serv_info, self.cli_socket, self.debug_mode)
+            case 0: return Progenitor(serv_info, cli_socket, self.debug_mode)
+            case 1: return Incantator(serv_info, cli_socket, self.debug_mode)
+            case 2: return Collector(serv_info, cli_socket, self.debug_mode)
+            case 3: return Pusher(serv_info, cli_socket, self.debug_mode)
+            case 4: return Pnj(serv_info, cli_socket, self.debug_mode)
+            case 5: return First_born(serv_info, cli_socket, self.debug_mode)
+            case 6: return NorthGuard(serv_info, cli_socket, self.debug_mode)
+            case 7: return Hansel(serv_info, cli_socket, self.debug_mode)
+            case 8: return ViceNorthGuard(serv_info, cli_socket, self.debug_mode)
 
-
-            # case 1: return RoleInGame.COLLECTOR
-            # case 2: return RoleInGame.INCANTATOR
-            # case 3: return RoleInGame.NORTH_GUARD
-            # case 4: return RoleInGame.PNJ
-            # case 5: return RoleInGame.FIRST_BORN
-            # case 6: return RoleInGame.HANSEL
-            # case 7: return RoleInGame.PUSHER
-
-    def fork(self, role: RoleInGame, serv_info: list[int], cli_socket: socket) -> None:
+    def fork(self, role, cli_socket: socket) -> None:
         # print(f'role created : {role}') #TODO - à enelever
         # if role == RoleInGame.NORTH_GUARD:
         #     print('North Guard is borning')
-
-        if role == RoleInGame.NORTH_GUARD and self.exist_north:
-            role = self.BIND[RoleInGame.VICE_NORTH_GUARD](serv_info, cli_socket, self.debug_mode).run()
-        elif role == RoleInGame.PUSHER and self.second_phase is False:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, True).run()
-        else:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
-        while role is not None:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+        # print (f'role: {role}')
+        role.run()
         cli_socket.close()
         exit(0)
 
     def real_fork(self) -> bool:
-        role = self.get_role()
-        print(f'role: {role}')
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
         if serv_info is None or cli_socket is None:
+            cli_socket.close()
+            print('Nope dude connard')
             return False
         pid = fork()
         if pid == 0:
-            self.fork(role, serv_info, cli_socket)
+            self.fork(self.get_role(serv_info, cli_socket), cli_socket)
         elif pid == -1:
+            cli_socket.close()
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
@@ -218,7 +203,7 @@ class ParentAI(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'slots':
                 for _ in range(msgs):
