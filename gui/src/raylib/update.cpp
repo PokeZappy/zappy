@@ -126,20 +126,43 @@ namespace Zappy {
     }
 
     void Raylib::updateMenu() {
-        double startTime = 3.5f;
         std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _menuClock;
 
         if (_menuState == Menu::STARTING) {
-            if (elapsed_seconds.count() >= startTime) {
+            if (!_forceStartAnimation) {
+                if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_Q) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+                _menuState = Menu::NONE;
+            }
+            if (elapsed_seconds.count() >= _startTime) {
                 _menuClock = std::chrono::steady_clock::now();
                 _menuState = Menu::MENU;
             }
         }
 
-        if (_menuState == Menu::MENU) {
-            if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
-            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT))
+        if (_menuState == Menu::ENDING) {
+            float moveFactor = elapsed_seconds.count() / _durationEnding;
+
+            if (moveFactor > 1.0f)
+                moveFactor = 1.0f;
+            _camera.position = _startPos + (_endPos - _startPos) * moveFactor;
+            _camera.target = _startTarget + (_endTarget - _startTarget) * moveFactor;
+            if (elapsed_seconds.count() > _durationEnding) {
+                _menuClock = std::chrono::steady_clock::now();
                 _menuState = Menu::NONE;
+            }
+        }
+
+        if (_menuState == Menu::MENU) {
+             if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_Q) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+                _menuState = Menu::NONE;
+            if (IsKeyPressed(KEY_ENTER)) {
+                _menuClock = std::chrono::steady_clock::now();
+                _endTarget = _startTarget;
+                _endPos = raylib::Vector3(_gridSize * _mapX / 2, _startPos.y, _gridSize * _mapY / 2);
+                _menuState = Menu::ENDING;
+            }
         }
     }
 }

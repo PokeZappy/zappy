@@ -144,6 +144,13 @@ namespace Zappy {
             std::unique_ptr<raylib::Gif> _menuGif;
             Menu::State _menuState = Menu::STARTING;
             std::chrono::time_point<std::chrono::steady_clock> _menuClock;
+            raylib::Vector3 _startPos;
+            raylib::Vector3 _endPos;
+            raylib::Vector3 _startTarget;
+            raylib::Vector3 _endTarget;
+            double _startTime = 3.5f;
+            double _durationEnding = 1.5f;
+            bool _forceStartAnimation = false;
 
             raylib::Gif _broadcastGif;
             raylib::Gif _successGif;
