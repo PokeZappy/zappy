@@ -72,7 +72,7 @@ class Bot(object):
             print(f"Received action: {rec}")
         # if rec == "" or rec == "dead\n":
         # TODO - test avoid suicide
-        if rec == "dead\n":
+        if rec == "dead\n" or rec == "":
             # print("Server disconnected")
             self.cli_socket.close()
             sys.exit(0)
