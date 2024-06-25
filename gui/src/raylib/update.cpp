@@ -82,7 +82,7 @@ namespace Zappy {
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,
                     pokemon, _models[pokemon.id], _gridSize, _broadcastGif,
-                    _incantationSuccessGif, _incantationFailGif));
+                    _successGif, _failureGif, _followGif, _pushGif));
             }
         }
 

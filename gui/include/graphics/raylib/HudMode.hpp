@@ -86,6 +86,8 @@ namespace Zappy {
         void setSelectedPlayerToTarget();
         bool isChatEnabled() { return _chat; }
 
+        std::shared_ptr<PlayerRaylib> getTargetedPlayer() { return _targetedPlayer; }
+
     private:
         bool _activated = false;
 
