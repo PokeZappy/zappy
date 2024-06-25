@@ -123,6 +123,8 @@ namespace Zappy {
             (Color){181, 161, 88, 255}, (Color){89, 92, 169, 255}, (Color){138, 159, 239, 255},
             raylib::Color::White(), raylib::Color::Orange(),
         };
+        _listTypesCustom.push_back("");
+        _listTypesColorsCustom.push_back(raylib::Color::White());
 
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(_assetsRoot + EGG_MODEL_PATH);

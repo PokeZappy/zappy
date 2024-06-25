@@ -31,9 +31,10 @@ namespace Zappy
                     getArenaOffset(_mapY, _gridSize)),
                 raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
 
-            _sun.Draw(_lights[0].position, _gridSize * 0.8);
-            float moonScale = _gridSize * 2;
-            _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30, raylib::Vector3(moonScale, true));
+            _sun.Draw(_lights[0].position, raylib::Vector3(1, 0, 0), 180,
+                raylib::Vector3(_gridSize * 0.8, true));
+            _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30,
+                raylib::Vector3(_gridSize * 2, true));
 
             drawTiles(world.getTiles());
 
