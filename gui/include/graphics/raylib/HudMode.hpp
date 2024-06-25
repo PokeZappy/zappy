@@ -81,7 +81,7 @@ namespace Zappy {
         void drawEntityCount(size_t graphicPlayerCount, size_t graphicEggCount, size_t worldPlayerCount, size_t worldEggCount, int x, int y);
         void setFirstPokemonTarget();
         CameraMode followTarget(raylib::Camera &camera);
-        void update(raylib::Camera &camera, ClientSocket &socket);
+        void update(ClientSocket &socket);
         void updateChat(ClientSocket &socket);
         void setSelectedPlayerToTarget();
         bool isChatEnabled() { return _chat; }

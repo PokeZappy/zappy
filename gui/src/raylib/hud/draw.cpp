@@ -274,7 +274,7 @@ namespace Zappy {
         } else if (type == "water") {
             src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
         } else {
-            _white.DrawText(type, x, y, 25);
+            _white.DrawText(type, x, y + 7, 15);
         }
         _typesTexture.Draw(src, dest);
     }
