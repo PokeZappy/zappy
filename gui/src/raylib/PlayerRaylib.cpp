@@ -153,4 +153,13 @@ namespace Zappy
         _successGif.draw(camera, gifPos);
         _failureGif.draw(camera, gifPos);
     }
+
+    void PlayerRaylib::glow(void)
+    {
+        Material *material = &_models->getModelByAnimation(_animIndex)->getModel().materials[1];
+        std::cout << "-- Albedo -- color:" << raylib::Color(material->maps[MATERIAL_MAP_ALBEDO].color).ToString() << ", value: "
+                    << std::to_string(material->maps[MATERIAL_MAP_ALBEDO].value) << std::endl;
+        material->maps[MATERIAL_MAP_ALBEDO].value = 0.5;
+        material->maps[MATERIAL_MAP_DIFFUSE].value = 0.2;
+    }
 } // namespace Zappy
