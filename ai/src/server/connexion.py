@@ -22,7 +22,8 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
             result = list(map(int, filter(None, new_ntq[:3])))
     except ValueError as e:
         print(f"Error: {e}\n for: {cli_number} or {welcome_message}")
+        result = [0, 30, 30]
+    if not result:
         client_socket.close()
-        client_socket = None
-        result = None
+        exit(0)
     return result, client_socket

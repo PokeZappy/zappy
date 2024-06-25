@@ -36,7 +36,6 @@ class RoleInGame(Enum):
     FIRST_BORN = 7
     NORTH_GUARD = 8
     HANSEL = 9
-    VICE_NORTH_GUARD = 10
 
 
 TESTUDO = [
