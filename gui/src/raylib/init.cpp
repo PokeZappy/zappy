@@ -27,7 +27,7 @@ namespace Zappy {
         _successGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
         _failureGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),
         _followGif(raylib::Gif(_assetsRoot + "gifs/follow.gif", true, 1, _gridSize / 3)),
-        _pushGif(raylib::Gif(_assetsRoot + "gifs/push.gif", false, 0, _gridSize / 2)),
+        _pushGif(raylib::Gif(_assetsRoot + "gifs/push.gif", false, 1, _gridSize / 2)),
         _socket(socket)
     {
         _window.SetTargetFPS(60);
