@@ -185,7 +185,7 @@ class ParentAI(Player):
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
     
-    def count_element(self, resources: list[list[str]]) -> None:
+    def count_element(self, resources: list) -> None:
         my_resources = dict(Counter(resources))
         # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
@@ -234,6 +234,7 @@ class ParentAI(Player):
                     print("inventory")
             else:
                 print(f"mmS  PBs: rec {recv_type}, msgs {msgs}, Buff {buf}")
+                # TODO - c'est quoi cette ligne ci dessous
                 messages = list(filter(None, msgs.split('\n')))
             self.actions.pop(0)
 
@@ -296,7 +297,7 @@ class ParentAI(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'ok' or recv_type == 'slots':
                 self.actions.pop(0)

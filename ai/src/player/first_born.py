@@ -156,7 +156,7 @@ class First_born(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'look':
                 if self.update_map(msgs):
