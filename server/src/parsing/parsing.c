@@ -63,7 +63,7 @@ static int check_arg(int ac, char **av, server_arg_t *args, int i)
     if (strcmp(av[i - 1], "-p") == 0 && i < ac && is_number(av[i]))
         args->p = atoi(av[i]);
     if (strcmp(av[i - 1], "-x") == 0 && i < ac && is_number(av[i]))
-        args->c = atoi(av[i]);
+        args->x = atoi(av[i]);
     if (strcmp(av[i - 1], "-y") == 0 && i < ac && is_number(av[i]))
         args->y = atoi(av[i]);
     if (strcmp(av[i - 1], "-c") == 0 && i < ac && is_number(av[i]))
@@ -92,7 +92,8 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
         }
         i = temp;
     }
-    if (args->c < 10 || args->c > 30 || args->y < 10 || args->y > 30) {
+    if (args->x < 10 || args->x > 30 || args->y < 10 || args->y > 30) {
+        printf("Error: c and y must be between 10 and 30\n");
         free_server_arg(args);
         return 84;
     }
@@ -102,13 +103,15 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
 static server_arg_t *parsing_av(int ac, char **av, server_arg_t *arg)
 {
     arg->p = -84;
-    arg->c = -84;
+    arg->x = -84;
     arg->y = -84;
     arg->c = -84;
     arg->f = -84;
-    if (parsing_arg(ac, av, arg) == 84)
+    if (parsing_arg(ac, av, arg) == 84) {
+        printf("Error parse args\n");
         return NULL;
-    if (arg->p == -84 || arg->c == -84 || arg->y == -84 ||
+    }
+    if (arg->p == -84 || arg->x == -84 || arg->y == -84 ||
         arg->c == -84 || arg->f == -84 || !arg->n) {
         return NULL;
     }
