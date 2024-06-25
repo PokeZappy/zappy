@@ -64,3 +64,17 @@ void hack_whole_tile(server_t *server, char *args, client_socket_t *client)
     }
     bct(server, (vector_t){x, y});
 }
+
+void hack_level(server_t *server, char *args, client_socket_t *client)
+{
+    int id = 0;
+    int level = 0;
+    client_socket_t *tmp = NULL;
+
+    if (sscanf(args + 10, "%d %d", &id, &level) == 2) {
+        tmp = find_client_by_socket(server, id);
+        if (tmp != NULL)
+            tmp->player->level = level;
+    }
+    dprintf(get_gui(server)->socket, "plv %d %d\n", id, level);
+}
