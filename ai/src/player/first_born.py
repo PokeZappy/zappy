@@ -12,8 +12,8 @@ from ai.src.player.north_guard import NorthGuard
 class First_born(Player):
 
     ROLE = [
-        # RoleInGame.NORTH_GUARD,
-        # RoleInGame.PROGENITOR
+        RoleInGame.NORTH_GUARD,
+        RoleInGame.PROGENITOR
     ]
 
     DEFAULT_ROLE = RoleInGame.PNJ
@@ -39,59 +39,56 @@ class First_born(Player):
         self.debug_mode = debug_mode
 
     def change_role(self) -> None:
+        print('Coming out')
         self.message.buf_messages('Ego me transform : ', infos=[[self.BIND[self.role[0]][1]]])
         self.queue.append('Broadcast')
         self.transformation = True
 
     def make_action(self) -> None:
-        if len(self.queue) > 0:
+        if len(self.queue) > 0 and len(self.actions) == 0:
+            if self.queue[0] == 'Newborn':
+                self.queue.pop(0)
+                self.change_role()
             self.apply_action()
         if len(self.actions) > 0:
             return
-        self.queue.append('Forward')
-        # if len(self.queue) > 0 and self.queue[0] == 'Newborn':
-        #     self.change_role()
-        #     self.queue.pop(0)
-        # if len(self.queue) > 0 and len(self.actions) == 0:
-        #     self.apply_action()
-        # if len(self.actions) > 0:
-        #     return
-        # self.queue.append('Look')
+        self.queue.append('Look')
 
     def reborn_in_collector(self, i: int) -> None:
         if i != 0:
             self.queue.append('Forward')
         if i == 1:
-            self.queue.append('Right')
+            self.queue.append('Left')
             self.queue.append('Forward')
         elif i == 3:
-            self.queue.append('Left')
+            self.queue.append('Right')
             self.queue.append('Forward')
         self.queue.append('Newborn')
     
-    def update_map(self, vision: str) -> None:
+    def update_map(self, vision: str) -> bool:
         vision.replace('[', '').replace(']', '')
         list_vision = vision.split(',')
         for i in range(len(list_vision)):
             case = list_vision[i].split(' ')
             if case.count('egg') > 2 and case.count('player') >= 1:
                 self.reborn_in_collector(i)
+                return False
+            horizontal = i - i * (i + 1)
+            vertical = int(i ** 0.5)
+            if self.dir == 0:
+                x = (self.pos[0] + horizontal) % self.limit[0]
+                y = (self.pos[1] + vertical) % self.limit[1]
+            elif self.dir == 1:
+                x = (self.pos[0] + vertical) % self.limit[0]
+                y = (self.pos[1] - horizontal) % self.limit[1]
+            elif self.dir == 2:
+                x = (self.pos[0] - horizontal) % self.limit[0]
+                y = (self.pos[1] - vertical) % self.limit[1]
             else:
-                horizontal = i - i * (i + 1)
-                vertical = int(i ** 0.5)
-                if self.dir == 0:
-                    x = (self.pos[0] + horizontal) % self.limit[0]
-                    y = (self.pos[1] + vertical) % self.limit[1]
-                elif self.dir == 1:
-                    x = (self.pos[0] + vertical) % self.limit[0]
-                    y = (self.pos[1] - horizontal) % self.limit[1]
-                elif self.dir == 2:
-                    x = (self.pos[0] - horizontal) % self.limit[0]
-                    y = (self.pos[1] - vertical) % self.limit[1]
-                else:
-                    x = (self.pos[0] - vertical) % self.limit[0]
-                    y = (self.pos[1] + horizontal) % self.limit[1]
-                self.map[x][y] = 1
+                x = (self.pos[0] - vertical) % self.limit[0]
+                y = (self.pos[1] + horizontal) % self.limit[1]
+            self.map[x][y] = 1
+        return True
 
     def adaptativ_walk(self, i, j) -> None | tuple[int, int]:
         result_x = self.pos[0] + i
@@ -146,51 +143,53 @@ class First_born(Player):
             self.queue.append('Forward')
             rd = randint(0, 2)
             if rd == 0:
-                self.queue.append('Left')
+                self.queue.append('Right')
                 self.queue.append('Forward')
             if rd == 2:
-                self.queue.append('Right')
+                self.queue.append('Left')
                 self.queue.append('Forward')
         else:
             rd = randint(0, len(action) - action.count(None) - 1)
             self.goto(rd)        
 
-    # def recv_treatment(self, buf: str) -> None:
-    #     if len(self.actions) == 0:
-    #         recv_list = self.message.receive(buf)
-    #     else:
-    #         recv_list = self.message.receive(buf, self.actions[0])
-    #     for recv_type, msgs in recv_list:
-    #         if recv_type == 'look':
-    #             self.update_map(msgs)
-    #             self.update_actions()
-    #         elif recv_type == 'ok':
-    #             if msgs == 'Forward':
-    #                 if self.dir == 0:
-    #                     self.pos[0] = (self.pos[0] + 1) % self.limit[0]
-    #                 elif self.dir == 1:
-    #                     self.pos[1] = (self.pos[1] + 1) % self.limit[1]
-    #                 elif self.dir == 2:
-    #                     self.pos[0] = (self.pos[0] - 1) % self.limit[0]
-    #                 else:
-    #                     self.pos[1] = (self.pos[1] - 1) % self.limit[1]
-    #             if msgs == 'Left':
-    #                 self.dir = (self.dir + 1) % 4
-    #             if msgs == 'Right':
-    #                 self.dir = (self.dir - 1) % 4
-    #             if msgs == 'Broadcast':
-    #                 if self.transformation:
-    #                     if len(self.role) > 0:
-    #                         self.death = self.role[0]
-    #                     else:
-    #                         self.death = self.DEFAULT_ROLE
-    #         elif recv_type == 'broadcast':
-    #             if msgs[0] == 'ko':
-    #                 continue
-    #             for msg in msgs:
-    #                 self.broadcast_traitement(msg)
-    #             continue
-    #         self.actions.pop(0)
+    def recv_treatment(self, buf: str) -> None:
+        if len(self.actions) == 0:
+            recv_list = self.message.receive(buf)
+        else:
+            recv_list = self.message.receive(buf, self.actions[0])
+        for recv_type, msgs in recv_list:
+            if recv_type == 'look':
+                if self.update_map(msgs):
+                    self.update_actions()
+            elif recv_type == 'ok':
+                if msgs == 'Forward':
+                    if self.dir == 0:
+                        self.pos[0] = (self.pos[0] + 1) % self.limit[0]
+                    elif self.dir == 1:
+                        self.pos[1] = (self.pos[1] + 1) % self.limit[1]
+                    elif self.dir == 2:
+                        self.pos[0] = (self.pos[0] - 1) % self.limit[0]
+                    else:
+                        self.pos[1] = (self.pos[1] - 1) % self.limit[1]
+                if msgs == 'Left':
+                    self.dir = (self.dir + 1) % 4
+                if msgs == 'Right':
+                    self.dir = (self.dir - 1) % 4
+                if msgs == 'Broadcast':
+                    if self.transformation:
+                        if len(self.role) > 0:
+                            self.death = self.role[0]
+                        else:
+                            self.death = self.DEFAULT_ROLE
+            elif recv_type == 'eject':
+                continue
+            elif recv_type == 'broadcast':
+                if msgs[0] == 'ko':
+                    continue
+                for msg in msgs:
+                    self.broadcast_traitement(msg)
+                continue
+            self.actions.pop(0)
 
     def broadcast_traitement(self, msg: dict[str, str] | str | tuple) -> None:
         if msg['msg'] == 'Ego me transform : ':
