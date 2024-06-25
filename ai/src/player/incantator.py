@@ -160,14 +160,15 @@ class Incantator(Player):
                 try:
                     if int(msgs[-1]) > 1:
                         self.level += 1
+                        self.message.buf_messages(message='felix carmen')
                         if self.level == 2:
                             # print('I am level 2, here, get out')
                             self.queue.append('Right')
                             self.queue.append('Right')
                             self.queue.append('Forward')
                             self.message.buf_messages(message='nobilis incantatio')
-                            self.queue.append('Broadcast')
                             self.ready = True
+                        self.queue.append('Broadcast')
                         self.queue.append(('Take', 'food'))
                         self.queue.append(('Take', 'food'))
                         self.queue.append(('Take', 'food'))
@@ -179,7 +180,7 @@ class Incantator(Player):
                 print(f'actions: {self.actions}')
                 continue
             elif recv_type == 'broadcast':
-                if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
+                if not msgs or not isinstance(msgs, list):
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
@@ -246,7 +247,8 @@ class Incantator(Player):
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
-        if self.dir == None:
+            self.queue.append('Inventory')
+        if self.dir is None:
             self.queue.append('Look')
             return
         if self.dir is not None and self.level < 2 and self.have_linemate == False and not self.ready:
@@ -267,7 +269,8 @@ class Incantator(Player):
             if self.unset:
                 self.path.facing = None
                 return
-            self.turn_to_the_north()
+            if self.path.facing:
+                self.turn_to_the_north()
             self.queue.append('Left')
             self.queue.append('Forward')
             self.ready = True

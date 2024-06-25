@@ -64,7 +64,7 @@ class Pusher(Player):
             if self.path.facing is None:
                 self.path.get_north(message['direction'])
                 self.turn_to_the_north()
-                if self.id >= 4 and self.start is False:
+                if self.id >= 4 and self.start is False and self.first is False:
                     self.go_testudo()
             if self.got_id > 2 and self.start is False and self.first is True:
                 if self.id >= 4:

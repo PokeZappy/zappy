@@ -3,6 +3,7 @@ from random import randint
 
 from collections import Counter
 
+from ai.src.gameplay.evolution import EVOLUTION_RESOURCES
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
 from ai.src.player.incantator import Incantator
@@ -65,7 +66,7 @@ class ParentAI(Player):
                     ]
     
     DEFENDER_ROLE = [
-                    RoleInGame.COLLECTOR,
+                    RoleInGame.PUSHER,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
@@ -104,6 +105,7 @@ class ParentAI(Player):
         self.fork_gave = 0
         self.coll_ressources = {}
         self.level_incant = 1
+        self.level_resources = 0
         self.global_ressources = self.based_ressources
         self.new_focus = False
         self.ressources_focus = {}
@@ -111,7 +113,7 @@ class ParentAI(Player):
         self.in_depot: int = -1
         self.exist_north = False
         self.pusher_count = 4
-        self.second_phase = False # TODO - reset at False
+        self.second_phase = False
         self.mms_id: int = randint(0, 100_000_000)
         self.mms = [self.mms_id]
         self.count_mms: int = 0
@@ -120,7 +122,7 @@ class ParentAI(Player):
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
-        # print(f'role created : {role}') TODO - à enelever
+        print(f'role created : {role}') #TODO - à enelever
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
         elif role == RoleInGame.PUSHER and self.second_phase is False:
@@ -140,6 +142,7 @@ class ParentAI(Player):
                 self.fork(RoleInGame.FIRST_BORN)
             else:
                 if self.second_phase:
+                    print('second_phase ------------------------------------------------------------------------------------')
                     self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
                 else:
                     self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
@@ -240,6 +243,9 @@ class ParentAI(Player):
             pass
         if message['msg'] == 'felix carmen':
             self.level_incant += 1
+            self.level_resources += 1
+
+            self.update_needed()
         if message['msg'] == 'situm intrare':
             self.enter_depot()
         if message['msg'] == 'sum extra domum':
@@ -400,3 +406,8 @@ class ParentAI(Player):
         self.message.buf_messages('satus testudo : ', my_id=self.pusher_count)
         self.queue.append('Broadcast')
         self.pusher_count += 1
+
+    def update_needed(self) -> None:
+        result = {key: self.need_ressources[key] - EVOLUTION_RESOURCES[self.level_resources - 1].get(key, 0)
+                  for key in self.need_ressources.keys()}
+        self.need_ressources = result

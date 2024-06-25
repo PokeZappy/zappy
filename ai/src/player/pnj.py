@@ -82,7 +82,7 @@ class Pnj(Player):
         if len(self.actions) > 0:
              return
         if self.life <= 400:
-            print('I am hungry')
+            # print('I am hungry')
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
             self.queue.append(('Take', 'food'))
