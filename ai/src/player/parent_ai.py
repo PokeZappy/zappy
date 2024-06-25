@@ -9,7 +9,7 @@ from ai.src.player.incantator import Incantator
 from ai.src.player.player import Player
 from ai.src.player.pnj import Pnj
 from ai.src.player.first_born import First_born
-from ai.src.player.north_guard import NorthGuard
+from ai.src.player.north_guard import NorthGuard, ViceNorthGuard
 from ai.src.player.hansel import Hansel
 from ai.src.player.pusher import Pusher
 from ai.src.utils.messages import extract_inventory
@@ -81,6 +81,7 @@ class ParentAI(Player):
         RoleInGame.FIRST_BORN: First_born,
         RoleInGame.HANSEL: Hansel,
         RoleInGame.PUSHER: Pusher,
+        RoleInGame.VICE_NORTH_GUARD: ViceNorthGuard
     }
 
 
@@ -157,7 +158,7 @@ class ParentAI(Player):
         #     print('North Guard is borning')
 
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
+            role = self.BIND[RoleInGame.VICE_NORTH_GUARD](serv_info, cli_socket, self.debug_mode).run()
         elif role == RoleInGame.PUSHER and self.second_phase is False:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, True).run()
         else:
