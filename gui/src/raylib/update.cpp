@@ -131,7 +131,7 @@ namespace Zappy {
         if (_menuState == Menu::STARTING) {
             if (!_forceStartAnimation) {
                 if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
-            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_Q) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
                 _menuState = Menu::NONE;
             }
             if (elapsed_seconds.count() >= _startTime) {
@@ -155,7 +155,7 @@ namespace Zappy {
 
         if (_menuState == Menu::MENU) {
              if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
-            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_Z) || IsKeyPressed(KEY_Q) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
                 _menuState = Menu::NONE;
             if (IsKeyPressed(KEY_ENTER)) {
                 _menuClock = std::chrono::steady_clock::now();
