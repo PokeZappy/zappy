@@ -57,7 +57,12 @@ class Pnj(Player):
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
-            self.actions.pop(0)
+            try:
+                self.actions.pop(0)
+            except Exception as e:
+                print(f"Error: {e}")
+                print(f"Unknown message type for Pnj: {recv_type}, msg {msgs}, buf {buf}")
+
             
         
 

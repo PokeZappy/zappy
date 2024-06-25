@@ -218,7 +218,7 @@ class ParentAI(Player):
                 if self.debug_mode:
                     print("inventory")
             else:
-                print(f"not wanted : rec {recv_type}, msgs {msgs}")
+                print(f"mmS  PBs: rec {recv_type}, msgs {msgs}, Buff {buf}")
                 messages = list(filter(None, msgs.split('\n')))
             self.actions.pop(0)
 
