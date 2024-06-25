@@ -124,7 +124,7 @@ class ParentAI(Player):
         self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         role = 0
         if self.first_round[1]:
-            role = RoleInGame.FIRST_BORN.value
+            role = RoleInGame.PUSHER.value
         elif len(self.give_role) > 0:
             role = self.give_role[0].value
         elif self.second_phase:
