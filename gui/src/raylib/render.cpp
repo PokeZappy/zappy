@@ -81,7 +81,9 @@ namespace Zappy
             // };
 
             // GuiButton(r, "Follow");
-
+            if (_menuState == Menu::MENU) {
+                drawMenu();
+            } else if (_menuState == Menu::NONE) {
             if (_hudMode->activated()) {
                 drawHud(world);
 
@@ -98,7 +100,7 @@ namespace Zappy
             } else {
                 raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails", 1240, GUI_HEIGHT - 35, 30);
             }
-
+        }
         }
         _window.EndDrawing();
     }

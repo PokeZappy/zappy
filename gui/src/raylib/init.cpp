@@ -23,6 +23,7 @@ namespace Zappy {
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
         _discardTranspShader(raylib::Shader::Load("", _assetsRoot + "shaders/discard_transparent.fs")),
+        _menuClock(std::chrono::steady_clock::now()),
         _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 0, _gridSize / 2)),
         _successGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
         _failureGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),

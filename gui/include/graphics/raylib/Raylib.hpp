@@ -56,6 +56,8 @@ namespace Zappy {
             void renderDebug(void);
             void handleKeys(void);
             void update(const World &world) override;
+            void updateMenu();
+            void drawMenu();
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
 
@@ -141,6 +143,7 @@ namespace Zappy {
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
             Menu::State _menuState = Menu::STARTING;
+            std::chrono::time_point<std::chrono::steady_clock> _menuClock;
 
             raylib::Gif _broadcastGif;
             raylib::Gif _successGif;

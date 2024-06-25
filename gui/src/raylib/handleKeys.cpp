@@ -10,6 +10,11 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
+        if (_menuState != Menu::NONE) {
+            updateMenu();
+            return;
+        }
+
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
              if (IsKeyDown(KEY_SPACE)) {
@@ -66,9 +71,6 @@ namespace Zappy {
                 _mapY = 30;
             }
         }
-
-        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()))
-            _camera.Update(_cameraViewMode);
 
         // if (!_players.empty() && !_players[0]->isDying()) {
             //* Follow the player with id 0

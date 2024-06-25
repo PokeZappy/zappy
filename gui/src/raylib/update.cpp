@@ -14,6 +14,9 @@ namespace Zappy {
         _hudMode->clearPlayers();
         handleKeys();
 
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
+            _camera.Update(_cameraViewMode);
+
         // Sun & Moon
         size_t revolution = 1789 / 10;
         auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
@@ -119,6 +122,24 @@ namespace Zappy {
                 _eggs.erase(_eggs.begin() + i - decal);
                 decal++;
             }
+        }
+    }
+
+    void Raylib::updateMenu() {
+        double startTime = 3.5f;
+        std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _menuClock;
+
+        if (_menuState == Menu::STARTING) {
+            if (elapsed_seconds.count() >= startTime) {
+                _menuClock = std::chrono::steady_clock::now();
+                _menuState = Menu::MENU;
+            }
+        }
+
+        if (_menuState == Menu::MENU) {
+            if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT))
+                _menuState = Menu::NONE;
         }
     }
 }
