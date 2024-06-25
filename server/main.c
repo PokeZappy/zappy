@@ -23,7 +23,6 @@ int main(int ac, char **av)
         return 0;
     args = parsing(ac, av);
     if (args == NULL) {
-        printf("Error while parsing arguments\n");
         free_server_arg(args);
         return 84;
     }
