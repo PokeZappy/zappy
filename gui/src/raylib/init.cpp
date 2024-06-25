@@ -23,6 +23,7 @@ namespace Zappy {
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
         _shader(raylib::Shader::Load(_assetsRoot + "shaders/lighting.vs", _assetsRoot + "shaders/lighting.fs")),
         _discardTranspShader(raylib::Shader::Load("", _assetsRoot + "shaders/discard_transparent.fs")),
+        _menuClock(std::chrono::steady_clock::now()),
         _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 0, _gridSize / 2)),
         _successGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
         _failureGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),
@@ -72,8 +73,10 @@ namespace Zappy {
         _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
         _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
         //* Menu
-        _camera.SetPosition(raylib::Vector3(4.4, 10, -5) * _gridSize);
-        _camera.SetTarget(raylib::Vector3(4.4, 10, -7) * _gridSize);
+        _startPos = raylib::Vector3(4.4, 10, -5) * _gridSize;
+        _startTarget = raylib::Vector3(4.4, 10, -7) * _gridSize;
+        _camera.SetPosition(_startPos);
+        _camera.SetTarget(_startTarget);
 
         // DisableCursor();
 
