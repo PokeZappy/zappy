@@ -18,10 +18,10 @@ namespace Zappy {
     public:
         PlayerRaylib(const std::shared_ptr<Player> worldPlayer,
             PokemonInfo &pkInfo, std::shared_ptr<RaylibModels> models,
-            float gridSize, const raylib::Gif &broadcastGif,
+            float gridSize, raylib::Color teamColor, const raylib::Gif &broadcastGif,
             const raylib::Gif &successGif, const raylib::Gif &failureGif,
             const raylib::Gif &followGif, const raylib::Gif &pushGif);
-        void draw(void);
+        void draw(bool isHudMode);
         void update(void);
         void updateModels(std::shared_ptr<RaylibModels> models);
 

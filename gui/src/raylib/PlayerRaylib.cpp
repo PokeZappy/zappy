@@ -12,7 +12,7 @@ namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(
         const std::shared_ptr<Player> worldPlayer, PokemonInfo &pkInfo,
-        std::shared_ptr<RaylibModels> models, float gridSize,
+        std::shared_ptr<RaylibModels> models, float gridSize, raylib::Color teamColor,
         const raylib::Gif &broadcastGif, const raylib::Gif &successGif,
         const raylib::Gif &failureGif, const raylib::Gif &followGif,
         const raylib::Gif &pushGif) :
@@ -27,10 +27,8 @@ namespace Zappy
         _models = models;
         _scale = _gridSize / 32;
         _height = _gridSize;
-        color = raylib::Color::White();
         infos = pkInfo;
-
-
+        color = teamColor;
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 3),
@@ -130,7 +128,7 @@ namespace Zappy
         }
     }
 
-    void PlayerRaylib::draw(void)
+    void PlayerRaylib::draw(bool isHudMode)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
@@ -149,7 +147,8 @@ namespace Zappy
         _models->getModelByAnimation(_animIndex)->draw(getPixelPos(),
             raylib::Vector3(_verticalRotation, 1, 0),
             _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f));
+            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f),
+            isHudMode ? color : raylib::Color::White());
     }
 
     void PlayerRaylib::drawGifs(const Camera &camera)

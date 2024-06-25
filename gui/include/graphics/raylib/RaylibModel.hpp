@@ -30,8 +30,8 @@ namespace Zappy
                 if (_animIndex != -1)
                     _model.UpdateAnimation(animations[_animIndex], _frame); 
                 _frame++; }
-            void draw(raylib::Vector3 position, raylib::Vector3 rotation, float angle, raylib::Vector3 scale) {
-                 _model.Draw(position, rotation, angle, scale);
+            void draw(raylib::Vector3 position, raylib::Vector3 rotation, float angle, raylib::Vector3 scale, raylib::Color tint = raylib::Color::White()) {
+                 _model.Draw(position, rotation, angle, scale, tint);
             }
         private:
             raylib::Model _model;

@@ -23,7 +23,8 @@ namespace Zappy {
             }
 
             if (IsKeyPressed(KEY_N)) {
-            _hudMode->switchState();
+                _hudMode->switchState();
+                _cameraViewMode = CAMERA_FIRST_PERSON;
             }
 
             if (IsKeyPressed(KEY_P)) {
@@ -89,11 +90,11 @@ namespace Zappy {
         SetShaderValue(_shader, _shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
 
         // Check key inputs to enable/disable lights
-        if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
-        if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
+        // if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
+        // if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
         if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
         if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
 
-        if (IsKeyPressed(KEY_Y)) _showPlayers = !_showPlayers;
+        if (IsKeyPressed(KEY_H)) _showPlayers = !_showPlayers;
     }
 }
