@@ -16,6 +16,7 @@
 #include "HudMode.hpp"
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
+#include "Skybox.hpp"
 
 #include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
@@ -136,5 +137,8 @@ namespace Zappy {
 
             // Server socket
             ClientSocket &_socket;
+
+             // SkyBox
+            Skybox _skybox;
     };
 }

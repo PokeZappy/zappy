@@ -25,7 +25,8 @@ namespace Zappy {
         _broadcastGif(raylib::Gif(_assetsRoot + "gifs/broadcast.gif", false, 0, _gridSize / 2)),
         _incantationSuccessGif(raylib::Gif(_assetsRoot + "gifs/success.gif", false, 0, _gridSize / 2)),
         _incantationFailGif(raylib::Gif(_assetsRoot + "gifs/failure.gif", false, 0, _gridSize / 2)),
-        _socket(socket)
+        _socket(socket),
+        _skybox(assetsRoot)
     {
         _window.SetTargetFPS(60);
         SetExitKey(KEY_DELETE);
@@ -122,6 +123,8 @@ namespace Zappy {
 
         // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
+
+
 
         _arenaAltitudeScale = -(1. / 13.);
         _arenaScale = _gridSize;

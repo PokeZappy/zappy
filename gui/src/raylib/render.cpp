@@ -49,6 +49,7 @@ namespace Zappy
             static raylib::Vector3 menuPos = raylib::Vector3(4.4, 10, -9.5) * _gridSize;
             static float menuScale = _gridSize / 200;
 
+            _skybox.draw();
             _shader.EndMode();
 
             if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded())
