@@ -47,6 +47,7 @@ void hack_tile(server_t *server, char *args, client_socket_t *client)
         if (strcmp(object_names[i], item_name) == 0)
             server->grid->tiles[y][x]->items[i] = quantity;
     }
+    bct(server, (vector_t){x, y});
 }
 
 void hack_whole_tile(server_t *server, char *args, client_socket_t *client)
@@ -61,4 +62,5 @@ void hack_whole_tile(server_t *server, char *args, client_socket_t *client)
         for (int i = 0; i < 7; i++)
             server->grid->tiles[y][x]->items[i] = items[i];
     }
+    bct(server, (vector_t){x, y});
 }
