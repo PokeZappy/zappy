@@ -71,7 +71,7 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                actions: list = None, pnj: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None, incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
@@ -84,12 +84,11 @@ class Messages(object):
             return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
-        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
-        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
-        if pnj:
-            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
-            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
-            # print(f'actions: {msg_actions}')
+        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
+        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        if incantator:
+            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
+            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
         if actions:
             actions = actions[::-1]
         for index, message in enumerate(msg_actions):

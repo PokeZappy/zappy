@@ -13,12 +13,12 @@ class TestRoleInGame:
     #  Enum members can be accessed by value
     def test_enum_members_access_by_value(self):
         assert RoleInGame(0) == RoleInGame.PROGENITOR
-        assert RoleInGame(1) == RoleInGame.MASTERMIND
+        assert RoleInGame(1) == RoleInGame.INCANTATOR
 
     #  Enum members have correct names
     def test_enum_members_have_correct_names(self):
         assert RoleInGame.PROGENITOR.name == "PROGENITOR"
-        assert RoleInGame.COOCKER.name == "COOCKER"
+        assert RoleInGame.PUSHER.name == "PUSHER"
 
     #  Accessing an undefined enum member raises AttributeError
     def test_accessing_undefined_enum_member_raises_attribute_error(self):
