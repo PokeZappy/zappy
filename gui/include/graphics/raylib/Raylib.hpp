@@ -36,6 +36,16 @@
 #include "ClientSocket.hpp"
 
 namespace Zappy {
+
+    namespace Menu {
+        enum State {
+            STARTING,
+            MENU,
+            ENDING,
+            NONE
+        };
+    }
+
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
@@ -130,6 +140,7 @@ namespace Zappy {
             // Menu
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+            Menu::State _menuState = Menu::STARTING;
 
             raylib::Gif _broadcastGif;
             raylib::Gif _successGif;
