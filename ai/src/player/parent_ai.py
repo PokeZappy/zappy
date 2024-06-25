@@ -11,7 +11,7 @@ from ai.src.player.pnj import Pnj
 from ai.src.player.first_born import First_born
 from ai.src.player.north_guard import NorthGuard, ViceNorthGuard
 from ai.src.player.hansel import Hansel
-from ai.src.player.pusher import Pusher
+from ai.src.player.pusher import Pusher, VicePusher, Spartiate
 from ai.src.utils.messages import extract_inventory
 from ai.src.utils.info_look import look_resources
 from ai.src.zappy_ai import connection
@@ -31,7 +31,7 @@ class ParentAI(Player):
             RoleInGame.PNJ,
             RoleInGame.PNJ,
             RoleInGame.PNJ,
-            # RoleInGame.HANSEL,
+            RoleInGame.HANSEL,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
@@ -39,16 +39,16 @@ class ParentAI(Player):
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
             # RoleInGame.HANSEL,
             # RoleInGame.HANSEL,
             # RoleInGame.PUSHER,
@@ -66,7 +66,8 @@ class ParentAI(Player):
                     ]
     
     DEFENDER_ROLE = [
-                    RoleInGame.PUSHER,
+                    # RoleInGame.SPARTIATE,
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
@@ -81,7 +82,9 @@ class ParentAI(Player):
         RoleInGame.FIRST_BORN: First_born,
         RoleInGame.HANSEL: Hansel,
         RoleInGame.PUSHER: Pusher,
-        RoleInGame.VICE_NORTH_GUARD: ViceNorthGuard
+        RoleInGame.VICE_NORTH_GUARD: ViceNorthGuard,
+        RoleInGame.VICE_PUSHER: VicePusher,
+        RoleInGame.SPARTIATE: Spartiate
     }
 
 
@@ -113,24 +116,19 @@ class ParentAI(Player):
         self.in_depot: int = -1
         self.exist_north = False
         self.pusher_count = 4
-        self.second_phase = False # TODO - reset at False
-        self.mms_id: int = randint(0, 100_000_000)
-        self.mms = [self.mms_id]
-        self.count_mms: int = 0
-        self.mms_start: bool = False
+        self.second_phase = False
         self.spoke: bool = False
+        self.id_pusher: int = 0
 
     def fork(self, role: RoleInGame) -> None:
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
-        # print(f'role created : {role}') #TODO - à enelever
-        # if role == RoleInGame.NORTH_GUARD:
-        #     print('North Guard is borning')
-        if role == RoleInGame.NORTH_GUARD and self.exist_north:
-            role = self.BIND[RoleInGame.VICE_NORTH_GUARD](serv_info, cli_socket, self.debug_mode).run()
-        elif role == RoleInGame.PUSHER and self.second_phase is False:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, True).run()
-        else:
-            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+        print(f'role created : {role}') #TODO - à enelever
+        # TODO - reliquat plus besoin car j'implémente directement dan la queue le VICE Pusher
+        # if role == RoleInGame.PUSHER and self.second_phase is False:
+        #     role = self.BIND[RoleInGame.VICE_PUSHER](serv_info, cli_socket, self.debug_mode).run()
+        #     TODO - implémenter les spartiate en 2nd phase
+        # else:
+        role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         while role is not None:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         cli_socket.close()
@@ -153,20 +151,10 @@ class ParentAI(Player):
             self.exist_north = True
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
-
-
-
-    # def apply_action(self, buf: str) -> None:
-    #     if buf.__contains__('message'):
-    #         list_message = buf.split(',')
-    #         self.decode_message(list_message)
-    #     elif buf.__contains__('death'):
-    #         self.actions.append()
-    # [m_info, m_nbr] for m_info, m_nbr in zip(message['info'], message['nbr'])
+        if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
+            self.message.buf_messages('occupat exercitum : ', my_id=self.id_pusher)
 
     def real_fork_addaptativ(self) -> None:
-        #TODO: implement the real_fork_addaptativ with cyprien
-        #TODO: see how we handle the strategy with him
         if len(self.give_role) == 0:
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
@@ -220,7 +208,6 @@ class ParentAI(Player):
                     print("inventory")
             else:
                 print(f"mmS  PBs: rec {recv_type}, msgs {msgs}, Buff {buf}")
-                messages = list(filter(None, msgs.split('\n')))
             self.actions.pop(0)
 
     def broadcast_traitement(self, message: tuple | str | dict) -> None:
@@ -231,8 +218,7 @@ class ParentAI(Player):
                 self.coll_ressources[message['id']][keys] = nbrs
                 self.global_ressources[keys] += nbrs
         if message['msg'] == 'Ego plus viribus':
-            self.give_role.insert(0, RoleInGame.NORTH_GUARD)
-
+            self.give_role.insert(0, RoleInGame.VICE_NORTH_GUARD)
         if message['msg'] == 'opes deposita':
             for keys, nbrs in zip(message['info'], message['nbr']):
                 self.global_ressources[keys] -= nbrs
@@ -249,11 +235,11 @@ class ParentAI(Player):
             self.enter_depot()
         if message['msg'] == 'sum extra domum':
             self.exit_depot()
-        if message['msg'] == 'Ego plus viribus':
-    #         TODO - faire un North gurad qui va au Nord
-            pass
-        if message['msg'] == 'auxilium postulo':
-            self.mms.append(message['id'])
+        if message['msg'] == 'recessi ab exercitu':
+            self.id_pusher = message['id']
+            # TODO - enlever print débug
+            print(f'il va die : {self.id_pusher}')
+            self.give_role.insert(0, RoleInGame.VICE_PUSHER)
 
     def enter_depot(self) -> None:
         """

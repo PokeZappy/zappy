@@ -85,6 +85,10 @@ class Latin(object):
                                         # M&M's to Pusher
                                         'formation tortue': 'satus testudo : ',
 
+                                        # Pusher to M&M's
+                                        'je vais mourir': 'recessi ab exercitu',
+                                        'remplace le pousseur : ': 'occupat exercitum : ',
+
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',
 

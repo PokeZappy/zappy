@@ -37,6 +37,8 @@ class RoleInGame(Enum):
     NORTH_GUARD = 8
     HANSEL = 9
     VICE_NORTH_GUARD = 10
+    VICE_PUSHER = 11
+    SPARTIATE = 12
 
 
 TESTUDO = [
