@@ -24,7 +24,7 @@ namespace Zappy {
         if (_chat)
             drawChat();
         else
-            _black120.DrawText("Press 'T' to open chat", 13, GUI_HEIGHT - 241, 25);
+            _black120.DrawText("Appuyez sur 'T' pour ouvrir le chat", 13, GUI_HEIGHT - 241, 25);
 
         drawEntityCount(graphicPlayerCount, graphicEggCount, world.getPlayers().size(), world.getEggs().size(), 1657, 156);
         drawShell(world.getShellCommands());
@@ -274,7 +274,7 @@ namespace Zappy {
         } else if (type == "water") {
             src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
         } else {
-            _white.DrawText(type, x, y, 25);
+            _white.DrawText(type, x, y + 7, 15);
         }
         _typesTexture.Draw(src, dest);
     }

@@ -116,6 +116,7 @@ namespace Zappy {
 
             float _defaultAmbientLight = 0.3f;
             raylib::Shader _shader;
+            raylib::Shader _discardTranspShader;
             Light _lights[MAX_LIGHTS];
 
             // HUD
@@ -131,8 +132,10 @@ namespace Zappy {
             std::unique_ptr<raylib::Gif> _menuGif;
 
             raylib::Gif _broadcastGif;
-            raylib::Gif _incantationSuccessGif;
-            raylib::Gif _incantationFailGif;
+            raylib::Gif _successGif;
+            raylib::Gif _failureGif;
+            raylib::Gif _followGif;
+            raylib::Gif _pushGif;
 
             // Server socket
             ClientSocket &_socket;

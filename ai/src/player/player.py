@@ -233,7 +233,7 @@ class Player(Bot):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'ko' and len(self.actions) > 0 and self.actions[0] == ('Take', 'player'):
                 self.got_id += 1

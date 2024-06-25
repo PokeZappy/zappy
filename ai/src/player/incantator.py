@@ -122,7 +122,7 @@ class Incantator(Player):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if self.debug_mode:
                 print(f'recv_type: {recv_type} and msgs: {msgs}')
@@ -178,6 +178,7 @@ class Incantator(Player):
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
                     self.queue.append(('Take', 'food'))
+                    self.queue.append('Inventory')
                     self.queue.append('Incantation')
                 # except Exception:
                     # pass
