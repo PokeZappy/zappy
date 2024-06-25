@@ -509,7 +509,7 @@ void UpdateCamera(Camera *camera, int mode)
     if ((mode == CAMERA_THIRD_PERSON) || (mode == CAMERA_ORBITAL) || (mode == CAMERA_FREE))
     {
         // Zoom target distance
-        CameraMoveToTarget(camera, -GetMouseWheelMove());
+        if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) CameraMoveToTarget(camera, -GetMouseWheelMove() * 0.2f);
         if (IsKeyPressed(KEY_KP_SUBTRACT)) CameraMoveToTarget(camera, 2.0f);
         if (IsKeyPressed(KEY_KP_ADD)) CameraMoveToTarget(camera, -2.0f);
     }

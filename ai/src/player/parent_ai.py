@@ -9,7 +9,7 @@ from ai.src.player.incantator import Incantator
 from ai.src.player.player import Player
 from ai.src.player.pnj import Pnj
 from ai.src.player.first_born import First_born
-from ai.src.player.north_guard import NorthGuard, ViceNorthGuard
+from ai.src.player.north_guard import NorthGuard
 from ai.src.player.hansel import Hansel
 from ai.src.player.pusher import Pusher
 from ai.src.utils.messages import extract_inventory
@@ -81,7 +81,6 @@ class ParentAI(Player):
         RoleInGame.FIRST_BORN: First_born,
         RoleInGame.HANSEL: Hansel,
         RoleInGame.PUSHER: Pusher,
-        RoleInGame.VICE_NORTH_GUARD: ViceNorthGuard
     }
 
 
@@ -120,55 +119,41 @@ class ParentAI(Player):
         self.mms_start: bool = False
         self.spoke: bool = False
 
-    def get_role(self, serv_info: list[int], cli_socket: socket) -> any:
-        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
-        role = 0
-        if self.first_round[1]:
-            role = RoleInGame.PUSHER.value
-        elif len(self.give_role) > 0:
-            role = self.give_role[0].value
-        elif self.second_phase:
-            role = self.DEFENDER_ROLE[self.index].value
-        else:
-            role = self.DEFAULT_ROLE[self.index].value
-
-        match role:
-            case 0: return Progenitor(serv_info, cli_socket, self.debug_mode)
-            case 1: return Incantator(serv_info, cli_socket, self.debug_mode)
-            case 2: return Collector(serv_info, cli_socket, self.debug_mode)
-            case 3: return Pusher(serv_info, cli_socket, self.debug_mode)
-            case 4: return Pnj(serv_info, cli_socket, self.debug_mode)
-            case 5: return First_born(serv_info, cli_socket, self.debug_mode)
-            case 6: return NorthGuard(serv_info, cli_socket, self.debug_mode)
-            case 7: return Hansel(serv_info, cli_socket, self.debug_mode)
-            case 8: return ViceNorthGuard(serv_info, cli_socket, self.debug_mode)
-
-    def fork(self, role, cli_socket: socket) -> None:
+    def fork(self, role: RoleInGame) -> None:
+        serv_info, cli_socket = connection(self.port, self.name, self.machine)
         # print(f'role created : {role}') #TODO - à enelever
         # if role == RoleInGame.NORTH_GUARD:
         #     print('North Guard is borning')
-        # print (f'role: {role}')
-        role.run()
+        if role == RoleInGame.NORTH_GUARD and self.exist_north:
+            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
+        elif role == RoleInGame.PUSHER and self.second_phase is False:
+            role = self.BIND[role](serv_info, cli_socket, self.debug_mode, True).run()
+        else:
+            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
+        while role is not None:
+            role = self.BIND[role](serv_info, cli_socket, self.debug_mode).run()
         cli_socket.close()
         exit(0)
 
-    def real_fork(self) -> bool:
-        serv_info, cli_socket = connection(self.port, self.name, self.machine)
-        if serv_info is None or cli_socket is None:
-            cli_socket.close()
-            print('Nope dude connard')
-            return False
+    def real_fork(self) -> None:
+        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         pid = fork()
         if pid == 0:
-            self.fork(self.get_role(serv_info, cli_socket), cli_socket)
-        elif pid == -1:
-            cli_socket.close()
+            if self.first_round[1]:
+                self.fork(RoleInGame.FIRST_BORN)
+            else:
+                if self.second_phase:
+                    self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
+                else:
+                    self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
+        if pid == -1:
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
-        return True
+
+
 
     # def apply_action(self, buf: str) -> None:
     #     if buf.__contains__('message'):
@@ -185,7 +170,7 @@ class ParentAI(Player):
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
     
-    def count_element(self, resources: list[list[str]]) -> None:
+    def count_element(self, resources: [list[str]]) -> None:
         my_resources = dict(Counter(resources))
         # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
@@ -208,8 +193,8 @@ class ParentAI(Player):
             if recv_type == 'slots':
                 for _ in range(msgs):
                     if msgs != 0:
-                        has_forked = self.real_fork()
-                        if len(self.give_role) > 0 and has_forked:
+                        self.real_fork()
+                        if len(self.give_role) > 0:
                             self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':

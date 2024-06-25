@@ -80,6 +80,8 @@ namespace Zappy {
             size_t _eggAnimFrame = 0;
             std::vector<std::string> _listTypes;
             std::vector<raylib::Color> _listTypesColors;
+            std::vector<std::string> _listTypesCustom;
+            std::vector<raylib::Color> _listTypesColorsCustom;
 
             libconfig::Config _configuration;
             std::unique_ptr<DebugMode> debugMode;

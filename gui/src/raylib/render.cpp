@@ -42,7 +42,7 @@ namespace Zappy
             }
             if (_showPlayers) {
                 for (auto &player : _players) {
-                    player->draw();
+                    player->draw(_hudMode->activated());
                 }
             }
 

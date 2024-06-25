@@ -17,11 +17,13 @@ def connect(port: str, team_name: str, host: str) -> tuple[list[int], socket]:
     cli_number = client_socket.recv(100_000).decode()
     new_ntq = cli_number.split()
     result = []
-    if new_ntq != ['ko']:
-        result = list(map(int, filter(None, new_ntq[:3])))
-    else:
-        print(f"Error\n for: {cli_number} or {welcome_message}")
+    try:
+        if new_ntq != ['ko']:
+            result = list(map(int, filter(None, new_ntq[:3])))
+    except ValueError as e:
+        print(f"Error: {e}\n for: {cli_number} or {welcome_message}")
+        result = [0, 30, 30]
+    if not result:
         client_socket.close()
-        client_socket = None
-        result = None
+        exit(0)
     return result, client_socket

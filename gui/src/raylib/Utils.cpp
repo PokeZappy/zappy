@@ -48,7 +48,19 @@ namespace Zappy
             }
             i++;
         }
-        return raylib::Color::White();
+        i = 0;
+        for (const auto &team : _listTypesCustom) {
+            if (team == teamName) {
+                return _listTypesColorsCustom[i];
+            }
+            i++;
+        }
+        _listTypesCustom.push_back(teamName);
+        int min = 20;
+        int max = 220;
+        raylib::Color newColor(Utils::random(min, max), Utils::random(min, max), Utils::random(min, max));
+        _listTypesColorsCustom.push_back(newColor);
+        return newColor;
     }
 
     raylib::Color Raylib::getTeamColor(const Team &team)
