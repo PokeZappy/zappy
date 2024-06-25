@@ -40,6 +40,9 @@ void hack_player_pos(server_t *server, char *args, client_socket_t *client)
         if (tmp != NULL) {
             tmp->player->pos.x = x;
             tmp->player->pos.y = y;
+            dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", tmp->id,
+            tmp->player->pos.x, tmp->player->pos.y,
+            tmp->player->direction + 1);
         }
     }
 }
@@ -62,6 +65,9 @@ void hack_player_dir(server_t *server, char *args, client_socket_t *client)
             tmp->player->direction = DOWN;
         if (strcmp(dir, "LEFT") == 0)
             tmp->player->direction = LEFT;
+        dprintf(get_gui(server)->socket, "ppo %d %d %d %d\n", tmp->id,
+        tmp->player->pos.x, tmp->player->pos.y,
+        tmp->player->direction + 1);
     }
 }
 
