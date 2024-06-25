@@ -27,6 +27,8 @@ namespace Zappy {
         raylib::Vector3 getPixelPos(void) const;
         void drawGifs(const Camera &camera);
 
+        void glow(void);
+
         const std::shared_ptr<Player> worldPlayer;
         PokemonInfo infos;
     private:

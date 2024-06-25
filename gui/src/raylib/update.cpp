@@ -44,7 +44,7 @@ namespace Zappy {
             _hudMode->setFirstPokemonTarget();
 
         if (_hudMode->activated()) {
-            _hudMode->followTarget(_camera);
+            _cameraViewMode = _hudMode->followTarget(_camera);
             _hudMode->update(_camera, _socket);
         }
 

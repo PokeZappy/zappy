@@ -69,6 +69,7 @@ namespace Zappy {
             const std::string &_assetsRoot;
             raylib::Window _window;
             raylib::Camera _camera;
+            CameraMode _cameraViewMode = CAMERA_FIRST_PERSON;
             raylib::Vector3 _defaultCameraPosition;
             raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
