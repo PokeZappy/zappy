@@ -93,7 +93,6 @@ static int parsing_arg(int ac, char **av, server_arg_t *args)
         i = temp;
     }
     if (args->x < 10 || args->x > 30 || args->y < 10 || args->y > 30) {
-        printf("Error: c and y must be between 10 and 30\n");
         free_server_arg(args);
         return 84;
     }
@@ -108,7 +107,6 @@ static server_arg_t *parsing_av(int ac, char **av, server_arg_t *arg)
     arg->c = -84;
     arg->f = -84;
     if (parsing_arg(ac, av, arg) == 84) {
-        printf("Error parse args\n");
         return NULL;
     }
     if (arg->p == -84 || arg->x == -84 || arg->y == -84 ||
