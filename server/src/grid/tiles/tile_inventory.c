@@ -11,25 +11,25 @@
 
 void add_item_to_tile(tiles_t *tile, int item, int quantity)
 {
-    tile->_items[item] += quantity;
+    tile->items[item] += quantity;
 }
 
 void remove_item_from_tile(tiles_t *tile, int item, int quantity)
 {
-    tile->_items[item] -= quantity;
+    tile->items[item] -= quantity;
 }
 
 int get_item_count(tiles_t *tile, int item)
 {
-    return tile->_items[item];
+    return tile->items[item];
 }
 
 char *get_tile_content(tiles_t *tile)
 {
     char *content = (char *)malloc(sizeof(char) * 1024);
 
-    sprintf(content, "%d %d %d %d %d %d %d", tile->_items[0],
-        tile->_items[1], tile->_items[2], tile->_items[3], tile->_items[4],
-        tile->_items[5], tile->_items[6]);
+    sprintf(content, "%d %d %d %d %d %d %d", tile->items[0],
+        tile->items[1], tile->items[2], tile->items[3], tile->items[4],
+        tile->items[5], tile->items[6]);
     return content;
 }

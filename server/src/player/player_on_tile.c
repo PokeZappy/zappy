@@ -8,10 +8,10 @@
 #include "../../include/server.h"
 #include "../../include/list.h"
 
-int nb_player_on_tile(server_t *server, vector_t tile_pos)
+int nb_player_on_tile(server_t *server, vector_t tilepos)
 {
     int nb = 0;
-    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
     vector_t pos;
 
     while (current) {
@@ -19,8 +19,8 @@ int nb_player_on_tile(server_t *server, vector_t tile_pos)
             current = TAILQ_NEXT(current, entries);
             continue;
         }
-        pos = current->player->_pos;
-        if (pos._x == tile_pos._x && pos._y == tile_pos._y)
+        pos = current->player->pos;
+        if (pos.x == tilepos.x && pos.y == tilepos.y)
             nb++;
         current = TAILQ_NEXT(current, entries);
     }

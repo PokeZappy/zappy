@@ -11,7 +11,8 @@ namespace Zappy {
     void HudMode::scrollUp(float wheel) {
         if (_selectedPlayer == nullptr)
             return;
-        
+        if (_selectedPlayers.empty())
+            return;
         if (_scrollIndex > 0) {
             _howManyScroll += wheel;
             if (_howManyScroll >= 0.5f) {
@@ -24,6 +25,8 @@ namespace Zappy {
 
     void HudMode::scrollDown(float wheel) {
         if (_selectedPlayer == nullptr)
+            return;
+        if (_selectedPlayers.empty())
             return;
         if (_scrollIndex < _selectedPlayers.size() - 1) {
             _howManyScroll += wheel;

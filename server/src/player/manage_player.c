@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-static int generate_player_id(void)
+static int generate_playerid(void)
 {
     static int id = 0;
 
@@ -19,37 +19,37 @@ static int generate_player_id(void)
 
 static egg_t *check_for_egg(server_t *server, char *team_name)
 {
-    egg_t *tmp = TAILQ_FIRST(&server->_head_egg);
+    egg_t *tmp = TAILQ_FIRST(&server->head_egg);
 
-    TAILQ_FOREACH(tmp, &server->_head_egg, _entries) {
-        if (strcmp(tmp->_team->_name, team_name) == 0)
+    TAILQ_FOREACH(tmp, &server->head_egg, entries) {
+        if (strcmp(tmp->team->name, team_name) == 0)
             return tmp;
-        tmp = TAILQ_NEXT(tmp, _entries);
+        tmp = TAILQ_NEXT(tmp, entries);
     }
     return NULL;
 }
 
 static void remove_egg(server_t *server, egg_t *egg)
 {
-    TAILQ_REMOVE(&server->grid->_tiles[egg->_pos._x][egg->_pos._y]->_head_egg,
-        egg, _entries);
-    TAILQ_REMOVE(&server->_head_egg, egg, _entries);
+    TAILQ_REMOVE(&server->grid->tiles[egg->pos.x][egg->pos.y]->head_egg,
+        egg, entries);
+    TAILQ_REMOVE(&server->head_egg, egg, entries);
 }
 
-static void check_for_pos(player_t *player, server_t *server)
+static void check_forpos(player_t *player, server_t *server)
 {
-    int w = server->grid->_width;
-    int h = server->grid->_height;
-    egg_t *rand_egg = check_for_egg(server, player->_team->_name);
+    int w = server->grid->width;
+    int h = server->grid->height;
+    egg_t *rand_egg = check_for_egg(server, player->team->name);
 
     if (rand_egg == NULL) {
-        player->_pos._x = rand() % w;
-        player->_pos._y = rand() % h;
+        player->pos.x = rand() % w;
+        player->pos.y = rand() % h;
     } else {
-        player->_pos._x = rand_egg->_pos._x;
-        player->_pos._y = rand_egg->_pos._y;
+        player->pos.x = rand_egg->pos.x;
+        player->pos.y = rand_egg->pos.y;
         if (get_gui(server))
-            dprintf(get_gui(server)->socket, "ebo %d\n", rand_egg->_id);
+            dprintf(get_gui(server)->socket, "ebo %d\n", rand_egg->id);
         remove_egg(server, rand_egg);
     }
 }
@@ -58,20 +58,20 @@ player_t *init_player(team_t *team, server_t *server)
 {
     player_t *player = (player_t *)malloc(sizeof(player_t));
 
-    if (team->_current_clients >= team->_max_clients) {
+    if (team->current_clients >= team->max_clients) {
         free(player);
         return (NULL);
     }
-    player->_id = generate_player_id();
-    player->_level = 1;
-    player->_direction = (direction_t)(rand() % 4);
+    player->id = generate_playerid();
+    player->level = 1;
+    player->direction = (direction_t)(rand() % 4);
     for (int i = 0; i < ITEM_PER_TILE; i++)
-        player->_inventory[i] = 0;
-    player->_inventory[0] = 9;
-    player->_health = 126;
-    player->_team = team;
-    team->_current_clients++;
-    check_for_pos(player, server);
+        player->inventory[i] = 0;
+    player->inventory[0] = 9;
+    player->health = 126;
+    player->team = team;
+    team->current_clients++;
+    check_forpos(player, server);
     return player;
 }
 

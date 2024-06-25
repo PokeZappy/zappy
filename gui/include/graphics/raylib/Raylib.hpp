@@ -51,7 +51,7 @@ namespace Zappy {
 
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-            void drawHud(void);
+            void drawHud(const World &world);
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
@@ -97,8 +97,7 @@ namespace Zappy {
             raylib::Model _sun;
             raylib::Model _moon;
 
-            // Gameboy & Arena
-            // raylib::Model _tv;
+            // Arena
             raylib::Model _arena;
             float _arenaScale = 1.0f;
             float _arenaAltitudeScale = 0.0f;
@@ -114,9 +113,6 @@ namespace Zappy {
             // Food
             raylib::Model _foodModel;
 
-            // Text
-            Texture2D _textTexture;
-
             float _defaultAmbientLight = 0.3f;
             raylib::Shader _shader;
             Light _lights[MAX_LIGHTS];
@@ -129,8 +125,14 @@ namespace Zappy {
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 
+            // Menu
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+
+            raylib::Gif _broadcastGif;
+            raylib::Gif _incantationSuccessGif;
+            raylib::Gif _incantationFailGif;
+
             // Server socket
             ClientSocket &_socket;
     };

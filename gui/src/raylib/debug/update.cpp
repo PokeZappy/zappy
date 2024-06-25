@@ -53,11 +53,11 @@ namespace Zappy {
         } else if (IsKeyPressed(KEY_F)) {
             _type = NONE;
             _animFrame = 0;
-        } else if (IsKeyDown(KEY_J)) {
+        } else if (IsKeyPressed(KEY_J) || IsKeyPressedRepeat(KEY_J)) {
             _animFrame--;
             if (_animFrame < 0)
                 _animFrame = _animations[_animIndex].frameCount;
-        } else if (IsKeyDown(KEY_L)) {
+        } else if (IsKeyPressed(KEY_L) || IsKeyPressedRepeat(KEY_L)) {
             _animFrame++;
             if (_animFrame > _animations[_animIndex].frameCount)
                 _animFrame = 0;

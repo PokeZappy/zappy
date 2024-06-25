@@ -10,7 +10,7 @@
 void player_orientation(player_t *player, bool right)
 {
     if (right)
-        player->_direction = (direction_t)((player->_direction + 1) % 4);
+        player->direction = (direction_t)((player->direction + 1) % 4);
     else
-        player->_direction = (direction_t)((player->_direction + 3) % 4);
+        player->direction = (direction_t)((player->direction + 3) % 4);
 }

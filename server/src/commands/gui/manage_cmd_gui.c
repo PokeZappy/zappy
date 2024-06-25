@@ -30,10 +30,10 @@ static const command_t commands_gui[] = {
 
 client_socket_t *get_gui(server_t *server)
 {
-    client_socket_t *current = TAILQ_FIRST(&server->_head_client_sockets);
+    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
 
     while (current) {
-        if (current->_is_gui == 1)
+        if (current->is_gui == 1)
             return current;
         current = TAILQ_NEXT(current, entries);
     }

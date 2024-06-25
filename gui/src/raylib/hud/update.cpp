@@ -9,12 +9,15 @@
 
 namespace Zappy {
 
-    void HudMode::updateChat() {
+    void HudMode::updateChat(ClientSocket &socket) {
         int input = GetCharPressed();
         if (input != 0)
             _inputString += input;
         if (IsKeyPressed(KEY_ENTER)) {
-            // changeModel(_pokemonInput);
+            socket.sendData(_inputString);
+            _chat = false;
+            _inputString = "";
+        } else if (IsKeyPressed(KEY_ESCAPE)) {
             _chat = false;
             _inputString = "";
         } else if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE)) {
@@ -25,7 +28,7 @@ namespace Zappy {
 
     void HudMode::update(raylib::Camera &camera, ClientSocket &socket) {
         if (_chat) {
-            updateChat();
+            updateChat(socket);
             return;
         }
         if (IsKeyPressed(KEY_T))
