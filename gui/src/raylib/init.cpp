@@ -28,7 +28,7 @@ namespace Zappy {
         _socket(socket)
     {
         _window.SetTargetFPS(60);
-        SetExitKey(0);
+        SetExitKey(KEY_DELETE);
         try
         {
             _configuration.readFile((_assetsRoot + "pokemons.cfg").c_str());
@@ -106,7 +106,7 @@ namespace Zappy {
                       "dark", "fight", "fairy",
                       "ice", "normal", "poison",
                       "rock", "ghost", "fly",
-                      "eevee", "mustebeh"};
+                      "eevee", "mustebee"};
         _listTypesColors = {
             (Color){107, 190, 48, 255}, (Color){231, 59, 12, 255}, (Color){48, 144, 241, 255},
             (Color){179, 179, 194, 255}, (Color){113, 89, 215, 255}, (Color){250, 179, 21, 255},
