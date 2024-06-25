@@ -125,7 +125,7 @@ class ParentAI(Player):
         self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         role = 0
         if self.first_round[1]:
-            role = RoleInGame.PUSHER.value
+            role = RoleInGame.FIRST_BORN.value
         elif len(self.give_role) > 0:
             role = self.give_role[0].value
         elif self.second_phase:
@@ -149,7 +149,8 @@ class ParentAI(Player):
         # if role == RoleInGame.NORTH_GUARD:
         #     print('North Guard is borning')
         # print (f'role: {role}')
-        role.run()
+        while role is not None:
+            role = role.run()
         cli_socket.close()
         exit(0)
 
@@ -194,6 +195,14 @@ class ParentAI(Player):
                 return
         self.second_phase = True
 
+    def slot_treatment(self, msgs: str) -> None:
+        for _ in range(msgs):
+            if msgs != 0:
+                has_forked = self.real_fork()
+                if len(self.give_role) > 0 and has_forked:
+                    self.give_role.pop(0)
+
+
     def mastermind_treatment(self, buf) -> bool:
         """"
         mastermind treatment informations
@@ -207,11 +216,7 @@ class ParentAI(Player):
             recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'slots':
-                for _ in range(msgs):
-                    if msgs != 0:
-                        has_forked = self.real_fork()
-                        if len(self.give_role) > 0 and has_forked:
-                            self.give_role.pop(0)
+                self.slot_treatment(msgs)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
                     pass
@@ -247,7 +252,7 @@ class ParentAI(Player):
                 self.coll_ressources[message['id']][keys] = nbrs
                 self.global_ressources[keys] += nbrs
         if message['msg'] == 'Ego plus viribus':
-            self.give_role.insert(0, RoleInGame.NORTH_GUARD)
+            self.give_role.insert(0, RoleInGame.VICE_NORTH_GUARD)
 
         if message['msg'] == 'opes deposita':
             for keys, nbrs in zip(message['info'], message['nbr']):
@@ -259,6 +264,10 @@ class ParentAI(Player):
         if message['msg'] == 'defecit carmen':
             #TODO: problem to make the incantation
             pass
+        if message['msg'] == 'Quis es':
+            print('Quis es')
+            self.message.buf_messages('Ego sum dominus tuus')
+            self.queue.insert(0, 'Broadcast')
         if message['msg'] == 'felix carmen':
             self.level_incant += 1
         if message['msg'] == 'situm intrare':
@@ -268,8 +277,6 @@ class ParentAI(Player):
         if message['msg'] == 'Ego plus viribus':
     #         TODO - faire un North gurad qui va au Nord
             pass
-        if message['msg'] == 'auxilium postulo':
-            self.mms.append(message['id'])
 
     def enter_depot(self) -> None:
         """
@@ -300,17 +307,20 @@ class ParentAI(Player):
         else:
             recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
-            if recv_type == 'ok' or recv_type == 'slots':
-                self.actions.pop(0)
+            if recv_type == 'eject':
+                continue
+            if recv_type == 'slots':
+                self.slot_treatment(msgs)
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko':
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
                 continue
+            self.actions.pop(0)
 
     def recv_treatment(self, buf: str) -> None:
-        buf = buf[:-1]
+        # buf = buf[:-1]
         if self.first_round[1] and isinstance(buf, str) and buf.isnumeric():
             for _ in range(0, int(buf)):
                 self.real_fork()
@@ -321,9 +331,9 @@ class ParentAI(Player):
             if not self.progenitor_treatment(buf):
                 return
         elif self.role == RoleInGame.MASTERMIND:
+            # print(f'MMs aiweu : actions {self.actions}, queue {self.queue}, buf {buf}')
             if not self.mastermind_treatment(buf):
                 return
-        self.actions.pop(0)
 
     def action_as_progenitor(self) -> None:
         """
@@ -363,10 +373,9 @@ class ParentAI(Player):
         """
         if self.life <= 400:
             self.queue.append(('Take', 'food'))
-            self.queue.append('Look')
+            self.queue.append('Inventory')
         elif not self.communicate_orders():
             self.queue.append('Inventory')
-            self.queue.append('Look')
         self.queue.append('Slots')
 
     def make_action(self) -> None:
@@ -383,6 +392,7 @@ class ParentAI(Player):
             # self.spoke = True
             self.first_round[0] = False
             self.apply_action()
+            self.actions.pop(0)
         if self.first_round[1]:
             return
         # if self.mms_start:
@@ -410,6 +420,7 @@ class ParentAI(Player):
         elif self.role == RoleInGame.MASTERMIND:
             if len(self.queue) > 0 and len(self.actions) == 0:
                 self.apply_action()
+                # print(f'MMs aiweu : actions {self.actions}, queue {self.queue}, buf {buf}')
             if len(self.actions) > 0:
                 return
             self.action_as_mastermind()

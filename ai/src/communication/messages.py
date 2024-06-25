@@ -100,11 +100,19 @@ class Messages(object):
             elif message == 'ok':
                 if self.debug:
                     print(f'ok: {actions[index]}')
-                result.append(('ok', actions[index]))
+                try:
+                    result.append(('ok', actions[index]))
+                except IndexError:
+                    print(f'actions: {actions}')
+                    print(f'msgs: {msg_actions}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
-                result.append(('ko', actions[index]))
+                try:
+                    result.append(('ko', actions[index]))
+                except IndexError:
+                    print(f'actions: {actions}')
+                    print(f'msgs: {msg_actions}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:
@@ -144,7 +152,7 @@ class Messages(object):
                 text = parts[3].split('#')
                 text = self.cipher.decryption([int(i) for i in text])
                 text = text.split('#')
-                if text[0] == 'est dominus aquilonis':
+                if text[0] == 'est dominus aquilonis' or text[0] == 'Ego sum dominus tuus':
                     direction = extract_direction(save_msg)
                     result.append({
                         'msg': text[0],

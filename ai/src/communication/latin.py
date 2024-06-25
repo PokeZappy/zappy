@@ -64,6 +64,10 @@ class Latin(object):
 
                                         # First Born to MM
                                         'Je me vais me transormer en : ': 'Ego me transform : ',
+                                        'Qui es-tu': 'Quis es',
+
+                                        # MM to First Born
+                                        'Je suis ton maître': 'Ego sum dominus tuus',
 
                                         # Incantator to Collecteur
                                         'évo de niveau': 'nobilis incantatio',

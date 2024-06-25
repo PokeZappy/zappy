@@ -53,9 +53,6 @@ class Pnj(Player):
             elif recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
-            elif recv_type == 'ok':
-                if isinstance(msgs, str) and msgs[0] == 'Take' and msgs[1] == 'food':
-                    self.life += self.FOOD
             elif recv_type == 'broadcast':
                 if msgs == 'ko':
                     continue

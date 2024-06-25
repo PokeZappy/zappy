@@ -37,24 +37,35 @@ class First_born(Player):
         self.serv_info = serv_info
         self.cli_socket = cli_socket
         self.debug_mode = debug_mode
+        self.waiting_answer = False
 
     def change_role(self) -> None:
         print('Coming out')
         self.message.buf_messages('Ego me transform : ', infos=[[self.BIND[self.role[0]][1]]])
         self.queue.append('Broadcast')
         self.transformation = True
+    
+    def who_are_you(self) -> None:
+        self.message.buf_messages('Quis es')
+        self.queue.append('Broadcast')
+        for _ in range(7):
+            self.queue.append('Look')
+        self.waiting_answer = True
 
     def make_action(self) -> None:
         if len(self.queue) > 0 and len(self.actions) == 0:
             if self.queue[0] == 'Newborn':
                 self.queue.pop(0)
-                self.change_role()
+                self.who_are_you()
             self.apply_action()
         if len(self.actions) > 0:
             return
-        self.queue.append('Look')
+        if self.waiting_answer:
+            self.death = self.INQUISITOR
+        else:
+            self.queue.append('Look')
 
-    def reborn_in_collector(self, i: int) -> None:
+    def goto_reborn(self, i: int) -> None:
         if i != 0:
             self.queue.append('Forward')
         if i == 1:
@@ -66,12 +77,12 @@ class First_born(Player):
         self.queue.append('Newborn')
     
     def update_map(self, vision: str) -> bool:
-        vision.replace('[', '').replace(']', '')
-        list_vision = vision.split(',')
+        vi = vision.replace('[ ', '').replace(' ]', '')
+        list_vision = vi.split(',')
         for i in range(len(list_vision)):
             case = list_vision[i].split(' ')
             if case.count('egg') > 2 and case.count('player') >= 1:
-                self.reborn_in_collector(i)
+                self.goto_reborn(i)
                 return False
             horizontal = i - i * (i + 1)
             vertical = int(i ** 0.5)
@@ -198,3 +209,10 @@ class First_born(Player):
         if msg['msg'] == 'est dominus aquilonis':
             if len(self.role) > 0 and self.role[0] == RoleInGame.NORTH_GUARD:
                 self.role.pop(0)
+        if self.waiting_answer and msg['msg'] == 'Ego sum dominus tuus' and msg['direction'] == 0:
+            self.queue = []
+            self.change_role()
+        if self.waiting_answer and msg['msg'] == 'Ego sum dominus tuus' and msg['direction'] != 0:
+            self.queue = []
+            self.death = RoleInGame.INQUISITOR
+
