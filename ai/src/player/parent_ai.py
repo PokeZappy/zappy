@@ -119,11 +119,43 @@ class ParentAI(Player):
         self.mms_start: bool = False
         self.spoke: bool = False
 
-    def fork(self, role: RoleInGame) -> None:
-        serv_info, cli_socket = connection(self.port, self.name, self.machine)
+    def get_role(self) -> Player:
+        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
+        role = 0
+        if self.first_round[1]:
+            role = 5
+        elif len(self.give_role) > 0:
+            role = self.give_role[0].value
+        elif self.second_phase:
+            role = self.DEFENDER_ROLE[self.index].value
+        else:
+            role = self.DEFAULT_ROLE[self.index].value
+
+        match role:
+            case 0: return First_born(self.serv_info, self.cli_socket, self.debug_mode)
+            case 1: return Collector(self.serv_info, self.cli_socket, self.debug_mode)
+            case 2: return Incantator(self.serv_info, self.cli_socket, self.debug_mode)
+            case 3: return NorthGuard(self.serv_info, self.cli_socket, self.debug_mode)
+            case 4: return NorthGuard(self.serv_info, self.cli_socket, self.debug_mode)
+            case 5: return Pnj(self.serv_info, self.cli_socket, self.debug_mode)
+            case 6: return Hansel(self.serv_info, self.cli_socket, self.debug_mode)
+            case 7: return Pusher(self.serv_info, self.cli_socket, self.debug_mode)
+            case 8: return Pusher(self.serv_info, self.cli_socket, self.debug_mode)
+
+
+            # case 1: return RoleInGame.COLLECTOR
+            # case 2: return RoleInGame.INCANTATOR
+            # case 3: return RoleInGame.NORTH_GUARD
+            # case 4: return RoleInGame.PNJ
+            # case 5: return RoleInGame.FIRST_BORN
+            # case 6: return RoleInGame.HANSEL
+            # case 7: return RoleInGame.PUSHER
+
+    def fork(self, role: RoleInGame, serv_info: list[int], cli_socket: socket) -> None:
         # print(f'role created : {role}') #TODO - à enelever
         # if role == RoleInGame.NORTH_GUARD:
         #     print('North Guard is borning')
+
         if role == RoleInGame.NORTH_GUARD and self.exist_north:
             role = self.BIND[role](serv_info, cli_socket, self.debug_mode, self.exist_north).run()
         elif role == RoleInGame.PUSHER and self.second_phase is False:
@@ -135,25 +167,22 @@ class ParentAI(Player):
         cli_socket.close()
         exit(0)
 
-    def real_fork(self) -> None:
-        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
+    def real_fork(self) -> bool:
+        role = self.get_role()
+        print(f'role: {role}')
+        serv_info, cli_socket = connection(self.port, self.name, self.machine)
+        if serv_info is None or cli_socket is None:
+            return False
         pid = fork()
         if pid == 0:
-            if self.first_round[1]:
-                self.fork(RoleInGame.FIRST_BORN)
-            else:
-                if self.second_phase:
-                    self.fork(self.DEFENDER_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
-                else:
-                    self.fork(self.DEFAULT_ROLE[self.index] if len(self.give_role) == 0 else self.give_role[0])
-        if pid == -1:
+            self.fork(role, serv_info, cli_socket)
+        elif pid == -1:
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
             self.satus_testudo()
-
-
+        return True
 
     # def apply_action(self, buf: str) -> None:
     #     if buf.__contains__('message'):
@@ -170,7 +199,7 @@ class ParentAI(Player):
             self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
             return self.DEFAULT_ROLE[self.index]
     
-    def count_element(self, resources: [list[str]]) -> None:
+    def count_element(self, resources: list[list[str]]) -> None:
         my_resources = dict(Counter(resources))
         # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
@@ -193,8 +222,8 @@ class ParentAI(Player):
             if recv_type == 'slots':
                 for _ in range(msgs):
                     if msgs != 0:
-                        self.real_fork()
-                        if len(self.give_role) > 0:
+                        has_forked = self.real_fork()
+                        if len(self.give_role) > 0 and has_forked:
                             self.give_role.pop(0)
             elif recv_type == 'ok':
                 if msgs[0] == 'Take' and msgs[1] == 'food':
