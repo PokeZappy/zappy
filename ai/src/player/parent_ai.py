@@ -172,10 +172,8 @@ class ParentAI(Player):
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
-        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase == False:
+        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase is False:
             self.satus_testudo()
-        return True
-        if message['info'], message['nbr'])
         if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
             my_id = None
             if self.legione_honoris is True:
@@ -195,6 +193,7 @@ class ParentAI(Player):
                 print(f'M&Ms id {self.id}')
                 self.message.buf_messages('occupat exercitum : ', my_id=my_id)
                 self.queue.insert(0, 'Broadcast')
+        return True
 
     def real_fork_addaptativ(self) -> None:
         if len(self.give_role) == 0:
