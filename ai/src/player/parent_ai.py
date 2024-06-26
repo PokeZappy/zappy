@@ -38,6 +38,8 @@ class ParentAI(Player):
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
             # RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
@@ -128,7 +130,36 @@ class ParentAI(Player):
                     # RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.COLLECTOR,
@@ -137,45 +168,12 @@ class ParentAI(Player):
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.INCANTATOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
+                    RoleInGame.PNJ,
+                    RoleInGame.PNJ,
+                    RoleInGame.PNJ,
+                    RoleInGame.PNJ,
+                    RoleInGame.PNJ,
+
                     ]
     
     DEFENDER_ROLE = [
@@ -229,7 +227,7 @@ class ParentAI(Player):
         self.allow_incantation = False
         self.in_depot: int = -1
         self.exist_north = False
-        self.pusher_count = 4
+        self.pusher_count = 1
         self.second_phase = False
         self.spoke: bool = False
         self.legione_honoris: bool = False
@@ -414,7 +412,7 @@ class ParentAI(Player):
         elif message['msg'] == 'Dimissus a legione tertia':
             self.legione_tertia = True
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
-        if message['msg'] == 'pugnae consilia' and self.pusher_count < 24:
+        if message['msg'] == 'pugnae consilia' and self.pusher_count < 25:
             self.satus_testudo()
 
     def enter_depot(self) -> None:

@@ -42,10 +42,10 @@ class RoleInGame(Enum):
 
 
 TESTUDO = [
-    {'id': 0, 'path': ['Forward']}, #Do not use
-    {'id': 1, 'path': ['Forward']}, #Do not use
-    {'id': 2, 'path': ['Forward']}, #Do not use
-    {'id': 3, 'path': ['Forward']}, #Do not use
+    {'id': 0, 'path': ['Forward']},
+    {'id': 1, 'path': ['Right', 'Forward']}, 
+    {'id': 2, 'path': ['Left', 'Forward']},
+    {'id': 3, 'path': ['Right', 'Right','Forward']},
     {'id': 4, 'path': ['Forward', 'Forward']},
     {'id': 5, 'path': ['Forward', 'Right', 'Forward', 'Left', 'Forward']},
     {'id': 6, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Left', 'Forward']},
@@ -65,7 +65,10 @@ TESTUDO = [
     {'id': 20, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward']},
     {'id': 21, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward']},
     {'id': 22, 'path': ['Forward', 'Right', 'Forward', 'Forward']},
-    {'id': 23, 'path': ['Forward', 'Right', 'Forward']}
+    {'id': 23, 'path': ['Forward', 'Right', 'Forward']},
+    {'id': 24, 'path': ['Forward']},
+    {}
+
 ]
 
 FOCUS = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate']
