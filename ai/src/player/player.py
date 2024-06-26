@@ -194,7 +194,6 @@ class Player(Bot):
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
-            # print('uuuuuuuuuuuuuuuuuuuuuuuuuui')
             self.incantation()
         elif action[0] == 'Set':
             self.set_obj(action[1])

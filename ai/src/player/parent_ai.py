@@ -3,6 +3,7 @@ from random import randint
 
 from collections import Counter
 
+from ai.src.gameplay.utils import role_enum
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
 from ai.src.player.incantator import Incantator
@@ -77,6 +78,12 @@ class ParentAI(Player):
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
+    
+    FIRST_ROLE = [
+                    RoleInGame.PARROT
+                ]
+    
+    DEFAULT_FIRST_ROLE = RoleInGame.INQUISITOR
 
     BIND = {
         RoleInGame.PROGENITOR: Progenitor,
@@ -101,6 +108,7 @@ class ParentAI(Player):
         self.counter = self.INCUBATION_TIME
         self.gave_birth = 0
         self.role = RoleInGame.PROGENITOR
+        self.first_roles = self.FIRST_ROLE
         self.machine = machine
         self.port = port
         self.name = name
@@ -130,32 +138,28 @@ class ParentAI(Player):
         self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         role = 0
         if self.first_round[1]:
-            role = RoleInGame.FIRST_BORN.value
+            role = self.DEFAULT_FIRST_ROLE.value if len(self.first_roles) == 0 else self.first_roles[0].value
+            if len(self.first_roles) > 0:
+                self.first_roles.pop(0)
         elif len(self.give_role) > 0:
             role = self.give_role[0].value
         elif self.second_phase:
             role = self.DEFENDER_ROLE[self.index].value
         else:
             role = self.DEFAULT_ROLE[self.index].value
+        return role_enum(role, serv_info, cli_socket, self.debug_mode)
 
-        match role:
-            case 0: return Progenitor(serv_info, cli_socket, self.debug_mode)
-            case 1: return Incantator(serv_info, cli_socket, self.debug_mode)
-            case 2: return Collector(serv_info, cli_socket, self.debug_mode)
-            case 3: return Pusher(serv_info, cli_socket, self.debug_mode)
-            case 4: return Pnj(serv_info, cli_socket, self.debug_mode)
-            case 5: return First_born(serv_info, cli_socket, self.debug_mode)
-            case 6: return NorthGuard(serv_info, cli_socket, self.debug_mode)
-            case 7: return Hansel(serv_info, cli_socket, self.debug_mode)
-            case 8: return ViceNorthGuard(serv_info, cli_socket, self.debug_mode)
 
-    def fork(self, role, cli_socket: socket) -> None:
+    def fork(self, serv_info: list[int], cli_socket) -> None:
         # print(f'role created : {role}') #TODO - à enelever
         # if role == RoleInGame.NORTH_GUARD:
         #     print('North Guard is borning')
         # print (f'role: {role}')
+        role = self.get_role(serv_info, cli_socket)
         while role is not None:
             role = role.run()
+            if role is not None:
+                role = self.get_role(serv_info, cli_socket)
         cli_socket.close()
         exit(0)
 
@@ -167,7 +171,7 @@ class ParentAI(Player):
             return False
         pid = fork()
         if pid == 0:
-            self.fork(self.get_role(serv_info, cli_socket), cli_socket)
+            self.fork(serv_info, cli_socket)
         elif pid == -1:
             cli_socket.close()
             print('error')

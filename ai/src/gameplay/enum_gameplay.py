@@ -36,6 +36,10 @@ class RoleInGame(Enum):
     HANSEL = 7
     VICE_NORTH_GUARD = 8
     MASTERMIND = 9
+    VICE_PUSHER = 10
+    SPARTIATE = 11
+    PARROT = 12
+    INQUISITOR = 13
 
 
 TESTUDO = [

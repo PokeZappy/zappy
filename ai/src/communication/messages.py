@@ -147,7 +147,7 @@ class Messages(object):
             return ('broadcast', 'ko')
         result: list[dict[str, str | int]] = []
         if self.parrot is True:
-            return 'broadcast', [message[match.end() + 1:-1]]
+            return 'broadcast', [message[match.end() + 1:-1] if match else 'ko']
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')
