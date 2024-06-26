@@ -22,7 +22,7 @@ from ai.src.gameplay.enum_gameplay import RoleInGame, FOCUS
 class ParentAI(Player):
 
     ROLE = [
-            # RoleInGame.PROGENITOR,
+            RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.NORTH_GUARD,
@@ -74,7 +74,8 @@ class ParentAI(Player):
     DEFAULT_ROLE = [
                     RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
     
