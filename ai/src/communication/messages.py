@@ -71,7 +71,7 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                actions: list = None, incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None, incantator: bool = False, inquisitor: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
@@ -126,14 +126,14 @@ class Messages(object):
                     print(f'msgs actions: {msg_actions}')
                     print(f'msgs all: {messages}')
             else:
-                result.append(self.broadcast_received(message))
+                result.append(self.broadcast_received(message, inquisitor))
         for message in msg_broadcast:
             if validate_eject_pattern(message):
                 result.append(('eject', message))
             elif validate_elevation(message):
                 result.append(('elevation', message))
             else:
-                result.append(self.broadcast_received(message))
+                result.append(self.broadcast_received(message, inquisitor))
         if not result:
             result = [('broadcast', 'ko')]
         return result
@@ -142,6 +142,7 @@ class Messages(object):
         """
         Process the received broadcast message and extract relevant information.
 
+        :param inquisitor:
         :param message: str - The received broadcast message.
         :return: tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]] - A tuple containing the status
         and processed message details.
