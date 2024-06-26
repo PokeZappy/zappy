@@ -67,7 +67,13 @@ namespace raylib {
                     _frameCount++;
                     _paths.push_back(entry.path().string());
                 }
-                _loadThread = std::thread(&Gif::loadTexturesAsync, this);
+                // _loadThread = std::thread(&Gif::loadTexturesAsync, this);
+                for (size_t i = 0; i < _paths.size(); ++i) {
+                // std::lock_guard<std::mutex> lock(_textureMutex);
+                _images.push_back(Image(_paths[i]));
+
+                // _textureCondition.notify_one();
+            }
                 _mesh = GenMeshPlane(_texture->width, _texture->height, 1, 1);
                 _meshMaterial = LoadMaterialDefault();
                 _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = *_texture;

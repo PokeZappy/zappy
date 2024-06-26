@@ -19,7 +19,10 @@ namespace Zappy {
         if (_escapeMenu->activated()) {
             _escapeMenu->update(*this);
         }
-        if (_menuState == Menu::NONE && !_escapeMenu->activated())
+
+        if (world.getWinningTeam() != "")
+            _pantheon->activate(_camera, world.getWinningTeam(), _players);
+        if (_menuState == Menu::NONE && !_escapeMenu->activated() && !_pantheon->activated())
             handleKeys();
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
@@ -88,8 +91,10 @@ namespace Zappy {
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
 
+
+                // add the model if the pokemon doesn't exist in the map
                 if (_models.count(pokemon.id) <= 0) {
-                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
+                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, pokemon.animPantheon, _shader);
                 }
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,

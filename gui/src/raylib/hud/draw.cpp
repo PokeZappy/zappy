@@ -235,47 +235,12 @@ namespace Zappy {
     }
 
     void HudMode::drawType(std::string type, int x, int y) {
-        raylib::Rectangle src;
+        raylib::Rectangle src = Raylib::getTypeRectangle(type);
         raylib::Rectangle dest(x, y, 57, 25);
-        if (type == "bug") {
-            src = raylib::Rectangle(0, 14, _typesTexture.width, 14);
-        } else if (type == "dark") {
-            src = raylib::Rectangle(0, 28, _typesTexture.width, 14);
-        } else if (type == "dragon") {
-            src = raylib::Rectangle(0, 42, _typesTexture.width, 14);
-        } else if (type == "electric") {
-            src = raylib::Rectangle(0, 56, _typesTexture.width, 14);
-        } else if (type == "fairy") {
-            src = raylib::Rectangle(0, 70, _typesTexture.width, 14);
-        } else if (type == "fight") {
-            src = raylib::Rectangle(0, 84, _typesTexture.width, 14);
-        } else if (type == "fire") {
-            src = raylib::Rectangle(0, 98, _typesTexture.width, 14);
-        } else if (type == "fly") {
-            src = raylib::Rectangle(0, 112, _typesTexture.width, 14);
-        } else if (type == "ghost") {
-            src = raylib::Rectangle(0, 126, _typesTexture.width, 14);
-        } else if (type == "grass") {
-            src = raylib::Rectangle(0, 140, _typesTexture.width, 14);
-        } else if (type == "ground") {
-            src = raylib::Rectangle(0, 154, _typesTexture.width, 14);
-        } else if (type == "ice") {
-            src = raylib::Rectangle(0, 168, _typesTexture.width, 14);
-        } else if (type == "normal") {
-            src = raylib::Rectangle(0, 182, _typesTexture.width, 14);
-        } else if (type == "poison") {
-            src = raylib::Rectangle(0, 196, _typesTexture.width, 14);
-        } else if (type == "psychic") {
-            src = raylib::Rectangle(0, 210, _typesTexture.width, 14);
-        } else if (type == "rock") {
-            src = raylib::Rectangle(0, 224, _typesTexture.width, 14);
-        } else if (type == "steel") {
-            src = raylib::Rectangle(0, 238, _typesTexture.width, 14);
-        } else if (type == "water") {
-            src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
-        } else {
+        if (src.x == -1) {
             _white.DrawText(type, x, y + 7, 15);
+        } else {
+            _typesTexture.Draw(src, dest);
         }
-        _typesTexture.Draw(src, dest);
     }
 }

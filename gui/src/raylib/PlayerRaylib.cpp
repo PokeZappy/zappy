@@ -128,6 +128,21 @@ namespace Zappy
         }
     }
 
+    void PlayerRaylib::drawPantheon(raylib::Vector3 position) {
+        if (infos.shiny) {
+            _models->setShinyTexture(_animIndex);
+        } else {
+            _models->setNormalTexture(_animIndex);
+        }
+
+        _models->getModelByAnimation(Animations::PANTHEON)->draw(position, 
+        raylib::Vector3(0, 1, 0), 
+        90, 
+        raylib::Vector3(0.005, true) * (1 + _level / 2.0f),
+        raylib::Color::White()
+        );
+    }
+
     void PlayerRaylib::draw(bool tintWithTeamColor)
     {
         float rotationGoal = getRotation();

@@ -188,6 +188,7 @@ namespace Zappy
         }
         else if (commandName == "seg") { // end of game
             addShellCommand("Game ended");
+            ss >> _winningTeam;
             std::cout << "Game ended" << std::endl;
             // return true;
         }
