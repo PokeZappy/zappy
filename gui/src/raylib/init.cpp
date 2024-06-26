@@ -58,6 +58,7 @@ namespace Zappy {
 
         debugMode = std::make_unique<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
+        _escapeMenu = std::make_unique<EscapeMenu>(_assetsRoot);
         _window.ToggleFullscreen();
 
         // Create lights
@@ -73,7 +74,7 @@ namespace Zappy {
         _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
         _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
         //* Menu
-        _startPos = raylib::Vector3(4.4, 10, -5) * _gridSize;
+        _startPos = raylib::Vector3(4.4, 10, -4.5) * _gridSize;
         _startTarget = raylib::Vector3(4.4, 10, -7) * _gridSize;
         _camera.SetPosition(_startPos);
         _camera.SetTarget(_startTarget);
@@ -150,10 +151,13 @@ namespace Zappy {
 
         // Menu gif
         std::string menuPath = "menu/";
-        menuPath += Utils::random(0, 1) == 0 ? "day/" : "dawn/";
-        _menuIntroGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_intro", false, 0);
+        bool isDay = Utils::random(0, 1) == 0;
+        menuPath += isDay ? "day/" : "dawn/";
+        _menuIntroGif = std::make_unique<raylib::Gif>(
+            _assetsRoot + menuPath + "frames_intro", false, 0, isDay ? 1.1 : 1.0);
         _menuIntroGif->reset();
-        _menuGif = std::make_unique<raylib::Gif>(_assetsRoot + menuPath + "frames_main", true, 1);
+        _menuGif = std::make_unique<raylib::Gif>(
+            _assetsRoot + menuPath + "frames_main", true, 1, isDay ? 1.1 : 1.0);
 
         // Broadcast gif
         _broadcastGif.reset();

@@ -29,6 +29,18 @@
             ]
         },
         {
+            "name": "(lldb) Lancer (macos)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/zappy_gui",
+            "args": ["-h", "127.0.0.1", "-p", "4242"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        },
+        {
             "name": "(gdb) Launch INTERACTIVE",
             "type": "cppdbg",
             "request": "launch",

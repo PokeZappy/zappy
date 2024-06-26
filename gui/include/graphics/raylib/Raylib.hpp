@@ -14,6 +14,7 @@
 #include <libconfig.h++>
 #include "DebugMode.hpp"
 #include "HudMode.hpp"
+#include "EscapeMenu.hpp"
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
 
@@ -136,6 +137,9 @@ namespace Zappy {
             // HUD
             std::unique_ptr<HudMode> _hudMode;
 
+            // Escape menu
+            std::unique_ptr<EscapeMenu> _escapeMenu;
+
             // Sounds and Themes
             raylib::Music _mainTheme;
 
@@ -150,7 +154,7 @@ namespace Zappy {
             raylib::Vector3 _endPos;
             raylib::Vector3 _startTarget;
             raylib::Vector3 _endTarget;
-            double _startTime = 3.5f;
+            double _startTime = 2.f;
             double _durationEnding = 1.5f;
             bool _forceStartAnimation = false;
 

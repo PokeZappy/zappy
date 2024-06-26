@@ -10,6 +10,10 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            _escapeMenu->switchState();
+        }
+
         if (_menuState != Menu::NONE) {
             updateMenu();
             return;

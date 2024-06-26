@@ -63,13 +63,14 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
-        if (_menuIntroGif != nullptr) {
-            if (!_menuIntroGif->isAnimEnded())
-                _menuIntroGif->update();
-            else
-                _menuIntroGif.release();
-        } else if (_menuGif != nullptr)
+        if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded()) {
+            _menuIntroGif->update();
+        }
+        else if (_menuGif != nullptr)
             _menuGif->update();
+
+        if (_menuIntroGif != nullptr && _menuIntroGif->isAnimEnded())
+            _menuIntroGif.release();
     }
 
     void Raylib::updatePlayers(const World &world) {
