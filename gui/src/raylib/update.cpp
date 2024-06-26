@@ -20,10 +20,10 @@ namespace Zappy {
             _escapeMenu->update(*this);
         }
 
-        if (world.getWinningTeam() != "")
-            _pantheon->activate(_camera, world.getWinningTeam(), _players);
-        if (_menuState == Menu::NONE && !_escapeMenu->activated() && !_pantheon->activated())
-            handleKeys();
+        if (!world.getWinningTeam().empty())
+            _pantheon->activate(world.getWinningTeam(), getTeamColor(world.getWinningTeam()), _players);
+
+        handleKeys();
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
             _camera.Update(_cameraViewMode);
@@ -35,7 +35,6 @@ namespace Zappy {
             _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
             float brightness = _lights[i].position.y / _gridSize / 50;
-            // std::cout << "i" << std::to_string(i) << " height: " << _lights[i].position.y << ", brightness value: " << brightness << std::endl;
             _lights[i].color =  newColor.Brightness(brightness * (i == 0 ? 1.0f : 0.3f));
             // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
             // else _lights[i].enabled = true;
@@ -53,9 +52,8 @@ namespace Zappy {
                     _hudMode->addPlayer(player);
         }
 
-
         if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            _hudMode->setFirstPokemonTarget();
+            _hudMode->applySelectedPlayerToTarget();
 
         if (_hudMode->activated()) {
             _cameraViewMode = _hudMode->followTarget(_camera);

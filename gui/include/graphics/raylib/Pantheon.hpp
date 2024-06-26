@@ -29,17 +29,17 @@ namespace Zappy {
     }
 
     class PlayerRaylib;
-    class Raylib;
 
     class Pantheon {
         public:
-            Pantheon(std::string assetsRoot, Raylib &raylib);
+            Pantheon(std::string assetsRoot, float gridSize, Camera &_camera);
             void setTeam(std::string team) { _team = team;}
             std::string getTeam() { return (_team); }
             PantheonState::State getState() { return (_state); }
             raylib::Color getTeamColor() { return (_teamColor); }
             bool activated() { return _state != PantheonState::NONE; }
-            void activate(raylib::Camera &camera, std::string team, std::vector<std::shared_ptr<PlayerRaylib>> players);
+            void activate(std::string team, raylib::Color teamColor,
+                std::vector<std::shared_ptr<PlayerRaylib>> players);
             void desactivate();
             void render() {};
             void renderTeam();
@@ -53,7 +53,7 @@ namespace Zappy {
         private:
             PantheonState::State _state = PantheonState::NONE;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
-            int _minPantheonLevel = 1;
+            size_t _minPantheonLevel = 1;
 
             // Team
             std::string _team;
@@ -62,49 +62,50 @@ namespace Zappy {
             // Music
             raylib::Music _theme;
 
-            // Textures
-            raylib::Texture2D _typesTexture;
-
             // Assets root
             std::string _assetsRoot;
+
+            float _gridSize;
+            Camera &_camera;
+
+            // Textures
+            raylib::Texture2D _typesTexture;
 
             // Clocks
             std::chrono::time_point<std::chrono::steady_clock> _animClock;
 
-            // Raylib utils
-            Raylib &_raylib;
-
             // Start animation
             raylib::Vector2 _endTextPos = raylib::Vector2(200, 10);
             raylib::Vector2 _startTextPos = raylib::Vector2(200, GUI_HEIGHT / 2 - 100);
-            float _startDuration = 1.0f;
+            float _startDuration = 3.0f;
 
             // Go to the pokemon
             float _goToPokemonDuration = 1.5f;
 
             // Start positions of the camera
-            raylib::Vector3 _startPos = raylib::Vector3(-1.17, 0.57, -1.14);
-            raylib::Vector3 _startTarget = raylib::Vector3(-1.15, 0.56, -1.08);
+            raylib::Vector3 _startPos;
+            raylib::Vector3 _startTarget;
 
             // Final position to go to show all the pokemons
             raylib::Vector3 _finalShowPosition;
             raylib::Vector3 _finalShowTarget;
 
             // Index of the current pokemon we're showing
-            int _currentShowIndex = 0;
-            raylib::Vector3 _currentShowPosition = raylib::Vector3(0.15, 0.05, 0);
-            raylib::Vector3 _currentShowTarget = raylib::Vector3(0.22, 0.04, 0);
+            size_t _currentShowIndex = 0;
+            raylib::Vector3 _currentShowPosition;
+            raylib::Vector3 _currentShowTarget;
+
+            float pokemonSpacing;
 
             // Duration of the pokemons animations
-            int _showPokemonDuration = 4.0f;
-            int _transitionPokemonDuration = 1.5f;
+            float _showPokemonDuration = 4.0f;
+            float _transitionPokemonDuration = 1.5f;
 
             int _maxPokemonPerTeam = 6;
 
             float _endingDuration = 4.0f;
             raylib::Vector3 _endingPosition;
             raylib::Vector3 _endingTarget;
-            
 
             // Steve
             raylib::Model _steve;

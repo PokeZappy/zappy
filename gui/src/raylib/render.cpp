@@ -30,19 +30,21 @@ namespace Zappy
             _camera.BeginMode();
             _shader.BeginMode();
 
-            _tv.Draw(
-                raylib::Vector3(_mapX / 2. - 1 / 2., 0.3, _mapY + 3) * _gridSize,
-                raylib::Vector3(0, 1, 0), 180, raylib::Vector3(_gridSize * 6 * (_mapX + _mapY) / 20, true));
             float scale = _mapX * _arenaScale;
-            // _arena.Draw(raylib::Vector3(
-            //         getArenaOffset(_mapX, _gridSize),
-            //         scale * _arenaAltitudeScale,
-            //         getArenaOffset(_mapY, _gridSize)), scale);
+            _arena.Draw(raylib::Vector3(
+                    getArenaOffset(_mapX, _gridSize),
+                    scale * _arenaAltitudeScale,
+                    getArenaOffset(_mapY, _gridSize)), scale);
 
             _sun.Draw(_lights[0].position, raylib::Vector3(1, 0, 0), 180,
                 raylib::Vector3(_gridSize * 0.8, true));
             _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30,
                 raylib::Vector3(_gridSize * 2, true));
+
+            bool isBig = _mapX + _mapY == 60;
+            _tv.Draw(
+                raylib::Vector3(_mapX / 2. - 1 / 2., 0.3, _mapY + 3 + (isBig ? 3 : 0)) * _gridSize,
+                raylib::Vector3(0, 1, 0), 180, raylib::Vector3(_gridSize * 6 * (_mapX + _mapY) / 20, true));
 
             drawTiles(world.getTiles());
 
@@ -63,7 +65,7 @@ namespace Zappy
             raylib::Vector3 menuPos = raylib::Vector3(
                 _mapX / 2. - 1 / 2.,
                 0.2 + (_mapX + _mapY) / 10.0,
-                _mapY * 1.28 + 2.8) * _gridSize;
+                _mapY * 1.28 + 2.8 + (isBig ? 3 : 0)) * _gridSize;
             float menuScale = _gridSize / 370 * (_mapX + _mapY) / 20;
             raylib::Vector3 menuAngle = raylib::Vector3(PI / 1.485, 0, PI);
 
@@ -97,6 +99,9 @@ namespace Zappy
             _discardTranspShader.EndMode();
 
             _camera.EndMode();
+
+            raylib::Color::Black().DrawText(raylib::Vector3(_camera.position).ToString(), 10, 10, 20);
+            raylib::Color::Black().DrawText(raylib::Vector3(_camera.target).ToString(), 10, 30, 20);
 
             if (_menuState == Menu::MENU) {
                 drawMenu();

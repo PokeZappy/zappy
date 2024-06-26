@@ -135,11 +135,11 @@ namespace Zappy
             _models->setNormalTexture(_animIndex);
         }
 
-        _models->getModelByAnimation(Animations::PANTHEON)->draw(position, 
-        raylib::Vector3(0, 1, 0), 
-        90, 
-        raylib::Vector3(0.005, true) * (1 + _level / 2.0f),
-        raylib::Color::White()
+        _models->getModelByAnimation(Animations::PANTHEON)->draw(position,
+            raylib::Vector3(0, 1, 0),
+            90,
+            raylib::Vector3(_gridSize / 4, true) * (1 + worldPlayer->getLevel() / 4.0f),
+            raylib::Color::White()
         );
     }
 
@@ -162,7 +162,7 @@ namespace Zappy
         _models->getModelByAnimation(_animIndex)->draw(getPixelPos(),
             raylib::Vector3(_verticalRotation, 1, 0),
             _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f),
+            raylib::Vector3(_animatedScale, true) * (1 + worldPlayer->getLevel() / 2.0f),
             tintWithTeamColor ? color : raylib::Color::White());
     }
 

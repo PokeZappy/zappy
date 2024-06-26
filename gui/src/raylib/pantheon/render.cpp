@@ -6,7 +6,8 @@
 */
 
 #include "Pantheon.hpp"
-#include "Raylib.hpp"
+#include "PlayerRaylib.hpp"
+#include "UtilsRaylib.hpp"
 
 namespace Zappy {
 
@@ -27,12 +28,12 @@ namespace Zappy {
         _frame++;
         _steve.Draw(_stevePos,
         raylib::Vector3(0, 1, 0), 90,
-        raylib::Vector3(0.01, 0.01, 0.01));
+        raylib::Vector3(_gridSize, true));
     }
 
     void Pantheon::drawPokemons() {
-        for (int i = 0; i < _players.size(); i++) {
-            _players[i]->drawPantheon(raylib::Vector3(0.3, 0, i * 0.2));
+        for (size_t i = 0; i < _players.size(); i++) {
+            _players[i]->drawPantheon(raylib::Vector3(_gridSize * 3, 0, i * _gridSize));
         }
     }
 
@@ -49,15 +50,15 @@ namespace Zappy {
 
             raylib::Vector3 _nextPosition = raylib::Vector3(_currentShowPosition.x, _currentShowPosition.y, _currentShowPosition.z + 0.2);
             raylib::Vector3 _nextTarget = raylib::Vector3(_currentShowTarget.x, _currentShowTarget.y, _currentShowTarget.z + 0.2);
-            
+
             float moveFactor = (elapsed_seconds.count() - _showPokemonDuration) / _transitionPokemonDuration;
 
             if (moveFactor > 1.0f)
                 moveFactor = 1.0f;
             raylib::Vector3 cameraPos = _currentShowPosition + (_nextPosition - _currentShowPosition) * moveFactor;
             raylib::Vector3 cameraTarget = _currentShowTarget + (_nextTarget - _currentShowTarget) * moveFactor;
-            _raylib.getCamera().position = cameraPos;
-            _raylib.getCamera().target = cameraTarget;
+            _camera.position = cameraPos;
+            _camera.target = cameraTarget;
             if (elapsed_seconds.count() > _showPokemonDuration + _transitionPokemonDuration) {
                 _currentShowIndex++;
                 _currentShowPosition = _nextPosition;
@@ -86,15 +87,14 @@ namespace Zappy {
         }
         raylib::Vector3 cameraPos = _startPos + (_currentShowPosition - _startPos) * moveFactor;
         raylib::Vector3 cameraTarget = _startTarget + (_currentShowTarget - _startTarget) * moveFactor;
-        _raylib.getCamera().position = cameraPos;
-        _raylib.getCamera().target = cameraTarget;
+        _camera.position = cameraPos;
+        _camera.target = cameraTarget;
     }
 
     void Pantheon::renderTeam() {
-        raylib::Rectangle srcType = Raylib::getTypeRectangle(_team);
+        raylib::Rectangle srcType = UtilsRaylib::getTypeRectangle(_team);
         std::string text = "Félicitations à l'équipe";
         raylib::Vector2 textPos = _endTextPos;
-        
 
         if (_state == PantheonState::START) {
             std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _animClock;
@@ -130,8 +130,8 @@ namespace Zappy {
             if (elapsed_seconds.count() < _endingDuration) {
                 raylib::Vector3 cameraPos = _currentShowPosition + (_endingPosition - _currentShowPosition) * moveFactor;
                 raylib::Vector3 cameraTarget = _currentShowTarget + (_endingTarget - _currentShowTarget) * moveFactor;
-                _raylib.getCamera().position = cameraPos;
-                _raylib.getCamera().target = cameraTarget;
+                _camera.position = cameraPos;
+                _camera.target = cameraTarget;
             }
     }
 }

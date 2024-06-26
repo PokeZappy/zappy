@@ -7,6 +7,7 @@
 
 #include "Raylib.hpp"
 #include "HudMode.hpp"
+#include "UtilsRaylib.hpp"
 
 namespace Zappy {
      void HudMode::drawBackground(const World &world, size_t graphicPlayerCount, size_t graphicEggCount) {
@@ -55,7 +56,6 @@ namespace Zappy {
         }
         if (_selectedPlayer == nullptr) {
             if (_targetedPlayer != nullptr) {
-                // setSelectedPlayerToTarget();
                 _selectedPlayer = _targetedPlayer;
             } else if (!_selectedPlayers.empty()){
                 _selectedPlayer = _selectedPlayers[0];
@@ -235,7 +235,7 @@ namespace Zappy {
     }
 
     void HudMode::drawType(std::string type, int x, int y) {
-        raylib::Rectangle src = Raylib::getTypeRectangle(type);
+        raylib::Rectangle src = UtilsRaylib::getTypeRectangle(type);
         raylib::Rectangle dest(x, y, 57, 25);
         if (src.x == -1) {
             _white.DrawText(type, x, y + 7, 15);

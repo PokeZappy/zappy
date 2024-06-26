@@ -83,7 +83,7 @@ namespace Zappy {
         CameraMode followTarget(raylib::Camera &camera);
         void update(ClientSocket &socket);
         void updateChat(ClientSocket &socket);
-        void setSelectedPlayerToTarget();
+        void applySelectedPlayerToTarget();
         bool isChatEnabled() { return _chat; }
 
         std::shared_ptr<PlayerRaylib> getTargetedPlayer() { return _targetedPlayer; }

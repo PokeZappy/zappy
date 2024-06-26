@@ -39,7 +39,6 @@ namespace Zappy {
 
         std::shared_ptr<RaylibModels> _models;
         size_t _currentOrientation;
-        size_t _level = 0;
         float _verticalRotation = 0.0;
         std::string _broadcastMessage;
         raylib::Gif _broadcastGif;

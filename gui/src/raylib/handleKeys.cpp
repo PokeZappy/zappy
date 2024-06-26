@@ -10,23 +10,27 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            _escapeMenu->switchState();
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                if (_pantheon->activated())
+                    _pantheon->desactivate();
+                _escapeMenu->switchState();
+            }
         }
-
+        if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())
+            return;
         // Pantheon key
-        if (IsKeyPressed(KEY_L)) {
-            _pantheon->activate(_camera, "normal", _players);
+        if (IsKeyPressed(KEY_P)) {
+            _pantheon->activate("lgbt", getTeamColor("lgbt"), _players);
         }
 
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
-             if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += moveYSpeed;
-            _camera.target.y += moveYSpeed;
+            if (IsKeyDown(KEY_SPACE)) {
+                _camera.position.y += moveYSpeed;
+                _camera.target.y += moveYSpeed;
             }
-            if (IsKeyDown(KEY_LEFT_SHIFT))
-            {
+            if (IsKeyDown(KEY_LEFT_SHIFT)) {
                 _camera.position.y -= moveYSpeed;
                 _camera.target.y -= moveYSpeed;
             }
@@ -36,7 +40,7 @@ namespace Zappy {
                 _cameraViewMode = CAMERA_FIRST_PERSON;
             }
 
-            if (IsKeyPressed(KEY_P)) {
+            if (IsKeyPressed(KEY_G)) {
                 if (debugMode->activated()) {
                     debugMode->desactive(_camera, _defaultCameraPosition,
                         _defaultCameraTarget, _defaultAmbientLight);
@@ -65,15 +69,6 @@ namespace Zappy {
                     (void)gridSize;
                     return - gridSize * 0.5 - (float)tileCount * 0.14 * gridSize;
                 };
-            } else if (IsKeyPressed(KEY_T)) {
-                _mapX = 10;
-                _mapY = 10;
-            } else if (IsKeyPressed(KEY_Y)) {
-                _mapX = 20;
-                _mapY = 20;
-            } else if (IsKeyPressed(KEY_U)) {
-                _mapX = 30;
-                _mapY = 30;
             }
         }
 
@@ -98,8 +93,8 @@ namespace Zappy {
         // Check key inputs to enable/disable lights
         // if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
         // if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
-        if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
-        if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
+        // if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
+        // if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
 
         if (IsKeyPressed(KEY_H)) _showPlayers = !_showPlayers;
     }
