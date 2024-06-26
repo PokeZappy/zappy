@@ -92,7 +92,7 @@ class Messages(object):
             msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
             for msg in messages:
                 if 'eject' in msg:
-                    print("Pélo")
+                    print("ERROR Ejected")
 
         if actions:
             actions = actions[::-1]

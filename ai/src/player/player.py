@@ -168,7 +168,7 @@ class Player(Bot):
         for mvt in path:
             self.queue.append(mvt)
 
-    def get_id(self, message: str) -> None:
+    def get_id(self, message: str, collector: bool = False) -> None:
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
         self.life -= self.ACTION
@@ -178,6 +178,10 @@ class Player(Bot):
         self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
         self.life -= self.ACTION
+        if collector is True:
+            self.message.buf_messages('situm intrare', bis=True)
+            self.queue.append('Broadcast bis')
+            self.life -= self.ACTION
 
     def get_timing(self, message: str, delay: int) -> None:
         for _ in range(delay):

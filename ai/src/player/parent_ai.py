@@ -35,21 +35,20 @@ class ParentAI(Player):
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
+            RoleInGame.COLLECTOR,
+            RoleInGame.PUSHER,
             RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.PUSHER,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
             RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.PUSHER,
-            RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
-            RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
-            RoleInGame.HANSEL,
-            RoleInGame.COLLECTOR,
-            RoleInGame.HANSEL,
-            RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
             # TODO - stop la list ici
             # RoleInGame.HANSEL,
             # RoleInGame.HANSEL,
@@ -63,15 +62,15 @@ class ParentAI(Player):
     DEFAULT_ROLE = [
                     RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
                     ]
     
     DEFENDER_ROLE = [
+                    RoleInGame.SPARTIATE,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
                     # RoleInGame.SPARTIATE,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
 
@@ -152,12 +151,9 @@ class ParentAI(Player):
             case 10: return VicePusher(serv_info, cli_socket, self.debug_mode)
             case 11: return Spartiate(serv_info, cli_socket, self.debug_mode)
             case 12: return Parrot(serv_info, cli_socket, self.debug_mode)
-            case _: print("DUMMMMY's")
+            case _: print("DEFAULT CASE")
+
     def fork(self, role, cli_socket: socket) -> None:
-        # print(f'role created : {role}') #TODO - à enelever
-        # if role == RoleInGame.NORTH_GUARD:
-        #     print('North Guard is borning')
-        # print (f'role: {role}')
         while role is not None:
             role = role.run()
         cli_socket.close()
@@ -179,26 +175,34 @@ class ParentAI(Player):
         if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase is False:
             self.satus_testudo()
         if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
-            my_id = None
+            my_id_0 = None
+            my_id_1 = None
+            my_id_2 = None
+            my_id_3 = None
             if self.legione_honoris is True:
-                my_id = 0
+                my_id_0 = 0
                 self.legione_honoris = False
             if self.legione_prima is True:
-                my_id = 1
+                my_id_1 = 1
                 self.legione_prima = False
             if self.legione_secunda is True:
-                my_id = 2
+                my_id_2 = 2
                 self.legione_secunda = False
             if self.legione_tertia is True:
-                my_id = 3
+                my_id_3 = 3
                 self.legione_tertia = False
-            if my_id is not None:
-                print(f'my id {my_id}')
-                print(f'M&Ms id {self.id}')
-                self.message.buf_messages('occupat exercitum : ', my_id=my_id)
+            if my_id_0 is not None:
+                self.message.buf_messages('occupat exercitum : ', my_id=my_id_0)
                 self.queue.insert(0, 'Broadcast')
-                # self.queue.insert(0, ('Take', 'player'))
-                # self.queue.insert(0, 'Inventory')
+            if my_id_1 is not None:
+                self.message.buf_messages('occupat exercitum : ', my_id=my_id_1)
+                self.queue.insert(0, 'Broadcast')
+            if my_id_2 is not None:
+                self.message.buf_messages('occupat exercitum : ', my_id=my_id_2)
+                self.queue.insert(0, 'Broadcast')
+            if my_id_3 is not None:
+                self.message.buf_messages('occupat exercitum : ', my_id=my_id_3)
+                self.queue.insert(0, 'Broadcast')
         return True
 
     def real_fork_addaptativ(self) -> None:
@@ -208,7 +212,6 @@ class ParentAI(Player):
     
     def count_element(self, resources: list) -> None:
         my_resources = dict(Counter(resources))
-        # print(f'mine: {my_resources}\nneeded: {self.need_ressources}')
         for need in self.need_ressources.keys():
             if need not in my_resources or my_resources[need] < self.need_ressources[need]:
                 return
@@ -221,13 +224,12 @@ class ParentAI(Player):
                 if len(self.give_role) > 0 and has_forked:
                     self.give_role.pop(0)
 
-
-    def mastermind_treatment(self, buf) -> bool:
+    def mastermind_treatment(self, buf) -> None:
         """"
         mastermind treatment informations
 
         :return false: if he received a broadcast
-        :return true: else
+        :return None
         """
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
@@ -281,7 +283,6 @@ class ParentAI(Player):
             #TODO: problem to make the incantation
             pass
         if message['msg'] == 'Quis es':
-            print('Quis es')
             self.message.buf_messages('Ego sum dominus tuus')
             self.queue.insert(0, 'Broadcast')
         if message['msg'] == 'felix carmen':
@@ -292,23 +293,14 @@ class ParentAI(Player):
             self.exit_depot()
         if message['msg'] == 'Dimissus a Legione Honoris':
             self.legione_honoris = True
-            # TODO - enlever print débug
-            print(f'il va die : 0')
-            self.give_role.insert(0, RoleInGame.VICE_PUSHER)
         elif message['msg'] == 'Dimissus a legione prima':
             self.legione_prima = True
-            # TODO - enlever print débug
-            print(f'il va die : 1')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
         elif message['msg'] == 'Dimissus a legione secunda':
             self.legione_secunda = True
-            # TODO - enlever print débug
-            print(f'il va die : 2')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
         elif message['msg'] == 'Dimissus a legione tertia':
             self.legione_tertia = True
-            # TODO - enlever print débug
-            print(f'il va die : 3')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
 
     def enter_depot(self) -> None:

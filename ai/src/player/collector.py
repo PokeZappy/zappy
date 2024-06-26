@@ -19,7 +19,7 @@ class Collector(Player):
         self.hard_focus: bool = False
         self.id = 0
         self.start: bool = False
-        self.get_id('Quot publicani ibi sunt?')
+        self.get_id('Quot publicani ibi sunt?', collector=True)
         self.start_path: list = []
         self.deposit_path: list = []
         self.start_pos: list = [0, 0]
@@ -68,9 +68,12 @@ class Collector(Player):
             print(f'facing: {self.path.facing}')
         self.start_pos[0], self.start_pos[1] = self.path.end
         self.pos[0], self.pos[1] = self.path.end
-        for move in self.start_path:
+        for index, move in enumerate(self.start_path):
             self.queue.append(move)
             self.life -= self.ACTION
+        self.message.buf_messages(message='sum extra domum')
+        self.queue.append('Broadcast')
+        self.life -= self.ACTION
         if self.debug_mode:
             print(f'queue with path: {self.queue}')
             print(f'start path: {self.start_path}')
