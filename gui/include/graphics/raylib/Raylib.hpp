@@ -76,12 +76,14 @@ namespace Zappy {
             std::shared_ptr<EscapeMenu> getMenu() { return (_escapeMenu); }
             void setMusicState(bool state) {
                 if (state) {
+                    _isMusicPlaying = true;
                     _mainTheme.Resume();
                 } else {
+                    _isMusicPlaying = false;
                     _mainTheme.Pause();
                 }
             }
-            bool getMusicState() { return _mainTheme.IsPlaying(); }
+            bool getMusicState() { return  _isMusicPlaying; }
             raylib::Camera &getCamera() { return (_camera); }
             bool getShowPlayers() { return _showPlayers; }
 
@@ -161,6 +163,7 @@ namespace Zappy {
 
             // Sounds and Themes
             raylib::Music _mainTheme;
+            bool _isMusicPlaying = true;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 

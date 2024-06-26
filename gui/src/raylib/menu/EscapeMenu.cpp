@@ -43,7 +43,7 @@ namespace Zappy {
                 // }, "Music", 30));
                  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize + 10, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
                     raylib.setMusicState(!raylib.getMusicState());
-                }, "Music", textSize, !core.getMusicState()));
+                }, "Music", textSize, core.getMusicState()));
                 _minOptionsWidth = MeasureText("Music", textSize) > _minOptionsWidth ? MeasureText("Music", textSize) : _minOptionsWidth;
     }
 
