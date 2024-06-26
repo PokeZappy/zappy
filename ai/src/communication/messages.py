@@ -138,7 +138,7 @@ class Messages(object):
             result = [('broadcast', 'ko')]
         return result
 
-    def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
+    def broadcast_received(self, message: str, inquisitor: bool = False) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
         """
         Process the received broadcast message and extract relevant information.
 
@@ -175,6 +175,9 @@ class Messages(object):
                     })
                 elif text[0] in self.language.verbum.values():
                     res = get_infos(text)
+                    direction = None
+                    if inquisitor is True:
+                        direction = extract_direction(save_msg)
                     if len(res) == 1:
                         infos = res[0][0]
                         nbr = None
@@ -186,7 +189,8 @@ class Messages(object):
                         **({'coord': tuple(map(int, text[1].split(',')))} if len(text) > 1 and
                             text[1][0].isnumeric() and validate_uuid_pattern(text[1]) is True else {}),
                         **({'infos': list(infos)} if infos is not None else {}),
-                        **({'nbr': list(nbr)} if nbr is not None else {})
+                        **({'nbr': list(nbr)} if nbr is not None else {}),
+                        **({'direction': direction} if direction is not None else {})
                     })
                 else:
                     result.append({'id': 0, 'msg': 'ko'})
