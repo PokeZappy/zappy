@@ -65,6 +65,48 @@ namespace Zappy {
             void drawMenu();
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
+            static raylib::Rectangle getTypeRectangle(std::string team) {
+                int width = 32;
+            if (team == "bug") {
+                return raylib::Rectangle(0, 14, width, 14);
+            } else if (team == "dark") {
+                return raylib::Rectangle(0, 28, width, 14);
+            } else if (team == "dragon") {
+                return  raylib::Rectangle(0, 42, width, 14);
+            } else if (team == "electric") {
+                return raylib::Rectangle(0, 56, width, 14);
+            } else if (team == "fairy") {
+                return raylib::Rectangle(0, 70, width, 14);
+            } else if (team == "fight") {
+                return raylib::Rectangle(0, 84, width, 14);
+            } else if (team == "fire") {
+                return raylib::Rectangle(0, 98, width, 14);
+            } else if (team == "fly") {
+                return raylib::Rectangle(0, 112, width, 14);
+            } else if (team == "ghost") {
+                return raylib::Rectangle(0, 126, width, 14);
+            } else if (team == "grass") {
+                return raylib::Rectangle(0, 140, width, 14);
+            } else if (team == "ground") {
+                return raylib::Rectangle(0, 154, width, 14);
+            } else if (team == "ice") {
+                return raylib::Rectangle(0, 168, width, 14);
+            } else if (team == "normal") {
+                return raylib::Rectangle(0, 182, width, 14);
+            } else if (team == "poison") {
+                return raylib::Rectangle(0, 196, width, 14);
+            } else if (team == "psychic") {
+                return raylib::Rectangle(0, 210, width, 14);
+            } else if (team == "rock") {
+                return raylib::Rectangle(0, 224, width, 14);
+            } else if (team == "steel") {
+                return raylib::Rectangle(0, 238, width, 14);
+            } else if (team == "water") {
+                return raylib::Rectangle(0, 252, width, 14);
+            } else {
+                return raylib::Rectangle(-1, -1, -1, -1);
+            }
+            }
 
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
@@ -72,6 +114,7 @@ namespace Zappy {
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
+            raylib::Color getTeamColor(const std::string &teamName);
 
             // Getters
             raylib::Window &getWindow() { return (_window); }
@@ -90,6 +133,8 @@ namespace Zappy {
             raylib::Camera &getCamera() { return (_camera); }
             bool getShowPlayers() { return _showPlayers; }
             bool getTintPlayers() { return _tintPlayers; }
+            raylib::Shader &getShader() { return (_shader); }
+            std::vector<std::string> &getTypes() { return (_listTypes); }
 
             // Setters
             void setShowPlayers(bool state) { _showPlayers = state; }
@@ -98,7 +143,6 @@ namespace Zappy {
             // Utils
             bool containsPlayer(std::shared_ptr<Player> player);
             bool containsEgg(std::shared_ptr<Egg> egg);
-            raylib::Color getTeamColor(const std::string &teamName);
             raylib::Color getTeamColor(const Team &team);
             raylib::Vector3 getSunPosition(double elapsedTime, double cycle_duration_sec);
             raylib::Vector3 getStartPos(void);

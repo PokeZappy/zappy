@@ -12,6 +12,7 @@
 #include <memory>
 #include "raylib-cpp.hpp"
 #include <chrono>
+#include "IGraphicalModule.hpp"
 
 namespace Zappy {
 
@@ -20,6 +21,7 @@ namespace Zappy {
     namespace PantheonState {
         enum State {
             START,
+            GOTOPOKEMONS,
             SHOWPOKEMONS,
             ENDING,
             NONE
@@ -27,24 +29,31 @@ namespace Zappy {
     }
 
     class PlayerRaylib;
+    class Raylib;
 
     class Pantheon {
         public:
-            Pantheon(std::string assetsRoot, raylib::Window &_window, raylib::Camera &_camera, raylib::Shader &_shader);
+            Pantheon(std::string assetsRoot, Raylib &raylib);
             void setTeam(std::string team) { _team = team;}
             std::string getTeam() { return (_team); }
             PantheonState::State getState() { return (_state); }
             bool activated() { return _state != PantheonState::NONE; }
-            void activate(std::string team, std::vector<std::shared_ptr<PlayerRaylib>> players);
+            void activate(raylib::Camera &camera, std::string team, std::vector<std::shared_ptr<PlayerRaylib>> players);
             void desactivate();
-            void render();
+            void render() {};
             void renderStart();
+            void renderGoToPokemons();
+            void renderShowPokemons();
+            void drawPokemons();
             void getPantheonPlayers(std::vector<std::shared_ptr<PlayerRaylib>> players);
         private:
             PantheonState::State _state = PantheonState::NONE;
-            std::string _team;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
-            int _minPantheonLevel = 8;
+            int _minPantheonLevel = 1;
+
+            // Team
+            std::string _team;
+            raylib::Color _teamColor;
 
             // Music
             raylib::Music _theme;
@@ -59,8 +68,31 @@ namespace Zappy {
             std::chrono::time_point<std::chrono::steady_clock> _animClock;
 
             // Raylib utils
-            raylib::Window &_window;
-            raylib::Camera &_camera;
-            raylib::Shader &_shader;
+            Raylib &_raylib;
+
+            // Start animation
+            raylib::Vector2 _startTextPos = raylib::Vector2(250, -100);
+            raylib::Vector2 _endTextPos = raylib::Vector2(250, GUI_HEIGHT / 2 - 100);
+            float _startDuration = 1.0f;
+
+            // Go to the pokemon
+            float _goToPokemonDuration = 1.5f;
+
+            // Start positions of the camera
+            raylib::Vector3 _startPos = raylib::Vector3(-1.17, 0.57, -1.14);
+            raylib::Vector3 _startTarget = raylib::Vector3(-1.15, 0.56, -1.08);
+
+            // Final position to go to show all the pokemons
+            raylib::Vector3 _finalShowPosition;
+            raylib::Vector3 _finalShowTarget;
+
+            // Index of the current pokemon we're showing
+            int _currentShowIndex = 0;
+            raylib::Vector3 _currentShowPosition = raylib::Vector3(0.15, 0.05, 0);
+            raylib::Vector3 _currentShowTarget = raylib::Vector3(0.22, 0.04, 0);
+
+            // Duration of the pokemons animations
+            int _showPokemonDuration = 4.0f;
+            int _transitionPokemonDuration = 1.5f;
     };
 }

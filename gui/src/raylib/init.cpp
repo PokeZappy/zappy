@@ -160,7 +160,7 @@ namespace Zappy {
         _mainTheme.SetVolume(0.07);
 
         // Pantheon
-        _pantheon = std::make_unique<Pantheon>(assetsRoot, _window, _camera, _shader);
+        _pantheon = std::make_unique<Pantheon>(assetsRoot, *this);
 
         // Menu gif
         std::string menuPath = "menu/";

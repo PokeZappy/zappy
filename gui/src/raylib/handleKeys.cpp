@@ -16,7 +16,7 @@ namespace Zappy {
 
         // Pantheon key
         if (IsKeyPressed(KEY_L)) {
-            _pantheon->activate("grass", _players);
+            _pantheon->activate(_camera, "grass", _players);
         }
 
         float moveYSpeed = _gridSize / 15.;

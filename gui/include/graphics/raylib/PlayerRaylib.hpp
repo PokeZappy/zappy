@@ -22,6 +22,7 @@ namespace Zappy {
             const raylib::Gif &successGif, const raylib::Gif &failureGif,
             const raylib::Gif &followGif, const raylib::Gif &pushGif);
         void draw(bool isHudMode);
+        void drawPantheon(raylib::Vector3 position);
         void update(void);
         void updateModels(std::shared_ptr<RaylibModels> models);
 

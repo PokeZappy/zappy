@@ -88,8 +88,10 @@ namespace Zappy {
                 pokemon.shiny = Utils::random(0, 20) == 6;
                 // pokemon.shiny = true;
 
+
+                // add the model if the pokemon doesn't exist in the map
                 if (_models.count(pokemon.id) <= 0) {
-                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
+                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, pokemon.animPantheon, _shader);
                 }
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,
