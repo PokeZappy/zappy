@@ -40,16 +40,17 @@ void print_nb_looked_players(char *result, int nb)
 {
     if (nb == 0)
         return;
-    if (result[strlen(result) - 1] == '[')
-        sprintf(result, "%splayer", result);
-    else
-        sprintf(result, "%splayer", result);
+    for (int i = 0; i < nb; i++) {
+        sprintf(result, "%s player", result);
+    }
 }
 
 void print_lookeditems_on_tile(char *result, tiles_t *tile)
 {
     for (int i = 0; i < ITEM_PER_TILE; i++) {
-        if (tile->items[i] != 0)
+        if (tile->items[i] == 0)
+            continue;
+        for (int j = 0; j < tile->items[i]; j++)
             sprintf(result, "%s %s", result, object_names[i]);
     }
 }

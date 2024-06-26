@@ -54,6 +54,7 @@ void cmd_look(server_t *server, char *args, client_socket_t *client)
         return;
     response = player_look(server, client->player);
     dprintf(client->socket, "%s\n", response);
+    printf("%s\n", response);
     free(response);
 }
 
@@ -69,5 +70,6 @@ void cmd_inventory(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(get_gui(server)->socket, "pin %d %d %d %s\n", client->id,
         client->player->pos.x, client->player->pos.y, response);
+    printf("reponse : %s\n", response);
     free(response);
 }
