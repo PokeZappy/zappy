@@ -20,6 +20,10 @@ namespace Zappy {
         _animClock = std::chrono::steady_clock::now();
 
         std::vector<std::string> &types = _raylib.getTypes();
+
+        _endingPosition = raylib::Vector3(-0.2 * (_players.size()), 0.3, 0.2 * (_players.size() / 2));
+        _endingTarget = raylib::Vector3(0.3, 0.03, 0.2 * (_players.size() / 2));
+        _stevePos = raylib::Vector3(0.23, 0, (0.2 * (_players.size() - 1)) / 2);
     
     }
 

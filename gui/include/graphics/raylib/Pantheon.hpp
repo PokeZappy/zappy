@@ -45,6 +45,8 @@ namespace Zappy {
             void renderTeam();
             void renderGoToPokemons();
             void renderShowPokemons();
+            void renderEnding();
+            void renderSteve();
             void drawPokemons();
             void drawBravoo();
             void getPantheonPlayers(std::vector<std::shared_ptr<PlayerRaylib>> players);
@@ -98,5 +100,16 @@ namespace Zappy {
             int _transitionPokemonDuration = 1.5f;
 
             int _maxPokemonPerTeam = 6;
+
+            float _endingDuration = 4.0f;
+            raylib::Vector3 _endingPosition;
+            raylib::Vector3 _endingTarget;
+            
+
+            // Steve
+            raylib::Model _steve;
+            std::vector<raylib::ModelAnimation> _steveAnims;
+            raylib::Vector3 _stevePos;
+            int _frame = 0;
     };
 }

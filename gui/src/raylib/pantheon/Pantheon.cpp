@@ -16,8 +16,8 @@ namespace Zappy {
                 break;
             if (player->worldPlayer->getTeam().getName() == _team && player->worldPlayer->getLevel() >= _minPantheonLevel) {
                 _players.push_back(player);
+                i++;
             }  
-        i++;
         }
     }
 }

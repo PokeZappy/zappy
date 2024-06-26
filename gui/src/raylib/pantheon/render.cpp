@@ -22,6 +22,14 @@ namespace Zappy {
         raylib::Color::White().DrawText(pkLvl, GUI_WIDTH - 40 - MeasureText(pkName.c_str(), 40), GUI_HEIGHT - 100 - 40, 40);
     }
 
+    void Pantheon::renderSteve() {
+        _steve.UpdateAnimation(_steveAnims[5], _frame);
+        _frame++;
+        _steve.Draw(_stevePos,
+        raylib::Vector3(0, 1, 0), 90,
+        raylib::Vector3(0.01, 0.01, 0.01));
+    }
+
     void Pantheon::drawPokemons() {
         for (int i = 0; i < _players.size(); i++) {
             _players[i]->drawPantheon(raylib::Vector3(0.3, 0, i * 0.2));
@@ -34,6 +42,7 @@ namespace Zappy {
         if (elapsed_seconds.count() > _showPokemonDuration) {
 
             if (_currentShowIndex == _players.size() - 1) {
+                _animClock = std::chrono::steady_clock::now();
                 _state = PantheonState::ENDING;
                 return;
             }
@@ -109,5 +118,20 @@ namespace Zappy {
         }
         _teamColor.DrawText(text, textPos.x, textPos.y, 100);
 
+    }
+
+    void Pantheon::renderEnding() {
+            std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _animClock;
+            float moveFactor = elapsed_seconds.count() / _startDuration;
+
+            if (moveFactor > 1.0f)
+                moveFactor = 1.0f;
+
+            if (elapsed_seconds.count() < _endingDuration) {
+                raylib::Vector3 cameraPos = _currentShowPosition + (_endingPosition - _currentShowPosition) * moveFactor;
+                raylib::Vector3 cameraTarget = _currentShowTarget + (_endingTarget - _currentShowTarget) * moveFactor;
+                _raylib.getCamera().position = cameraPos;
+                _raylib.getCamera().target = cameraTarget;
+            }
     }
 }
