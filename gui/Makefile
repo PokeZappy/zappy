@@ -27,14 +27,15 @@ TESTS_OBJS		:=	$(TESTS_SRC:%.cpp=%.o)
 
 NAME			=	zappy_gui
 
-INCLUDEFLAGS	=	-Iinclude					\
-					-Iinclude/graphics/sfml		\
-					-Iinclude/world				\
-					-Iinclude/graphics/raylib	\
-					-Iinclude/graphics			\
-					-I./lib/include				\
-					-I./lib/raylib/src			\
-					-I./lib/raylib-cpp/include	\
+INCLUDEFLAGS	=	-Iinclude									\
+					-Iinclude/graphics/sfml						\
+					-Iinclude/world								\
+					-Iinclude/graphics/raylib					\
+					-Iinclude/graphics/raylib/buttons			\
+					-Iinclude/graphics							\
+					-I./lib/include								\
+					-I./lib/raylib/src							\
+					-I./lib/raylib-cpp/include					\
 					$(shell pkg-config --cflags libconfig++)
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	$(shell pkg-config --libs libconfig++)		\

@@ -12,6 +12,9 @@ namespace Zappy {
     class IButton {
         public:
             virtual ~IButton() = default;
-
+            virtual void press(Raylib &raylib) = 0;
+            virtual void hover() = 0;
+            virtual bool isPressed() = 0;
+            virtual void draw() = 0;
     };
 }
