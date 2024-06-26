@@ -37,6 +37,7 @@
 #include "ClientSocket.hpp"
 
 namespace Zappy {
+    class EscapeMenu;
 
     namespace Menu {
         enum State {
@@ -68,6 +69,12 @@ namespace Zappy {
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
+
+            // Getters
+            raylib::Window &getWindow() { return (_window); }
+            std::shared_ptr<DebugMode> getDebug() { return (debugMode);}
+            std::shared_ptr<EscapeMenu> getMenu() { return (_escapeMenu); }
+            raylib::Camera &getCamera() { return (_camera); }
         private:
             // Utils
             bool containsPlayer(std::shared_ptr<Player> player);
@@ -97,7 +104,7 @@ namespace Zappy {
             std::vector<raylib::Color> _listTypesColorsCustom;
 
             libconfig::Config _configuration;
-            std::unique_ptr<DebugMode> debugMode;
+            std::shared_ptr<DebugMode> debugMode;
 
             // floor
             raylib::Texture2D _floorTexture;
@@ -138,7 +145,7 @@ namespace Zappy {
             std::unique_ptr<HudMode> _hudMode;
 
             // Escape menu
-            std::unique_ptr<EscapeMenu> _escapeMenu;
+            std::shared_ptr<EscapeMenu> _escapeMenu;
 
             // Sounds and Themes
             raylib::Music _mainTheme;

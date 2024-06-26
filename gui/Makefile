@@ -10,6 +10,7 @@ SRC				=	main.cpp							\
 					$(wildcard src/raylib/*.cpp)		\
 					$(wildcard src/raylib/debug/*.cpp)	\
 					$(wildcard src/raylib/hud/*.cpp)	\
+					$(wildcard src/raylib/menu/*.cpp)	\
 					$(wildcard src/sfml/*.cpp)	\
 					$(wildcard src/world/*.cpp)
 

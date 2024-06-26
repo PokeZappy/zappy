@@ -12,7 +12,15 @@ namespace Zappy {
     void Raylib::update(const World &world)
     {
         _hudMode->clearPlayers();
-        handleKeys();
+        if (_menuState != Menu::NONE) {
+            updateMenu();
+        }
+
+        if (_escapeMenu->activated()) {
+            _escapeMenu->update(*this);
+        }
+        if (_menuState == Menu::NONE && !_escapeMenu->activated())
+            handleKeys();
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
             _camera.Update(_cameraViewMode);

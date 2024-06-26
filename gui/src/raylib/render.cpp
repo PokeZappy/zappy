@@ -11,6 +11,8 @@ namespace Zappy
 {
     void Raylib::render(const World &world)
     {
+        if (_window.ShouldClose())
+            return;
         _hudMode->setTile(nullptr);
         if (debugMode->activated()) {
             renderDebug();

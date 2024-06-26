@@ -14,11 +14,6 @@ namespace Zappy {
             _escapeMenu->switchState();
         }
 
-        if (_menuState != Menu::NONE) {
-            updateMenu();
-            return;
-        }
-
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
              if (IsKeyDown(KEY_SPACE)) {
