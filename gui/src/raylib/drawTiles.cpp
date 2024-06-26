@@ -14,7 +14,7 @@ namespace Zappy
         _rockModel.UpdateAnimation(_rockAnimations[_rockAnimationIndex], _rockAnimationFrame);
         _rockAnimationFrame++;
         if (static_cast<int>(_rockAnimationFrame) >= _rockAnimations[_rockAnimationIndex].frameCount) {
-            _rockAnimationIndex = rand() % 9 + 3;
+            _rockAnimationIndex = Utils::random(0, 9) + 3;
             _rockAnimationFrame = 0;
         }
 

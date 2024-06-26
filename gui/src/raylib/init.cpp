@@ -17,7 +17,7 @@ namespace Zappy {
         _eggModel(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
         _sun(raylib::Model(_assetsRoot + SUN_MODEL_PATH)),
         _moon(raylib::Model(_assetsRoot + MOON_MODEL_PATH)),
-        // _tv(raylib::Model(_assetsRoot + GAMEBOY_MODEL_PATH)),
+        _tv(raylib::Model(_assetsRoot + DS_MODEL_PATH)),
         _arena(raylib::Model(_assetsRoot + EGG_MODEL_PATH)),
         _rockModel(raylib::Model(_assetsRoot + POKEBALL_MODEL_PATH)),
         _foodModel(raylib::Model(_assetsRoot + FOOD_MODEL_PATH)),
@@ -71,11 +71,11 @@ namespace Zappy {
 
         // -- Camera --
         //* Front of the scene
-        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 14.8) * _gridSize;
+        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 20) * _gridSize;
         _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
         //* Menu
-        _startPos = raylib::Vector3(4.4, 10, -4.5) * _gridSize;
-        _startTarget = raylib::Vector3(4.4, 10, -7) * _gridSize;
+        _startPos = getStartPos();
+        _startTarget = getStartTarget();
         _camera.SetPosition(_startPos);
         _camera.SetTarget(_startTarget);
 
@@ -130,8 +130,18 @@ namespace Zappy {
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(_assetsRoot + EGG_MODEL_PATH);
 
-        // _tv.materials[2].shader = _shader;
         _moon.materials[1].shader = _shader;
+
+        raylib::Color baseColor = raylib::Color(0x5D76F1);
+        for (int i = 0; i < _tv.materialCount; i++) {
+            _tv.materials[i].shader = _shader;
+            raylib::Color randomColor = raylib::Color(Utils::random(0, 255),
+                Utils::random(0, 255), Utils::random(0, 255), 255);
+            _tv.materials[i].maps[MATERIAL_MAP_DIFFUSE].color = randomColor;
+        }
+        for (int i = 0; i < 3; i++)
+            _tv.materials[i].maps[MATERIAL_MAP_DIFFUSE].color = baseColor;
+        _tv.materials[7].maps[MATERIAL_MAP_DIFFUSE].color = baseColor;
 
         _arenaAltitudeScale = -(1. / 13.);
         _arenaScale = _gridSize;
@@ -151,18 +161,15 @@ namespace Zappy {
 
         // Menu gif
         std::string menuPath = "menu/";
-        bool isDay = Utils::random(0, 1) == 0;
-        menuPath += isDay ? "day/" : "dawn/";
+        _isMenuDay = Utils::random(0, 1) == 0;
+        menuPath += _isMenuDay ? "day/" : "dawn/";
         _menuIntroGif = std::make_unique<raylib::Gif>(
-            _assetsRoot + menuPath + "frames_intro", false, 0, isDay ? 1.1 : 1.0);
+            _assetsRoot + menuPath + "frames_intro", false, 0, _isMenuDay ? 1.1 : 1.0);
         _menuIntroGif->reset();
         _menuGif = std::make_unique<raylib::Gif>(
-            _assetsRoot + menuPath + "frames_main", true, 1, isDay ? 1.1 : 1.0);
+            _assetsRoot + menuPath + "frames_main", true, 1, _isMenuDay ? 1.1 : 1.0);
 
         // Broadcast gif
         _broadcastGif.reset();
-
-        // _camera.SetPosition(_defaultCameraPosition);
-        // _camera.SetTarget(_defaultCameraTarget);
     }
 }

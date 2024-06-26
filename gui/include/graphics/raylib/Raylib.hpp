@@ -29,6 +29,7 @@
 #define SUN_MODEL_PATH "models/pokemons/solrock.glb"
 #define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "models/arena.glb"
+#define DS_MODEL_PATH "models/nintendo_ds.m3d"
 
 // #define TILE_TEXTURE_PATH "textures/pokemon_tile.png"
 #define TILE_TEXTURE_PATH "textures/ice_tile.png"
@@ -96,6 +97,8 @@ namespace Zappy {
             raylib::Color getTeamColor(const std::string &teamName);
             raylib::Color getTeamColor(const Team &team);
             raylib::Vector3 getSunPosition(double elapsedTime, double cycle_duration_sec);
+            raylib::Vector3 getStartPos(void);
+            raylib::Vector3 getStartTarget(void);
             // Draw
             void drawFood(float x, float y, size_t quantity);
             void drawRock(float x, float y, size_t id, size_t quantity);
@@ -134,6 +137,8 @@ namespace Zappy {
             raylib::Model _sun;
             raylib::Model _moon;
 
+            raylib::Model _tv;
+
             // Arena
             raylib::Model _arena;
             float _arenaScale = 1.0f;
@@ -170,6 +175,7 @@ namespace Zappy {
             // Menu
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+            bool _isMenuDay = true;
             Menu::State _menuState = Menu::STARTING;
             std::chrono::time_point<std::chrono::steady_clock> _menuClock;
             raylib::Vector3 _startPos;

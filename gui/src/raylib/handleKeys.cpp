@@ -38,7 +38,7 @@ namespace Zappy {
                 } else {
                     debugMode->activate(_camera);
                 }
-        }
+            }
         }
 
         if (debugMode->activated()) {

@@ -138,6 +138,8 @@ namespace Zappy {
         std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _menuClock;
 
         if (_menuState == Menu::STARTING) {
+            _camera.position = getStartPos();
+            _camera.target = getStartTarget();
             if (!_forceStartAnimation) {
                 if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
             IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
@@ -154,8 +156,8 @@ namespace Zappy {
 
             if (moveFactor > 1.0f)
                 moveFactor = 1.0f;
-            _camera.position = _startPos + (_endPos - _startPos) * moveFactor;
-            _camera.target = _startTarget + (_endTarget - _startTarget) * moveFactor;
+            _camera.position = getStartPos() + (_endPos - getStartPos()) * moveFactor;
+            _camera.target = getStartTarget() + (_endTarget - getStartTarget()) * moveFactor;
             if (elapsed_seconds.count() > _durationEnding) {
                 _menuClock = std::chrono::steady_clock::now();
                 _menuState = Menu::NONE;
@@ -168,8 +170,10 @@ namespace Zappy {
                 _menuState = Menu::NONE;
             if (IsKeyPressed(KEY_ENTER)) {
                 _menuClock = std::chrono::steady_clock::now();
-                _endTarget = _startTarget;
-                _endPos = raylib::Vector3(_gridSize * _mapX / 2, _startPos.y, _gridSize * _mapY / 2);
+                // _endTarget = raylib::Vector3(_startTarget.x, _startTarget.y - _gridSize * 10, _startTarget.z);
+                // _endPos = raylib::Vector3(_startPos.x, _startPos.y, _startPos.z - _gridSize * 15);
+                _endTarget = raylib::Vector3(_mapX / 2., 0.5, 5) * _gridSize;
+                _endPos = raylib::Vector3(_mapX / 2., 2, -5) * _gridSize;
                 _menuState = Menu::ENDING;
             }
         }

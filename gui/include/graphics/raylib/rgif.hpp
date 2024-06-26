@@ -109,14 +109,14 @@ namespace raylib {
                 }
             }
         };
-        void draw(const Camera &camera, Vector3 position, float scale = 1) {
+        void draw(const Camera &camera, Vector3 position, float scale = 1, raylib::Vector3 angle = {0, 0, 0}) {
             if (_animEnded) {
                 return;
             }
 
             scale *= _scale;
             if (_images.size() > 0) {
-                _mesh.Draw(_meshMaterial, Matrix::Scale(scale, scale, scale) * Matrix::RotateX(PI / 2) * Matrix::Translate(position.x, position.y, position.z));
+                _mesh.Draw(_meshMaterial, Matrix::Scale(scale, scale, scale) * Matrix::RotateXYZ(angle) * Matrix::Translate(position.x, position.y, position.z));
             } else {
                 unsigned int nextFrameDataOffset = _image->width * _image->height * 4 * _currentFrame;
 
