@@ -28,7 +28,7 @@ static int count_names(char **av)
             continue;
         }
         i++;
-        while (av[i][0] != '-') {
+        while (av[i] && av[i][0] != '-') {
             names++;
             i++;
         }

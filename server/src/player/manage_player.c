@@ -68,7 +68,7 @@ player_t *init_player(team_t *team, server_t *server)
     for (int i = 0; i < ITEM_PER_TILE; i++)
         player->inventory[i] = 0;
     player->inventory[0] = 9;
-    player->health = 126000;
+    player->health = 126;
     player->team = team;
     team->current_clients++;
     check_forpos(player, server);
@@ -78,6 +78,7 @@ player_t *init_player(team_t *team, server_t *server)
 player_t *add_player_to_team(char *team_name, server_t *server)
 {
     team_t *team = search_team(team_name, server);
+    printf("add_player_to_team: %s\n", team_name);
 
     if (team == NULL)
         return NULL;
