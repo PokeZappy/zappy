@@ -57,7 +57,6 @@ namespace Zappy {
         std::string _winningTeam = "";
         std::vector<Team> _teams;
         Team defaultTeam;
-        // todo: vector of IEntity ?
         std::vector<std::shared_ptr<Player>> _players;
         std::vector<std::shared_ptr<Egg>> _eggs;
         std::vector<ShellCommand> _shellCommands;

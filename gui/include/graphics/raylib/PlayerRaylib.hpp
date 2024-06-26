@@ -30,8 +30,6 @@ namespace Zappy {
         void drawGifs(const Camera &camera);
         void drawFollowGif(const Camera &camera);
 
-        void glow(void);
-
         const std::shared_ptr<Player> worldPlayer;
         PokemonInfo infos;
     private:
