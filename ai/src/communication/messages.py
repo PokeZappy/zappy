@@ -71,10 +71,11 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                actions: list = None, pnj: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None, incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
+        :param incantator:
         :param message: str - The message received.
         :param actions: any - Additional actions related to the message.
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status
@@ -84,12 +85,15 @@ class Messages(object):
             return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
-        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
-        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
-        if pnj:
-            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
-            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
-            # print(f'actions: {msg_actions}')
+        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
+        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        if incantator:
+            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
+            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
+            for msg in messages:
+                if 'eject' in msg:
+                    print("ERROR Ejected")
+
         if actions:
             actions = actions[::-1]
         for index, message in enumerate(msg_actions):
@@ -107,20 +111,22 @@ class Messages(object):
                 try:
                     result.append(('ok', actions[index]))
                 except Exception as e:
-                    print(f'ok : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    pass
+                    # print(f'ok : Error: {e}')
+                    # print(f'actions: {actions}')
+                    # print(f'msgs actions: {msg_actions}')
+                    # print(f'msgs all: {messages}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
                 try:
                     result.append(('ko', actions[index]))
                 except Exception as e:
-                    print(f'KO : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    pass
+                    # print(f'KO : Error: {e}')
+                    # print(f'actions: {actions}')
+                    # print(f'msgs actions: {msg_actions}')
+                    # print(f'msgs all: {messages}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:
@@ -161,7 +167,7 @@ class Messages(object):
                     return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
-                text = self.cipher.decryption([int(i) for i in text])
+                text = self.cipher.decryption([int(i) for i in text], parts[2])
                 text = text.split('#')
                 if text[0] == 'est dominus aquilonis' or text[0] == 'Ego sum dominus tuus':
                     direction = extract_direction(save_msg)
@@ -223,7 +229,7 @@ class Messages(object):
             new_uuid = uuid.uuid4().__str__()[:7]
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
-        encrypted_msg = self.cipher.encryption(message)
+        encrypted_msg = self.cipher.encryption(message, new_uuid)
         if bis is False:
             if self.msg == 'Broadcast "':
                 self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
