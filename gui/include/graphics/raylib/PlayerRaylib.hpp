@@ -18,10 +18,18 @@ namespace Zappy {
     public:
         PlayerRaylib(const std::shared_ptr<Player> worldPlayer,
             PokemonInfo &pkInfo, std::shared_ptr<RaylibModels> models,
-            float gridSize);
+            float gridSize, const raylib::Gif &broadcastGif,
+            const raylib::Gif &successGif, const raylib::Gif &failureGif,
+            const raylib::Gif &followGif, const raylib::Gif &pushGif);
         void draw(void);
         void update(void);
         void updateModels(std::shared_ptr<RaylibModels> models);
+
+        raylib::Vector3 getPixelPos(void) const;
+        void drawGifs(const Camera &camera);
+        void drawFollowGif(const Camera &camera);
+
+        void glow(void);
 
         const std::shared_ptr<Player> worldPlayer;
         PokemonInfo infos;
@@ -32,8 +40,12 @@ namespace Zappy {
         size_t _currentOrientation;
         size_t _level = 0;
         float _verticalRotation = 0.0;
-        // Incantation _graphicalIncantingState = Incantation::NONE;
-        // raylib::Gif _successGif;
-        // raylib::Gif _failureGif;
+        std::string _broadcastMessage;
+        raylib::Gif _broadcastGif;
+        Incantation _graphicalIncantingState = Incantation::NONE;
+        raylib::Gif _successGif;
+        raylib::Gif _failureGif;
+        raylib::Gif _followGif;
+        raylib::Gif _pushGif;
     };
 } // namespace Zappy

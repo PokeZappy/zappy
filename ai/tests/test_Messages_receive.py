@@ -10,7 +10,7 @@ class TestReceive:
         cipher = Cipher("testkey")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result = messages.receive('ok\n', "hello")
+        result = messages.receive('ok\n', ["hello"])
         assert result == [('ok', "hello")]
 
     #  returns 'ko\n' when message is 'ko\n'
@@ -18,7 +18,7 @@ class TestReceive:
         cipher = Cipher("testkey")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result = messages.receive('ko\n', "hello")
+        result = messages.receive('ko\n', ["hello"])
         assert result == [('ko', "hello")]
 
     #  handles messages with invalid formats gracefully
@@ -26,5 +26,5 @@ class TestReceive:
         cipher = Cipher("testkey")
         latin = Latin()
         messages = Messages(cipher, "123", latin)
-        result = messages.receive('INVALID MESSAGE FORMAT', "hello")
+        result = messages.receive('INVALID MESSAGE FORMAT', ["hello"])
         assert result == [('broadcast', [{'id': 0, 'msg': 'ko'}])]

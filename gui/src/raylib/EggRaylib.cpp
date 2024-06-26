@@ -23,9 +23,6 @@ namespace Zappy {
                 Utils::generateRandomFloat(gridSize / 1.3),
                 Utils::generateRandomFloat(gridSize / 10) + gridSize / 3);
         _currentPos = raylib::Vector2(worldEgg->getX(), worldEgg->getY());
-        // _textImage = raylib::Image(256, 256, raylib::Color(0, 0, 0, 0));
-        // _textTexture = raylib::Texture2D(_textImage);
-        // _textRenderTexture = LoadRenderTexture(256, 256);
 
         _animationIndexes["idle"] = getAnimationIndex({"ground_idle"});
         _animationIndexes["faint"] = getAnimationIndex({"faint"});
@@ -41,6 +38,11 @@ namespace Zappy {
     void EggRaylib::update(void)
     {
         _animFrame++;
+        if (_isDying) {
+            _animatedScale -= _gridSize / 1000.;
+        } else if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
+        }
     }
 
     void EggRaylib::draw(void)
@@ -52,7 +54,7 @@ namespace Zappy {
             _currentPos.y * _gridSize + offset.y};
         _model.Draw(playerPos,
             raylib::Vector3(0, 1, 0), 0,
-            raylib::Vector3(_scale, true),
+            raylib::Vector3(_animatedScale, true),
             _tint);
     }
 

@@ -27,15 +27,18 @@ class Directions(Enum):
 
 class RoleInGame(Enum):
     PROGENITOR = 0
-    MASTERMIND = 1
-    INCANTATOR = 2
-    COLLECTOR = 3
-    COOCKER = 4
-    PUSHER = 5
-    PNJ = 6
-    FIRST_BORN = 7
-    NORTH_GUARD = 8
-    HANSEL = 9
+    INCANTATOR = 1
+    COLLECTOR = 2
+    PUSHER = 3
+    PNJ = 4
+    FIRST_BORN = 5
+    NORTH_GUARD = 6
+    HANSEL = 7
+    VICE_NORTH_GUARD = 8
+    MASTERMIND = 9
+    VICE_PUSHER = 10
+    SPARTIATE = 11
+    PARROT = 12
 
 
 TESTUDO = [
@@ -65,3 +68,4 @@ TESTUDO = [
     {'id': 23, 'path': ['Forward', 'Right', 'Forward']}
 ]
 
+FOCUS = ['thystame', 'phiras', 'mendiane', 'deraumere', 'sibur', 'linemate']

@@ -13,6 +13,8 @@ class Latin(object):
         Initialize the Latin class with a dictionary of Latin phrases and their translations.
         """
         self.verbum: dict[str, str] = {
+                                        # M&M's to M&M's
+                                        'besoin aide': 'auxilium postulo',
                                         # MM to Collector
                                         'focalisation sur ces ressources': 'focus in his opibus : ',
                                         'point de dépot': 'collectio rerum : ',
@@ -62,8 +64,14 @@ class Latin(object):
 
                                         # First Born to MM
                                         'Je me vais me transormer en : ': 'Ego me transform : ',
+                                        'Qui es-tu': 'Quis es',
 
+                                        # MM to First Born
+                                        'Je suis ton maître': 'Ego sum dominus tuus',
+
+                                        # Incantator to Collecteur
                                         'évo de niveau': 'nobilis incantatio',
+
                                         'Collector': 'Collector',
                                         'Pusher': 'Pusher',
                                         'Incantator': 'Incantator',
@@ -80,6 +88,14 @@ class Latin(object):
 
                                         # M&M's to Pusher
                                         'formation tortue': 'satus testudo : ',
+
+                                        # Pusher to M&M's
+                                        # 'je vais mourir': 'recessi ab exercitu',
+                                        'je suis démis de la 0 légion': 'Dimissus a Legione Honoris',
+                                        'je suis démis de la 1ère légion': 'Dimissus a legione prima',
+                                        'je suis démis de la 2ème légion': 'Dimissus a legione secunda',
+                                        'je suis démis de la 3ème légion': 'Dimissus a legione tertia',
+                                        'remplace le pousseur : ': 'occupat exercitum : ',
 
                                         'Où vais-je': 'Quo ego vado',
                                         'point de ralliment': 'collectio militum : ',
@@ -99,7 +115,6 @@ class Latin(object):
 
                                         'temps restant incantation': 'quantum temporis reliquum est carminibus',
 
-                                        'besoin aide': 'auxilium postulo',
 
                                         'confirmation action': 'hic servio tibi domino',
 

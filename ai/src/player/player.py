@@ -4,6 +4,7 @@ import random
 from abc import abstractmethod
 from datetime import datetime
 
+from ai.src.utils.messages import extract_inventory
 from ai.src.zappy_ai import Bot
 from ai.src.gameplay.enum_gameplay import Directions as dir
 from ai.src.mvt.path import Path
@@ -40,6 +41,13 @@ class Player(Bot):
                                 'mendiane': 0,
                                 'phiras': 0,
                                 'thystame': 0
+                                }
+        self.need_ressources = {'linemate': 8,
+                                'deraumere': 8,
+                                'sibur': 10,
+                                'mendiane': 5,
+                                'phiras': 6,
+                                'thystame': 1
                                 }
         self.inventory: dict[str: int] = self.based_ressources
         self.looked: bool = False
@@ -160,7 +168,7 @@ class Player(Bot):
         for mvt in path:
             self.queue.append(mvt)
 
-    def get_id(self, message: str) -> None:
+    def get_id(self, message: str, collector: bool = False) -> None:
         self.message.buf_messages(message)
         self.queue.append('Broadcast')
         self.life -= self.ACTION
@@ -169,6 +177,18 @@ class Player(Bot):
         self.queue.append(('Take', 'player'))
         self.life -= self.ACTION
         self.queue.append(('Take', 'player'))
+        self.life -= self.ACTION
+        if collector is True:
+            self.message.buf_messages('situm intrare', bis=True)
+            self.queue.append('Broadcast bis')
+            self.life -= self.ACTION
+
+    def get_timing(self, message: str, delay: int) -> None:
+        for _ in range(delay):
+            self.queue.append(('Take', 'player'))
+            self.life -= self.ACTION
+        self.message.buf_messages(message)
+        self.queue.append('Broadcast')
         self.life -= self.ACTION
 
     def apply_action(self) -> None:
@@ -186,6 +206,7 @@ class Player(Bot):
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
+            # print('uuuuuuuuuuuuuuuuuuuuuuuuuui')
             self.incantation()
         elif action[0] == 'Set':
             self.set_obj(action[1])
@@ -224,7 +245,7 @@ class Player(Bot):
         if len(self.actions) == 0:
             recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions[0])
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'ko' and len(self.actions) > 0 and self.actions[0] == ('Take', 'player'):
                 self.got_id += 1
@@ -239,13 +260,17 @@ class Player(Bot):
                 self.looked = True
                 self.environment = msgs
             if recv_type == 'inventory':
+                self.inventory = extract_inventory(msgs)
+                self.life = self.inventory['food'] * self.FOOD
+                # print(f'life: {self.life}')
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                print('elevation :', msgs)
+                # print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':
+                    # TODO - on vient pas skip des messages avec ce continue ?
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
@@ -253,7 +278,11 @@ class Player(Bot):
             if recv_type == 'eject':
                 self.back_on_track(msgs[-1])
                 continue
-            self.actions.pop(0)
+            try:
+                self.actions.pop(0)
+            except Exception as e:
+                print(e)
+                print(f"pnj except : rcv_typ {recv_type}, msg {msg}")
 
     @abstractmethod
     def make_action(self) -> None:
@@ -313,7 +342,6 @@ class Player(Bot):
         if self.eject_security is False:
             return
         direction = int(msg)
-        self.queue.insert(0, 'Forward')
         if direction == 3:
             self.queue.insert(0, 'Left')
         if direction == 7:
@@ -321,3 +349,4 @@ class Player(Bot):
         if direction == 5:
             self.queue.insert(0, 'Right')
             self.queue.insert(0, 'Right')
+        self.queue.insert(0, 'Forward')

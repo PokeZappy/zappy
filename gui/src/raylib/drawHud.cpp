@@ -8,7 +8,7 @@
 #include "Raylib.hpp"
 
 namespace Zappy {
-    void Raylib::drawHud() {
-        _hudMode->drawBackground();
+    void Raylib::drawHud(const World &world) {
+        _hudMode->drawBackground(world, _players.size(), _eggs.size());
     }
 }

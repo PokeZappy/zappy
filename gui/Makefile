@@ -100,4 +100,4 @@ tests_clean: fclean
 coverage:
 	gcovr
 
-.PHONY: all clean fclean re tests_run coverage dbg dbgs
+.PHONY: all clean fclean re tests_run coverage dbg dbgs prof

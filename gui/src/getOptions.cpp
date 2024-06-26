@@ -34,7 +34,7 @@ namespace Zappy
             }
         }
         if (_graphics == nullptr) {
-            _graphics = std::make_shared<Raylib>(_assetsRoot);
+            _graphics = std::make_shared<Raylib>(_assetsRoot, _socket);
         }
         if (_machine.empty() || _port == -1) {
             _machine = "127.0.0.1";

@@ -25,8 +25,6 @@
 #define FOOD_MODEL_PATH "models/pecha_berry.glb"
 #define GAMEBOY_MODEL_PATH "models/dsi1.glb"
 #define EGG_MODEL_PATH "models/pokemons/ditto.glb"
-// #define SUN_MODEL_PATH "models/sun.glb"
-// #define MOON_MODEL_PATH "models/pokemons/dusclops.glb"
 #define SUN_MODEL_PATH "models/pokemons/solrock.glb"
 #define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "models/arena.glb"
@@ -35,25 +33,25 @@
 #define TILE_TEXTURE_PATH "textures/ice_tile.png"
 
 #define MAIN_THEME_PATH "menu/SouthProvince.ogg"
+#include "ClientSocket.hpp"
 
 namespace Zappy {
-
-
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
     class Raylib : public AGraphicalModule {
         public:
-            Raylib(const std::string &assetsRoot);
+            Raylib(const std::string &assetsRoot, ClientSocket &socket);
             void render(const World &world) override;
             void renderDebug(void);
+            void handleKeys(void);
             void update(const World &world) override;
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
 
             bool isOpen(void) override;
             void drawTiles(const std::vector<std::vector<Tile>> &tiles) override;
-            void drawHud(void);
+            void drawHud(const World &world);
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
@@ -71,7 +69,11 @@ namespace Zappy {
             const std::string &_assetsRoot;
             raylib::Window _window;
             raylib::Camera _camera;
+            CameraMode _cameraViewMode = CAMERA_FIRST_PERSON;
+            raylib::Vector3 _defaultCameraPosition;
+            raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
+            bool _showPlayers = true;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
@@ -96,8 +98,7 @@ namespace Zappy {
             raylib::Model _sun;
             raylib::Model _moon;
 
-            // Gameboy & Arena
-            // raylib::Model _tv;
+            // Arena
             raylib::Model _arena;
             float _arenaScale = 1.0f;
             float _arenaAltitudeScale = 0.0f;
@@ -113,10 +114,9 @@ namespace Zappy {
             // Food
             raylib::Model _foodModel;
 
-            // Text
-            Texture2D _textTexture;
-
+            float _defaultAmbientLight = 0.3f;
             raylib::Shader _shader;
+            raylib::Shader _discardTranspShader;
             Light _lights[MAX_LIGHTS];
 
             // HUD
@@ -126,5 +126,18 @@ namespace Zappy {
             raylib::Music _mainTheme;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
+
+            // Menu
+            std::unique_ptr<raylib::Gif> _menuIntroGif;
+            std::unique_ptr<raylib::Gif> _menuGif;
+
+            raylib::Gif _broadcastGif;
+            raylib::Gif _successGif;
+            raylib::Gif _failureGif;
+            raylib::Gif _followGif;
+            raylib::Gif _pushGif;
+
+            // Server socket
+            ClientSocket &_socket;
     };
 }

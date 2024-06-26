@@ -11,14 +11,18 @@
 namespace Zappy
 {
     PlayerRaylib::PlayerRaylib(
-        const std::shared_ptr<Player> worldPlayer,
-        PokemonInfo &pkInfo,
-        std::shared_ptr<RaylibModels> models,
-        float gridSize) :
+        const std::shared_ptr<Player> worldPlayer, PokemonInfo &pkInfo,
+        std::shared_ptr<RaylibModels> models, float gridSize,
+        const raylib::Gif &broadcastGif, const raylib::Gif &successGif,
+        const raylib::Gif &failureGif, const raylib::Gif &followGif,
+        const raylib::Gif &pushGif) :
         AEntityRaylib(gridSize),
-        worldPlayer(worldPlayer)
-        // _successGif(_assetsRoot + "textures/success.gif", false),
-        // _failureGif(_assetsRoot + "textures/failure.gif", false)
+        worldPlayer(worldPlayer),
+        _broadcastGif(broadcastGif),
+        _successGif(successGif),
+        _failureGif(failureGif),
+        _followGif(followGif),
+        _pushGif(pushGif)
     {
         _models = models;
         _scale = _gridSize / 32;
@@ -53,6 +57,15 @@ namespace Zappy
         default: return 0;
         }
         return 0;
+    }
+
+    raylib::Vector3 PlayerRaylib::getPixelPos(void) const
+    {
+        return raylib::Vector3(
+            _currentPos.x * _gridSize + offset.x,
+            _altitude + std::abs(_verticalRotation * _gridSize / 10.f),
+            _currentPos.y * _gridSize + offset.y
+        );
     }
 
     void PlayerRaylib::update(void)
@@ -92,45 +105,75 @@ namespace Zappy
                 _animIndex = Animations::IDLE;
             }
         }
-        // if (worldPlayer->getIncantationState() != _graphicalIncantingState) {
-        //     _graphicalIncantingState = worldPlayer->getIncantationState();
-        //     if (_graphicalIncantingState == Incantation::SUCCESS) {
-        //         _successGif.reset();
-        //     } else if (_graphicalIncantingState == Incantation::FAILURE) {
-        //         _failureGif.reset();
-        //     }
-        // }
-        // _successGif.update();
-        // _failureGif.update();
+        if (worldPlayer->getIncantationState() != _graphicalIncantingState) {
+            _graphicalIncantingState = worldPlayer->getIncantationState();
+            if (_graphicalIncantingState == Incantation::SUCCESS) {
+                _successGif.reset();
+            } else if (_graphicalIncantingState == Incantation::FAILURE) {
+                _failureGif.reset();
+            }
+        }
+        if (worldPlayer->getBroadcast() != _broadcastMessage) {
+            _broadcastMessage = worldPlayer->getBroadcast();
+            _broadcastGif.reset();
+        }
+        if (worldPlayer->isPushing()) {
+            _pushGif.reset();
+        }
+        _successGif.update();
+        _failureGif.update();
+        _broadcastGif.update();
+        _pushGif.update();
+
+        if (_animatedScale < _scale) {
+            _animatedScale += (_scale - _animatedScale) / 1000. + _gridSize / 1000.;
+        }
     }
 
-    void PlayerRaylib::draw()
+    void PlayerRaylib::draw(void)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
 
         // draw
-        raylib::Vector3 playerPos = raylib::Vector3{
-            _currentPos.x * _gridSize + offset.x,
-            _altitude + std::abs(_verticalRotation * _gridSize / 5.f),
-            _currentPos.y * _gridSize + offset.y};
-
         // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
         // if (_animIndex != NONE) {
         //     _model->updateAnimation(_animIndex, _animFrame);
         // }
-
 
         if (infos.shiny) {
             _models->setShinyTexture(_animIndex);
         } else {
             _models->setNormalTexture(_animIndex);
         }
-        _models->getModelByAnimation(_animIndex)->draw(playerPos,
-            raylib::Vector3(_verticalRotation, 1, 0), _currentOrientation + (std::abs(_verticalRotation * 80) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_scale, _scale, _scale) * (1 + _level / 4.0f));
-        playerPos.y += _height + _gridSize;
-        // _successGif.draw(camera, playerPos, _gridSize);
-        // _failureGif.draw(camera, playerPos, _gridSize);
+        _models->getModelByAnimation(_animIndex)->draw(getPixelPos(),
+            raylib::Vector3(_verticalRotation, 1, 0),
+            _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
+            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f));
+    }
+
+    void PlayerRaylib::drawGifs(const Camera &camera)
+    {
+        raylib::Vector3 gifPos = getPixelPos() + raylib::Vector3(0, _gridSize, 0);
+        _broadcastGif.draw(camera, gifPos);
+        _successGif.draw(camera, gifPos);
+        _failureGif.draw(camera, gifPos);
+        _pushGif.draw(camera, gifPos);
+    }
+
+    void PlayerRaylib::drawFollowGif(const Camera &camera)
+    {
+        raylib::Vector3 gifPos = getPixelPos() + raylib::Vector3(0, _gridSize / 1.5, 0);
+        _followGif.update();
+        _followGif.draw(camera, gifPos);
+    }
+
+    void PlayerRaylib::glow(void)
+    {
+        // Material *material = &_models->getModelByAnimation(_animIndex)->getModel().materials[1];
+        // std::cout << "-- Albedo -- color:" << raylib::Color(material->maps[MATERIAL_MAP_ALBEDO].color).ToString() << ", value: "
+        //             << std::to_string(material->maps[MATERIAL_MAP_ALBEDO].value) << std::endl;
+        // material->maps[MATERIAL_MAP_ALBEDO].value = 0.5;
+        // material->maps[MATERIAL_MAP_DIFFUSE].value = 0.2;
     }
 } // namespace Zappy

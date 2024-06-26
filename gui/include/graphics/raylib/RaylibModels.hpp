@@ -53,10 +53,20 @@ namespace Zappy {
         }
         void update();
         bool hasAnim(Animations::Type anim);
-        void setShinyTexture(Animations::Type anim) { _models[anim]->setShinyTexture(_shinyTexture); };
+        void setShinyTexture(Animations::Type anim) { 
+            if (hasAnim(anim))
+                _models[anim]->setTexture(_shinyTexture);
+            else
+                _models[Animations::NONE]->setTexture(_shinyTexture);
+        };
         void updateAnimation(Animations::Type anim) { _models[anim]->updateAnimation(_animations); };
-        std::shared_ptr<RaylibModel> getModelByAnimation(Animations::Type anim) { return _models[anim]; }
-        void setNormalTexture(Animations::Type anim) { _models[anim]->setNormalTexture(_normalTexture); };
+        std::shared_ptr<RaylibModel> getModelByAnimation(Animations::Type anim) { return hasAnim(anim) ? _models[anim] : _models[Animations::NONE]; }
+        void setNormalTexture(Animations::Type anim) { 
+            if (hasAnim(anim))
+                _models[anim]->setTexture(_normalTexture);
+            else
+                _models[Animations::NONE]->setTexture(_normalTexture);
+    }
 
         int getAnimationIndex(const std::vector<std::string> &names)
         {
