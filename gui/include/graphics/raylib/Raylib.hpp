@@ -14,6 +14,7 @@
 #include <libconfig.h++>
 #include "DebugMode.hpp"
 #include "HudMode.hpp"
+#include "EscapeMenu.hpp"
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
 
@@ -36,6 +37,16 @@
 #include "ClientSocket.hpp"
 
 namespace Zappy {
+
+    namespace Menu {
+        enum State {
+            STARTING,
+            MENU,
+            ENDING,
+            NONE
+        };
+    }
+
     #define SUN_COLOR CLITERAL(Color){252, 255, 181, 255}
     #define MOON_COLOR CLITERAL(Color){81, 81, 176, 255}
     #define ITEM_COLORS {WHITE, CLITERAL(Color){231, 112, 255, 255}, CLITERAL(Color){246, 255, 0, 255}, CLITERAL(Color){255, 137, 0, 255}}
@@ -46,6 +57,8 @@ namespace Zappy {
             void renderDebug(void);
             void handleKeys(void);
             void update(const World &world) override;
+            void updateMenu();
+            void drawMenu();
             void updatePlayers(const World &world);
             void updateEggs(const World &world);
 
@@ -80,6 +93,8 @@ namespace Zappy {
             size_t _eggAnimFrame = 0;
             std::vector<std::string> _listTypes;
             std::vector<raylib::Color> _listTypesColors;
+            std::vector<std::string> _listTypesCustom;
+            std::vector<raylib::Color> _listTypesColorsCustom;
 
             libconfig::Config _configuration;
             std::unique_ptr<DebugMode> debugMode;
@@ -122,6 +137,9 @@ namespace Zappy {
             // HUD
             std::unique_ptr<HudMode> _hudMode;
 
+            // Escape menu
+            std::unique_ptr<EscapeMenu> _escapeMenu;
+
             // Sounds and Themes
             raylib::Music _mainTheme;
 
@@ -130,6 +148,15 @@ namespace Zappy {
             // Menu
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+            Menu::State _menuState = Menu::STARTING;
+            std::chrono::time_point<std::chrono::steady_clock> _menuClock;
+            raylib::Vector3 _startPos;
+            raylib::Vector3 _endPos;
+            raylib::Vector3 _startTarget;
+            raylib::Vector3 _endTarget;
+            double _startTime = 2.f;
+            double _durationEnding = 1.5f;
+            bool _forceStartAnimation = false;
 
             raylib::Gif _broadcastGif;
             raylib::Gif _successGif;

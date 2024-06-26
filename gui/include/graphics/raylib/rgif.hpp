@@ -13,6 +13,11 @@
 #include <algorithm>
 #include <memory>
 
+#include <thread>
+#include <mutex>
+#include <atomic>
+
+
 namespace raylib {
     class Gif {
     public:
@@ -30,20 +35,6 @@ namespace raylib {
             _image = gif._image;
             _texture = gif._texture;
         }
-        // Gif &operator=(const Gif &gif)
-        // {
-        //     // WARNING: This copy constructor will only work for gif file, not folder
-        //     _loop = gif._loop;
-        //     _maxFrameDelay = gif._maxFrameDelay;
-        //     _frameDelay = gif._frameDelay;
-        //     _scale = gif._scale;
-        //     _frameCount = gif._frameCount;
-        //     _currentFrame = gif._currentFrame;
-        //     _animEnded = gif._animEnded;
-        //     _image = gif._image;
-        //     _texture = gif._texture;
-        //     return *this;
-        // }
         Gif(const std::string &path, bool loop = true, int frameDelay = 2,
             float scale = 1.0f) :
             _loop(loop),
@@ -70,16 +61,16 @@ namespace raylib {
                 );
 
                 _frameCount = 0;
-                for (size_t i = 0; i < entries.size() && i < 2; i++) {
-                    _textures.push_back(Texture2D(entries[i].path().string()));
-                }
+                _images.push_back(Image(entries[0].path().string()));
+                _texture = std::make_shared<Texture2D>(_images[0]);
                 for (const auto& entry : entries) {
                     _frameCount++;
                     _paths.push_back(entry.path().string());
                 }
-                _mesh = GenMeshPlane(_textures[0].width, _textures[0].height, 1, 1);
+                _loadThread = std::thread(&Gif::loadTexturesAsync, this);
+                _mesh = GenMeshPlane(_texture->width, _texture->height, 1, 1);
                 _meshMaterial = LoadMaterialDefault();
-                _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _textures[0];
+                _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = *_texture;
             } else {
                 int localFrames;
                 _image = std::make_shared<Image>(path, &localFrames);
@@ -90,6 +81,11 @@ namespace raylib {
             if (loop)
                 _animEnded = false;
         }
+        ~Gif(void) {
+            if (_loadThread.joinable()) {
+                _loadThread.join();
+            }
+        }
 
         void update(void) {
             if (_animEnded) {
@@ -99,11 +95,9 @@ namespace raylib {
                 _frameDelay--;
                 return;
             }
-            if (_textures.size() > 0) {
-                if (_textures.size() < _frameCount) {
-                    _textures.push_back(Texture2D(_paths[_textures.size()]));
-                }
-                _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = _textures[_currentFrame];
+            if (_images.size() > 0) {
+                // ensureCurrentTextureLoaded();
+                _texture->Update(_images[_currentFrame].data);
             }
             _frameDelay = _maxFrameDelay;
             _currentFrame++;
@@ -121,12 +115,7 @@ namespace raylib {
             }
 
             scale *= _scale;
-            if (_textures.size() > 0) {
-                // From a single texture with a list of images
-                // _texture = Texture2D(_images[_currentFrame]);
-                // _texture.DrawBillboard(camera, position, scale);
-
-                // _textures[_currentFrame].DrawBillboard(camera, position, scale);
+            if (_images.size() > 0) {
                 _mesh.Draw(_meshMaterial, Matrix::Scale(scale, scale, scale) * Matrix::RotateX(PI / 2) * Matrix::Translate(position.x, position.y, position.z));
             } else {
                 unsigned int nextFrameDataOffset = _image->width * _image->height * 4 * _currentFrame;
@@ -146,15 +135,38 @@ namespace raylib {
         }
 
     private:
+        // Threads
+        void loadTexturesAsync() {
+            for (size_t i = 0; i < _paths.size(); ++i) {
+                // std::lock_guard<std::mutex> lock(_textureMutex);
+                _images.push_back(Image(_paths[i]));
+
+                // _textureCondition.notify_one();
+            }
+            // _texturesLoaded = true;
+        }
+
+        // void ensureCurrentTextureLoaded() {
+        //     std::unique_lock<std::mutex> lock(_textureMutex);
+        //     while (_currentFrame >= _images.size()) {
+        //         _textureCondition.wait(lock);
+        //     }
+        // }
+
         // From file
         std::shared_ptr<Image> _image;
         std::shared_ptr<Texture2D> _texture;
 
         // From folder
-        std::vector<Texture2D> _textures;
+        std::vector<Image> _images;
         std::vector<std::string> _paths;
         Mesh _mesh;
         Material _meshMaterial;
+        // Threading folder loading
+        std::thread _loadThread;
+        // std::mutex _textureMutex;
+        // std::condition_variable _textureCondition;
+        // std::atomic<bool> _texturesLoaded {false};
 
         bool _loop;
         bool _animEnded = true;

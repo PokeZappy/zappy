@@ -48,7 +48,19 @@ namespace Zappy
             }
             i++;
         }
-        return raylib::Color::White();
+        i = 0;
+        for (const auto &team : _listTypesCustom) {
+            if (team == teamName) {
+                return _listTypesColorsCustom[i];
+            }
+            i++;
+        }
+        _listTypesCustom.push_back(teamName);
+        int min = 20;
+        int max = 220;
+        raylib::Color newColor(Utils::random(min, max), Utils::random(min, max), Utils::random(min, max));
+        _listTypesColorsCustom.push_back(newColor);
+        return newColor;
     }
 
     raylib::Color Raylib::getTeamColor(const Team &team)
@@ -68,7 +80,7 @@ namespace Zappy
         raylib::Vector3 sunPosition;
         // sunPosition.x = SUN_PEAK_WIDTH * (timeInCycle / cycle_duration_sec) - SUN_PEAK_WIDTH / 2;
         sunPosition.y = SUN_PEAK_HEIGHT * sin(angle);
-        sunPosition.z = _gridSize * 40.0;
+        sunPosition.z = - _gridSize * 40.0;
         if (timeInCycle < HALF_CYCLE) {
             sunPosition.x = -SUN_PEAK_WIDTH / 2 + (SUN_PEAK_WIDTH * (timeInCycle / HALF_CYCLE)) + _mapX * _gridSize / 2;
         } else {
