@@ -14,6 +14,10 @@ namespace Zappy
         if (_window.ShouldClose())
             return;
         _hudMode->setTile(nullptr);
+        if (_pantheon->activated()) {
+            _pantheon->render();
+            return;
+        }
         if (debugMode->activated()) {
             renderDebug();
             return;

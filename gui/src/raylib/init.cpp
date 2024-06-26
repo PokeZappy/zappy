@@ -149,6 +149,9 @@ namespace Zappy {
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);
         _mainTheme.SetVolume(0.07);
 
+        // Pantheon
+        _pantheon = std::make_unique<Pantheon>(assetsRoot, _window, _camera, _shader);
+
         // Menu gif
         std::string menuPath = "menu/";
         bool isDay = Utils::random(0, 1) == 0;
