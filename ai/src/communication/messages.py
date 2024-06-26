@@ -75,6 +75,7 @@ class Messages(object):
         """
         Receive and process a message.
 
+        :param incantator:
         :param message: str - The message received.
         :param actions: any - Additional actions related to the message.
         :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status
@@ -89,6 +90,10 @@ class Messages(object):
         if incantator:
             msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
             msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
+            for msg in messages:
+                if 'eject' in msg:
+                    print("Pélo")
+
         if actions:
             actions = actions[::-1]
         for index, message in enumerate(msg_actions):

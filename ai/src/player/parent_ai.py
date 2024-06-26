@@ -3,6 +3,7 @@ from random import randint
 
 from collections import Counter
 
+from ai.src.player.parrot import Parrot
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
 from ai.src.player.incantator import Incantator
@@ -85,7 +86,8 @@ class ParentAI(Player):
         RoleInGame.PUSHER: Pusher,
         RoleInGame.VICE_NORTH_GUARD: ViceNorthGuard,
         RoleInGame.VICE_PUSHER: VicePusher,
-        RoleInGame.SPARTIATE: Spartiate
+        RoleInGame.SPARTIATE: Spartiate,
+        RoleInGame.PARROT: Parrot
     }
 
 
@@ -147,7 +149,10 @@ class ParentAI(Player):
             case 6: return NorthGuard(serv_info, cli_socket, self.debug_mode)
             case 7: return Hansel(serv_info, cli_socket, self.debug_mode)
             case 8: return ViceNorthGuard(serv_info, cli_socket, self.debug_mode)
-
+            case 10: return VicePusher(serv_info, cli_socket, self.debug_mode)
+            case 11: return Spartiate(serv_info, cli_socket, self.debug_mode)
+            case 12: return Parrot(serv_info, cli_socket, self.debug_mode)
+            case _: print("DUMMMMY's")
     def fork(self, role, cli_socket: socket) -> None:
         # print(f'role created : {role}') #TODO - à enelever
         # if role == RoleInGame.NORTH_GUARD:
@@ -162,7 +167,6 @@ class ParentAI(Player):
         serv_info, cli_socket = connection(self.port, self.name, self.machine)
         if serv_info is None or cli_socket is None:
             cli_socket.close()
-            print('Nope dude connard')
             return False
         pid = fork()
         if pid == 0:
@@ -193,6 +197,8 @@ class ParentAI(Player):
                 print(f'M&Ms id {self.id}')
                 self.message.buf_messages('occupat exercitum : ', my_id=my_id)
                 self.queue.insert(0, 'Broadcast')
+                # self.queue.insert(0, ('Take', 'player'))
+                # self.queue.insert(0, 'Inventory')
         return True
 
     def real_fork_addaptativ(self) -> None:
@@ -289,17 +295,17 @@ class ParentAI(Player):
             # TODO - enlever print débug
             print(f'il va die : 0')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
-        if message['msg'] == 'Dimissus a legione prima':
+        elif message['msg'] == 'Dimissus a legione prima':
             self.legione_prima = True
             # TODO - enlever print débug
             print(f'il va die : 1')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
-        if message['msg'] == 'Dimissus a legione secunda':
+        elif message['msg'] == 'Dimissus a legione secunda':
             self.legione_secunda = True
             # TODO - enlever print débug
             print(f'il va die : 2')
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
-        if message['msg'] == 'Dimissus a legione tertia':
+        elif message['msg'] == 'Dimissus a legione tertia':
             self.legione_tertia = True
             # TODO - enlever print débug
             print(f'il va die : 3')

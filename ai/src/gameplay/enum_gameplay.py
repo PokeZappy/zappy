@@ -38,6 +38,8 @@ class RoleInGame(Enum):
     MASTERMIND = 9
     VICE_PUSHER = 10
     SPARTIATE = 11
+    PARROT = 12
+
 
 TESTUDO = [
     {'id': 0, 'path': ['Forward']}, #Do not use
