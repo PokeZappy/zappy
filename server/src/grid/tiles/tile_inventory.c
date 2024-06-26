@@ -19,11 +19,6 @@ void remove_item_from_tile(tiles_t *tile, int item, int quantity)
     tile->items[item] -= quantity;
 }
 
-int get_item_count(tiles_t *tile, int item)
-{
-    return tile->items[item];
-}
-
 char *get_tile_content(tiles_t *tile)
 {
     char *content = (char *)malloc(sizeof(char) * 1024);

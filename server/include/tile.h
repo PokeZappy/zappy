@@ -22,5 +22,4 @@ void free_tile(tiles_t *tile);
 void free_all_egg(tiles_t *tile);
 void add_item_to_tile(tiles_t *tile, int item, int quantity);
 void remove_item_from_tile(tiles_t *tile, int item, int quantity);
-int get_item_count(tiles_t *tile, int item);
 char *get_tile_content(tiles_t *tile);

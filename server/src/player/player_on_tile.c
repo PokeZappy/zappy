@@ -6,7 +6,6 @@
 */
 
 #include "../../include/server.h"
-#include "../../include/list.h"
 
 int nb_player_on_tile(server_t *server, vector_t tilepos)
 {

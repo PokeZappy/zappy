@@ -80,9 +80,6 @@ void cmd_pin(server_t *server, char *args, client_socket_t *client);
 void cmd_sgt(server_t *server, char *args, client_socket_t *client);
 void cmd_sst(server_t *server, char *args, client_socket_t *client);
 
-// -- SERVER -- //
-void cmd_unknown(server_t *server, char *args, client_socket_t *client);
-
 // -- MY_CMD -- //
 void print_client_list(server_t *server, char *args, client_socket_t *client);
 void exit_command(server_t *server, char *args, client_socket_t *client);

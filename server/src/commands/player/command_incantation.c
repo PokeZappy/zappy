@@ -41,12 +41,15 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
     player_t *player = client->player;
     cmd_incantation_t *current = find_incantation(server, client);
 
+    printf("Incantation\n");
     if (!check_post_incantation(server, client)) {
+        printf("Incantation failed\n"),
         dprintf(client->socket, "ko\n");
         dprintf(get_gui(server)->socket, "pie %d %d ko\n",
         player->pos.x, player->pos.y);
         return;
     }
+    printf("Incantation success\n");
     dprintf(get_gui(server)->socket, "pie %d %d ok\n", player->pos.x,
             player->pos.y);
     for (int i = 0; i < current->number_of_participants; i++) {

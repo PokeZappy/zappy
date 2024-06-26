@@ -42,22 +42,6 @@ grid_t *init_grid(server_t *server, int width, int height)
     return grid;
 }
 
-void print_tile(tiles_t *tile)
-{
-    for (int i = 0; i < ITEM_PER_TILE; i++)
-        printf("%d ", tile->items[i]);
-    printf("\n");
-}
-
-void print_grid(grid_t *grid)
-{
-    for (int i = 0; i < grid->height; i++) {
-        for (int j = 0; j < grid->width; j++)
-            print_tile(grid->tiles[i][j]);
-        printf("\n");
-    }
-}
-
 void free_grid(grid_t *grid)
 {
     for (int i = 0; i < grid->height; i++) {

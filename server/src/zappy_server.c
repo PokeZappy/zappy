@@ -100,6 +100,11 @@ static int simulate_server(server_t *server)
     return handle_client(server, max_sd, readfds);
 }
 
+void block_incoming_signal(server_t *server)
+{
+    signal(SIGPIPE, SIG_IGN);
+}
+
 int zappy_server(server_arg_t *arguments)
 {
     server_t *server = (server_t *)malloc(sizeof(server_t));
@@ -112,6 +117,7 @@ int zappy_server(server_arg_t *arguments)
         connect_server(server, arguments) == 84) {
         return 84;
     }
+    block_incoming_signal(server);
     while (simulate_server(server));
     close_all_clients(server);
     close(server->socket);

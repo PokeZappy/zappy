@@ -6,6 +6,7 @@
 */
 
 #include "../../include/free.h"
+#include "../../include/incantation.h"
 
 static void free_tab(char **tab)
 {
@@ -65,6 +66,18 @@ static void free_server_commands(server_t *server)
     }
 }
 
+static void free_incantations(server_t *server)
+{
+    cmd_incantation_t *incantation = TAILQ_FIRST(&server->head_incantation);
+
+    while (incantation != NULL) {
+        TAILQ_REMOVE(&server->head_incantation, incantation, entries);
+        free(incantation->participants);
+        free(incantation);
+        incantation = TAILQ_FIRST(&server->head_incantation);
+    }
+}
+
 void free_server(server_t *server)
 {
     if (!server)
@@ -73,6 +86,7 @@ void free_server(server_t *server)
     free_server_client(server);
     free_server_team(server);
     free_server_commands(server);
+    free_incantations(server);
     free_grid(server->grid);
     free(server);
 }

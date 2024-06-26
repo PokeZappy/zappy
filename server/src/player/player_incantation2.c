@@ -53,6 +53,16 @@ void free_incantation(server_t *server, cmd_incantation_t *current)
     free(current);
 }
 
+static void print_post_incantation(cmd_incantation_t *incant)
+{
+    printf("Incantation: %d\n", incant->level);
+    printf("Organizer: %d\n", incant->organizer->socket);
+    printf("Participants: ");
+    for (int i = 0; incant->participants[i]; i++)
+        printf("\t%d : %d %d", incant->participants[i]->socket, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
+    printf("\n");
+}
+
 bool check_post_incantation(server_t *server, client_socket_t *client)
 {
     cmd_incantation_t *current = find_incantation(server, client);
@@ -60,11 +70,16 @@ bool check_post_incantation(server_t *server, client_socket_t *client)
     tiles_t *tile = server->grid->tiles[current->tile_vector.y]
     [current->tile_vector.x];
 
-    if (!player_still_onpos(current))
+    print_post_incantation(current);
+    if (!player_still_onpos(current)) {
+        free_incantation(server, current);
         return false;
+    }
     for (int i = 0; i < 7; i++) {
-        if (tile->items[i] < incantation.objects_required[i])
+        if (tile->items[i] < incantation.objects_required[i]) {
+            free_incantation(server, current);
             return false;
+        }
         tile->items[i] -= incantation.objects_required[i];
     }
     return true;
