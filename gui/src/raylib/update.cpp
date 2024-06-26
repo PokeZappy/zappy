@@ -19,7 +19,10 @@ namespace Zappy {
         if (_escapeMenu->activated()) {
             _escapeMenu->update(*this);
         }
-        if (_menuState == Menu::NONE && !_escapeMenu->activated())
+
+        if (world.getWinningTeam() != "")
+            _pantheon->activate(_camera, world.getWinningTeam(), _players);
+        if (_menuState == Menu::NONE && !_escapeMenu->activated() && !_pantheon->activated())
             handleKeys();
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)

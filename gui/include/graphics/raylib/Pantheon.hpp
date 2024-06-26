@@ -37,14 +37,16 @@ namespace Zappy {
             void setTeam(std::string team) { _team = team;}
             std::string getTeam() { return (_team); }
             PantheonState::State getState() { return (_state); }
+            raylib::Color getTeamColor() { return (_teamColor); }
             bool activated() { return _state != PantheonState::NONE; }
             void activate(raylib::Camera &camera, std::string team, std::vector<std::shared_ptr<PlayerRaylib>> players);
             void desactivate();
             void render() {};
-            void renderStart();
+            void renderTeam();
             void renderGoToPokemons();
             void renderShowPokemons();
             void drawPokemons();
+            void drawBravoo();
             void getPantheonPlayers(std::vector<std::shared_ptr<PlayerRaylib>> players);
         private:
             PantheonState::State _state = PantheonState::NONE;
@@ -71,8 +73,8 @@ namespace Zappy {
             Raylib &_raylib;
 
             // Start animation
-            raylib::Vector2 _startTextPos = raylib::Vector2(250, -100);
-            raylib::Vector2 _endTextPos = raylib::Vector2(250, GUI_HEIGHT / 2 - 100);
+            raylib::Vector2 _endTextPos = raylib::Vector2(200, 10);
+            raylib::Vector2 _startTextPos = raylib::Vector2(200, GUI_HEIGHT / 2 - 100);
             float _startDuration = 1.0f;
 
             // Go to the pokemon
@@ -94,5 +96,7 @@ namespace Zappy {
             // Duration of the pokemons animations
             int _showPokemonDuration = 4.0f;
             int _transitionPokemonDuration = 1.5f;
+
+            int _maxPokemonPerTeam = 6;
     };
 }

@@ -37,6 +37,7 @@ namespace Zappy {
         const std::vector<std::shared_ptr<Player>> &getPlayers() const { return _players; }
         std::vector<std::shared_ptr<Player>> getPlayers(size_t x, size_t y);
         const std::vector<std::shared_ptr<Egg>> &getEggs() const { return _eggs; }
+        const std::string getWinningTeam() const { return (_winningTeam); }
         void killPlayer(size_t id);
         void killEgg(size_t id);
 
@@ -53,6 +54,7 @@ namespace Zappy {
         std::string getOrientationString(Orientation orientation);
         std::string getItemString(Item item);
         std::vector<std::vector<Tile>> _tiles;
+        std::string _winningTeam = "";
         std::vector<Team> _teams;
         Team defaultTeam;
         // todo: vector of IEntity ?

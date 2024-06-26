@@ -27,9 +27,7 @@ namespace Zappy {
             raylib::Color::White().DrawText("camera pos : " + std::to_string(_camera.position.x) + " " + std::to_string(_camera.position.y) + " " + std::to_string(_camera.position.z), 10, 10, 15);
             raylib::Color::White().DrawText("target pos : " + std::to_string(_camera.target.x) + " " + std::to_string(_camera.target.y) + " " + std::to_string(_camera.target.z), 10, 100, 15);
 
-            if (_pantheon->getState() == PantheonState::State::START) {
-                _pantheon->renderStart();
-            }
+            _pantheon->renderTeam();
             if (_pantheon->getState() == PantheonState::State::GOTOPOKEMONS) {
                 _pantheon->renderGoToPokemons();
             }
