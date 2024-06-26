@@ -31,9 +31,10 @@ namespace Zappy
                     getArenaOffset(_mapY, _gridSize)),
                 raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
 
-            _sun.Draw(_lights[0].position, _gridSize * 0.8);
-            float moonScale = _gridSize * 2;
-            _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30, raylib::Vector3(moonScale, true));
+            _sun.Draw(_lights[0].position, raylib::Vector3(1, 0, 0), 180,
+                raylib::Vector3(_gridSize * 0.8, true));
+            _moon.Draw(_lights[1].position, raylib::Vector3(0.1, 0, -0.3), 30,
+                raylib::Vector3(_gridSize * 2, true));
 
             drawTiles(world.getTiles());
 
@@ -42,7 +43,7 @@ namespace Zappy
             }
             if (_showPlayers) {
                 for (auto &player : _players) {
-                    player->draw();
+                    player->draw(_hudMode->activated());
                 }
             }
 
@@ -81,24 +82,27 @@ namespace Zappy
             // };
 
             // GuiButton(r, "Follow");
+            if (_menuState == Menu::MENU) {
+                drawMenu();
+            } else if (_menuState == Menu::NONE) {
+                if (_hudMode->activated()) {
+                    drawHud(world);
 
-            if (_hudMode->activated()) {
-                drawHud(world);
+                    // if (_selectionMode)
+                    //     GuiWindowBox(r, "Actions");
+                    // int a = 0;
+                    // GuiButton((Rectangle) {GUI_WIDTH - 125, GUI_HEIGHT - 200, 100, 60}, "Follow");
+                    // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 120, 225, 60}, "Kill");
+                    // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
+                    // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
 
-                // if (_selectionMode)
-                //     GuiWindowBox(r, "Actions");
-                // int a = 0;
-                // GuiButton((Rectangle) {GUI_WIDTH - 125, GUI_HEIGHT - 200, 100, 60}, "Follow");
-                // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 120, 225, 60}, "Kill");
-                // GuiButton((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 60}, "Inventaire");
-                // GuiDropdownBox((Rectangle) {GUI_WIDTH - 250, GUI_HEIGHT - 200, 100, 100}, "KO", &a, false);
-
-                raylib::Color(0, 0, 0, 160).DrawRectangle(1840, 358, 77, 22);
-                _window.DrawFPS(1842, 360);
-            } else {
-                raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails", 1240, GUI_HEIGHT - 35, 30);
+                    raylib::Color(0, 0, 0, 160).DrawRectangle(1840, 358, 77, 22);
+                    _window.DrawFPS(1842, 360);
+                } else {
+                    raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails", 1240, GUI_HEIGHT - 35, 30);
+                }
             }
-
+            _escapeMenu->draw();
         }
         _window.EndDrawing();
     }

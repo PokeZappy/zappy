@@ -10,6 +10,15 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            _escapeMenu->switchState();
+        }
+
+        if (_menuState != Menu::NONE) {
+            updateMenu();
+            return;
+        }
+
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
              if (IsKeyDown(KEY_SPACE)) {
@@ -23,7 +32,8 @@ namespace Zappy {
             }
 
             if (IsKeyPressed(KEY_N)) {
-            _hudMode->switchState();
+                _hudMode->switchState();
+                _cameraViewMode = CAMERA_FIRST_PERSON;
             }
 
             if (IsKeyPressed(KEY_P)) {
@@ -67,9 +77,6 @@ namespace Zappy {
             }
         }
 
-        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()))
-            _camera.Update(_cameraViewMode);
-
         // if (!_players.empty() && !_players[0]->isDying()) {
             //* Follow the player with id 0
             // for (auto &player : _players) {
@@ -89,11 +96,11 @@ namespace Zappy {
         SetShaderValue(_shader, _shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
 
         // Check key inputs to enable/disable lights
-        if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
-        if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
+        // if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
+        // if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
         if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
         if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
 
-        if (IsKeyPressed(KEY_Y)) _showPlayers = !_showPlayers;
+        if (IsKeyPressed(KEY_H)) _showPlayers = !_showPlayers;
     }
 }

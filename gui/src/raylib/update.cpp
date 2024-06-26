@@ -14,6 +14,9 @@ namespace Zappy {
         _hudMode->clearPlayers();
         handleKeys();
 
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
+            _camera.Update(_cameraViewMode);
+
         // Sun & Moon
         size_t revolution = 1789 / 10;
         auto currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()) / 1000.;
@@ -60,13 +63,14 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
-        if (_menuIntroGif != nullptr) {
-            if (!_menuIntroGif->isAnimEnded())
-                _menuIntroGif->update();
-            else
-                _menuIntroGif.release();
-        } else if (_menuGif != nullptr)
+        if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded()) {
+            _menuIntroGif->update();
+        }
+        else if (_menuGif != nullptr)
             _menuGif->update();
+
+        if (_menuIntroGif != nullptr && _menuIntroGif->isAnimEnded())
+            _menuIntroGif.release();
     }
 
     void Raylib::updatePlayers(const World &world) {
@@ -81,8 +85,8 @@ namespace Zappy {
                 }
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,
-                    pokemon, _models[pokemon.id], _gridSize, _broadcastGif,
-                    _successGif, _failureGif, _followGif, _pushGif));
+                    pokemon, _models[pokemon.id], _gridSize, getTeamColor(player->getTeam()),
+                    _broadcastGif, _successGif, _failureGif, _followGif, _pushGif));
             }
         }
 
@@ -118,6 +122,47 @@ namespace Zappy {
             if (_eggs[i]->getAnimatedScale() < 0) {
                 _eggs.erase(_eggs.begin() + i - decal);
                 decal++;
+            }
+        }
+    }
+
+    void Raylib::updateMenu() {
+        std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _menuClock;
+
+        if (_menuState == Menu::STARTING) {
+            if (!_forceStartAnimation) {
+                if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+                _menuState = Menu::NONE;
+            }
+            if (elapsed_seconds.count() >= _startTime) {
+                _menuClock = std::chrono::steady_clock::now();
+                _menuState = Menu::MENU;
+            }
+        }
+
+        if (_menuState == Menu::ENDING) {
+            float moveFactor = elapsed_seconds.count() / _durationEnding;
+
+            if (moveFactor > 1.0f)
+                moveFactor = 1.0f;
+            _camera.position = _startPos + (_endPos - _startPos) * moveFactor;
+            _camera.target = _startTarget + (_endTarget - _startTarget) * moveFactor;
+            if (elapsed_seconds.count() > _durationEnding) {
+                _menuClock = std::chrono::steady_clock::now();
+                _menuState = Menu::NONE;
+            }
+        }
+
+        if (_menuState == Menu::MENU) {
+             if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
+            IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
+                _menuState = Menu::NONE;
+            if (IsKeyPressed(KEY_ENTER)) {
+                _menuClock = std::chrono::steady_clock::now();
+                _endTarget = _startTarget;
+                _endPos = raylib::Vector3(_gridSize * _mapX / 2, _startPos.y, _gridSize * _mapY / 2);
+                _menuState = Menu::ENDING;
             }
         }
     }
