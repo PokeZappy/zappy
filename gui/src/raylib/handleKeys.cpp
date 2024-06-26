@@ -14,6 +14,11 @@ namespace Zappy {
             _escapeMenu->switchState();
         }
 
+        // Pantheon key
+        if (IsKeyPressed(KEY_L)) {
+            _pantheon->activate("grass", _players);
+        }
+
         float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
              if (IsKeyDown(KEY_SPACE)) {

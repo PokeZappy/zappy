@@ -17,6 +17,7 @@
 #include "EscapeMenu.hpp"
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
+#include "Pantheon.hpp"
 
 #include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
@@ -57,6 +58,7 @@ namespace Zappy {
             Raylib(const std::string &assetsRoot, ClientSocket &socket);
             void render(const World &world) override;
             void renderDebug(void);
+            void renderPantheon(void);
             void handleKeys(void);
             void update(const World &world) override;
             void updateMenu();
@@ -169,6 +171,9 @@ namespace Zappy {
             // Sounds and Themes
             raylib::Music _mainTheme;
             bool _isMusicPlaying = true;
+
+            // Pantheon
+            std::unique_ptr<Pantheon> _pantheon;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 

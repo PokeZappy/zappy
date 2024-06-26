@@ -5,15 +5,15 @@
 ## Makefile
 ##
 
-SRC				=	main.cpp							\
-					$(wildcard src/*.cpp)				\
-					$(wildcard src/raylib/*.cpp)		\
-					$(wildcard src/raylib/debug/*.cpp)	\
-					$(wildcard src/raylib/hud/*.cpp)	\
-					$(wildcard src/raylib/menu/*.cpp)	\
-					$(wildcard src/sfml/*.cpp)	\
-					$(wildcard src/world/*.cpp)
-
+SRC	=	main.cpp								\
+		$(wildcard src/*.cpp)                   \
+		$(wildcard src/raylib/*.cpp)			\
+		$(wildcard src/raylib/debug/*.cpp)		\
+		$(wildcard src/raylib/hud/*.cpp)		\
+		$(wildcard src/raylib/menu/*.cpp)		\
+		$(wildcard src/raylib/pantheon/*.cpp)	\
+		$(wildcard src/sfml/*.cpp)				\
+		$(wildcard src/world/*.cpp)
 
 OBJ				=	$(SRC:.cpp=.o)
 DEPS			=	$(SRC:.cpp=.d)
