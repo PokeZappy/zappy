@@ -22,7 +22,7 @@ from ai.src.gameplay.enum_gameplay import RoleInGame, FOCUS
 class ParentAI(Player):
 
     ROLE = [
-            RoleInGame.PROGENITOR,
+            # RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.PROGENITOR,
             RoleInGame.NORTH_GUARD,
@@ -35,20 +35,32 @@ class ParentAI(Player):
             RoleInGame.HANSEL,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
-            RoleInGame.COLLECTOR,
-            RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            # RoleInGame.PUSHER,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
             RoleInGame.HANSEL,
             RoleInGame.COLLECTOR,
             RoleInGame.HANSEL,
-            RoleInGame.PUSHER,
+            # RoleInGame.PUSHER,
             RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
+            RoleInGame.COLLECTOR,
+            RoleInGame.HANSEL,
             # TODO - stop la list ici
             # RoleInGame.HANSEL,
             # RoleInGame.HANSEL,
@@ -127,7 +139,6 @@ class ParentAI(Player):
         self.legione_tertia: bool = False
 
     def get_role(self, serv_info: list[int], cli_socket: socket) -> any:
-        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         role = 0
         if self.first_round[1]:
             role = RoleInGame.FIRST_BORN.value
@@ -164,6 +175,7 @@ class ParentAI(Player):
         if serv_info is None or cli_socket is None:
             cli_socket.close()
             return False
+        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
         pid = fork()
         if pid == 0:
             self.fork(self.get_role(serv_info, cli_socket), cli_socket)
