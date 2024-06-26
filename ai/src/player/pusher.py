@@ -173,8 +173,10 @@ class Spartiate(Pusher):
         self.got_id: int = 3
         self.first: bool = False
         self.start: bool = False
-        self.hard_push: bool = False
+        self.hard_push: bool = True
         self.you_should_not_pass: bool = True
         self.dead_end: bool = True
         self.vice: bool = False
         self.spartiate: bool = True
+        self.message.buf_messages('pugnae consilia')
+        self.queue.append('Broadcast')

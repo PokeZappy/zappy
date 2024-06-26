@@ -43,6 +43,7 @@ class Pnj(Player):
                     self.queue = []
                     if int(msgs[-1]) == 2:
                         self.queue.append('Right')
+                        self.queue.append('Inventory')
                         self.queue.append('Right')
                         self.queue.append('Forward')
                     self.queue.append(('Take', 'food'))

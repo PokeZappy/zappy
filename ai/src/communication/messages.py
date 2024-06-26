@@ -11,7 +11,7 @@ from ai.src.utils.messages import (validate_look_pattern,
                                    validate_number_pattern,
                                    validate_elevation,
                                    validate_eject_pattern,
-                                   validate_uuid_pattern)
+                                   validate_uuid_pattern, correction_overload_server)
 
 
 class Messages(object):
@@ -36,6 +36,8 @@ class Messages(object):
         self.msg_bis: str = 'Broadcast "'
         self.debug: bool = debug
         self.parrot = parrot
+        self.server_fixe: str = ''
+        self.last_item: bool = False
 
     def send_coord(self, message: str, pos: tuple[int, int]) -> str:
         """
@@ -71,7 +73,8 @@ class Messages(object):
 
     def receive(self,
                 message: str,
-                actions: list = None, incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
+                actions: list = None,
+                incantator: bool = False) -> list[tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]]:
         """
         Receive and process a message.
 
@@ -85,17 +88,32 @@ class Messages(object):
             return [('broadcast', 'ko')]
         messages = list(filter(None, message.split('\n')))
         result = []
-        msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
-        msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        tmp_msg = []
+        for msg in messages:
+            if self.last_item is True:
+                msg = self.server_fixe + msg
+                self.last_item = False
+            if correction_overload_server(msg, actions) is False:
+                self.server_fixe += msg
+                self.last_item = True
+            else:
+                tmp_msg.append(msg)
+                self.server_fixe = ''
+
+        msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
+        msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
         if incantator:
-            msg_actions = [msg for msg in messages if 'message' not in msg and 'eject' not in msg]
-            msg_broadcast = [msg for msg in messages if 'message' in msg or 'eject' in msg]
-            for msg in messages:
+            msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg]
+            msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg]
+            for msg in tmp_msg:
                 if 'eject' in msg:
                     print("ERROR Ejected")
 
         if actions:
             actions = actions[::-1]
+        # print(f'msg_action type {type(msg_actions)}\n{msg_actions}')
+        # print(f'msg_broadcast type {type(msg_broadcast)}\n{msg_broadcast}')
+        # print(f'fuuuuuuuuuuuuck {self.server_fixe}, {actions}')
         for index, message in enumerate(msg_actions):
             if validate_number_pattern(message):
                 result.append(('slots', int(message)))
@@ -111,20 +129,22 @@ class Messages(object):
                 try:
                     result.append(('ok', actions[index]))
                 except Exception as e:
+                    pass
                     print(f'ok : Error: {e}')
                     print(f'actions: {actions}')
                     print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    print(f'msgs all: {tmp_msg}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
                 try:
                     result.append(('ko', actions[index]))
                 except Exception as e:
+                    pass
                     print(f'KO : Error: {e}')
                     print(f'actions: {actions}')
                     print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    print(f'msgs all: {tmp_msg}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:
@@ -152,7 +172,7 @@ class Messages(object):
             return ('broadcast', 'ko')
         result: list[dict[str, str | int]] = []
         if self.parrot is True:
-            return 'broadcast', [message[match.end() + 1:-1]]
+            return 'broadcast', [message[match.end() + 1:-1] if match else 'ko']
         if match and len(message) > 4:
             messages = message[match.end() + 1:-1]
             messages = messages.split('|')
@@ -165,7 +185,7 @@ class Messages(object):
                     return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
-                text = self.cipher.decryption([int(i) for i in text])
+                text = self.cipher.decryption([int(i) for i in text], parts[2])
                 text = text.split('#')
                 if text[0] == 'est dominus aquilonis' or text[0] == 'Ego sum dominus tuus':
                     direction = extract_direction(save_msg)
@@ -227,7 +247,7 @@ class Messages(object):
             new_uuid = uuid.uuid4().__str__()[:7]
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
-        encrypted_msg = self.cipher.encryption(message)
+        encrypted_msg = self.cipher.encryption(message, new_uuid)
         if bis is False:
             if self.msg == 'Broadcast "':
                 self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'
