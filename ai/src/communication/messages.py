@@ -111,20 +111,22 @@ class Messages(object):
                 try:
                     result.append(('ok', actions[index]))
                 except Exception as e:
-                    print(f'ok : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    pass
+                    # print(f'ok : Error: {e}')
+                    # print(f'actions: {actions}')
+                    # print(f'msgs actions: {msg_actions}')
+                    # print(f'msgs all: {messages}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
                 try:
                     result.append(('ko', actions[index]))
                 except Exception as e:
-                    print(f'KO : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {messages}')
+                    pass
+                    # print(f'KO : Error: {e}')
+                    # print(f'actions: {actions}')
+                    # print(f'msgs actions: {msg_actions}')
+                    # print(f'msgs all: {messages}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:
