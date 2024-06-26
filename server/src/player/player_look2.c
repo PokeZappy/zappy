@@ -59,13 +59,13 @@ void player_look_loop(server_t *server, player_t *p, int i, char *result)
     vector_t current;
     int nb = 0;
 
-    for (int j = (0 - i); j <= i; j++) {
+    for (int j = i; j >= (0 - i); j--) {
         current = find_tile(server->grid, p, i, j);
         nb = nb_player_on_tile(server, current);
         print_nb_looked_players(result, nb);
         print_lookeditems_on_tile(result,
         server->grid->tiles[current.y][current.x]);
-        if (j == i && i == p->level) {
+        if (j == (0 - i) && i == p->level) {
             sprintf(result, "%s", result);
             break;
         }

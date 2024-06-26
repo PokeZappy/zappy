@@ -76,6 +76,16 @@ client_socket_t **rip(server_t *server, player_t *player)
     return participants;
 }
 
+static void print_incantation(cmd_incantation_t *incant)
+{
+    printf("Incantation: %d\n", incant->level);
+    printf("Organizer: %d\n", incant->organizer->socket);
+    printf("Participants: ");
+    for (int i = 0; incant->participants[i]; i++)
+        printf("\t%d : %d %d", incant->participants[i]->socket, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
+    printf("\n");
+}
+
 void create_current_incantation(server_t *server, player_t *player)
 {
     cmd_incantation_t *cmd_incantation = (cmd_incantation_t *)
@@ -89,5 +99,6 @@ void create_current_incantation(server_t *server, player_t *player)
     cmd_incantation->number_of_participants =
     player_samepos_and_level(server, player);
     send_gui_elevation(server, cmd_incantation, player);
+    print_incantation(cmd_incantation);
     TAILQ_INSERT_TAIL(&server->head_incantation, cmd_incantation, entries);
 }

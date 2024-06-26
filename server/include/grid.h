@@ -16,7 +16,6 @@ typedef struct grid_s {
 } grid_t;
 
 grid_t *init_grid(server_t *server, int width, int height);
-void print_grid(grid_t *grid);
 void free_grid(grid_t *grid);
 double *create_density(int tile_nbr);
 void generate_resource(server_t *server, grid_t *grid);

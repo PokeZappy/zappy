@@ -8,8 +8,8 @@
 #pragma once
 
 typedef enum direction_e {
-    UP,
-    RIGHT,
     DOWN,
+    RIGHT,
+    UP,
     LEFT
 } direction_t;

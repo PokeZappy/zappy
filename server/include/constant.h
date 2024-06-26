@@ -7,14 +7,7 @@
 
 #pragma once
 
-#define MAX_CLIENTS 4096
 #define READ_SIZE 4096
-
-#define MSG_KO "ko\n"
-#define MSG_OK "ok\n"
-#define MSG_DEAD "dead\n"
-#define MSG_EJECT "eject\n"
-#define MSG_ELEVATION "Elevation underway\n"
 
 #define ITEM_PER_TILE 7
 #define DENSITY_FOOD 0.5

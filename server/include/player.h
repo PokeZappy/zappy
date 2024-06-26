@@ -15,7 +15,6 @@
 #include "team.h"
 #include "server.h"
 #include "grid.h"
-#include "list.h"
 
 struct server_s;
 typedef struct server_s server_t;
@@ -48,8 +47,6 @@ player_t *init_player(struct team_s *team, server_t *server);
 void free_player(player_t *player);
 void add_item_to_player(player_t *player, int item, int quantity);
 void remove_item_from_player(player_t *player, int item, int quantity);
-int get_player_level(player_t *player);
-int increment_player_level(player_t *player);
 void player_move(player_t *player, int map_width, int map_height);
 void player_orientation(player_t *player, bool right);
 char *print_player_inventory(player_t *player);
