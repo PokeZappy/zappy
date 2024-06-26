@@ -120,9 +120,9 @@ class Incantator(Player):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_list = self.message.receive(buf)
+            recv_list = self.message.receive(buf, incantator=True)
         else:
-            recv_list = self.message.receive(buf, self.actions)
+            recv_list = self.message.receive(buf, self.actions, incantator=True)
         for recv_type, msgs in recv_list:
             if self.debug_mode:
                 print(f'recv_type: {recv_type} and msgs: {msgs}')

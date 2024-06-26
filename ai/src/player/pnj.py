@@ -31,9 +31,9 @@ class Pnj(Player):
         :return: None
         """
         if len(self.actions) == 0:
-            recv_list = self.message.receive(buf, pnj=True)
+            recv_list = self.message.receive(buf)
         else:
-            recv_list = self.message.receive(buf, self.actions, pnj=True)
+            recv_list = self.message.receive(buf, self.actions)
         for recv_type, msgs in recv_list:
             if recv_type == 'elevation':
                 # print (f"elevation : {msgs}")
