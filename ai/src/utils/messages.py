@@ -138,3 +138,35 @@ def get_id_testudo(ids: list) -> int:
     for single_id in ids:
         id_concat += single_id
     return int(id_concat)
+
+
+def correction_overload_server(s: str, actions) -> bool:
+    if s == 'ok':
+        return True
+    if s == 'ko':
+        return True
+    if s.startswith('['):
+        return counter_of_delim(s)
+    if s.startswith('message'):
+        return counter_of_quotations_marks(s)
+    # print(f'slot valide ? {validate_number_pattern(s)}')
+    # print(f'is in {'Slots' in actions}')
+    if validate_number_pattern(s) and 'Slots' in actions:
+        return True
+    if s.startswith('Elevation') or s.startswith('Current'):
+        return validate_elevation(s)
+    if s.startswith('eject'):
+        return validate_eject_pattern(s)
+    return False
+
+
+def counter_of_quotations_marks(s) -> bool:
+    if s.count('"') == 2:
+        return True
+    return False
+
+
+def counter_of_delim(s) -> bool:
+    if s.count('[') - s.count(']') == 0:
+        return True
+    return False
