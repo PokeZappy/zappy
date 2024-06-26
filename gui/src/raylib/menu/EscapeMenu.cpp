@@ -10,7 +10,7 @@
 
 namespace Zappy {
 
-    EscapeMenu::EscapeMenu(const std::string &assetsRoot) :
+    EscapeMenu::EscapeMenu(const std::string &assetsRoot, Raylib &core) :
             _backgroundHudTexture(assetsRoot + BASEWINDOW_HUD_PATH),
             _inventoryHudTexture(assetsRoot + INVENTORY_HUD_PATH) {
 
@@ -36,12 +36,14 @@ namespace Zappy {
                     raylib.getWindow().Close();
                 }, "Quitter"));
                 _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Show Players", textSize) - _rightMargin, startY, MeasureText("Show players", textSize), textSize), [](Raylib &raylib) {
-                }, "Show players", textSize));
+                    raylib.setShowPlayers(!raylib.getShowPlayers());
+                }, "Show players", textSize, core.getShowPlayers()));
                 _minOptionsWidth = MeasureText("Show players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
                 //  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - 100, 702, MeasureText("Show players", 30), 30), [](Raylib &raylib) {
                 // }, "Music", 30));
                  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize + 10, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
-                }, "Music", textSize));
+                    raylib.setMusicState(!raylib.getMusicState());
+                }, "Music", textSize, !core.getMusicState()));
                 _minOptionsWidth = MeasureText("Music", textSize) > _minOptionsWidth ? MeasureText("Music", textSize) : _minOptionsWidth;
     }
 

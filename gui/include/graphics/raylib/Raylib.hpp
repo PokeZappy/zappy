@@ -74,7 +74,19 @@ namespace Zappy {
             raylib::Window &getWindow() { return (_window); }
             std::shared_ptr<DebugMode> getDebug() { return (debugMode);}
             std::shared_ptr<EscapeMenu> getMenu() { return (_escapeMenu); }
+            void setMusicState(bool state) {
+                if (state) {
+                    _mainTheme.Resume();
+                } else {
+                    _mainTheme.Pause();
+                }
+            }
+            bool getMusicState() { return _mainTheme.IsPlaying(); }
             raylib::Camera &getCamera() { return (_camera); }
+            bool getShowPlayers() { return _showPlayers; }
+
+            // Setters
+            void setShowPlayers(bool state) { _showPlayers = state; }
         private:
             // Utils
             bool containsPlayer(std::shared_ptr<Player> player);

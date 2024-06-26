@@ -20,7 +20,7 @@ namespace Zappy {
 
     class EscapeMenu {
     public:
-        EscapeMenu(const std::string &assetsRoot);
+        EscapeMenu(const std::string &assetsRoot, Raylib &core);
 
         void switchState() { _activated = !_activated; }
         bool activated() { return _activated; }

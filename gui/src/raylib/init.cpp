@@ -58,7 +58,7 @@ namespace Zappy {
 
         debugMode = std::make_shared<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
-        _escapeMenu = std::make_shared<EscapeMenu>(_assetsRoot);
+        _escapeMenu = std::make_shared<EscapeMenu>(_assetsRoot, *this);
         _window.ToggleFullscreen();
 
         // Create lights
