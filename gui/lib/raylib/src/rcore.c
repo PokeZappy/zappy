@@ -703,7 +703,7 @@ void CloseWindow(void)
     //--------------------------------------------------------------
 
     CORE.Window.ready = false;
-    TRACELOG(LOG_INFO, "Window closed successfullyyy");
+    TRACELOG(LOG_INFO, "Window closed successfully");
 }
 
 // Check if window has been initialized successfully
@@ -856,7 +856,7 @@ void EndDrawing(void)
         #ifndef GIF_RECORD_FRAMERATE
         #define GIF_RECORD_FRAMERATE    10
         #endif
-        gifFrameCounter += GetFrameTime()*1000;
+        gifFrameCounter += (unsigned int)(GetFrameTime()*1000);
 
         // NOTE: We record one gif frame depending on the desired gif framerate
         if (gifFrameCounter > 1000/GIF_RECORD_FRAMERATE)

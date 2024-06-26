@@ -196,7 +196,7 @@ RLAPI Matrix GetCameraProjectionMatrix(Camera* camera, float aspect);
 //----------------------------------------------------------------------------------
 // Defines and Macros
 //----------------------------------------------------------------------------------
-#define CAMERA_MOVE_SPEED                               0.001f // was 20
+#define CAMERA_MOVE_SPEED                               0.001f
 #define CAMERA_ROTATION_SPEED                           0.04f
 #define CAMERA_PAN_SPEED                                0.2f
 
@@ -509,7 +509,7 @@ void UpdateCamera(Camera *camera, int mode)
     if ((mode == CAMERA_THIRD_PERSON) || (mode == CAMERA_ORBITAL) || (mode == CAMERA_FREE))
     {
         // Zoom target distance
-        if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) CameraMoveToTarget(camera, -GetMouseWheelMove() * 0.2f);
+        if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) CameraMoveToTarget(camera, -GetMouseWheelMove());
         if (IsKeyPressed(KEY_KP_SUBTRACT)) CameraMoveToTarget(camera, 2.0f);
         if (IsKeyPressed(KEY_KP_ADD)) CameraMoveToTarget(camera, -2.0f);
     }

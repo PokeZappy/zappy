@@ -13,7 +13,7 @@ namespace Zappy {
         camera.SetTarget(raylib::Vector3(0, 1, 7) * _gridSize);
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
-        float ambientLight = 0.8f;
+        float ambientLight = 0.4f;
         float array[4] = { ambientLight, ambientLight, ambientLight, 1.0f };
         SetShaderValue(_shader, ambientLoc, array, SHADER_UNIFORM_VEC4);
         _activated = true;

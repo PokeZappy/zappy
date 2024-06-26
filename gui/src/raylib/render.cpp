@@ -30,8 +30,7 @@ namespace Zappy
             _arena.Draw(raylib::Vector3(
                     getArenaOffset(_mapX, _gridSize),
                     scale * _arenaAltitudeScale,
-                    getArenaOffset(_mapY, _gridSize)),
-                raylib::Vector3(1, 0, 0), -90, raylib::Vector3(scale, scale, scale));
+                    getArenaOffset(_mapY, _gridSize)), scale);
 
             _sun.Draw(_lights[0].position, raylib::Vector3(1, 0, 0), 180,
                 raylib::Vector3(_gridSize * 0.8, true));
