@@ -165,7 +165,7 @@ class Messages(object):
                     return 'broadcast', [{'id': 0, 'msg': 'ko'}]
                 self.uuid_used.append(parts[2])
                 text = parts[3].split('#')
-                text = self.cipher.decryption([int(i) for i in text])
+                text = self.cipher.decryption([int(i) for i in text], parts[2])
                 text = text.split('#')
                 if text[0] == 'est dominus aquilonis' or text[0] == 'Ego sum dominus tuus':
                     direction = extract_direction(save_msg)
@@ -227,7 +227,7 @@ class Messages(object):
             new_uuid = uuid.uuid4().__str__()[:7]
         if new_uuid not in self.uuid_used:
             self.uuid_used.append(new_uuid)
-        encrypted_msg = self.cipher.encryption(message)
+        encrypted_msg = self.cipher.encryption(message, new_uuid)
         if bis is False:
             if self.msg == 'Broadcast "':
                 self.msg += f'ACCMST {self.id} {new_uuid} {encrypted_msg}'

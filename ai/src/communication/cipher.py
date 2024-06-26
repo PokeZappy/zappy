@@ -66,7 +66,7 @@ class Cipher(object):
         ]
         return result_matrix
 
-    def encryption(self, message: str) -> str:
+    def encryption(self, message: str, new_uuid: str) -> str:
         """
         Encrypts the input message using the encryption key matrix.
 
@@ -75,10 +75,12 @@ class Cipher(object):
         """
         matrix_msg: list[[int]] = self.message_matrix(message)
         resulting_matrix: list[int] = self.calc_result_matrix(matrix_msg)
+        calc = int(new_uuid[4:], 16)
+        resulting_matrix = [x + calc for x in resulting_matrix]
         resulting_msg: str = '#'.join(str(x) for x in resulting_matrix)
         return resulting_msg
 
-    def decryption(self, message: list[int]) -> str:
+    def decryption(self, message: list[int], old_uuid: str) -> str:
         """
         Decrypts an encrypted message using the decryption key matrix.
 
@@ -86,6 +88,8 @@ class Cipher(object):
         :return: str - The decrypted message as a string.
         """
         matrix_size: int = len(self.key)
+        calc = int(old_uuid[4:], 16)
+        message = [x - calc for x in message]
         reversed_message_matrix = np.array(message).reshape(-1, matrix_size)
         decrypted_matrix = np.dot(reversed_message_matrix, self.key_inv)
         decrypted_matrix = np.round(decrypted_matrix).astype(int)
