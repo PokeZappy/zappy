@@ -62,12 +62,14 @@ namespace Zappy
             //     if (_lights[i].enabled) DrawSphereEx(_lights[i].position, 100, 20, 20, _lights[i].color);
             //     else DrawSphereWires(_lights[i].position, 20, 8, 8, ColorAlpha(_lights[i].color, 0.3f));
             // }
-
+            _discardTranspShader.BeginMode();
             for (auto &player : _players) {
                 player->drawGifs(_camera);
-                // if (_broadcastGif.update(&player->broadcastFrame));
-                //     _broadcastGif.draw(_camera, player->getPixelPos() + raylib::Vector3(0, _gridSize * 2, 0));
             }
+            if (_hudMode->getTargetedPlayer() != nullptr) {
+                _hudMode->getTargetedPlayer()->drawFollowGif(_camera);
+            }
+            _discardTranspShader.EndMode();
 
             _camera.EndMode();
 

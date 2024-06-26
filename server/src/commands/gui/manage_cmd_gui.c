@@ -24,6 +24,9 @@ static const command_t commands_gui[] = {
     {"EGG_LIST", print_egg_list, 0},
     {"HACK_GIVE", hack_player_give, 0},
     {"HACK_HEALTH", hack_player_health, 0},
+    {"HACK_TILE", hack_tile, 0},
+    {"HACK_WHOLE_TILE", hack_whole_tile, 0},
+    {"HACK_LEVEL", hack_level, 0},
     {"KILL", kill_player, 0},
     {NULL, NULL, 0}
 };

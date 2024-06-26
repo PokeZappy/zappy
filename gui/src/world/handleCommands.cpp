@@ -57,7 +57,6 @@ namespace Zappy
             player->setPos(x, y);
             player->setOrientation(orientation);
 
-
             // todo : Uncomment to have player movements in the shell
             // addShellCommand("T" + std::to_string(id) + " moved to {x: " +
             //     std::to_string(x) + ", y: " + std::to_string(y) + ", o: " +
@@ -79,7 +78,13 @@ namespace Zappy
         }
         else if (commandName == "pex") { // expulsion
             ss >> id;
-            addShellCommand("T" + std::to_string(id) + " was expelled", getPlayer(id));
+            std::shared_ptr<Player> player = getPlayer(id);
+            player->setPush(true);
+            for (auto player : getPlayers(player->getX(), player->getY())) {
+                if (player->getIncantationState() == Incantation::INCANTING)
+                    player->setIncanting(Incantation::FAILURE);
+            }
+            addShellCommand("T" + std::to_string(id) + " pushes everyone on his tile", getPlayer(id));
         }
         else if (commandName == "pbc") { // broadcast
             std::string message;
@@ -115,7 +120,8 @@ namespace Zappy
                     addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                         std::to_string(y) + "} succeeded", getPlayer(id));
                         for (auto player : getPlayers(x, y)) {
-                            player->setIncanting(Incantation::SUCCESS);
+                            if (player->getIncantationState() == Incantation::INCANTING)
+                                player->setIncanting(Incantation::SUCCESS);
                         }
                 } else {
                     throw std::out_of_range("The number is out of range for size_t.");
@@ -124,7 +130,8 @@ namespace Zappy
                 addShellCommand("Incantation at {x: " + std::to_string(x) + ", y: " +
                     std::to_string(y) + "} failed", getPlayer(id));
                 for (auto player : getPlayers(x, y)) {
-                    player->setIncanting(Incantation::FAILURE);
+                    if (player->getIncantationState() == Incantation::INCANTING)
+                        player->setIncanting(Incantation::FAILURE);
                 }
             }
         }

@@ -44,17 +44,20 @@ namespace Zappy {
         void setIncanting(Incantation incantationState) { _incantingState = incantationState; }
         void setInventory(const Inventory &inventory) { _inventory = inventory; }
         void setBroadcast(const std::string &broadcast) { _broadcast = broadcast; }
+        void setPush(bool push) { _push = push; }
 
         Orientation getOrientation() const { return _orientation; }
         size_t getLevel() const { return _level; }
         Incantation getIncantationState() const { return _incantingState; }
         Inventory &getInventory() { return _inventory; }
         const std::string &getBroadcast() const { return _broadcast; }
+        bool isPushing() const { return _push; }
     private:
         Orientation _orientation;
         size_t _level;
         Incantation _incantingState;
         Inventory _inventory;
         std::string _broadcast;
+        bool _push = false;
     };
 } // namespace Zappy
