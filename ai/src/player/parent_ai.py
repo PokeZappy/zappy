@@ -3,6 +3,7 @@ from random import randint
 
 from collections import Counter
 
+from ai.src.gameplay.evolution import EVOLUTION_RESOURCES
 from ai.src.player.parrot import Parrot
 from ai.src.player.progenitor import Progenitor
 from ai.src.player.collector import Collector
@@ -127,42 +128,8 @@ class ParentAI(Player):
                     # RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
+                    RoleInGame.INCANTATOR,
                     RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.COLLECTOR,
-                    RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    RoleInGame.INCANTATOR,RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.COLLECTOR,
                     RoleInGame.HANSEL,
@@ -170,18 +137,51 @@ class ParentAI(Player):
                     RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     RoleInGame.INCANTATOR,
-                    RoleInGame.PNJ,
-                    RoleInGame.PNJ,
-                    RoleInGame.PNJ,
-                    RoleInGame.PNJ,
-                    RoleInGame.PNJ,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.INCANTATOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.INCANTATOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.INCANTATOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.INCANTATOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
+                    RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    # RoleInGame.COLLECTOR,
+                    RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
                     ]
     
     DEFENDER_ROLE = [
                     RoleInGame.SPARTIATE,
                     RoleInGame.HANSEL,
-                    RoleInGame.HANSEL,
-                    # RoleInGame.SPARTIATE,
+                    RoleInGame.SPARTIATE,
                     RoleInGame.HANSEL,
                     ]
 
@@ -236,6 +236,7 @@ class ParentAI(Player):
         self.legione_prima: bool = False
         self.legione_secunda: bool = False
         self.legione_tertia: bool = False
+        self.level_resources: int = 0
 
     def get_role(self, serv_info: list[int], cli_socket: socket) -> any:
         role = 0
@@ -244,10 +245,10 @@ class ParentAI(Player):
         elif len(self.give_role) > 0:
             role = self.give_role[0].value
         elif self.second_phase:
-            role = self.DEFENDER_ROLE[self.index].value
+            role = self.DEFENDER_ROLE[self.index % len(self.DEFENDER_ROLE)].value
         else:
-            role = self.DEFAULT_ROLE[self.index].value
-
+            role = self.DEFAULT_ROLE[self.index % len(self.DEFAULT_ROLE)].value
+        # print(f"rôle created: {role}")
         match role:
             case 0: return Progenitor(serv_info, cli_socket, self.debug_mode)
             case 1: return Incantator(serv_info, cli_socket, self.debug_mode)
@@ -274,7 +275,7 @@ class ParentAI(Player):
         if serv_info is None or cli_socket is None:
             cli_socket.close()
             return False
-        self.index = (self.index + 1) % len(self.DEFAULT_ROLE)
+        self.index = (self.index + 1)
         pid = fork()
         if pid == 0:
             self.fork(self.get_role(serv_info, cli_socket), cli_socket)
@@ -283,8 +284,6 @@ class ParentAI(Player):
             print('error')
         if len(self.give_role) > 0 and self.give_role[0] == RoleInGame.NORTH_GUARD:
             self.exist_north = True
-        if len(self.give_role) == 0 and self.pusher_count <= 24 and self.second_phase is False:
-            self.satus_testudo()
         if len(self.give_role) != 0 and self.give_role[0] == RoleInGame.VICE_PUSHER:
             my_id_0 = None
             my_id_1 = None
@@ -398,6 +397,8 @@ class ParentAI(Player):
             self.queue.insert(0, 'Broadcast')
         if message['msg'] == 'felix carmen':
             self.level_incant += 1
+            self.level_resources += 1
+            self.update_needed()
         if message['msg'] == 'situm intrare':
             self.enter_depot()
         if message['msg'] == 'sum extra domum':
@@ -413,6 +414,8 @@ class ParentAI(Player):
         elif message['msg'] == 'Dimissus a legione tertia':
             self.legione_tertia = True
             self.give_role.insert(0, RoleInGame.VICE_PUSHER)
+        if message['msg'] == 'pugnae consilia' and self.pusher_count < 24:
+            self.satus_testudo()
 
     def enter_depot(self) -> None:
         """
@@ -507,6 +510,7 @@ class ParentAI(Player):
             self.queue.append('Inventory')
         elif not self.communicate_orders():
             self.queue.append('Inventory')
+            self.queue.append('Look')
         self.queue.append('Slots')
 
     def make_action(self) -> None:
@@ -561,3 +565,8 @@ class ParentAI(Player):
         self.message.buf_messages('satus testudo : ', my_id=self.pusher_count)
         self.queue.append('Broadcast')
         self.pusher_count += 1
+
+    def update_needed(self) -> None:
+        result = {key: self.need_ressources[key] - EVOLUTION_RESOURCES[self.level_resources - 1].get(key, 0)
+                  for key in self.need_ressources.keys()}
+        self.need_ressources = result

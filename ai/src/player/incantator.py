@@ -165,7 +165,7 @@ class Incantator(Player):
                     self.actions.pop(0)
                     continue
                 # try:
-                if int(msgs[-1]) > 1:
+                if msgs[-1] != 'y' and int(msgs[-1]) > 1:
                     self.level += 1
                     if self.level == 2:
                         # print('I am level 2, here, get out')
