@@ -146,6 +146,7 @@ static void wait_for_client(struct server_s *server)
         fprintf(stderr, "accept failed: %s\n", strerror(errno));
         return;
     }
+    printf("New client connected\n");
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
     new_client->is_gui = 0;
