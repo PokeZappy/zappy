@@ -56,5 +56,4 @@ void cmd_connect_nbr(server_t *server, char *args, client_socket_t *client)
         return;
     dprintf(client->socket, "%d\n",
     player->team->max_clients - player->team->current_clients);
-    printf("connect_nbr: %d\n", player->team->max_clients - player->team->current_clients);
 }

@@ -13,6 +13,7 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
     command_t *cmd = (command_t *)malloc(sizeof(command_t));
     player_t *player = client->player;
 
+    printf("\n\nPRE Incantation\n\n");
     cmd->name = "Incantation";
     cmd->ptr = cmd_post_incant;
     cmd->time = 300;
@@ -41,7 +42,7 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
     player_t *player = client->player;
     cmd_incantation_t *current = find_incantation(server, client);
 
-    printf("Incantation\n");
+    printf("\n\nPOST Incantation\n\n");
     if (!check_post_incantation(server, client)) {
         printf("Incantation failed\n"),
         dprintf(client->socket, "ko\n");
@@ -57,7 +58,7 @@ void cmd_post_incant(server_t *server, char *args, client_socket_t *client)
         dprintf(current->participants[i]->socket, "Current level: %d\n",
             current->participants[i]->player->level);
         dprintf(get_gui(server)->socket, "plv %d %d\n",
-            current->participants[i]->socket,
+            current->participants[i]->id,
             current->participants[i]->player->level);
     }
     is_win(server, client, current);

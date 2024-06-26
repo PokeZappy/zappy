@@ -25,6 +25,11 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+typedef struct s_handler {
+    server_t *server;
+    void (*handler)(int, server_t *);
+} t_handler;
+
 typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
     int socket; // socket of the server

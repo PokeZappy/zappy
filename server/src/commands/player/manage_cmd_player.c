@@ -28,7 +28,6 @@ void manage_cmd_play(char *command, client_socket_t *client, server_t *server)
 {
     command_t *cmd = (command_t *)malloc(sizeof(command_t));
     timeval_t wait;
-    printf("Command: %s\n", command);
 
     for (int i = 0; commands[i].name != NULL; i++) {
         if (strncmp(command, commands[i].name,

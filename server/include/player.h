@@ -61,7 +61,7 @@ int nb_player_on_tile(server_t *server, vector_t tile_pos);
 bool check_incantation(server_t *server, player_t *player);
 bool check_post_incantation(server_t *server, client_socket_t *client);
 void create_current_incantation(server_t *server, player_t *player);
-bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl);
+bool is_participant(cmd_incantation_t *cu, client_socket_t *cl);
 void free_incantation(server_t *server, cmd_incantation_t *current);
 void check_death(server_t *server);
 cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c);

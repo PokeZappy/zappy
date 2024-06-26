@@ -100,14 +100,31 @@ static int simulate_server(server_t *server)
     return handle_client(server, max_sd, readfds);
 }
 
-void block_incoming_signal(server_t *server)
+void close_server(int sig, server_t *server)
 {
-    signal(SIGPIPE, SIG_IGN);
+    (void)sig;
+    printf("Ctrl+C detected. Exiting...\n");
+    close_all_clients(server);
+    close(server->socket);
+    exit(0);
+}
+
+void block_incoming_signal(t_handler *handler)
+{
+    struct sigaction sa;
+
+    sa.sa_handler = (void (*)(int))handler->handler;
+    sa.sa_flags = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGPIPE, &sa, NULL);
 }
 
 int zappy_server(server_arg_t *arguments)
 {
     server_t *server = (server_t *)malloc(sizeof(server_t));
+    t_handler handler = {server, close_server};
 
     if (server == NULL) {
         fprintf(stderr, "zappy_server: Memory allocation of server failed.\n");
@@ -117,7 +134,7 @@ int zappy_server(server_arg_t *arguments)
         connect_server(server, arguments) == 84) {
         return 84;
     }
-    block_incoming_signal(server);
+    block_incoming_signal(&handler);
     while (simulate_server(server));
     close_all_clients(server);
     close(server->socket);

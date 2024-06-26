@@ -40,7 +40,7 @@ bool icii(server_t *server, client_socket_t *c)
     while (cmd_incantation) {
         if (cmd_incantation->organizer == c)
             return true;
-        if (player_is_participant(cmd_incantation, c))
+        if (is_participant(cmd_incantation, c))
             return true;
         cmd_incantation = TAILQ_NEXT(cmd_incantation, entries);
     }

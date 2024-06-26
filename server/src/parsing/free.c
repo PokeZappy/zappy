@@ -82,11 +82,12 @@ void free_server(server_t *server)
 {
     if (!server)
         return;
-    free_server_arg(server->arguments);
+    free_server_commands(server);
     free_server_client(server);
     free_server_team(server);
-    free_server_commands(server);
+    free_server_arg(server->arguments);
     free_incantations(server);
     free_grid(server->grid);
+    close(server->socket);
     free(server);
 }

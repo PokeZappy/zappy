@@ -80,9 +80,10 @@ static void print_incantation(cmd_incantation_t *incant)
 {
     printf("Incantation: %d\n", incant->level);
     printf("Organizer: %d\n", incant->organizer->socket);
-    printf("Participants: ");
+    printf("Position: %d %d\n", incant->tile_vector.x, incant->tile_vector.y);
+    printf("Participants: \n");
     for (int i = 0; incant->participants[i]; i++)
-        printf("\t%d : %d %d", incant->participants[i]->socket, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
+        printf("  %d : %d %d\n", incant->participants[i]->socket, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
     printf("\n");
 }
 
