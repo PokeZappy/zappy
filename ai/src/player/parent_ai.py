@@ -179,7 +179,9 @@ class ParentAI(Player):
     DEFENDER_ROLE = [
                     RoleInGame.SPARTIATE,
                     RoleInGame.HANSEL,
+                    RoleInGame.HANSEL,
                     RoleInGame.SPARTIATE,
+                    RoleInGame.HANSEL,
                     RoleInGame.HANSEL,
                     ]
 
