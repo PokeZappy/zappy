@@ -128,7 +128,7 @@ namespace Zappy
         }
     }
 
-    void PlayerRaylib::draw(bool isHudMode)
+    void PlayerRaylib::draw(bool tintWithTeamColor)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
@@ -148,7 +148,7 @@ namespace Zappy
             raylib::Vector3(_verticalRotation, 1, 0),
             _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
             raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f),
-            isHudMode ? color : raylib::Color::White());
+            tintWithTeamColor ? color : raylib::Color::White());
     }
 
     void PlayerRaylib::drawGifs(const Camera &camera)

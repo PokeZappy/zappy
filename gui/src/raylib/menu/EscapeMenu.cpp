@@ -30,7 +30,7 @@ namespace Zappy {
                 }, "Debug"));
                 _buttons.push_back(std::make_unique<TextureButton>(raylib::Rectangle(730, 512, 405, 115), assetsRoot + ATTACK_HUD_PATH, [](Raylib &raylib) {
                     (void)raylib;
-                    
+
                 }, "Options"));
                 _buttons.push_back(std::make_unique<TextureButton>(raylib::Rectangle(730, 662, 405, 115), assetsRoot + ATTACK_HUD_PATH, [](Raylib &raylib) {
                     raylib.getWindow().Close();
@@ -39,9 +39,13 @@ namespace Zappy {
                     raylib.setShowPlayers(!raylib.getShowPlayers());
                 }, "Show players", textSize, core.getShowPlayers()));
                 _minOptionsWidth = MeasureText("Show players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
+                _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Tint Players", textSize) - _rightMargin, startY + textSize + 15, MeasureText("Show players", textSize), textSize), [](Raylib &raylib) {
+                    raylib.setTintPlayers(!raylib.getTintPlayers());
+                }, "Tint players", textSize, core.getTintPlayers()));
+                _minOptionsWidth = MeasureText("Tint players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
                 //  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - 100, 702, MeasureText("Show players", 30), 30), [](Raylib &raylib) {
                 // }, "Music", 30));
-                 _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize + 10, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
+                 _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize * 2 + 30, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
                     raylib.setMusicState(!raylib.getMusicState());
                 }, "Music", textSize, core.getMusicState()));
                 _minOptionsWidth = MeasureText("Music", textSize) > _minOptionsWidth ? MeasureText("Music", textSize) : _minOptionsWidth;

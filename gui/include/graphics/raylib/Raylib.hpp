@@ -89,9 +89,11 @@ namespace Zappy {
             bool getMusicState() { return  _isMusicPlaying; }
             raylib::Camera &getCamera() { return (_camera); }
             bool getShowPlayers() { return _showPlayers; }
+            bool getTintPlayers() { return _tintPlayers; }
 
             // Setters
             void setShowPlayers(bool state) { _showPlayers = state; }
+            void setTintPlayers(bool state) { _tintPlayers = state; }
         private:
             // Utils
             bool containsPlayer(std::shared_ptr<Player> player);
@@ -113,6 +115,7 @@ namespace Zappy {
             raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
             bool _showPlayers = true;
+            bool _tintPlayers = false;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;

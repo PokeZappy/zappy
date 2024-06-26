@@ -50,7 +50,7 @@ namespace Zappy
             }
             if (_showPlayers) {
                 for (auto &player : _players) {
-                    player->draw(_hudMode->activated());
+                    player->draw(_tintPlayers);
                 }
             }
 
@@ -96,10 +96,6 @@ namespace Zappy
             _discardTranspShader.EndMode();
 
             _camera.EndMode();
-
-            raylib::Color::Black().DrawText(raylib::Vector3(_camera.position), 20, 40, 25);
-            raylib::Color::Black().DrawText(raylib::Vector3(_camera.target), 20, 70, 25);
-            raylib::Color::Black().DrawText(std::to_string(_mapX) + " " + std::to_string(_mapY), 20, 100, 40);
 
             if (_menuState == Menu::MENU) {
                 drawMenu();
