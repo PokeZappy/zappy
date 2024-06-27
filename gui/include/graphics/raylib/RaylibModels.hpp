@@ -40,7 +40,7 @@ namespace Zappy {
 
             // we try to assign an animation for the pantheon even if it is not referenced
             if (indexPantheon == -1) {
-                std::vector<int> allIndexes = {indexIdle, indexWalk, indexSleep, indexCry };
+                std::vector<int> allIndexes = {indexCry, indexWalk, indexIdle, indexSleep};
                 for (size_t i = 0; i < allIndexes.size(); i++) {
                     if (allIndexes[i] != -1) {
                         indexPantheon = allIndexes[i];
