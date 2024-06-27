@@ -90,7 +90,5 @@ namespace Zappy {
         // if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
         // if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
         // if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
-
-        if (IsKeyPressed(KEY_H)) _showPlayers = !_showPlayers;
     }
 }
