@@ -27,9 +27,6 @@ void ClientSocket::connectSocket(int port, std::string &ip) {
         throw ServerConnectionException();
     _receiveBuffer.clear();
     sendData("GRAPHIC\n");
-    // if(fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFL) | O_NONBLOCK) < 0) {
-    //     // handle error
-    // }
 }
 
 void ClientSocket::receive(int flags)

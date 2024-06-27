@@ -43,8 +43,6 @@ namespace Zappy {
                     raylib.setTintPlayers(!raylib.getTintPlayers());
                 }, "Tint players", textSize, core.getTintPlayers()));
                 _minOptionsWidth = MeasureText("Tint players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
-                //  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - 100, 702, MeasureText("Show players", 30), 30), [](Raylib &raylib) {
-                // }, "Music", 30));
                  _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize * 2 + 30, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
                     raylib.setMusicState(!raylib.getMusicState());
                 }, "Music", textSize, core.getMusicState()));

@@ -18,20 +18,6 @@ namespace Zappy
 
     const std::vector<ShellCommand> &World::getShellCommands(void) const
     {
-        // I would like to scroll to see the previouses commands but it segfaults
-        // std::vector<ShellCommand> commands;
-        // size_t index = 0;
-        // commands.push_back(ShellCommand("test", nullptr));
-        // for (auto &command : _shellCommands) {
-        //     // for (size_t i = 0; i < _shellOffset; i++) {
-        //     //     continue;
-        //     // }
-        //     commands.push_back(command);
-        //     // if (index >= 30)
-        //     //     break;
-        //     index++;
-        // }
-        // return commands;
         return _shellCommands;
     }
 

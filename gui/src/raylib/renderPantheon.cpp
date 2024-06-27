@@ -18,6 +18,7 @@ namespace Zappy {
             _camera.BeginMode();
             _camera.BeginMode();
 
+            _pantheon->renderArena();
             _pantheon->drawPokemons();
             if (_pantheon->getState() == PantheonState::ENDING)
                 _pantheon->renderSteve();

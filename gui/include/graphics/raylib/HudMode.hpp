@@ -69,6 +69,7 @@ namespace Zappy {
         void drawInventory(Inventory inventory, int topX, int topY, std::string title);
         void drawPlayers();
         void drawAttacks();
+        bool execBuiltInCommand(std::string command, std::vector<std::shared_ptr<PlayerRaylib>> &players);
         void drawShell(const std::vector<ShellCommand> &commands);
         void verifyPlayerPosition();
         void drawPokemons();
@@ -81,8 +82,8 @@ namespace Zappy {
         void drawEntityCount(size_t graphicPlayerCount, size_t graphicEggCount, size_t worldPlayerCount, size_t worldEggCount, int x, int y);
         void setFirstPokemonTarget();
         CameraMode followTarget(raylib::Camera &camera);
-        void update(ClientSocket &socket);
-        void updateChat(ClientSocket &socket);
+        void update(ClientSocket &socket, std::vector<std::shared_ptr<PlayerRaylib>> &players);
+        void updateChat(ClientSocket &socket, std::vector<std::shared_ptr<PlayerRaylib>> &players);
         void applySelectedPlayerToTarget();
         bool isChatEnabled() { return _chat; }
 

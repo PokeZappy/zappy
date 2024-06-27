@@ -28,12 +28,18 @@ namespace Zappy {
         _frame++;
         _steve.Draw(_stevePos,
         raylib::Vector3(0, 1, 0), 90,
-        raylib::Vector3(_gridSize, true));
+        raylib::Vector3(_gridSize / 4, true));
+    }
+
+    void Pantheon::renderArena() {
+        _arena.Draw(_arenaPos,
+        raylib::Vector3(0, 1, 0), 90,
+        raylib::Vector3(_gridSize * 6, true));
     }
 
     void Pantheon::drawPokemons() {
         for (size_t i = 0; i < _players.size(); i++) {
-            _players[i]->drawPantheon(raylib::Vector3(_gridSize * 3, 0, i * _gridSize));
+            _players[i]->drawPantheon(raylib::Vector3(-_gridSize * 2, -_gridSize * 1.8, -_gridSize * 5 + i * _pokemonSpacing));
         }
     }
 
@@ -48,8 +54,8 @@ namespace Zappy {
                 return;
             }
 
-            raylib::Vector3 _nextPosition = raylib::Vector3(_currentShowPosition.x, _currentShowPosition.y, _currentShowPosition.z + 0.2);
-            raylib::Vector3 _nextTarget = raylib::Vector3(_currentShowTarget.x, _currentShowTarget.y, _currentShowTarget.z + 0.2);
+            raylib::Vector3 _nextPosition = raylib::Vector3(_currentShowPosition.x, _currentShowPosition.y, _currentShowPosition.z + _pokemonSpacing);
+            raylib::Vector3 _nextTarget = raylib::Vector3(_currentShowTarget.x, _currentShowTarget.y, _currentShowTarget.z + _pokemonSpacing);
 
             float moveFactor = (elapsed_seconds.count() - _showPokemonDuration) / _transitionPokemonDuration;
 
@@ -93,7 +99,7 @@ namespace Zappy {
 
     void Pantheon::renderTeam() {
         raylib::Rectangle srcType = UtilsRaylib::getTypeRectangle(_team);
-        std::string text = "Félicitations à l'équipe";
+        std::string text = "Félicitations à l'équipe ";
         raylib::Vector2 textPos = _endTextPos;
 
         if (_state == PantheonState::START) {

@@ -12,7 +12,6 @@ namespace Zappy {
     CameraMode HudMode::followTarget(raylib::Camera &camera) {
         if (_targetedPlayer != nullptr) {
             camera.target = _targetedPlayer->getPosition() * _gridSize;
-            _targetedPlayer->glow();
             return CAMERA_THIRD_PERSON;
         }
         return CAMERA_FIRST_PERSON;

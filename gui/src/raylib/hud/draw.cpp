@@ -116,7 +116,7 @@ namespace Zappy {
     }
 
     void HudMode::drawAttacks() {
-        _white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        _white.DrawText("Level Up (1)", 1288, GUI_HEIGHT - 156, 40);
         if (_targetedPlayer == _selectedPlayer)
             _white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
         else
@@ -150,31 +150,24 @@ namespace Zappy {
         int xRightText = xRightBalls + 35;
 
         _pokeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 71, 30, 30));
-        // _pokeBallTexture.Draw(x + 45, GUI_HEIGHT - 129);
         _white.DrawText(std::to_string(inventory.getItem(1)), topX + xLeftText, topY + 76, 20);
 
         _superBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 102, 30, 30));
-        // _superBallTexture.Draw(x + 45, GUI_HEIGHT - 98);
         _white.DrawText(std::to_string(inventory.getItem(2)), topX + xLeftText, topY + 107, 20);
 
         _hyperBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 133, 30, 30));
-        // _hyperBallTexture.Draw(x + 45, GUI_HEIGHT - 67);
         _white.DrawText(std::to_string(inventory.getItem(3)), topX + xLeftText, topY + 138, 20);
 
         _foodTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 40, 30, 30));
-        // _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
         _white.DrawText(std::to_string(inventory.getItem(0)), topX + xRightText, topY + 45, 20);
 
         _honorBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 71, 30, 30));
-        // _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
         _white.DrawText(std::to_string(inventory.getItem(4)), topX + xRightText, topY + 76, 20);
 
         _luxeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 102, 30, 30));
-        // _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
         _white.DrawText(std::to_string(inventory.getItem(5)), topX + xRightText, topY + 107, 20);
 
         _masterBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 133, 30, 30));
-        // _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
         _white.DrawText(std::to_string(inventory.getItem(6)), topX + xRightText, topY + 138, 20);
     }
 

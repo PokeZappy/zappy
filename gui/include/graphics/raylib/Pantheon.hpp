@@ -47,6 +47,7 @@ namespace Zappy {
             void renderShowPokemons();
             void renderEnding();
             void renderSteve();
+            void renderArena();
             void drawPokemons();
             void drawBravoo();
             void getPantheonPlayers(std::vector<std::shared_ptr<PlayerRaylib>> players);
@@ -59,8 +60,6 @@ namespace Zappy {
             std::string _team;
             raylib::Color _teamColor;
 
-            // Music
-            raylib::Music _theme;
 
             // Assets root
             std::string _assetsRoot;
@@ -95,7 +94,7 @@ namespace Zappy {
             raylib::Vector3 _currentShowPosition;
             raylib::Vector3 _currentShowTarget;
 
-            float pokemonSpacing;
+            float _pokemonSpacing = _gridSize * 4;
 
             // Duration of the pokemons animations
             float _showPokemonDuration = 4.0f;
@@ -112,5 +111,9 @@ namespace Zappy {
             std::vector<raylib::ModelAnimation> _steveAnims;
             raylib::Vector3 _stevePos;
             int _frame = 0;
+
+            // Arena
+            raylib::Model _arena;
+            raylib::Vector3 _arenaPos;
     };
 }
