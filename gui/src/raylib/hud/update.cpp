@@ -9,15 +9,15 @@
 
 namespace Zappy {
 
-    void HudMode::updateChat(ClientSocket &socket) {
+    void HudMode::updateChat(ClientSocket &socket, std::vector<std::shared_ptr<PlayerRaylib>> &players) {
         int input = GetCharPressed();
         if (input != 0)
             _inputString += input;
         if (IsKeyPressed(KEY_ENTER)) {
-            // if (_inputString == "/help" || _inputString == "HELP")
-            //     return;
             _inputString += '\n';
-            socket.sendData(_inputString);
+            // aucune commande built in trouvée en cas de return false
+            if (!execBuiltInCommand(_inputString, players))
+                socket.sendData(_inputString);
             _chat = false;
             _inputString = "";
         } else if (IsKeyPressed(KEY_ESCAPE)) {
@@ -29,9 +29,9 @@ namespace Zappy {
         }
     }
 
-    void HudMode::update(ClientSocket &socket) {
+    void HudMode::update(ClientSocket &socket, std::vector<std::shared_ptr<PlayerRaylib>> &players) {
         if (_chat) {
-            updateChat(socket);
+            updateChat(socket, players);
             return;
         }
         if (IsKeyPressed(KEY_T))
@@ -41,6 +41,7 @@ namespace Zappy {
             return;
         }
         if (IsKeyPressed(KEY_ONE)) {
+            socket.sendData("HACK_LEVEL " + std::to_string(_selectedPlayer->worldPlayer->getId()) + " " + std::to_string(_selectedPlayer->worldPlayer->getLevel() + 1) + "\n");
             // ?,  surement level up
         }
         if (IsKeyPressed(KEY_TWO)) {
@@ -52,11 +53,11 @@ namespace Zappy {
         }
         if (IsKeyPressed(KEY_THREE)) {
             // heal
-            socket.sendData("HACK_HEALTH " + std::to_string(_selectedPlayer->worldPlayer->getId()) + " 1260");
+            socket.sendData("HACK_HEALTH " + std::to_string(_selectedPlayer->worldPlayer->getId()) + " 1260\n");
         }
         if (IsKeyPressed(KEY_FOUR)) {
             // kill
-            socket.sendData("KILL " + std::to_string(_selectedPlayer->worldPlayer->getId()));
+            socket.sendData("KILL " + std::to_string(_selectedPlayer->worldPlayer->getId()) + "\n");
         }
     }
 }

@@ -116,7 +116,7 @@ namespace Zappy {
     }
 
     void HudMode::drawAttacks() {
-        _white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        _white.DrawText("Level Up (1)", 1288, GUI_HEIGHT - 156, 40);
         if (_targetedPlayer == _selectedPlayer)
             _white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
         else
