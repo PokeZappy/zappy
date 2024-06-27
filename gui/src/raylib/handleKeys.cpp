@@ -11,37 +11,31 @@ namespace Zappy {
     void Raylib::handleKeys(void)
     {
         float moveYSpeed = _gridSize / 15.;
-        if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += moveYSpeed;
-            _camera.target.y += moveYSpeed;
-        }
-        if (IsKeyDown(KEY_LEFT_SHIFT)) {
-            _camera.position.y -= moveYSpeed;
-            _camera.target.y -= moveYSpeed;
-        }
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
             if (IsKeyPressed(KEY_ESCAPE)) {
                 if (_pantheon->activated())
                     _pantheon->desactivate();
+                if (!debugMode->activated())
                 _escapeMenu->switchState();
             }
         }
         if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())
             return;
         // Pantheon key
-        if (IsKeyPressed(KEY_P)) {
-            _pantheon->activate("grass", getTeamColor("grass"), _players);
-        }
+        // if (!debugMode->activated() && IsKeyPressed(KEY_P)) {
+        //     _pantheon->activate("grass", getTeamColor("grass"), _players);
+        // }
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
-            // if (IsKeyDown(KEY_SPACE)) {
-            //     _camera.position.y += moveYSpeed;
-            //     _camera.target.y += moveYSpeed;
-            // }
-            // if (IsKeyDown(KEY_LEFT_SHIFT)) {
-            //     _camera.position.y -= moveYSpeed;
-            //     _camera.target.y -= moveYSpeed;
-            // }
+            
+            if (IsKeyDown(KEY_SPACE)) {
+                _camera.position.y += moveYSpeed;
+                _camera.target.y += moveYSpeed;
+            }
+            if (IsKeyDown(KEY_LEFT_SHIFT)) {
+                _camera.position.y -= moveYSpeed;
+                _camera.target.y -= moveYSpeed;
+            }
 
             if (IsKeyPressed(KEY_N)) {
                 _hudMode->switchState();
@@ -50,6 +44,8 @@ namespace Zappy {
 
             if (IsKeyPressed(KEY_G)) {
                 if (debugMode->activated()) {
+                    _defaultCameraPosition = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, (_gridSize * _mapY) / 2);
+                    _defaultCameraTarget = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, _gridSize * (_mapY));
                     debugMode->desactive(_camera, _defaultCameraPosition,
                         _defaultCameraTarget, _defaultAmbientLight);
                 } else {

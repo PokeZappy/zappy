@@ -71,8 +71,7 @@ namespace Zappy {
 
         // -- Camera --
         //* Front of the scene
-        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 20) * _gridSize;
-        _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
+        
         //* Menu
         _startPos = getStartPos();
         _startTarget = getStartTarget();
