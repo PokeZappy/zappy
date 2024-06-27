@@ -60,8 +60,6 @@ namespace Zappy {
             std::string _team;
             raylib::Color _teamColor;
 
-            // Music
-            raylib::Music _theme;
 
             // Assets root
             std::string _assetsRoot;

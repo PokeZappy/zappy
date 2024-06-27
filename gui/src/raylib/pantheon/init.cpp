@@ -14,9 +14,6 @@ namespace Zappy {
     _steve(raylib::Model(_assetsRoot + "models/steve.glb")),
     _steveAnims(raylib::ModelAnimation::Load(_assetsRoot + "models/steve.glb")),
     _arena(raylib::Model(_assetsRoot + "models/pantheon_pedestal.glb")) {
-        _theme = raylib::Music(assetsRoot + "menu/SouthProvince.ogg");
-        _theme.SetLooping(true);
-        _theme.SetVolume(0.08);
 
          // Start positions of the camera
         _startPos = raylib::Vector3(-gridSize * 30, _gridSize * 5, -_gridSize * 32);

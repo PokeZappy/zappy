@@ -72,6 +72,7 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
+        _pantheonTheme.Update();
         if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded()) {
             _menuIntroGif->update();
         }

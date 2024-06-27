@@ -71,7 +71,7 @@ namespace Zappy {
 
         // -- Camera --
         //* Front of the scene
-        
+
         //* Menu
         _startPos = getStartPos();
         _startTarget = getStartTarget();
@@ -152,7 +152,10 @@ namespace Zappy {
         // Music
         InitAudioDevice();
         _mainTheme = raylib::Music(_assetsRoot + MAIN_THEME_PATH);
-        _mainTheme.Play();
+
+        _pantheonTheme = raylib::Music(_assetsRoot + "Pantheon.ogg");
+         _mainTheme.Play();
+
         _mainTheme.SetLooping(true);
         float randNum = Utils::random(80, 120) / 100.;
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);

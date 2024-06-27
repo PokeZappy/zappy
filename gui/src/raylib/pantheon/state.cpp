@@ -15,7 +15,6 @@ namespace Zappy {
         _teamColor = teamColor;
         getPantheonPlayers(players);
         _state = PantheonState::START;
-        _theme.Play();
         _camera.position = _startPos;
         _camera.target = _startTarget;
         _animClock = std::chrono::steady_clock::now();
@@ -26,7 +25,7 @@ namespace Zappy {
 
     void Pantheon::desactivate() {
         _state = PantheonState::NONE;
-        _theme.Stop();
+        // _theme.Stop();
         _players.clear();
         _team.clear();
     }

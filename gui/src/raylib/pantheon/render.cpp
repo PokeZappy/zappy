@@ -99,7 +99,7 @@ namespace Zappy {
 
     void Pantheon::renderTeam() {
         raylib::Rectangle srcType = UtilsRaylib::getTypeRectangle(_team);
-        std::string text = "Félicitations à l'équipe";
+        std::string text = "Félicitations à l'équipe ";
         raylib::Vector2 textPos = _endTextPos;
 
         if (_state == PantheonState::START) {

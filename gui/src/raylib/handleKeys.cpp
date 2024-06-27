@@ -14,8 +14,11 @@ namespace Zappy {
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
             if (IsKeyPressed(KEY_ESCAPE)) {
-                if (_pantheon->activated())
+                if (_pantheon->activated()) {
+                    _pantheonTheme.Stop();
+                    _mainTheme.Play();
                     _pantheon->desactivate();
+                }
                 if (!debugMode->activated())
                 _escapeMenu->switchState();
             }
@@ -23,9 +26,11 @@ namespace Zappy {
         if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())
             return;
         // Pantheon key
-        // if (!debugMode->activated() && IsKeyPressed(KEY_P)) {
-        //     _pantheon->activate("grass", getTeamColor("grass"), _players);
-        // }
+        if (!debugMode->activated() && IsKeyPressed(KEY_P)) {
+            _mainTheme.Stop();
+            _pantheonTheme.Play();
+            _pantheon->activate("grass", getTeamColor("grass"), _players);
+        }
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
             
             if (IsKeyDown(KEY_SPACE)) {
