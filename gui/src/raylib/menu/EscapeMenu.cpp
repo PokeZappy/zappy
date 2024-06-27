@@ -35,15 +35,23 @@ namespace Zappy {
                 _buttons.push_back(std::make_unique<TextureButton>(raylib::Rectangle(730, 662, 405, 115), assetsRoot + ATTACK_HUD_PATH, [](Raylib &raylib) {
                     raylib.getWindow().Close();
                 }, "Quitter"));
+
                 _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Show Players", textSize) - _rightMargin, startY, MeasureText("Show players", textSize), textSize), [](Raylib &raylib) {
                     raylib.setShowPlayers(!raylib.getShowPlayers());
                 }, "Show players", textSize, core.getShowPlayers()));
                 _minOptionsWidth = MeasureText("Show players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
-                _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Tint Players", textSize) - _rightMargin, startY + textSize + 15, MeasureText("Show players", textSize), textSize), [](Raylib &raylib) {
+
+                _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Show eggs", textSize) - _rightMargin, startY + textSize + 15, MeasureText("Show eggs", textSize), textSize), [](Raylib &raylib) {
+                    raylib.setShowEggs(!raylib.getShowEggs());
+                }, "Show eggs", textSize, core.getShowEggs()));
+                _minOptionsWidth = MeasureText("Show eggs", textSize) > _minOptionsWidth ? MeasureText("Show eggs", textSize) : _minOptionsWidth;
+
+                _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Tint Players", textSize) - _rightMargin, startY + textSize * 2 + 15 * 2, MeasureText("Show players", textSize), textSize), [](Raylib &raylib) {
                     raylib.setTintPlayers(!raylib.getTintPlayers());
                 }, "Tint players", textSize, core.getTintPlayers()));
                 _minOptionsWidth = MeasureText("Tint players", textSize) > _minOptionsWidth ? MeasureText("Show players", textSize) : _minOptionsWidth;
-                 _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize * 2 + 30, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
+
+                _buttons.push_back(std::make_unique<StringButton>(raylib::Rectangle(GUI_WIDTH - MeasureText("Music", textSize) - _rightMargin, startY + textSize * 3 + 15 * 3, MeasureText("Music", textSize), textSize), [](Raylib &raylib) {
                     raylib.setMusicState(!raylib.getMusicState());
                 }, "Music", textSize, core.getMusicState()));
                 _minOptionsWidth = MeasureText("Music", textSize) > _minOptionsWidth ? MeasureText("Music", textSize) : _minOptionsWidth;

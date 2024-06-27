@@ -46,9 +46,10 @@ namespace Zappy
                 raylib::Vector3(0, 1, 0), 180, raylib::Vector3(_gridSize * 6 * (_mapX + _mapY) / 20, true));
 
             drawTiles(world.getTiles());
-
-            for (auto &egg : _eggs) {
-                egg->draw();
+            if (_showEggs) {
+                for (auto &egg : _eggs) {
+                    egg->draw();
+                }
             }
             if (_showPlayers) {
                 for (auto &player : _players) {
@@ -98,9 +99,6 @@ namespace Zappy
             _discardTranspShader.EndMode();
 
             _camera.EndMode();
-
-            raylib::Color::Black().DrawText(raylib::Vector3(_camera.position).ToString(), 10, 10, 20);
-            raylib::Color::Black().DrawText(raylib::Vector3(_camera.target).ToString(), 10, 30, 20);
 
             if (_menuState == Menu::MENU) {
                 drawMenu();

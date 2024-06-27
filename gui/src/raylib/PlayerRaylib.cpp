@@ -128,9 +128,9 @@ namespace Zappy
 
     void PlayerRaylib::drawPantheon(raylib::Vector3 position) {
         if (infos.shiny) {
-            _models->setShinyTexture(_animIndex);
+            _models->setShinyTexture(Animations::PANTHEON);
         } else {
-            _models->setNormalTexture(_animIndex);
+            _models->setNormalTexture(Animations::PANTHEON);
         }
 
         _models->getModelByAnimation(Animations::PANTHEON)->draw(position,

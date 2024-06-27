@@ -62,13 +62,16 @@ namespace raylib {
                 );
 
                 _frameCount = 0;
-                _images.push_back(Image(entries[0].path().string()));
-                _texture = std::make_shared<Texture2D>(_images[0]);
-                for (const auto& entry : entries) {
+                for (size_t i = 0; i < entries.size(); i++) {
                     _frameCount++;
-                    _paths.push_back(entry.path().string());
+                    _images.push_back(Image(entries[i].path().string()));
                 }
-                _loadThread = std::thread(&Gif::loadTexturesAsync, this);
+                _texture = std::make_shared<Texture2D>(_images[0]);
+                // for (const auto& entry : entries) {
+                //     _frameCount++;
+                //     _paths.push_back(entry.path().string());
+                // }
+                // _loadThread = std::thread(&Gif::loadTexturesAsync, this);
                 _mesh = GenMeshPlane(_texture->width, _texture->height, 1, 1);
                 _meshMaterial = LoadMaterialDefault();
                 _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = *_texture;

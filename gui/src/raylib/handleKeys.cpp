@@ -20,7 +20,7 @@ namespace Zappy {
                     _pantheon->desactivate();
                 }
                 if (!debugMode->activated())
-                _escapeMenu->switchState();
+                    _escapeMenu->switchState();
             }
         }
         if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())

@@ -12,22 +12,17 @@ namespace Zappy {
         _window.BeginDrawing();
         {
             _window.ClearBackground(raylib::Color::Black());
-            _window.DrawFPS();
-
 
             _camera.BeginMode();
-            _camera.BeginMode();
+            _shader.BeginMode();
 
             _pantheon->renderArena();
             _pantheon->drawPokemons();
             if (_pantheon->getState() == PantheonState::ENDING)
                 _pantheon->renderSteve();
 
+            _shader.EndMode();
             _camera.EndMode();
-            _camera.EndMode();
-
-            raylib::Color::White().DrawText("camera pos : " + std::to_string(_camera.position.x) + " " + std::to_string(_camera.position.y) + " " + std::to_string(_camera.position.z), 10, 10, 15);
-            raylib::Color::White().DrawText("target pos : " + std::to_string(_camera.target.x) + " " + std::to_string(_camera.target.y) + " " + std::to_string(_camera.target.z), 10, 100, 15);
 
             _pantheon->renderTeam();
             if (_pantheon->getState() == PantheonState::State::GOTOPOKEMONS) {

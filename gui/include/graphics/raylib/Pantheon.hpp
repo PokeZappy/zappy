@@ -54,7 +54,7 @@ namespace Zappy {
         private:
             PantheonState::State _state = PantheonState::NONE;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
-            size_t _minPantheonLevel = 1;
+            size_t _minPantheonLevel = 6;
 
             // Team
             std::string _team;

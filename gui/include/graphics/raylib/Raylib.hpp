@@ -90,12 +90,14 @@ namespace Zappy {
             bool getMusicState() { return  _isMusicPlaying; }
             raylib::Camera &getCamera() { return (_camera); }
             bool getShowPlayers() { return _showPlayers; }
+            bool getShowEggs() { return _showEggs; }
             bool getTintPlayers() { return _tintPlayers; }
             raylib::Shader &getShader() { return (_shader); }
             std::vector<std::string> &getTypes() { return (_listTypes); }
 
             // Setters
             void setShowPlayers(bool state) { _showPlayers = state; }
+            void setShowEggs(bool state) { _showEggs = state; }
             void setTintPlayers(bool state) { _tintPlayers = state; }
         private:
             // Utils
@@ -119,6 +121,7 @@ namespace Zappy {
             bool _showPlayers = true;
             bool _tintPlayers = false;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
+            bool _showEggs = true;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
             size_t _eggAnimFrame = 0;
@@ -180,6 +183,7 @@ namespace Zappy {
 
             // Pantheon
             std::unique_ptr<Pantheon> _pantheon;
+            bool hasPantheoned = false;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 
