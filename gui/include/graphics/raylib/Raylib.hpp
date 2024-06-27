@@ -17,6 +17,7 @@
 #include "EscapeMenu.hpp"
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
+#include "Pantheon.hpp"
 
 #include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
@@ -29,6 +30,7 @@
 #define SUN_MODEL_PATH "models/pokemons/solrock.glb"
 #define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "models/arena.glb"
+#define DS_MODEL_PATH "models/nintendo_ds.m3d"
 
 // #define TILE_TEXTURE_PATH "textures/pokemon_tile.png"
 #define TILE_TEXTURE_PATH "textures/ice_tile.png"
@@ -37,6 +39,7 @@
 #include "ClientSocket.hpp"
 
 namespace Zappy {
+    class EscapeMenu;
 
     namespace Menu {
         enum State {
@@ -55,6 +58,7 @@ namespace Zappy {
             Raylib(const std::string &assetsRoot, ClientSocket &socket);
             void render(const World &world) override;
             void renderDebug(void);
+            void renderPantheon(void);
             void handleKeys(void);
             void update(const World &world) override;
             void updateMenu();
@@ -68,13 +72,41 @@ namespace Zappy {
             PokemonInfo getPokemon(std::string team);
             PokemonInfo parsePokemon(libconfig::Setting &pokemon);
             void testEvolution(void);
+            raylib::Color getTeamColor(const std::string &teamName);
+
+            // Getters
+            raylib::Window &getWindow() { return (_window); }
+            std::shared_ptr<DebugMode> getDebug() { return (debugMode);}
+            std::shared_ptr<EscapeMenu> getMenu() { return (_escapeMenu); }
+            void setMusicState(bool state) {
+                if (state) {
+                    _isMusicPlaying = true;
+                    _mainTheme.Resume();
+                } else {
+                    _isMusicPlaying = false;
+                    _mainTheme.Pause();
+                }
+            }
+            bool getMusicState() { return  _isMusicPlaying; }
+            raylib::Camera &getCamera() { return (_camera); }
+            bool getShowPlayers() { return _showPlayers; }
+            bool getShowEggs() { return _showEggs; }
+            bool getTintPlayers() { return _tintPlayers; }
+            raylib::Shader &getShader() { return (_shader); }
+            std::vector<std::string> &getTypes() { return (_listTypes); }
+
+            // Setters
+            void setShowPlayers(bool state) { _showPlayers = state; }
+            void setShowEggs(bool state) { _showEggs = state; }
+            void setTintPlayers(bool state) { _tintPlayers = state; }
         private:
             // Utils
             bool containsPlayer(std::shared_ptr<Player> player);
             bool containsEgg(std::shared_ptr<Egg> egg);
-            raylib::Color getTeamColor(const std::string &teamName);
             raylib::Color getTeamColor(const Team &team);
             raylib::Vector3 getSunPosition(double elapsedTime, double cycle_duration_sec);
+            raylib::Vector3 getStartPos(void);
+            raylib::Vector3 getStartTarget(void);
             // Draw
             void drawFood(float x, float y, size_t quantity);
             void drawRock(float x, float y, size_t id, size_t quantity);
@@ -87,7 +119,9 @@ namespace Zappy {
             raylib::Vector3 _defaultCameraTarget;
             std::vector<std::shared_ptr<PlayerRaylib>> _players;
             bool _showPlayers = true;
+            bool _tintPlayers = false;
             std::vector<std::unique_ptr<EggRaylib>> _eggs;
+            bool _showEggs = true;
             raylib::Model _eggModel;
             std::vector<raylib::ModelAnimation> _eggModelAnimations;
             size_t _eggAnimFrame = 0;
@@ -97,7 +131,7 @@ namespace Zappy {
             std::vector<raylib::Color> _listTypesColorsCustom;
 
             libconfig::Config _configuration;
-            std::unique_ptr<DebugMode> debugMode;
+            std::shared_ptr<DebugMode> debugMode;
 
             // floor
             raylib::Texture2D _floorTexture;
@@ -112,6 +146,8 @@ namespace Zappy {
             // Sun & moon
             raylib::Model _sun;
             raylib::Model _moon;
+
+            raylib::Model _tv;
 
             // Arena
             raylib::Model _arena;
@@ -138,16 +174,23 @@ namespace Zappy {
             std::unique_ptr<HudMode> _hudMode;
 
             // Escape menu
-            std::unique_ptr<EscapeMenu> _escapeMenu;
+            std::shared_ptr<EscapeMenu> _escapeMenu;
 
             // Sounds and Themes
             raylib::Music _mainTheme;
+            raylib::Music _pantheonTheme;
+            bool _isMusicPlaying = true;
+
+            // Pantheon
+            std::unique_ptr<Pantheon> _pantheon;
+            bool hasPantheoned = false;
 
             raylib::Color _itemColors[4] = ITEM_COLORS;
 
             // Menu
             std::unique_ptr<raylib::Gif> _menuIntroGif;
             std::unique_ptr<raylib::Gif> _menuGif;
+            bool _isMenuDay = true;
             Menu::State _menuState = Menu::STARTING;
             std::chrono::time_point<std::chrono::steady_clock> _menuClock;
             raylib::Vector3 _startPos;

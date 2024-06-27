@@ -7,6 +7,7 @@
 
 #include "Raylib.hpp"
 #include "HudMode.hpp"
+#include "UtilsRaylib.hpp"
 
 namespace Zappy {
      void HudMode::drawBackground(const World &world, size_t graphicPlayerCount, size_t graphicEggCount) {
@@ -55,7 +56,6 @@ namespace Zappy {
         }
         if (_selectedPlayer == nullptr) {
             if (_targetedPlayer != nullptr) {
-                // setSelectedPlayerToTarget();
                 _selectedPlayer = _targetedPlayer;
             } else if (!_selectedPlayers.empty()){
                 _selectedPlayer = _selectedPlayers[0];
@@ -116,7 +116,7 @@ namespace Zappy {
     }
 
     void HudMode::drawAttacks() {
-        _white.DrawText("Teleport (1)", 1288, GUI_HEIGHT - 156, 40);
+        _white.DrawText("Level Up (1)", 1288, GUI_HEIGHT - 156, 40);
         if (_targetedPlayer == _selectedPlayer)
             _white.DrawText("Unfollow (2)", 1607, GUI_HEIGHT - 156, 40);
         else
@@ -150,31 +150,24 @@ namespace Zappy {
         int xRightText = xRightBalls + 35;
 
         _pokeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 71, 30, 30));
-        // _pokeBallTexture.Draw(x + 45, GUI_HEIGHT - 129);
         _white.DrawText(std::to_string(inventory.getItem(1)), topX + xLeftText, topY + 76, 20);
 
         _superBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 102, 30, 30));
-        // _superBallTexture.Draw(x + 45, GUI_HEIGHT - 98);
         _white.DrawText(std::to_string(inventory.getItem(2)), topX + xLeftText, topY + 107, 20);
 
         _hyperBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xLeftBalls, topY + 133, 30, 30));
-        // _hyperBallTexture.Draw(x + 45, GUI_HEIGHT - 67);
         _white.DrawText(std::to_string(inventory.getItem(3)), topX + xLeftText, topY + 138, 20);
 
         _foodTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 40, 30, 30));
-        // _foodTexture.Draw(x + 149, GUI_HEIGHT - 160);
         _white.DrawText(std::to_string(inventory.getItem(0)), topX + xRightText, topY + 45, 20);
 
         _honorBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 71, 30, 30));
-        // _honorBallTexture.Draw(x + 149, GUI_HEIGHT - 129);
         _white.DrawText(std::to_string(inventory.getItem(4)), topX + xRightText, topY + 76, 20);
 
         _luxeBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 102, 30, 30));
-        // _luxeBallTexture.Draw(x + 149, GUI_HEIGHT - 98);
         _white.DrawText(std::to_string(inventory.getItem(5)), topX + xRightText, topY + 107, 20);
 
         _masterBallTexture.Draw(ballSrc, raylib::Rectangle(topX + xRightBalls, topY + 133, 30, 30));
-        // _masterBallTexture.Draw(x + 149, GUI_HEIGHT - 67);
         _white.DrawText(std::to_string(inventory.getItem(6)), topX + xRightText, topY + 138, 20);
     }
 
@@ -235,47 +228,12 @@ namespace Zappy {
     }
 
     void HudMode::drawType(std::string type, int x, int y) {
-        raylib::Rectangle src;
+        raylib::Rectangle src = UtilsRaylib::getTypeRectangle(type);
         raylib::Rectangle dest(x, y, 57, 25);
-        if (type == "bug") {
-            src = raylib::Rectangle(0, 14, _typesTexture.width, 14);
-        } else if (type == "dark") {
-            src = raylib::Rectangle(0, 28, _typesTexture.width, 14);
-        } else if (type == "dragon") {
-            src = raylib::Rectangle(0, 42, _typesTexture.width, 14);
-        } else if (type == "electric") {
-            src = raylib::Rectangle(0, 56, _typesTexture.width, 14);
-        } else if (type == "fairy") {
-            src = raylib::Rectangle(0, 70, _typesTexture.width, 14);
-        } else if (type == "fight") {
-            src = raylib::Rectangle(0, 84, _typesTexture.width, 14);
-        } else if (type == "fire") {
-            src = raylib::Rectangle(0, 98, _typesTexture.width, 14);
-        } else if (type == "fly") {
-            src = raylib::Rectangle(0, 112, _typesTexture.width, 14);
-        } else if (type == "ghost") {
-            src = raylib::Rectangle(0, 126, _typesTexture.width, 14);
-        } else if (type == "grass") {
-            src = raylib::Rectangle(0, 140, _typesTexture.width, 14);
-        } else if (type == "ground") {
-            src = raylib::Rectangle(0, 154, _typesTexture.width, 14);
-        } else if (type == "ice") {
-            src = raylib::Rectangle(0, 168, _typesTexture.width, 14);
-        } else if (type == "normal") {
-            src = raylib::Rectangle(0, 182, _typesTexture.width, 14);
-        } else if (type == "poison") {
-            src = raylib::Rectangle(0, 196, _typesTexture.width, 14);
-        } else if (type == "psychic") {
-            src = raylib::Rectangle(0, 210, _typesTexture.width, 14);
-        } else if (type == "rock") {
-            src = raylib::Rectangle(0, 224, _typesTexture.width, 14);
-        } else if (type == "steel") {
-            src = raylib::Rectangle(0, 238, _typesTexture.width, 14);
-        } else if (type == "water") {
-            src = raylib::Rectangle(0, 252, _typesTexture.width, 14);
-        } else {
+        if (src.x == -1) {
             _white.DrawText(type, x, y + 7, 15);
+        } else {
+            _typesTexture.Draw(src, dest);
         }
-        _typesTexture.Draw(src, dest);
     }
 }

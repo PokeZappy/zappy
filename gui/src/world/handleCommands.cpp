@@ -18,13 +18,6 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-        //     std::cout << command << std::endl;
-        // }
-        // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
-        //     std::cout << command << std::endl;
-        // }
-
         if (commandName == "msz") { // map size
             ss >> x >> y;
             initTiles(x, y);
@@ -57,7 +50,7 @@ namespace Zappy
             player->setPos(x, y);
             player->setOrientation(orientation);
 
-            // todo : Uncomment to have player movements in the shell
+            //? info : Uncomment to have player movements in the shell
             // addShellCommand("T" + std::to_string(id) + " moved to {x: " +
             //     std::to_string(x) + ", y: " + std::to_string(y) + ", o: " +
             //     getOrientationString(orientation) + "}", player);
@@ -67,7 +60,6 @@ namespace Zappy
             ss >> id >> level;
             std::shared_ptr<Player> player = getPlayer(id);
             player->setLevel(level);
-            // player->setIncanting(Incantation::NONE);
             addShellCommand("T" + std::to_string(id) + " is now level " +
                 std::to_string(level), player);
         }
@@ -112,8 +104,6 @@ namespace Zappy
             std::string result;
             ss >> x >> y >> result;
 
-            // std::cout << "Incantation result: " << result << std::endl; // TODO: result for me is 1 or 0
-
             try {
                 size_t value = std::stoull(result);
                 if (value >= 1 && value <= 8) {
@@ -141,14 +131,14 @@ namespace Zappy
         else if (commandName == "pdr") { // resource dropping
             size_t item;
             ss >> id >> item;
-            // todo : Uncomment this to show the player dropped items in the shell
+            //? info : Uncomment this to show the player dropped items in the shell
             // addShellCommand("T" + std::to_string(id) + " dropped " + getItemString(static_cast<Item>(item)),
             //     getPlayer(id));
         }
         else if (commandName == "pgt") { // resource collecting
             size_t item;
             ss >> id >> item;
-            // todo : Uncomment this to show the player collected items in the shell
+            //? info : Uncomment this to show the player collected items in the shell
             // addShellCommand("T" + std::to_string(id) + " collected " + getItemString(static_cast<Item>(item)),
             //     getPlayer(id));
         }
@@ -188,8 +178,8 @@ namespace Zappy
         }
         else if (commandName == "seg") { // end of game
             addShellCommand("Game ended");
+            ss >> _winningTeam;
             std::cout << "Game ended" << std::endl;
-            // return true;
         }
         else if (commandName == "smg") { // message from the server
             std::string message;

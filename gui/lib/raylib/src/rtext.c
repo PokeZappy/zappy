@@ -362,11 +362,7 @@ Font LoadFont(const char *fileName)
         UnloadImage(image);
     }
 
-    if (font.texture.id == 0)
-    {
-        TRACELOG(LOG_WARNING, "FONT: [%s] Failed to load font texture -> Using default font", fileName);
-        font = GetFontDefault();
-    }
+    if (font.texture.id == 0) TRACELOG(LOG_WARNING, "FONT: [%s] Failed to load font texture -> Using default font", fileName);
     else
     {
         SetTextureFilter(font.texture, TEXTURE_FILTER_POINT);    // By default, we set point filter (the best performance)
@@ -394,7 +390,6 @@ Font LoadFontEx(const char *fileName, int fontSize, int *codepoints, int codepoi
 
         UnloadFileData(fileData);
     }
-    else font = GetFontDefault();
 
     return font;
 }
@@ -1892,8 +1887,7 @@ int *LoadCodepoints(const char *text, int *count)
     }
 
     // Re-allocate buffer to the actual number of codepoints loaded
-    int *temp = (int *)RL_REALLOC(codepoints, codepointCount*sizeof(int));
-    if (temp != NULL) codepoints = temp;
+    codepoints = (int *)RL_REALLOC(codepoints, codepointCount*sizeof(int));
 
     *count = codepointCount;
 
@@ -2298,7 +2292,7 @@ static Font LoadBMFont(const char *fileName)
         }
         else
         {
-            font.glyphs[i].image = GenImageColor(font.recs[i].width, font.recs[i].height, BLACK);
+            font.glyphs[i].image = GenImageColor((int)font.recs[i].width, (int)font.recs[i].height, BLACK);
             TRACELOG(LOG_WARNING, "FONT: [%s] Some characters data not correctly provided", fileName);
         }
     }

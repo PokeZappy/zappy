@@ -19,13 +19,14 @@ namespace Zappy {
         WALK,
         SLEEP,
         CRY,
+        PANTHEON,
         NONE
         };
     }
 
     class RaylibModels {
     public:
-        RaylibModels(const std::string &assetsRoot, std::string id, raylib::Shader &shader) {
+        RaylibModels(const std::string &assetsRoot, std::string id, std::string animPantheon, raylib::Shader &shader) {
             std::string shinyPath = assetsRoot + "textures/pokemons/" + id + "_shiny.png";
             _shinyTexture = LoadTexture(shinyPath.c_str());
 
@@ -35,6 +36,18 @@ namespace Zappy {
             int indexWalk = getAnimationIndex({"ground_run", "ground_walk"});
             int indexSleep = getAnimationIndex({"sleep"});
             int indexCry = getAnimationIndex({"cry"});
+            int indexPantheon = getAnimationIndex({animPantheon});
+
+            // we try to assign an animation for the pantheon even if it is not referenced
+            if (indexPantheon == -1) {
+                std::vector<int> allIndexes = {indexCry, indexWalk, indexIdle, indexSleep};
+                for (size_t i = 0; i < allIndexes.size(); i++) {
+                    if (allIndexes[i] != -1) {
+                        indexPantheon = allIndexes[i];
+                        break;
+                    }
+                }
+            }
             if (indexIdle != -1) {
                 _models[Animations::IDLE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexIdle);
             }
@@ -47,6 +60,7 @@ namespace Zappy {
             if (indexCry != -1) {
                 _models[Animations::CRY] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexCry);
             }
+            _models[Animations::PANTHEON] = std::make_shared<RaylibModel>(assetsRoot, id, shader, indexPantheon);
             _models[Animations::NONE] = std::make_shared<RaylibModel>(assetsRoot, id, shader, -1);
             
             _normalTexture = _models[Animations::NONE]->getTexture();
@@ -73,6 +87,8 @@ namespace Zappy {
             for (size_t i = 0; i < _animations.size(); i++) {
                 std::string animName(_animations[i].name);
                 for (size_t j = 0; j < names.size(); j++) {
+                    if (names[j].empty())
+                        continue;
                     if (animName.find(names[j]) != std::string::npos) {
                         return i;
                     }

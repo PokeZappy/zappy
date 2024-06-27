@@ -10,23 +10,34 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            _escapeMenu->switchState();
-        }
-
-        if (_menuState != Menu::NONE) {
-            updateMenu();
-            return;
-        }
-
         float moveYSpeed = _gridSize / 15.;
+
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
-             if (IsKeyDown(KEY_SPACE)) {
-            _camera.position.y += moveYSpeed;
-            _camera.target.y += moveYSpeed;
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                if (_pantheon->activated()) {
+                    _pantheonTheme.Stop();
+                    _mainTheme.Play();
+                    _pantheon->desactivate();
+                }
+                if (!debugMode->activated())
+                    _escapeMenu->switchState();
             }
-            if (IsKeyDown(KEY_LEFT_SHIFT))
-            {
+        }
+        if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())
+            return;
+        // Pantheon key
+        // if (!debugMode->activated() && IsKeyPressed(KEY_P)) {
+        //     _mainTheme.Stop();
+        //     _pantheonTheme.Play();
+        //     _pantheon->activate("grass", getTeamColor("grass"), _players);
+        // }
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
+            
+            if (IsKeyDown(KEY_SPACE)) {
+                _camera.position.y += moveYSpeed;
+                _camera.target.y += moveYSpeed;
+            }
+            if (IsKeyDown(KEY_LEFT_SHIFT)) {
                 _camera.position.y -= moveYSpeed;
                 _camera.target.y -= moveYSpeed;
             }
@@ -36,14 +47,16 @@ namespace Zappy {
                 _cameraViewMode = CAMERA_FIRST_PERSON;
             }
 
-            if (IsKeyPressed(KEY_P)) {
+            if (IsKeyPressed(KEY_G)) {
                 if (debugMode->activated()) {
+                    _defaultCameraPosition = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, (_gridSize * _mapY) / 2);
+                    _defaultCameraTarget = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, _gridSize * (_mapY));
                     debugMode->desactive(_camera, _defaultCameraPosition,
                         _defaultCameraTarget, _defaultAmbientLight);
                 } else {
                     debugMode->activate(_camera);
                 }
-        }
+            }
         }
 
         if (debugMode->activated()) {
@@ -65,31 +78,8 @@ namespace Zappy {
                     (void)gridSize;
                     return - gridSize * 0.5 - (float)tileCount * 0.14 * gridSize;
                 };
-            } else if (IsKeyPressed(KEY_T)) {
-                _mapX = 10;
-                _mapY = 10;
-            } else if (IsKeyPressed(KEY_Y)) {
-                _mapX = 20;
-                _mapY = 20;
-            } else if (IsKeyPressed(KEY_U)) {
-                _mapX = 30;
-                _mapY = 30;
             }
         }
-
-        // if (!_players.empty() && !_players[0]->isDying()) {
-            //* Follow the player with id 0
-            // for (auto &player : _players) {
-            //     if (_players[0]->worldPlayer->getId() == 0) {
-            //         _camera.target = player->getPosition() * _gridSize;
-            //         TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
-            //         break;
-            //     }
-            // }
-            //* Follow the first player
-            // _camera.target = _players[0]->getPosition() * _gridSize;
-            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        // }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
@@ -98,8 +88,8 @@ namespace Zappy {
         // Check key inputs to enable/disable lights
         // if (IsKeyPressed(KEY_Y)) { _lights[0].enabled = !_lights[0].enabled; }
         // if (IsKeyPressed(KEY_R)) { _lights[1].enabled = !_lights[1].enabled; }
-        if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
-        if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
+        // if (IsKeyPressed(KEY_G)) { _lights[2].enabled = !_lights[2].enabled; }
+        // if (IsKeyPressed(KEY_B)) { _lights[3].enabled = !_lights[3].enabled; }
 
         if (IsKeyPressed(KEY_H)) _showPlayers = !_showPlayers;
     }

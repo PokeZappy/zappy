@@ -15,7 +15,7 @@ namespace Zappy {
             raylib::Color(0, 0, 0, (255 / blinkTime) * (elapsed_seconds.count())).DrawText("Appuyez sur ENTREE pour continuer . . .", 100, GUI_HEIGHT - 100, 45);
         } else if (elapsed_seconds.count() >= blinkTime && elapsed_seconds.count() <= blinkTime * 2) {
             raylib::Color(0, 0, 0, 255 - (255 / blinkTime) * (elapsed_seconds.count() - blinkTime)).DrawText("Appuyez sur ENTREE pour continuer . . .", 100, GUI_HEIGHT - 100, 45);
-        } else 
+        } else
             _menuClock = std::chrono::steady_clock::now();
     }
 }

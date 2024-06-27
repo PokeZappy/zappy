@@ -12,9 +12,24 @@ namespace Zappy {
     void Raylib::update(const World &world)
     {
         _hudMode->clearPlayers();
+        if (_menuState != Menu::NONE) {
+            updateMenu();
+        }
+
+        if (_escapeMenu->activated()) {
+            _escapeMenu->update(*this);
+        }
+
         handleKeys();
 
-        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
+        if (!_pantheon->activated() && !world.getWinningTeam().empty() && !hasPantheoned) {
+            _mainTheme.Stop();
+            _pantheonTheme.Play();
+            _pantheon->activate(world.getWinningTeam(), getTeamColor(world.getWinningTeam()), _players);
+            hasPantheoned = true;
+        }
+
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE && !_escapeMenu->activated())
             _camera.Update(_cameraViewMode);
 
         // Sun & Moon
@@ -24,10 +39,7 @@ namespace Zappy {
             _lights[i].position = getSunPosition(currentTime.count() + revolution / (1 + i), revolution);
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
             float brightness = _lights[i].position.y / _gridSize / 50;
-            // std::cout << "i" << std::to_string(i) << " height: " << _lights[i].position.y << ", brightness value: " << brightness << std::endl;
             _lights[i].color =  newColor.Brightness(brightness * (i == 0 ? 1.0f : 0.3f));
-            // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
-            // else _lights[i].enabled = true;
             UpdateLightValues(_shader, _lights[i]);
         }
         if (_showPlayers)
@@ -42,13 +54,12 @@ namespace Zappy {
                     _hudMode->addPlayer(player);
         }
 
-
         if (_hudMode->activated() && _hudMode->getTile() != nullptr && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-            _hudMode->setFirstPokemonTarget();
+            _hudMode->applySelectedPlayerToTarget();
 
         if (_hudMode->activated()) {
             _cameraViewMode = _hudMode->followTarget(_camera);
-            _hudMode->update(_socket);
+            _hudMode->update(_socket, _players);
         }
 
         float wheel = GetMouseWheelMove();
@@ -63,6 +74,7 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
+        _pantheonTheme.Update();
         if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded()) {
             _menuIntroGif->update();
         }
@@ -78,10 +90,11 @@ namespace Zappy {
             if (!containsPlayer(player)) {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
-                // pokemon.shiny = true;
 
+
+                // add the model if the pokemon doesn't exist in the map
                 if (_models.count(pokemon.id) <= 0) {
-                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, _shader);
+                    _models[pokemon.id] = std::make_shared<RaylibModels>(_assetsRoot, pokemon.id, pokemon.animPantheon, _shader);
                 }
 
                 _players.push_back(std::make_unique<PlayerRaylib>(player,
@@ -130,6 +143,8 @@ namespace Zappy {
         std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _menuClock;
 
         if (_menuState == Menu::STARTING) {
+            _camera.position = getStartPos();
+            _camera.target = getStartTarget();
             if (!_forceStartAnimation) {
                 if (IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_DOWN) ||
             IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_W) || IsKeyPressed(KEY_A) || IsKeyPressed(KEY_S) || IsKeyPressed(KEY_D))
@@ -146,8 +161,8 @@ namespace Zappy {
 
             if (moveFactor > 1.0f)
                 moveFactor = 1.0f;
-            _camera.position = _startPos + (_endPos - _startPos) * moveFactor;
-            _camera.target = _startTarget + (_endTarget - _startTarget) * moveFactor;
+            _camera.position = getStartPos() + (_endPos - getStartPos()) * moveFactor;
+            _camera.target = getStartTarget() + (_endTarget - getStartTarget()) * moveFactor;
             if (elapsed_seconds.count() > _durationEnding) {
                 _menuClock = std::chrono::steady_clock::now();
                 _menuState = Menu::NONE;
@@ -160,8 +175,8 @@ namespace Zappy {
                 _menuState = Menu::NONE;
             if (IsKeyPressed(KEY_ENTER)) {
                 _menuClock = std::chrono::steady_clock::now();
-                _endTarget = _startTarget;
-                _endPos = raylib::Vector3(_gridSize * _mapX / 2, _startPos.y, _gridSize * _mapY / 2);
+                _endTarget = raylib::Vector3(_mapX / 2., 0.5, 5) * _gridSize;
+                _endPos = raylib::Vector3(_mapX / 2., 2, -5) * _gridSize;
                 _menuState = Menu::ENDING;
             }
         }

@@ -7,8 +7,6 @@
 
 #include "EggRaylib.hpp"
 
-
-//TODO changer la classe pour qu'elle prenne des RaylibModels voilà
 namespace Zappy {
     EggRaylib::EggRaylib(const std::shared_ptr<Egg> &egg, raylib::Model &model,
         std::vector<raylib::ModelAnimation> &animations,
@@ -28,11 +26,6 @@ namespace Zappy {
         _animationIndexes["faint"] = getAnimationIndex({"faint"});
         _animationIndexes["sleep"] = getAnimationIndex({"sleep"});
         _animationIndexes["cry"] = getAnimationIndex({"cry"});
-        // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
-
-        // for (int i = 0; i < _modelAnimations.size(); i++) {
-            // TraceLog(LOG_ERROR, "%s", std::string(_modelAnimation[i].name).c_str());
-        // }
     }
 
     void EggRaylib::update(void)
@@ -47,7 +40,6 @@ namespace Zappy {
 
     void EggRaylib::draw(void)
     {
-        // draw
         raylib::Vector3 playerPos = raylib::Vector3{
             _currentPos.x * _gridSize + offset.x,
             0,

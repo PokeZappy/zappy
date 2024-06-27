@@ -88,4 +88,35 @@ namespace Zappy
         }
         return sunPosition;
     }
+
+    raylib::Vector3 Raylib::getStartPos(void)
+    {
+        if (_mapX == 10 && _mapY == 10) {
+            if (_isMenuDay)
+                return raylib::Vector3(4.42, 3.46, 13.25) * _gridSize;
+            return raylib::Vector3(4.41, 3.67, 13.17) * _gridSize;
+        }
+        if (_mapX == 30 && _mapY == 30) {
+            if (_isMenuDay)
+                return raylib::Vector3(14.03, 9.56, 37.51) * _gridSize;
+            return raylib::Vector3(14.04, 10.53, 37.46) * _gridSize;
+        }
+        return raylib::Vector3(0, 20, 5) * _gridSize;
+    }
+
+    raylib::Vector3 Raylib::getStartTarget(void)
+    {
+        if (_mapX == 10 && _mapY == 10) {
+            if (_isMenuDay)
+                return raylib::Vector3(4.40, 1.02, 17.61) * _gridSize;
+            return raylib::Vector3(4.47, 1.08, 17.45) * _gridSize;
+        }
+        if (_mapX == 30 && _mapY == 30) {
+            if (_isMenuDay)
+                return raylib::Vector3(16.22, -12.07, 78.75) * _gridSize;
+            return raylib::Vector3(14.30, 6.56, 43.89) * _gridSize;
+        }
+
+        return getStartPos() + raylib::Vector3(0, 0, 5) * _gridSize;
+    }
 }

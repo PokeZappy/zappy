@@ -21,9 +21,8 @@ namespace Zappy
     class Utils
     {
         public:
-            static int random(int min, int max)
-            {
-                static std::random_device rd; 
+            static int random(int min, int max) {
+                static std::random_device rd;
                 static std::mt19937 gen(rd());
 
                 std::uniform_int_distribution<> distr(min, max);
@@ -31,7 +30,8 @@ namespace Zappy
                 return distr(gen);
             }
             static float generateRandomFloat(float delta) {
-                return fmod(rand(),  delta) - delta / 2.;
+                float floatPrecision = 100000.;
+                return Utils::random(- delta / 2. * floatPrecision, delta / 2. * floatPrecision) / floatPrecision;
             }
 
         static std::string remove_extension(const std::string& filename) {

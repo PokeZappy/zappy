@@ -31,14 +31,18 @@ namespace Zappy {
         catch (libconfig::SettingNotFoundException &ex)
         {
             std::cerr << ex.what() << std::endl;
-            // return (false);
         }
         catch (libconfig::SettingTypeException &ex)
         {
             std::cerr << ex.what() << std::endl;
-            // return (false);
         }
 
+        // try to get the animation for the pantheon
+        try {
+            std::string animPantheon = pokemon["animPantheon"];
+            pkInfo.animPantheon = animPantheon;
+        } catch (libconfig::SettingNotFoundException &ex) {
+        }
         return pkInfo;
     }
 
@@ -105,7 +109,7 @@ namespace Zappy {
                 infos = pickedEvolution;
 
                 if (_models.count(infos.id) <= 0) {
-                    _models[infos.id] = std::make_shared<RaylibModels>(_assetsRoot, infos.id, _shader);
+                    _models[infos.id] = std::make_shared<RaylibModels>(_assetsRoot, infos.id, infos.animPantheon, _shader);
                 }
                 graphicPlayer->updateModels(_models[infos.id]);
             }

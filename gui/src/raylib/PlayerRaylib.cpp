@@ -35,8 +35,6 @@ namespace Zappy
                 Utils::generateRandomFloat(gridSize / 3));
         _currentPos = raylib::Vector2(worldPlayer->getX(), worldPlayer->getY());
 
-        // TraceLog(LOG_ERROR, "%i", _animationIndexes["walk"]);
-
         _height += (rand() % 20) * _gridSize / 20;
     }
 
@@ -128,16 +126,25 @@ namespace Zappy
         }
     }
 
-    void PlayerRaylib::draw(bool isHudMode)
+    void PlayerRaylib::drawPantheon(raylib::Vector3 position) {
+        if (infos.shiny) {
+            _models->setShinyTexture(Animations::PANTHEON);
+        } else {
+            _models->setNormalTexture(Animations::PANTHEON);
+        }
+
+        _models->getModelByAnimation(Animations::PANTHEON)->draw(position,
+            raylib::Vector3(0, 1, 0),
+            90,
+            raylib::Vector3(_gridSize / 12, true) * (1 + worldPlayer->getLevel() / 4.0f),
+            raylib::Color::White()
+        );
+    }
+
+    void PlayerRaylib::draw(bool tintWithTeamColor)
     {
         float rotationGoal = getRotation();
         _currentOrientation += (rotationGoal - _currentOrientation) / 5;
-
-        // draw
-        // TODO: à verifier mais cette ligne causera surement des comportements indéfinis si animIndex vaut -1, donc penser à ce cas
-        // if (_animIndex != NONE) {
-        //     _model->updateAnimation(_animIndex, _animFrame);
-        // }
 
         if (infos.shiny) {
             _models->setShinyTexture(_animIndex);
@@ -147,8 +154,8 @@ namespace Zappy
         _models->getModelByAnimation(_animIndex)->draw(getPixelPos(),
             raylib::Vector3(_verticalRotation, 1, 0),
             _currentOrientation + (std::abs(_verticalRotation * 50) * worldPlayer->getLevel() / 2.),
-            raylib::Vector3(_animatedScale, true) * (1 + _level / 2.0f),
-            isHudMode ? color : raylib::Color::White());
+            raylib::Vector3(_animatedScale, true) * (1 + worldPlayer->getLevel() / 2.0f),
+            tintWithTeamColor ? color : raylib::Color::White());
     }
 
     void PlayerRaylib::drawGifs(const Camera &camera)
@@ -165,14 +172,5 @@ namespace Zappy
         raylib::Vector3 gifPos = getPixelPos() + raylib::Vector3(0, _gridSize / 1.5, 0);
         _followGif.update();
         _followGif.draw(camera, gifPos);
-    }
-
-    void PlayerRaylib::glow(void)
-    {
-        // Material *material = &_models->getModelByAnimation(_animIndex)->getModel().materials[1];
-        // std::cout << "-- Albedo -- color:" << raylib::Color(material->maps[MATERIAL_MAP_ALBEDO].color).ToString() << ", value: "
-        //             << std::to_string(material->maps[MATERIAL_MAP_ALBEDO].value) << std::endl;
-        // material->maps[MATERIAL_MAP_ALBEDO].value = 0.5;
-        // material->maps[MATERIAL_MAP_DIFFUSE].value = 0.2;
     }
 } // namespace Zappy
