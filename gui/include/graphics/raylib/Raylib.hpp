@@ -175,6 +175,7 @@ namespace Zappy {
 
             // Sounds and Themes
             raylib::Music _mainTheme;
+            raylib::Music _pantheonTheme;
             bool _isMusicPlaying = true;
 
             // Pantheon

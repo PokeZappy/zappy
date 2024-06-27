@@ -32,7 +32,6 @@ namespace Zappy
         _tileRect.setOutlineThickness(3.0);
 
         _resourcesText.setFont(_font);
-        // _resourcesText.setCharacterSize(14);
         _resourcesText.setCharacterSize(50);
         _resourcesText.setScale(0.30f, 0.30f);
         _resourcesText.setFillColor(sf::Color::White);

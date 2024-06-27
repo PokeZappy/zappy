@@ -34,21 +34,6 @@ namespace Zappy {
             raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(GUI_WIDTH - _minOptionsWidth - _rightMargin * 2, 400, _minOptionsWidth + _rightMargin + _rightMargin / 2, 500));
             raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(_rightMargin, 400, 650, 300));
 
-            //     commands.push_back("Admin Commands:");
-            //     commands.push_back("Modifier la position:   HACK_POS id x y");
-            //     commands.push_back("Modifier la direction:  HACK_DIR id [UP/RIGHT/DOWN/LEFT]");
-            //     commands.push_back("Modifier le niveau:     HACK_LEVEL id level");
-            //     commands.push_back("Donner une ressource:   HACK_GIVE id resource quantity");
-            //     commands.push_back("Modifier la vie:        HACK_HEALTH id health");
-            //     commands.push_back("Tuer un joueur:         KILL id");
-            //     commands.push_back("Modifier la fréquence:  sst time");
-            //     commands.push_back("Inventaire d'une case:  HACK_WHOLE_TILE x y food linemate deraumere sibur mendiane phiras thystame");
-            //     commands.push_back("Ressource d'une case:   HACK_TILE ressource quantity x y");
-
-            //     commands.push_back("Légende:");
-            //     commands.push_back("id: int, 
-
-
             raylib::Color::Black().DrawText("Options :", GUI_WIDTH - MeasureText("Options :", 60) - _rightMargin, 410, 60);
             int adminCommandY = 410;
             int firstCommandY = 470;
@@ -66,14 +51,7 @@ namespace Zappy {
             for (auto &button : _buttons) {
                 button->draw();
             }
-            // raylib::Rectangle _tileSrc(0, 0, _inventoryHudTexture.width, _inventoryHudTexture.height);
-            // raylib::Rectangle _tileDest(100, 100, 265, 200);
-
-            // _inventoryHudTexture.Draw(_tileSrc, _tileDest);
         }
-        // void scrollUp(float wheel);
-        // void scrollDown(float wheel);
-        // void update(void);
 
     private:
         bool _activated = false;
@@ -82,10 +60,6 @@ namespace Zappy {
 
         raylib::Texture2D _backgroundHudTexture;
         raylib::Texture2D _inventoryHudTexture;
-        // Rectangle rectangle;
-
-        // size_t _scrollIndex = 0;
-        // double _howManyScroll = 0.0f;
 
         // Buttons
         std::vector<std::unique_ptr<IButton>> _buttons;

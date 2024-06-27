@@ -25,7 +25,7 @@ namespace Zappy {
         if (!_pantheon->activated() && !world.getWinningTeam().empty())
             _pantheon->activate(world.getWinningTeam(), getTeamColor(world.getWinningTeam()), _players);
 
-        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE)
+        if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE && !_escapeMenu->activated())
             _camera.Update(_cameraViewMode);
 
         // Sun & Moon
@@ -36,8 +36,6 @@ namespace Zappy {
             raylib::Color newColor = i == 0 ? SUN_COLOR : MOON_COLOR;
             float brightness = _lights[i].position.y / _gridSize / 50;
             _lights[i].color =  newColor.Brightness(brightness * (i == 0 ? 1.0f : 0.3f));
-            // if (_lights[i].position.y <= 20) _lights[i].enabled = false;
-            // else _lights[i].enabled = true;
             UpdateLightValues(_shader, _lights[i]);
         }
         if (_showPlayers)
@@ -72,6 +70,7 @@ namespace Zappy {
             model.second->update();
         }
         _mainTheme.Update();
+        _pantheonTheme.Update();
         if (_menuIntroGif != nullptr && !_menuIntroGif->isAnimEnded()) {
             _menuIntroGif->update();
         }
@@ -87,7 +86,6 @@ namespace Zappy {
             if (!containsPlayer(player)) {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
-                // pokemon.shiny = true;
 
 
                 // add the model if the pokemon doesn't exist in the map
@@ -173,8 +171,6 @@ namespace Zappy {
                 _menuState = Menu::NONE;
             if (IsKeyPressed(KEY_ENTER)) {
                 _menuClock = std::chrono::steady_clock::now();
-                // _endTarget = raylib::Vector3(_startTarget.x, _startTarget.y - _gridSize * 10, _startTarget.z);
-                // _endPos = raylib::Vector3(_startPos.x, _startPos.y, _startPos.z - _gridSize * 15);
                 _endTarget = raylib::Vector3(_mapX / 2., 0.5, 5) * _gridSize;
                 _endPos = raylib::Vector3(_mapX / 2., 2, -5) * _gridSize;
                 _menuState = Menu::ENDING;

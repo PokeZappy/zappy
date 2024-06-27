@@ -10,22 +10,29 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
+        float moveYSpeed = _gridSize / 15.;
+
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
             if (IsKeyPressed(KEY_ESCAPE)) {
-                if (_pantheon->activated())
+                if (_pantheon->activated()) {
+                    _pantheonTheme.Stop();
+                    _mainTheme.Play();
                     _pantheon->desactivate();
+                }
+                if (!debugMode->activated())
                 _escapeMenu->switchState();
             }
         }
         if (_menuState != Menu::NONE || _escapeMenu->activated() || _pantheon->activated())
             return;
         // Pantheon key
-        if (IsKeyPressed(KEY_P)) {
-            _pantheon->activate("lgbt", getTeamColor("lgbt"), _players);
+        if (!debugMode->activated() && IsKeyPressed(KEY_P)) {
+            _mainTheme.Stop();
+            _pantheonTheme.Play();
+            _pantheon->activate("grass", getTeamColor("grass"), _players);
         }
-
-        float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
+            
             if (IsKeyDown(KEY_SPACE)) {
                 _camera.position.y += moveYSpeed;
                 _camera.target.y += moveYSpeed;
@@ -42,6 +49,8 @@ namespace Zappy {
 
             if (IsKeyPressed(KEY_G)) {
                 if (debugMode->activated()) {
+                    _defaultCameraPosition = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, (_gridSize * _mapY) / 2);
+                    _defaultCameraTarget = raylib::Vector3((_gridSize * _mapX) / 2, _gridSize, _gridSize * (_mapY));
                     debugMode->desactive(_camera, _defaultCameraPosition,
                         _defaultCameraTarget, _defaultAmbientLight);
                 } else {
@@ -71,20 +80,6 @@ namespace Zappy {
                 };
             }
         }
-
-        // if (!_players.empty() && !_players[0]->isDying()) {
-            //* Follow the player with id 0
-            // for (auto &player : _players) {
-            //     if (_players[0]->worldPlayer->getId() == 0) {
-            //         _camera.target = player->getPosition() * _gridSize;
-            //         TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
-            //         break;
-            //     }
-            // }
-            //* Follow the first player
-            // _camera.target = _players[0]->getPosition() * _gridSize;
-            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        // }
 
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };

@@ -8,28 +8,6 @@
 #include "HudMode.hpp"
 
 namespace Zappy {
-    // static std::vector<std::string> getHelpCommands(void)
-    // {
-    //     std::vector<std::string> commands;
-    //     commands.push_back("Admin Commands:");
-    //     commands.push_back("Modifier la position:   HACK_POS id x y");
-    //     commands.push_back("Modifier la direction:  HACK_DIR id [UP/RIGHT/DOWN/LEFT]");
-    //     commands.push_back("Modifier le niveau:     HACK_LEVEL id level");
-    //     commands.push_back("Donner une ressource:   HACK_GIVE id resource quantity");
-    //     commands.push_back("Modifier la vie:        HACK_HEALTH id health");
-    //     commands.push_back("Tuer un joueur:         KILL id");
-    //     commands.push_back("Modifier la fréquence:  sst time");
-    //     commands.push_back("Inventaire d'une case:  HACK_WHOLE_TILE x y food linemate deraumere sibur mendiane phiras thystame");
-    //     commands.push_back("Ressource d'une case:   HACK_TILE ressource quantity x y");
-
-    //     commands.push_back("Légende:");
-    //     commands.push_back("id: int, x: int, y: int, level: int, resource: string (food, linemate, etc.), quantity: int, time: int");
-
-    //     return commands;
-    //     // commands.push_back("Modifier la taille:     HACK_SIZE x y");
-    //     // commands.push_back("Afficher les oeufs:     EGG_LIST");
-    //     // commands.push_back("Afficher les clients:   CLIENT_LIST");
-    // }
 
     void HudMode::updateChat(ClientSocket &socket) {
         int input = GetCharPressed();

@@ -71,15 +71,12 @@ namespace Zappy {
 
         // -- Camera --
         //* Front of the scene
-        _defaultCameraPosition = raylib::Vector3(4.8, 2.5, 20) * _gridSize;
-        _defaultCameraTarget = raylib::Vector3(4.8, 2.2, 13.1) * _gridSize;
+
         //* Menu
         _startPos = getStartPos();
         _startTarget = getStartTarget();
         _camera.SetPosition(_startPos);
         _camera.SetTarget(_startTarget);
-
-        // DisableCursor();
 
         // Load floor texture
         _floorTexture = raylib::Texture2D(_assetsRoot + TILE_TEXTURE_PATH);
@@ -153,11 +150,15 @@ namespace Zappy {
         // Music
         InitAudioDevice();
         _mainTheme = raylib::Music(_assetsRoot + MAIN_THEME_PATH);
-        _mainTheme.Play();
+
+        _pantheonTheme = raylib::Music(_assetsRoot + "Pantheon.ogg");
+         _mainTheme.Play();
+
         _mainTheme.SetLooping(true);
         float randNum = Utils::random(80, 120) / 100.;
         _mainTheme.SetPitch(0.8 + 0.1 * randNum);
         _mainTheme.SetVolume(0.07);
+        _pantheonTheme.SetVolume(0.05);
 
         // Pantheon
         _pantheon = std::make_unique<Pantheon>(assetsRoot, _gridSize, _camera);

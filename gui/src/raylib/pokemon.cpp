@@ -31,12 +31,10 @@ namespace Zappy {
         catch (libconfig::SettingNotFoundException &ex)
         {
             std::cerr << ex.what() << std::endl;
-            // return (false);
         }
         catch (libconfig::SettingTypeException &ex)
         {
             std::cerr << ex.what() << std::endl;
-            // return (false);
         }
 
         // try to get the animation for the pantheon

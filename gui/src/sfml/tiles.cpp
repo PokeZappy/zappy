@@ -35,7 +35,6 @@ namespace Zappy
         _entityTriangle.setRotation(90);
         if (entity->getType() == EntityType::PLAYER) {
             Player *player = static_cast<Player *>(entity.get());
-            // _entityTriangle.setRotation((player->getOrientation() - 1) * 90);
             switch (player->getOrientation()) {
             case Orientation::NORTH: _entityTriangle.setRotation(180); break;
             case Orientation::EAST: _entityTriangle.setRotation(90); break;

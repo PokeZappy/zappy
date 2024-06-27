@@ -102,11 +102,6 @@ namespace Zappy
             return raylib::Vector3(14.04, 10.53, 37.46) * _gridSize;
         }
         return raylib::Vector3(0, 20, 5) * _gridSize;
-        // return raylib::Vector3(
-        //     _mapX / 2. - 1 / 2.,
-        //     5.5 + (_mapX + _mapY) / 8.,
-        //     _mapY * 1.1 + 0.5
-        // ) * _gridSize;
     }
 
     raylib::Vector3 Raylib::getStartTarget(void)
