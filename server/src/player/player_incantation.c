@@ -8,6 +8,7 @@
 #include "../../include/incantation.h"
 #include "../../include/server.h"
 #include "../../include/utils.h"
+#include "../../include/objects.h"
 
 int player_samepos_and_level(server_t *server, player_t *player)
 {
@@ -31,7 +32,7 @@ bool check_incantation(server_t *server, player_t *player)
     int players = 0;
     tiles_t *tile = server->grid->tiles[player->pos.y][player->pos.x];
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < ITEM_PER_TILE; i++) {
         if (tile->items[i] < incantation.objects_required[i])
             return false;
     }
@@ -76,22 +77,11 @@ client_socket_t **rip(server_t *server, player_t *player)
     return participants;
 }
 
-static void print_incantation(cmd_incantation_t *incant)
-{
-    printf("Incantation: %d\n", incant->level);
-    printf("Organizer: %d\n", incant->organizer->socket);
-    printf("Position: %d %d\n", incant->tile_vector.x, incant->tile_vector.y);
-    printf("Participants: \n");
-    for (int i = 0; incant->participants[i]; i++)
-        printf("  %d : %d %d\n", incant->participants[i]->socket, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
-    printf("\n");
-}
-
 void create_current_incantation(server_t *server, player_t *player)
 {
     cmd_incantation_t *cmd_incantation = (cmd_incantation_t *)
     malloc(sizeof(cmd_incantation_t));
-    vector_t pos = {player->pos.y, player->pos.x};
+    vector_t pos = {player->pos.x, player->pos.y};
 
     cmd_incantation->organizer = find_client_by_player(server, player);
     cmd_incantation->level = player->level;
@@ -100,6 +90,5 @@ void create_current_incantation(server_t *server, player_t *player)
     cmd_incantation->number_of_participants =
     player_samepos_and_level(server, player);
     send_gui_elevation(server, cmd_incantation, player);
-    print_incantation(cmd_incantation);
     TAILQ_INSERT_TAIL(&server->head_incantation, cmd_incantation, entries);
 }

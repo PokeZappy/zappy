@@ -7,6 +7,7 @@
 
 #include "../../include/incantation.h"
 #include "../../include/server.h"
+#include "../../include/objects.h"
 
 cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
 {
@@ -44,17 +45,6 @@ void free_incantation(server_t *server, cmd_incantation_t *current)
     free(current);
 }
 
-static void print_post_incantation(cmd_incantation_t *incant)
-{
-    printf("Incantation: %d\n", incant->level);
-    printf("Organizer: %d\n", incant->organizer->id);
-    printf("Position: %d %d\n", incant->tile_vector.x, incant->tile_vector.y);
-    printf("Participants: \n");
-    for (int i = 0; incant->participants[i]; i++)
-        printf("  %d : %d %d\n", incant->participants[i]->id, incant->participants[i]->player->pos.x, incant->participants[i]->player->pos.y);
-    printf("\n");
-}
-
 bool check_post_incantation(server_t *server, client_socket_t *client)
 {
     cmd_incantation_t *current = find_incantation(server, client);
@@ -62,7 +52,6 @@ bool check_post_incantation(server_t *server, client_socket_t *client)
     tiles_t *tile = server->grid->tiles[current->tile_vector.y]
     [current->tile_vector.x];
 
-    print_post_incantation(current);
     if (!player_still_onpos(current)) {
         free_incantation(server, current);
         return false;
@@ -74,5 +63,6 @@ bool check_post_incantation(server_t *server, client_socket_t *client)
         }
         tile->items[i] -= incantation.objects_required[i];
     }
+    bct(server, current->tile_vector);
     return true;
 }
