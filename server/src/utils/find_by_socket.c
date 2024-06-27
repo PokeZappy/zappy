@@ -5,7 +5,7 @@
 ** find_by_socket.c
 */
 
-#include "../../../include/server.h"
+#include "../../include/server.h"
 
 client_socket_t *find_client_by_player(server_t *server, player_t *player)
 {
@@ -25,29 +25,6 @@ client_socket_t *find_client_by_socket(server_t *server, int socket)
     TAILQ_FOREACH(current, &server->head_client_sockets, entries) {
         if (current->player && current->id == socket)
             return current;
-    }
-    return NULL;
-}
-
-player_t *find_player_by_socket(server_t *server, int socket)
-{
-    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
-
-    TAILQ_FOREACH(current, &server->head_client_sockets, entries) {
-        if (current->player && current->id == socket)
-            return current->player;
-    }
-    return NULL;
-}
-
-client_socket_t *find_gui(server_t *server, int socket)
-{
-    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
-
-    while (current) {
-        if (!current->player)
-            return current;
-        current = TAILQ_NEXT(current, entries);
     }
     return NULL;
 }

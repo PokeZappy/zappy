@@ -8,6 +8,7 @@
 #include "../../include/incantation.h"
 #include "../../include/server.h"
 #include "../../include/utils.h"
+#include "../../include/objects.h"
 
 int player_samepos_and_level(server_t *server, player_t *player)
 {
@@ -31,7 +32,7 @@ bool check_incantation(server_t *server, player_t *player)
     int players = 0;
     tiles_t *tile = server->grid->tiles[player->pos.y][player->pos.x];
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < ITEM_PER_TILE; i++) {
         if (tile->items[i] < incantation.objects_required[i])
             return false;
     }
@@ -80,7 +81,7 @@ void create_current_incantation(server_t *server, player_t *player)
 {
     cmd_incantation_t *cmd_incantation = (cmd_incantation_t *)
     malloc(sizeof(cmd_incantation_t));
-    vector_t pos = {player->pos.y, player->pos.x};
+    vector_t pos = {player->pos.x, player->pos.y};
 
     cmd_incantation->organizer = find_client_by_player(server, player);
     cmd_incantation->level = player->level;

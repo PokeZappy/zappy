@@ -13,19 +13,19 @@ static int return_case_direction(double angle)
     if (angle >= 337.5 || angle < 22.5)
         return 1;
     if (angle >= 22.5 && angle < 67.5)
-        return 2;
+        return 8;
     if (angle >= 67.5 && angle < 112.5)
-        return 3;
+        return 7;
     if (angle >= 112.5 && angle < 157.5)
-        return 4;
+        return 6;
     if (angle >= 157.5 && angle < 202.5)
         return 5;
     if (angle >= 202.5 && angle < 247.5)
-        return 6;
+        return 4;
     if (angle >= 247.5 && angle < 292.5)
-        return 7;
+        return 3;
     if (angle >= 292.5 && angle < 337.5)
-        return 8;
+        return 2;
     return -1;
 }
 
@@ -66,14 +66,16 @@ void cmd_broadcast(server_t *server, char *args, client_socket_t *client)
 {
     char *text = args + 10;
     client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
+    char result[16384];
 
     if (!check_for_ko(args, client))
         return;
     while (current != NULL) {
         if (current->player && current->id != client->id) {
-            dprintf(current->socket, "message %d, %s\n",
+            sprintf(result, "message %d, %s\n",
             get_sound_direction(server->grid->width, server->grid->height,
             current->player, client->player->pos), text);
+            print_buffer(current->socket, result);
         }
         current = TAILQ_NEXT(current, entries);
     }

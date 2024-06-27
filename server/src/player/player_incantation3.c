@@ -11,11 +11,11 @@ void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p)
 {
     char buffer[4096];
 
-    sprintf(buffer, "pic %d %d %d\n", p->pos.x,
+    sprintf(buffer, "pic %d %d %d", p->pos.x,
     p->pos.y, p->level);
     for (int i = 0; i < c->number_of_participants; i++) {
         sprintf(buffer, "%s %d", buffer,
-        c->participants[i]->socket);
+        c->participants[i]->id);
         dprintf(c->participants[i]->socket,
                 "Elevation underway\n");
     }
@@ -25,7 +25,7 @@ void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p)
 
 bool is_participant(cmd_incantation_t *cu, client_socket_t *cl)
 {
-    for (int i = 0; cu->participants[i] != NULL; i++) {
+    for (int i = 0; i < cu->number_of_participants; i++) {
         if (cu->participants[i] == cl)
             return true;
     }

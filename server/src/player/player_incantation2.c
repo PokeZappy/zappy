@@ -7,15 +7,7 @@
 
 #include "../../include/incantation.h"
 #include "../../include/server.h"
-
-bool player_is_participant(cmd_incantation_t *cu, client_socket_t *cl)
-{
-    for (int i = 0; i < cu->number_of_participants; i++) {
-        if (cu->participants[i] == cl)
-            return true;
-    }
-    return false;
-}
+#include "../../include/objects.h"
 
 cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
 {
@@ -24,7 +16,7 @@ cmd_incantation_t *find_incantation(server_t *s, client_socket_t *c)
     while (current) {
         if (current->organizer == c)
             return current;
-        if (player_is_participant(current, c))
+        if (is_participant(current, c))
             return current;
         current = TAILQ_NEXT(current, entries);
     }
@@ -60,12 +52,17 @@ bool check_post_incantation(server_t *server, client_socket_t *client)
     tiles_t *tile = server->grid->tiles[current->tile_vector.y]
     [current->tile_vector.x];
 
-    if (!player_still_onpos(current))
+    if (!player_still_onpos(current)) {
+        free_incantation(server, current);
         return false;
+    }
     for (int i = 0; i < 7; i++) {
-        if (tile->items[i] < incantation.objects_required[i])
+        if (tile->items[i] < incantation.objects_required[i]) {
+            free_incantation(server, current);
             return false;
+        }
         tile->items[i] -= incantation.objects_required[i];
     }
+    bct(server, current->tile_vector);
     return true;
 }

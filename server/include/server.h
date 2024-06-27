@@ -25,6 +25,11 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+typedef struct handler_s {
+    server_t *server;
+    void (*handler)(int, server_t *);
+} handler_t;
+
 typedef struct server_s {
     server_arg_t *arguments; // arguments of the server
     int socket; // socket of the server
@@ -41,3 +46,4 @@ typedef struct server_s {
 
 int zappy_server(server_arg_t *arguments);
 void time_manager(server_t *server);
+void print_zappy(server_t *server);

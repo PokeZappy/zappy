@@ -38,7 +38,7 @@ static void send_all_info(struct server_s *server, int gui_socket)
     client_socket_t *p = TAILQ_FIRST(&server->head_client_sockets);
 
     while (p != NULL) {
-        if (p->is_gui == 1) {
+        if (p->is_gui == 1 || p->player == NULL) {
             p = TAILQ_NEXT(p, entries);
             continue;
         }
@@ -56,9 +56,6 @@ static void send_all_info(struct server_s *server, int gui_socket)
 
 static void handle_gui_client(client_socket_t *client, struct server_s *server)
 {
-    int x = server->grid->width;
-    int y = server->grid->height;
-
     client->is_gui = 1;
     cmd_msz(server, NULL, client);
     cmd_sgt(server, NULL, client);
@@ -102,7 +99,6 @@ static int handle_client_message(client_socket_t *client,
         return -1;
     }
     if (bytes == 0) {
-        printf("Client disconnected\n");
         close(client_socket);
         return -1;
     }
@@ -150,8 +146,6 @@ static void wait_for_client(struct server_s *server)
         fprintf(stderr, "accept failed: %s\n", strerror(errno));
         return;
     }
-    printf("Client connected: %s:%d\n",
-        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     new_client = (client_socket_t *)malloc(sizeof(client_socket_t));
     new_client->socket = client_socket;
     new_client->is_gui = 0;
