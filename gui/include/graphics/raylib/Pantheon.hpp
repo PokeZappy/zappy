@@ -77,7 +77,6 @@ namespace Zappy {
             raylib::Vector2 _endTextPos = raylib::Vector2(200, 10);
             raylib::Vector2 _startTextPos = raylib::Vector2(200, GUI_HEIGHT / 2 - 100);
             float _startDuration = 3.0f;
-            // float _startDuration = 0.5f;
 
             // Go to the pokemon
             float _goToPokemonDuration = 1.5f;
@@ -99,9 +98,7 @@ namespace Zappy {
 
             // Duration of the pokemons animations
             float _showPokemonDuration = 4.0f;
-            // float _showPokemonDuration = 0.5f;
             float _transitionPokemonDuration = 1.5f;
-            // float _transitionPokemonDuration = 0.5f;
 
             int _maxPokemonPerTeam = 6;
 

@@ -18,13 +18,6 @@ namespace Zappy
 
         size_t x, y, id = 0;
 
-        // if (commandName != "bct" && commandName != "ppo" && commandName != "pin" && commandName != "pgt") {
-        //     std::cout << command << std::endl;
-        // }
-        // if (commandName == "ebo" || commandName == "enw" || commandName == "pfk")
-        //     std::cout << command << std::endl;
-        // }
-
         if (commandName == "msz") { // map size
             ss >> x >> y;
             initTiles(x, y);
@@ -190,7 +183,6 @@ namespace Zappy
             addShellCommand("Game ended");
             ss >> _winningTeam;
             std::cout << "Game ended" << std::endl;
-            // return true;
         }
         else if (commandName == "smg") { // message from the server
             std::string message;

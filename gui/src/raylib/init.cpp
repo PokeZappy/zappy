@@ -78,8 +78,6 @@ namespace Zappy {
         _camera.SetPosition(_startPos);
         _camera.SetTarget(_startTarget);
 
-        // DisableCursor();
-
         // Load floor texture
         _floorTexture = raylib::Texture2D(_assetsRoot + TILE_TEXTURE_PATH);
         _floorMesh = GenMeshPlane(_gridSize, _gridSize, 1, 1);

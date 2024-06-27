@@ -15,7 +15,6 @@ namespace Zappy
             return;
         _hudMode->setTile(nullptr);
         if (_pantheon->activated()) {
-            // _pantheon->render();
             renderPantheon();
             return;
         }

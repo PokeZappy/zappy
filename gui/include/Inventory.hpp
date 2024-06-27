@@ -39,7 +39,7 @@ namespace Zappy {
         this->mendiane += other.mendiane;
         this->phiras += other.phiras;
         this->thystame += other.thystame;
-        return *this;  // Retourne une référence à l'objet actuel
+        return *this;
     }
 
         ~Inventory() = default;

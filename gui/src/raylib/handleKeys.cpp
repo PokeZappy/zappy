@@ -81,20 +81,6 @@ namespace Zappy {
             }
         }
 
-        // if (!_players.empty() && !_players[0]->isDying()) {
-            //* Follow the player with id 0
-            // for (auto &player : _players) {
-            //     if (_players[0]->worldPlayer->getId() == 0) {
-            //         _camera.target = player->getPosition() * _gridSize;
-            //         TraceLog(LOG_WARNING, "Camera target: %d", player->worldPlayer->getId());
-            //         break;
-            //     }
-            // }
-            //* Follow the first player
-            // _camera.target = _players[0]->getPosition() * _gridSize;
-            // _camera.position = _players[0]->getPosition() * _gridSize + Vector3{-50, 50, 100};
-        // }
-
         // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
         float cameraPos[3] = { _camera.position.x, _camera.position.y, _camera.position.z };
         SetShaderValue(_shader, _shader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
