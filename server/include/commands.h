@@ -108,3 +108,4 @@ bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time);
 void add_delay(server_t *server, client_socket_t *c, delayed_command_t *delay);
 void add_icii_delay(server_t *s, client_socket_t *c, delayed_command_t *d);
 void bct(server_t *server, vector_t pos);
+void print_buffer(int socket, char *buffer);

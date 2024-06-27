@@ -9,12 +9,12 @@
 
 char *player_look(server_t *server, player_t *player)
 {
-    char *result = (char *)malloc(sizeof(char) * 4096);
+    char *result = (char *)malloc(sizeof(char) * 16384);
 
     sprintf(result, "[");
     for (int i = 0; i <= player->level; i++) {
         player_look_loop(server, player, i, result);
     }
-    sprintf(result, "%s ]", result);
+    sprintf(result, "%s ]\n", result);
     return result;
 }

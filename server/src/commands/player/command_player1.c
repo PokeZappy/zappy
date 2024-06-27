@@ -53,7 +53,7 @@ void cmd_look(server_t *server, char *args, client_socket_t *client)
     if (!client || !client->player)
         return;
     response = player_look(server, client->player);
-    dprintf(client->socket, "%s\n", response);
+    print_buffer(client->socket, response);
     free(response);
 }
 
