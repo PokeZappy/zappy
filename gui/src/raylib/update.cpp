@@ -22,8 +22,11 @@ namespace Zappy {
 
         handleKeys();
 
-        if (!_pantheon->activated() && !world.getWinningTeam().empty())
+        if (!_pantheon->activated() && !world.getWinningTeam().empty()) {
+            _mainTheme.Stop();
+            _pantheonTheme.Play();
             _pantheon->activate(world.getWinningTeam(), getTeamColor(world.getWinningTeam()), _players);
+        }
 
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled()) && _menuState == Menu::NONE && !_escapeMenu->activated())
             _camera.Update(_cameraViewMode);
