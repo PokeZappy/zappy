@@ -7,7 +7,7 @@
 
 #include "../../include/server.h"
 
-void client_dead(server_t *server, client_socket_t *client)
+static void client_dead(server_t *server, client_socket_t *client)
 {
     delayed_command_t *delayed_command =
     TAILQ_FIRST(&server->head_delayed_commands);
@@ -30,7 +30,7 @@ void client_dead(server_t *server, client_socket_t *client)
     free_client(client);
 }
 
-void client_eat(server_t *server, client_socket_t *client)
+static void client_eat(server_t *server, client_socket_t *client)
 {
     if (client->player->inventory[0] > 0) {
         client->player->inventory[0] -= 1;

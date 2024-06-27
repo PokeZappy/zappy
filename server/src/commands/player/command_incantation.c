@@ -18,6 +18,7 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
     cmd->time = 300;
     if (!check_incantation(server, player)) {
         dprintf(client->socket, "ko\n");
+        free(cmd);
         return;
     }
     create_current_incantation(server, client->player);
@@ -26,13 +27,14 @@ void cmd_pre_incant(server_t *server, char *args, client_socket_t *client)
     actl(server, client, cmd, args);
 }
 
-void is_win(server_t *server, client_socket_t *client, cmd_incantation_t *c) {
+static void is_win(server_t *s, client_socket_t *client, cmd_incantation_t *c)
+{
     if (client->player->level == 8) {
         dprintf(client->socket, "win\n");
-        dprintf(get_gui(server)->socket, "seg %s\n",
-                client->player->team->name);
-       printf("TEAM : %s WON\n", client->player->team->name);
-        free_server(server);
+        dprintf(get_gui(s)->socket, "seg %s\n",
+        client->player->team->name);
+        printf("TEAM : %s WON\n", client->player->team->name);
+        free_server(s);
         exit(0);
     }
 }

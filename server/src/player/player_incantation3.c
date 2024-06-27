@@ -20,7 +20,6 @@ void send_gui_elevation(server_t *s, cmd_incantation_t *c, player_t *p)
                 "Elevation underway\n");
     }
     sprintf(buffer, "%s\n", buffer);
-    printf("%s\n", buffer);
     dprintf(get_gui(s)->socket, "%s", buffer);
 }
 

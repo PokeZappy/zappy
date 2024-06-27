@@ -7,6 +7,13 @@
 
 #include "../../../include/commands.h"
 
+static bool is_time_g_or_e(timeval_t *current_time, timeval_t *delay_time)
+{
+    return ((current_time->tv_sec == delay_time->tv_sec) ?
+            (current_time->tv_usec >= delay_time->tv_usec) :
+            (current_time->tv_sec >= delay_time->tv_sec));
+}
+
 void execute_command(server_t *server)
 {
     timeval_t current_time;
@@ -26,17 +33,6 @@ void execute_command(server_t *server)
             free(delayed_command);
         }
         delayed_command = tmp;
-    }
-}
-
-void print_queue(server_t *server)
-{
-    delayed_command_t *delayed_command;
-
-    TAILQ_FOREACH(delayed_command, &server->head_delayed_commands, entries) {
-        printf("Command: %s\n", delayed_command->args);
-        printf("Delay: %ld : %ld\n", delayed_command->delay.tv_sec,
-        delayed_command->delay.tv_usec);
     }
 }
 

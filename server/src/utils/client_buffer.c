@@ -5,7 +5,7 @@
 ** incantation.c
 */
 
-#include "../../../include/server.h"
+#include "../../include/server.h"
 
 void print_buffer(int socket, char *buffer)
 {

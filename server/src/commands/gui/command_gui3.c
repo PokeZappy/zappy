@@ -18,3 +18,16 @@ void bct(server_t *server, vector_t pos)
     response);
     free(response);
 }
+
+void cmd_sgt(server_t *server, char *args, client_socket_t *client)
+{
+    dprintf(client->socket, "sgt %d\n", server->arguments->f);
+}
+
+void cmd_sst(server_t *server, char *args, client_socket_t *client)
+{
+    int new_f = atoi(args + 4);
+
+    server->arguments->f = new_f;
+    dprintf(get_gui(server)->socket, "sst %d\n", new_f);
+}

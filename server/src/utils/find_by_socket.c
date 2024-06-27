@@ -5,7 +5,7 @@
 ** find_by_socket.c
 */
 
-#include "../../../include/server.h"
+#include "../../include/server.h"
 
 client_socket_t *find_client_by_player(server_t *server, player_t *player)
 {

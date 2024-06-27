@@ -6,6 +6,7 @@
 */
 
 #include "../../../include/tile.h"
+#include "../../../include/server.h"
 #include "stdlib.h"
 
 tiles_t *init_tile(void)
@@ -21,6 +22,16 @@ tiles_t *init_tile(void)
     tile->items[5] = 0;
     tile->items[6] = 0;
     return tile;
+}
+
+char *get_tile_content(tiles_t *tile)
+{
+    char *content = (char *)malloc(sizeof(char) * 1024);
+
+    sprintf(content, "%d %d %d %d %d %d %d", tile->items[0],
+            tile->items[1], tile->items[2], tile->items[3], tile->items[4],
+            tile->items[5], tile->items[6]);
+    return content;
 }
 
 void free_all_egg(tiles_t *tile)
