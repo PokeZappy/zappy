@@ -45,8 +45,6 @@ typedef struct player_s {
 // -- PLAYER RELATED -- //
 player_t *init_player(struct team_s *team, server_t *server);
 void free_player(player_t *player);
-void add_item_to_player(player_t *player, int item, int quantity);
-void remove_item_from_player(player_t *player, int item, int quantity);
 void player_move(player_t *player, int map_width, int map_height);
 void player_orientation(player_t *player, bool right);
 char *print_player_inventory(player_t *player);
@@ -56,7 +54,6 @@ bool player_eject(server_t *server, player_t *player);
 // -- SERVER RELATED -- //
 player_t *add_player_to_team(char *team_name, server_t *server);
 char *player_look(server_t *server, player_t *player);
-void player_look_loop(server_t *server, player_t *p, int i, char *result);
 int nb_player_on_tile(server_t *server, vector_t tile_pos);
 bool check_incantation(server_t *server, player_t *player);
 bool check_post_incantation(server_t *server, client_socket_t *client);

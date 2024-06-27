@@ -31,3 +31,30 @@ void player_move(player_t *player, int map_width, int map_height)
         player->pos.x += 1;
     check_playerposition(player, map_width, map_height);
 }
+
+void player_orientation(player_t *player, bool right)
+{
+    if (right)
+        player->direction = (direction_t)((player->direction + 1) % 4);
+    else
+        player->direction = (direction_t)((player->direction + 3) % 4);
+}
+
+int nb_player_on_tile(server_t *server, vector_t tilepos)
+{
+    int nb = 0;
+    client_socket_t *current = TAILQ_FIRST(&server->head_client_sockets);
+    vector_t pos;
+
+    while (current) {
+        if (!current->player) {
+            current = TAILQ_NEXT(current, entries);
+            continue;
+        }
+        pos = current->player->pos;
+        if (pos.x == tilepos.x && pos.y == tilepos.y)
+            nb++;
+        current = TAILQ_NEXT(current, entries);
+    }
+    return nb;
+}

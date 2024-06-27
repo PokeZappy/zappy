@@ -7,7 +7,7 @@
 
 #include "../../include/server.h"
 
-void launch_timed_function(server_t *server, int time_unit)
+static void launch_timed_function(server_t *server, int time_unit)
 {
     execute_command(server);
     if (time_unit % 20 == 0) {

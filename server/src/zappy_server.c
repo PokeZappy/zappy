@@ -76,7 +76,6 @@ static int connect_server(server_t *server, server_arg_t *arguments)
         free_server(server);
         return 84;
     }
-    printf("Server is running on port %d\n", arguments->p);
     return 0;
 }
 
@@ -109,7 +108,7 @@ void close_server(int sig, server_t *server)
     exit(0);
 }
 
-void block_incoming_signal(t_handler *handler)
+void block_incoming_signal(handler_t *handler)
 {
     struct sigaction sa;
 
@@ -124,7 +123,7 @@ void block_incoming_signal(t_handler *handler)
 int zappy_server(server_arg_t *arguments)
 {
     server_t *server = (server_t *)malloc(sizeof(server_t));
-    t_handler handler = {server, close_server};
+    handler_t handler = {server, close_server};
 
     if (server == NULL) {
         fprintf(stderr, "zappy_server: Memory allocation of server failed.\n");
@@ -135,6 +134,7 @@ int zappy_server(server_arg_t *arguments)
         return 84;
     }
     block_incoming_signal(&handler);
+    print_zappy(server);
     while (simulate_server(server));
     close_all_clients(server);
     close(server->socket);
