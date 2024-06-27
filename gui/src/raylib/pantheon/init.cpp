@@ -12,19 +12,26 @@ namespace Zappy {
     _assetsRoot(assetsRoot), _gridSize(gridSize), _camera(camera),
     _typesTexture(assetsRoot + TYPES_TEXTURE_PATH),
     _steve(raylib::Model(_assetsRoot + "models/steve.glb")),
-    _steveAnims(raylib::ModelAnimation::Load(_assetsRoot + "models/steve.glb")) {
+    _steveAnims(raylib::ModelAnimation::Load(_assetsRoot + "models/steve.glb")),
+    _arena(raylib::Model(_assetsRoot + "models/pantheon_pedestal.glb")) {
         _theme = raylib::Music(assetsRoot + "menu/SouthProvince.ogg");
         _theme.SetLooping(true);
         _theme.SetVolume(0.08);
 
          // Start positions of the camera
-        _startPos = raylib::Vector3(-1.17, 0.57, -1.14);
-        _startTarget = raylib::Vector3(-1.15, 0.56, -1.08);
+        _startPos = raylib::Vector3(-gridSize * 30, _gridSize * 5, -_gridSize * 32);
+        _startTarget = raylib::Vector3(-gridSize * 10, -gridSize * 10, gridSize * 37);
 
         // Index of the current pokemon we're showing
-        _currentShowPosition = raylib::Vector3(0.15, 0.05, 0);
-        _currentShowTarget = raylib::Vector3(0.22, 0.04, 0);
+        _currentShowPosition = raylib::Vector3(-_gridSize * 9.4, 0, -gridSize * 6.1);
+        _currentShowTarget = raylib::Vector3(_gridSize * 65, _gridSize * 2.7 , -_gridSize * 11.5);
 
-        pokemonSpacing = 0.2;
+
+        _arenaPos = raylib::Vector3(_gridSize * 2, 0, _gridSize * 4);
+
+        _stevePos = raylib::Vector3(-_gridSize * 7, -_gridSize * 1.8, _gridSize * 4);
+
+        _endingPosition = raylib::Vector3(-gridSize * 23.7, _gridSize * 1, _gridSize * 5);
+        _endingTarget = raylib::Vector3(gridSize * 50.5, -_gridSize * 8, _gridSize * 2);
     }
 }

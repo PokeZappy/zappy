@@ -20,9 +20,8 @@ namespace Zappy {
         _camera.target = _startTarget;
         _animClock = std::chrono::steady_clock::now();
 
-        _endingPosition = raylib::Vector3(-0.2 * (_players.size()), 0.3, 0.2 * (_players.size() / 2));
-        _endingTarget = raylib::Vector3(0.3, 0.03, 0.2 * (_players.size() / 2));
-        _stevePos = raylib::Vector3(0.23, 0, (0.2 * (_players.size() - 1)) / 2);
+        // _endingPosition = raylib::Vector3(-0.2 * (_players.size()), 0.3, 0.2 * (_players.size() / 2));
+        // _endingTarget = raylib::Vector3(0.3, 0.03, 0.2 * (_players.size() / 2));
     }
 
     void Pantheon::desactivate() {

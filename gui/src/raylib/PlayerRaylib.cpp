@@ -138,7 +138,8 @@ namespace Zappy
         _models->getModelByAnimation(Animations::PANTHEON)->draw(position,
             raylib::Vector3(0, 1, 0),
             90,
-            raylib::Vector3(_gridSize / 4, true) * (1 + worldPlayer->getLevel() / 4.0f),
+            // raylib::Vector3(_gridSize / 12, true) * (1 + worldPlayer->getLevel() / 4.0f),
+            raylib::Vector3(_gridSize / 12, true) * (1 + 8 / 4.0f),
             raylib::Color::White()
         );
     }

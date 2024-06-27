@@ -10,6 +10,16 @@
 namespace Zappy {
     void Raylib::handleKeys(void)
     {
+        float moveYSpeed = _gridSize / 15.;
+        if (IsKeyDown(KEY_SPACE)) {
+            _camera.position.y += moveYSpeed;
+            _camera.target.y += moveYSpeed;
+        }
+        if (IsKeyDown(KEY_LEFT_SHIFT)) {
+            _camera.position.y -= moveYSpeed;
+            _camera.target.y -= moveYSpeed;
+        }
+
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
             if (IsKeyPressed(KEY_ESCAPE)) {
                 if (_pantheon->activated())
@@ -21,19 +31,17 @@ namespace Zappy {
             return;
         // Pantheon key
         if (IsKeyPressed(KEY_P)) {
-            _pantheon->activate("lgbt", getTeamColor("lgbt"), _players);
+            _pantheon->activate("grass", getTeamColor("grass"), _players);
         }
-
-        float moveYSpeed = _gridSize / 15.;
         if (debugMode->getType() != CHAT && (!_hudMode->isChatEnabled())) {
-            if (IsKeyDown(KEY_SPACE)) {
-                _camera.position.y += moveYSpeed;
-                _camera.target.y += moveYSpeed;
-            }
-            if (IsKeyDown(KEY_LEFT_SHIFT)) {
-                _camera.position.y -= moveYSpeed;
-                _camera.target.y -= moveYSpeed;
-            }
+            // if (IsKeyDown(KEY_SPACE)) {
+            //     _camera.position.y += moveYSpeed;
+            //     _camera.target.y += moveYSpeed;
+            // }
+            // if (IsKeyDown(KEY_LEFT_SHIFT)) {
+            //     _camera.position.y -= moveYSpeed;
+            //     _camera.target.y -= moveYSpeed;
+            // }
 
             if (IsKeyPressed(KEY_N)) {
                 _hudMode->switchState();
