@@ -62,16 +62,17 @@ namespace raylib {
                 );
 
                 _frameCount = 0;
-                for (size_t i = 0; i < entries.size(); i++) {
-                    _frameCount++;
-                    _images.push_back(Image(entries[i].path().string()));
-                }
-                _texture = std::make_shared<Texture2D>(_images[0]);
-                // for (const auto& entry : entries) {
+                // for (size_t i = 0; i < entries.size(); i++) {
                 //     _frameCount++;
-                //     _paths.push_back(entry.path().string());
+                //     _images.push_back(Image(entries[i].path().string()));
                 // }
-                // _loadThread = std::thread(&Gif::loadTexturesAsync, this);
+                _images.push_back(Image(entries[0].path().string()));
+                _texture = std::make_shared<Texture2D>(_images[0]);
+                for (const auto& entry : entries) {
+                    _frameCount++;
+                    _paths.push_back(entry.path().string());
+                }
+                _loadThread = std::thread(&Gif::loadTexturesAsync, this);
                 _mesh = GenMeshPlane(_texture->width, _texture->height, 1, 1);
                 _meshMaterial = LoadMaterialDefault();
                 _meshMaterial.maps[MATERIAL_MAP_DIFFUSE].texture = *_texture;
@@ -100,7 +101,9 @@ namespace raylib {
                 return;
             }
             if (_images.size() > 0) {
-                // ensureCurrentTextureLoaded();
+                while(_currentFrame >= _images.size()) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                }
                 _texture->Update(_images[_currentFrame].data);
             }
             _frameDelay = _maxFrameDelay;
@@ -129,7 +132,7 @@ namespace raylib {
             }
         }
 
-        void reset(void) {
+        void reset(bool animEnded = false) {
             _currentFrame = 0;
             _animEnded = false;
         }
@@ -151,9 +154,10 @@ namespace raylib {
         }
 
         // void ensureCurrentTextureLoaded() {
-        //     std::unique_lock<std::mutex> lock(_textureMutex);
+        //     _textureMutex.lock();
+        //     // std::unique_lock<std::mutex> lock(_textureMutex);
         //     while (_currentFrame >= _images.size()) {
-        //         _textureCondition.wait(lock);
+        //         // _textureCondition.wait(lock);
         //     }
         // }
 

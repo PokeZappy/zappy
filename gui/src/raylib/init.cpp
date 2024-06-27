@@ -174,6 +174,6 @@ namespace Zappy {
             _assetsRoot + menuPath + "frames_main", true, 1, _isMenuDay ? 1.1 : 1.0);
 
         // Broadcast gif
-        _broadcastGif.reset();
+        _broadcastGif.reset(true);
     }
 }
