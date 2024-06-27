@@ -94,7 +94,7 @@ static void print_server_args(server_t *server)
     }
     printf("\n\n");
     printf("---\n\n");
-    printf("Server is running on port %d\n", server->arguments->p);
+    printf("Server is running on port %d\n\n", server->arguments->p);
 }
 
 void print_zappy(server_t *server)
