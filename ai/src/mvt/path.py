@@ -1,5 +1,3 @@
-from math import floor
-
 from ai.src.gameplay.enum_gameplay import Directions as face
 
 

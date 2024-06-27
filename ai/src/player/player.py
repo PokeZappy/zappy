@@ -206,7 +206,6 @@ class Player(Bot):
         if action[0] == 'Take':
             self.take_obj(action[1])
         elif action == 'Incantation':
-            # print('uuuuuuuuuuuuuuuuuuuuuuuuuui')
             self.incantation()
         elif action[0] == 'Set':
             self.set_obj(action[1])
@@ -237,7 +236,8 @@ class Player(Bot):
         """
         Process the received data from the server.
 
-        This method handles the data received from the server, updates player attributes accordingly, and removes the processed action from the action queue.
+        This method handles the data received from the server, updates player attributes accordingly,
+        and removes the processed action from the action queue.
 
         :param buf: The data received from the server.
         :return: None
@@ -262,15 +262,12 @@ class Player(Bot):
             if recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
-                # print(f'life: {self.life}')
                 if self.debug_mode:
                     print("inventory")
             if recv_type == 'elevation':
-                # print('elevation :', msgs)
                 continue
             if recv_type == 'broadcast':
                 if msgs == 'ko' or msgs[0] == 'ko':
-                    # TODO - on vient pas skip des messages avec ce continue ?
                     continue
                 for msg in msgs:
                     self.broadcast_traitement(msg)
@@ -290,7 +287,11 @@ class Player(Bot):
 
     def update_inventory(self, new_object: str, action: bool) -> None:
         """
-        TODO - doit être appelé quand on vient récup un obt
+        Update the player's inventory based on the action performed.
+
+        :param new_object: str - The object to update in the inventory.
+        :param action: bool - The action to perform (add or remove).
+        :return: None
         """
         if action:
             self.inventory[new_object] += 1
@@ -329,15 +330,17 @@ class Player(Bot):
 
     def global_message(self, message: tuple | str | dict = None) -> None:
         if message and message['msg'] == 'haec est historia imperii ACCMST' and self.new_born is True:
-            self.message.uuid_used = [uuid for uuid in message['infos'] if uuid not in self.message.uuid_used] + self.message.uuid_used
+            self.message.uuid_used = [uuid for uuid in message['infos']
+                                      if uuid not in self.message.uuid_used] + self.message.uuid_used
             print(f'new self.uuid: {self.message.uuid_used}')
             self.new_born = False
 
     def back_on_track(self, msg):
         """
+        Adjusts the player's movement to get back on track after being ejected in a specific direction.
 
-        :param msg:
-        :return:
+        :param msg: str - The message indicating the direction of ejection.
+        :return: None
         """
         if self.eject_security is False:
             return

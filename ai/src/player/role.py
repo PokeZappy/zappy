@@ -1,3 +1,5 @@
+import select
+
 from socket import socket
 
 from ai.src.player.player import Player
@@ -7,7 +9,7 @@ from ai.src.gameplay.evolution import evolution
 from ai.src.gameplay.enum_gameplay import Ressources as res
 from ai.src.gameplay.utils import is_all_val0
 from ai.src.gameplay.enum_gameplay import Directions as dir
-import select
+
 
 class Role(Player):
 
@@ -78,7 +80,6 @@ class Role(Player):
                         self.queue.append(elem)
             else:
                 self.queue.append(ele)
-                
 
     def empty_queue(self) -> None:
         """
@@ -117,7 +118,6 @@ class Role(Player):
         if self.queue[0] == 'Elevation\n':
             self.level += 1
             self.set_goal()
-
 
     def run(self) -> None:
         """
@@ -162,7 +162,3 @@ class Role(Player):
                     self.allow_action = False
                 if len(self.queue) == 0 and len(self.actions) == 0:
                     self.empty_queue()
-                # print(f"actions: {len(self.actions)}")
-                # print(f"actions: {self.actions}")
-                # print(f"queue: {len(self.queue)}")
-

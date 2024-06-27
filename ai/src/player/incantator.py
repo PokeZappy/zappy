@@ -151,24 +151,18 @@ class Incantator(Player):
             elif recv_type == 'inventory':
                 self.inventory = extract_inventory(msgs)
                 self.life = self.inventory['food'] * self.FOOD
-                # print(f'life incantator: {self.life}')
-                # print(self)
             elif recv_type == 'look':
                 if self.ready == False:
-                    self.addapt_map(msgs) #TODO: @Cyprien: implement a real look, and only watch the case 0, put a condition of level up and if true call incantation
-                                          #TODO: @Cyprien: if false, call the inventory
+                    self.addapt_map(msgs)
             elif recv_type == 'elevation':
                 if self.debug_mode:
                     print('elevation: incant', msgs)
                 if len(self.actions) > 0 and self.actions[0] == 'Incantation':
-                    # print("take care of")
                     self.actions.pop(0)
                     continue
-                # try:
                 if msgs[-1] != 'y' and int(msgs[-1]) > 1:
                     self.level += 1
                     if self.level == 2:
-                        # print('I am level 2, here, get out')
                         self.queue.append('Right')
                         self.queue.append('Right')
                         self.queue.append('Forward')
@@ -180,11 +174,6 @@ class Incantator(Player):
                     self.queue.append(('Take', 'food'))
                     self.queue.append('Inventory')
                     self.queue.append('Incantation')
-                # except Exception:
-                    # pass
-                # print(f'level: {self.level}')
-                # print(f'queue: {self.queue}')
-                # print(f'actions: {self.actions}')
                 continue
             elif recv_type == 'broadcast':
                 if msgs[0] == 'ko' or not msgs or isinstance(msgs, str):
@@ -196,13 +185,10 @@ class Incantator(Player):
                 print("problems there")
                 print(f"recv {recv_type}, msgs {msgs}")
             try:
-                # if self.actions[0] != recv_type:
-                #     print("recv", recv_type, "action", self.actions[0])
                 self.actions.pop(0)
             except Exception as e:
                 print(e)
                 print(f'incatator recv_type: {recv_type} and msgs: {msgs} and buf {buf}')
-            # self.actions.pop(0)
 
     def broadcast_traitement(self, message: tuple | str) -> None:
         if message['msg'] == 'facultates positas carmina':
@@ -253,15 +239,9 @@ class Incantator(Player):
             if self.queue[0] == 'Left':
                 self.comback.insert(0, 'Right')
             self.apply_action()
-            # print("the queue is", self.queue,
-            #       "the action is :", self.actions)
         if len(self.actions) > 0 or self.dir is None:
-            # if self.count % 100007 == 0:
-            #     print(f"Incantator {self.level} alive")
-            # self.count += 1
             return
         if self.first_round:
-            # self.queue.append(('Set', 'food'))
             self.first_round = False
         if self.life <= 400:
             self.queue.append(('Take', 'food'))
@@ -269,7 +249,7 @@ class Incantator(Player):
             self.queue.append(('Take', 'food'))
             self.queue.append('Incantation') #TODO: @Cyprien: change the incantation to look
             return
-        if self.dir == None:
+        if self.dir is None:
             self.queue.append('Look')
             return
         if self.dir is not None and self.level < 2 and self.have_linemate == False and not self.ready:
@@ -296,9 +276,4 @@ class Incantator(Player):
             self.ready = True
         if self.level >= 2:
             self.queue.append('Inventory')
-            self.queue.append('Incantation') #TODO: @Cyprien: change the incantation to look
-        # if self.allowed_incantation > self.level:
-        #     self.queue.append('Incantation')
-        # else:
-        #     self.queue.append('Look')
-            #TODO: commmunicate with the mastermind on the look
+            self.queue.append('Incantation')

@@ -1,5 +1,4 @@
 from os import fork
-from random import randint
 
 from collections import Counter
 

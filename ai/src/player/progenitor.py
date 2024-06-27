@@ -4,7 +4,10 @@ from ai.src.player.player import Player
 
 
 class Progenitor(Player):
-
+    """
+    The Progenitor class represents a specialized type of Player that serves as the initial entity in the game environment.
+    It manages the creation of new players, their actions, and the decision-making process based on the game state.
+    """
     def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)

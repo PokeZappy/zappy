@@ -149,8 +149,6 @@ def correction_overload_server(s: str, actions) -> bool:
         return counter_of_delim(s)
     if s.startswith('message'):
         return counter_of_quotations_marks(s)
-    # print(f'slot valide ? {validate_number_pattern(s)}')
-    # print(f'is in {'Slots' in actions}')
     if validate_number_pattern(s) and 'Slots' in actions:
         return True
     if s.startswith('Elevation') or s.startswith('Current'):

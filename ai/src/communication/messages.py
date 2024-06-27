@@ -100,20 +100,18 @@ class Messages(object):
                 tmp_msg.append(msg)
                 self.server_fixe = ''
 
-        msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
-        msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg
+                       and 'level' not in msg and 'Elevation' not in msg]
+        msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg
+                         or 'level' not in msg or 'Elevation' not in msg]
         if incantator:
             msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg]
             msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg]
             for msg in tmp_msg:
                 if 'eject' in msg:
                     print("ERROR Ejected")
-
         if actions:
             actions = actions[::-1]
-        # print(f'msg_action type {type(msg_actions)}\n{msg_actions}')
-        # print(f'msg_broadcast type {type(msg_broadcast)}\n{msg_broadcast}')
-        # print(f'fuuuuuuuuuuuuck {self.server_fixe}, {actions}')
         for index, message in enumerate(msg_actions):
             if validate_number_pattern(message):
                 result.append(('slots', int(message)))
@@ -130,10 +128,6 @@ class Messages(object):
                     result.append(('ok', actions[index]))
                 except Exception as e:
                     pass
-                    print(f'ok : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {tmp_msg}')
             elif message == 'ko':
                 if self.debug:
                     print(f'ko: {actions[index]}')
@@ -141,10 +135,6 @@ class Messages(object):
                     result.append(('ko', actions[index]))
                 except Exception as e:
                     pass
-                    print(f'KO : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {tmp_msg}')
             else:
                 result.append(self.broadcast_received(message))
         for message in msg_broadcast:

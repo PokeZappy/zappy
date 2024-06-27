@@ -98,11 +98,6 @@ class Pnj(Player):
         if len(self.queue) > 0 and len(self.actions) == 0:
             self.apply_action()
         if len(self.actions) > 0:
-            # if self.first_round % 1000000 == 0:
-            #     print(f"témort {self.queue}")
-            #     print(f"tamer : {self.actions}")
-            #     print(f"tégrenmort {self.life}")
-            # self.first_round += 1
             return
         if self.life <= 500:
             # print('I am hungry')

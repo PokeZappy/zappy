@@ -1,14 +1,22 @@
 from socket import socket
-import time
 
 from ai.src.player.player import Player
 from ai.src.utils.info_look import look_resources, only_forward_resources
-from ai.src.gameplay.enum_gameplay import Directions as compass
 
 
 class Collector(Player):
-
+    """
+    The Collector class extends the Player class and implements specific functionalities for collecting resources and
+    managing the bot's actions.
+    """
     def __init__(self, serv_info: list[int] | None = None, cli_socket: socket | None = None, debug_mode: bool = False):
+        """
+        Initialize the Collector player.
+
+        :param serv_info: list[int] | None - Information about the server.
+        :param cli_socket: socket | None - The client socket for communication.
+        :param debug_mode: bool - Flag to enable debug mode.
+        """
         if serv_info is not None:
             super().__init__(serv_info, cli_socket, debug_mode)
         self.need_eat = 0
@@ -28,8 +36,9 @@ class Collector(Player):
 
     def get_deposit_path(self) -> list:
         """
+        Get the path to the deposit location based on the player's ID.
 
-        :return:
+        :return: list - The path to the deposit location as a list of directions.
         """
         if self.id % 2 == 0 and self.id != 0:
             path = ['Left']
@@ -42,8 +51,12 @@ class Collector(Player):
 
     def go_to_start(self) -> None:
         """
+        Move the player to the starting position.
 
-        :return:
+        This method calculates the path to the starting position based on the player's ID
+         and moves the player accordingly.
+
+        :return: None
         """
         if self.id == 0:
             self.queue.append('Forward')
@@ -230,10 +243,13 @@ class Collector(Player):
             self.lvl_one = True
         self.global_message(message)
 
-    def deactivate_pusher(self):
+    def deactivate_pusher(self) -> None:
         """
+        Deactivates the pusher functionality based on the player's ID and position.
 
-        :return:
+        This method handles the deactivation of the pusher functionality by sending specific messages based on the player's ID and position.
+
+        :return: None
         """
         if ((0 < self.id < 3 and self.pos[0] == (self.start_pos[0] - 2) % (self.limit[0] - 1)) or
                 (self.id == 0 and self.pos[0] == (self.start_pos[0] - 3) % (self.limit[0] - 1))):
@@ -246,10 +262,12 @@ class Collector(Player):
             self.queue.insert(2, 'Broadcast bis')
             self.life -= self.ACTION
 
-    def deposit_ressources(self):
+    def deposit_ressources(self) -> None:
         """
+        Deposits the resources from the player's inventory.
+        This method adds the resources to the queue for depositing and removes them from the inventory.
 
-        :return:
+        :return: None
         """
         for resource in self.inventory:
             if resource != 'food':

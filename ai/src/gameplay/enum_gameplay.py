@@ -25,6 +25,8 @@ class Directions(Enum):
     def __add__(self, other):
         return (self.value + other) % 4
 
+
+@dataclass
 class RoleInGame(Enum):
     PROGENITOR = 0
     INCANTATOR = 1
@@ -51,17 +53,22 @@ TESTUDO = [
     {'id': 6, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Left', 'Forward']},
     {'id': 7, 'path': ['Forward', 'Left', 'Forward', 'Right', 'Forward']},
     {'id': 8, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Right', 'Forward']},
-    {'id': 9, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Right']},
-    {'id': 10, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Right']},
-    {'id': 11, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Forward', 'Left', 'Forward', 'Right']},
+    {'id': 9, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Forward', 'Left',
+                       'Forward', 'Forward', 'Right']},
+    {'id': 10, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward',
+                        'Right']},
+    {'id': 11, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Forward', 'Left',
+                        'Forward', 'Right']},
     {'id': 12, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward', 'Forward']},
     {'id': 13, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward', 'Forward']},
     {'id': 14, 'path': ['Forward', 'Left', 'Forward', 'Forward', 'Left', 'Forward']},
     {'id': 15, 'path': ['Forward', 'Left', 'Forward', 'Forward']},
     {'id': 16, 'path': ['Forward', 'Left', 'Forward']},
-    {'id': 17, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward', 'Forward', 'Right', 'Forward', 'Left']},
+    {'id': 17, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward', 'Forward', 'Right',
+                        'Forward', 'Left']},
     {'id': 18, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward', 'Forward']},
-    {'id': 19, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Left']},
+    {'id': 19, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward',
+                        'Left']},
     {'id': 20, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward', 'Forward']},
     {'id': 21, 'path': ['Forward', 'Right', 'Forward', 'Forward', 'Right', 'Forward']},
     {'id': 22, 'path': ['Forward', 'Right', 'Forward', 'Forward']},

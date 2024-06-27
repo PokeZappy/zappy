@@ -1,5 +1,6 @@
-import numpy as np
 import math
+
+import numpy as np
 
 
 def calc_encryption_key(key: str) -> list[list[int]]:
@@ -70,6 +71,7 @@ class Cipher(object):
         """
         Encrypts the input message using the encryption key matrix.
 
+        :param new_uuid: str - uuid add for better encryption
         :param message: str - The message to be encrypted.
         :return: list[int] - The encrypted message as a list of integers.
         """
@@ -84,6 +86,7 @@ class Cipher(object):
         """
         Decrypts an encrypted message using the decryption key matrix.
 
+        :param old_uuid: str - uuid for decryption
         :param message: list[int] - The encrypted message to be decrypted as a list of integers.
         :return: str - The decrypted message as a string.
         """

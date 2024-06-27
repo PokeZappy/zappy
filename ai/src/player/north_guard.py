@@ -1,10 +1,6 @@
 from socket import socket
-from abc import ABC
-from re import match
 
 from ai.src.player.player import Player
-from ai.src.mvt import path
-from ai.src.utils.messages import extract_inventory
 
 
 class NorthGuard(Player):
@@ -22,7 +18,9 @@ class NorthGuard(Player):
 
     def say_the_north(self):
         """
+        Send a message to claim control of the North position.
 
+        This method sends a message to assert dominance over the North position and adds a broadcast command to the action queue.
         """
         if self.eject_security is False:
             self.eject_security = True
@@ -49,13 +47,7 @@ class NorthGuard(Player):
         self.global_message(message)
 
     def make_action(self) -> None:
-        """
-
-        """
         if len(self.queue) > 0 and len(self.actions) < 1:
-            # if self.queue[0] == 'Forward':
-                # print(f'action North: {self.actions}')
-                # print(f'queue North: {self.queue}')
             self.apply_action()
         if len(self.actions) > 0:
             return
@@ -67,7 +59,6 @@ class NorthGuard(Player):
         elif self.life < 260 and self.said is False:
             self.message.buf_messages(message='Ego plus viribus')
             self.queue.insert(0, 'Broadcast')
-            # print("je suis faible")
             self.said = True
         else:
             self.say_the_north()
@@ -97,6 +88,13 @@ class ViceNorthGuard(Player):
         self.queue.append('Broadcast')
 
     def take_the_pole(self) -> None:
+        """
+        Move the player to take control of the pole.
+
+        This method moves the player towards the pole, takes control of it, and updates the player's status accordingly.
+
+        :return: None
+        """
         self.eject_security = False
         self.queue.append('Forward')
         self.queue.append('Forward')
@@ -116,13 +114,7 @@ class ViceNorthGuard(Player):
         self.global_message(message)
 
     def make_action(self) -> None:
-        """
-
-        """
         if len(self.queue) > 0 and len(self.actions) < 1:
-            # if self.queue[0] == 'Forward':
-                # print(f'action North: {self.actions}')
-                # print(f'queue North: {self.queue}')
             self.apply_action()
         if len(self.actions) > 0:
             return
@@ -138,4 +130,4 @@ class ViceNorthGuard(Player):
             self.said = True
         else:
             self.say_the_north()
-            self.life -= self.ACTION
+        self.life -= self.ACTION
