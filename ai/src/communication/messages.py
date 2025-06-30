@@ -81,27 +81,59 @@ class Messages(object):
         :param incantator:
         :param message: str - The message received.
         :param actions: any - Additional actions related to the message.
-        :return: list [tuple[str, str | list[dict[str, str | int | tuple[int, int]]]]] - A tuple containing the status
-        and processed message details.
+        :return: list of tuples with processed message data.
         """
-        if message == "" or message == "\n":
+        if message.strip() == "":
             return [('broadcast', 'ko')]
-        messages = list(filter(None, message.split('\n')))
+
+        lines = list(filter(None, message.split('\n')))
         result = []
         tmp_msg = []
-        for msg in messages:
-            if self.last_item is True:
-                msg = self.server_fixe + msg
-                self.last_item = False
-            if correction_overload_server(msg, actions) is False:
-                self.server_fixe += msg
-                self.last_item = True
-            else:
-                tmp_msg.append(msg)
-                self.server_fixe = ''
+        buffer = []
+        collecting_message = False
 
-        msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevaation' not in msg]
-        msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg]
+        for line in lines:
+            if self.last_item:
+                line = self.server_fixe + line
+                self.last_item = False
+
+            if collecting_message:
+                # If a new 'message <id>,' starts, flush buffer
+                if line.startswith('message') and buffer:
+                    full_msg = ''.join(buffer)
+                    tmp_msg.append(full_msg)
+                    buffer = [line]
+                elif correction_overload_server(line, actions) and not line.startswith('message'):
+                    # End of message block
+                    full_msg = ''.join(buffer)
+                    tmp_msg.append(full_msg)
+                    buffer = []
+                    collecting_message = False
+                    tmp_msg.append(line)
+                else:
+                    buffer.append(line)
+            else:
+                if line.startswith("message"):
+                    buffer = [line]
+                    collecting_message = True
+                elif correction_overload_server(line, actions):
+                    tmp_msg.append(line)
+                else:
+                    self.server_fixe += line + '\n'
+                    self.last_item = True
+
+        if buffer:
+            tmp_msg.append(''.join(buffer))
+
+        msg_actions = [
+            msg for msg in tmp_msg
+            if 'message' not in msg and 'eject' not in msg and 'level' not in msg and 'Elevation' not in msg
+        ]
+        msg_broadcast = [
+            msg for msg in tmp_msg
+            if 'message' in msg or 'eject' in msg or 'level' not in msg or 'Elevation' not in msg
+        ]
+
         if incantator:
             msg_actions = [msg for msg in tmp_msg if 'message' not in msg and 'eject' not in msg]
             msg_broadcast = [msg for msg in tmp_msg if 'message' in msg or 'eject' in msg]
@@ -111,13 +143,11 @@ class Messages(object):
 
         if actions:
             actions = actions[::-1]
-        # print(f'msg_action type {type(msg_actions)}\n{msg_actions}')
-        # print(f'msg_broadcast type {type(msg_broadcast)}\n{msg_broadcast}')
-        # print(f'fuuuuuuuuuuuuck {self.server_fixe}, {actions}')
+
         for index, message in enumerate(msg_actions):
             if validate_number_pattern(message):
                 result.append(('slots', int(message)))
-            if validate_inventory_pattern(message):
+            elif validate_inventory_pattern(message):
                 result.append(('inventory', message))
             elif validate_look_pattern(message):
                 result.append(('look', message))
@@ -125,28 +155,29 @@ class Messages(object):
                 result.append(('elevation', message))
             elif message == 'ok':
                 if self.debug:
-                    print(f'ok: {actions[index]}')
+                    print(f'ok: {actions[index] if index < len(actions) else "??"}')
                 try:
                     result.append(('ok', actions[index]))
                 except Exception as e:
-                    pass
-                    print(f'ok : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {tmp_msg}')
+                    if self.debug:
+                        print(f'ok : Error: {e}')
+                        print(f'actions: {actions}')
+                        print(f'msgs actions: {msg_actions}')
+                        print(f'msgs all: {tmp_msg}')
             elif message == 'ko':
                 if self.debug:
-                    print(f'ko: {actions[index]}')
+                    print(f'ko: {actions[index] if index < len(actions) else "??"}')
                 try:
                     result.append(('ko', actions[index]))
                 except Exception as e:
-                    pass
-                    print(f'KO : Error: {e}')
-                    print(f'actions: {actions}')
-                    print(f'msgs actions: {msg_actions}')
-                    print(f'msgs all: {tmp_msg}')
+                    if self.debug:
+                        print(f'KO : Error: {e}')
+                        print(f'actions: {actions}')
+                        print(f'msgs actions: {msg_actions}')
+                        print(f'msgs all: {tmp_msg}')
             else:
                 result.append(self.broadcast_received(message))
+
         for message in msg_broadcast:
             if validate_eject_pattern(message):
                 result.append(('eject', message))
@@ -154,9 +185,12 @@ class Messages(object):
                 result.append(('elevation', message))
             else:
                 result.append(self.broadcast_received(message))
+
         if not result:
             result = [('broadcast', 'ko')]
+
         return result
+
 
     def broadcast_received(self, message: str) -> tuple[str, str | list[dict[str, str | int | tuple[int, int]] | str]]:
         """

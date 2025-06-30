@@ -148,7 +148,7 @@ def correction_overload_server(s: str, actions) -> bool:
     if s.startswith('['):
         return counter_of_delim(s)
     if s.startswith('message'):
-        return counter_of_quotations_marks(s)
+        return verif_structure(s)
     # print(f'slot valide ? {validate_number_pattern(s)}')
     # print(f'is in {'Slots' in actions}')
     if validate_number_pattern(s) and 'Slots' in actions:
@@ -160,11 +160,8 @@ def correction_overload_server(s: str, actions) -> bool:
     return False
 
 
-def counter_of_quotations_marks(s) -> bool:
-    if s.count('"') == 2:
-        return True
-    return False
-
+def verif_structure(s : str) -> bool:
+    return bool(re.match(r'^message\s+\d+,\s?.*', s))
 
 def counter_of_delim(s) -> bool:
     if s.count('[') - s.count(']') == 0:
