@@ -18,6 +18,7 @@
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
 #include "Pantheon.hpp"
+#include "Layout.hpp"
 
 #include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION

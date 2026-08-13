@@ -16,11 +16,20 @@ namespace Zappy {
         _teamColorWithAlpha.a = 90;
         std::string pkName = _players[_currentShowIndex]->infos.displayName;
         std::string pkLvl = "N." + std::to_string(_players[_currentShowIndex]->worldPlayer->getLevel());
-        _teamColorWithAlpha.DrawRectangle(raylib::Vector2(0, 100), raylib::Vector2(GUI_WIDTH, 100));
-        _teamColorWithAlpha.DrawRectangle(raylib::Vector2(0, GUI_HEIGHT - 200), raylib::Vector2(GUI_WIDTH, 100));
-        raylib::Color::White().DrawText("Bravo !!!!", 40, 120, 60);
-        raylib::Color::White().DrawText(pkName, GUI_WIDTH - 40 - MeasureText(pkName.c_str(), 40), GUI_HEIGHT - 100 - 80, 40);
-        raylib::Color::White().DrawText(pkLvl, GUI_WIDTH - 40 - MeasureText(pkName.c_str(), 40), GUI_HEIGHT - 100 - 40, 40);
+        int bandSize = Layout::s(100);
+        int nameSize = Layout::s(40);
+
+        _teamColorWithAlpha.DrawRectangle(raylib::Vector2(0, Layout::top(100)),
+            raylib::Vector2(Layout::w(), bandSize));
+        _teamColorWithAlpha.DrawRectangle(raylib::Vector2(0, Layout::bottom(GUI_HEIGHT - 200)),
+            raylib::Vector2(Layout::w(), bandSize));
+        raylib::Color::White().DrawText("Bravo !!!!", Layout::left(40), Layout::top(120), Layout::s(60));
+        raylib::Color::White().DrawText(pkName,
+            Layout::w() - Layout::s(40) - MeasureText(pkName.c_str(), nameSize),
+            Layout::bottom(GUI_HEIGHT - 100 - 80), nameSize);
+        raylib::Color::White().DrawText(pkLvl,
+            Layout::w() - Layout::s(40) - MeasureText(pkName.c_str(), nameSize),
+            Layout::bottom(GUI_HEIGHT - 100 - 40), nameSize);
     }
 
     void Pantheon::renderSteve() {
@@ -100,7 +109,11 @@ namespace Zappy {
     void Pantheon::renderTeam() {
         raylib::Rectangle srcType = UtilsRaylib::getTypeRectangle(_team);
         std::string text = "Félicitations à l'équipe ";
-        raylib::Vector2 textPos = _endTextPos;
+        // _startTextPos/_endTextPos are design-space; resolve them here so the slide
+        // follows the live window instead of being baked at construction.
+        raylib::Vector2 startPos(Layout::left(_startTextPos.x), Layout::top(_startTextPos.y));
+        raylib::Vector2 endPos(Layout::left(_endTextPos.x), Layout::top(_endTextPos.y));
+        raylib::Vector2 textPos = endPos;
 
         if (_state == PantheonState::START) {
             std::chrono::duration<double> elapsed_seconds = std::chrono::steady_clock::now() - _animClock;
@@ -108,7 +121,7 @@ namespace Zappy {
 
             if (moveFactor > 1.0f)
                 moveFactor = 1.0f;
-            textPos = _startTextPos + (_endTextPos - _startTextPos) * moveFactor;
+            textPos = startPos + (endPos - startPos) * moveFactor;
             if (elapsed_seconds.count() > _startDuration) {
                 if (elapsed_seconds.count() > _startDuration + 2) {
                     _animClock = std::chrono::steady_clock::now();
@@ -120,9 +133,11 @@ namespace Zappy {
         if (srcType.x == -1) {
             text += _team + " !";
         } else {
-            _typesTexture.Draw(srcType, raylib::Rectangle(textPos.x + MeasureText("Félicitations à l'équipe", 100) + 50, textPos.y, 200, 100));
+            _typesTexture.Draw(srcType, raylib::Rectangle(
+                textPos.x + MeasureText("Félicitations à l'équipe", Layout::s(100)) + Layout::s(50),
+                textPos.y, Layout::s(200), Layout::s(100)));
         }
-        _teamColor.DrawText(text, textPos.x, textPos.y, 100);
+        _teamColor.DrawText(text, textPos.x, textPos.y, Layout::s(100));
 
     }
 

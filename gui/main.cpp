@@ -31,6 +31,9 @@ int main(int ac, char **av)
     SetTraceLogCallback(LogColored);
     SetTraceLogLevel(LOG_WARNING);
 
+    // Must run before the window exists: raylib ignores SetConfigFlags afterwards.
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
+
     std::string assetsRoot;
 
     if (std::filesystem::exists("assets")) {

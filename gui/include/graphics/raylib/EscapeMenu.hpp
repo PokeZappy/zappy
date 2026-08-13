@@ -9,6 +9,7 @@
 
 #include "TextureButton.hpp"
 #include "StringButton.hpp"
+#include "Layout.hpp"
 #include <functional>
 
 #define BASEWINDOW_HUD_PATH "textures/hud/base_window.png"
@@ -29,25 +30,37 @@ namespace Zappy {
         void draw(void) {
             if (!_activated)
                 return;
-            _blackTransp.DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight());
+            _blackTransp.DrawRectangle(0, 0, Layout::w(), Layout::h());
 
-            raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(GUI_WIDTH - _minOptionsWidth - _rightMargin * 2, 400, _minOptionsWidth + _rightMargin + _rightMargin / 2, 500));
-            raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(_rightMargin, 400, 650, 300));
+            int margin = Layout::s(_rightMargin);
+            int optionsWidth = Layout::s(_minOptionsWidth);
+            int titleSize = Layout::s(60);
+            int commandTextSize = Layout::s(20);
+            int lineStep = commandTextSize + Layout::s(5);
+            int panelY = Layout::top(400);
+            int adminCommandY = Layout::top(410);
+            int firstCommandY = Layout::top(470);
+            int commandX = Layout::left(_rightMargin + 15);
 
-            raylib::Color::Black().DrawText("Options :", GUI_WIDTH - MeasureText("Options :", 60) - _rightMargin, 410, 60);
-            int adminCommandY = 410;
-            int firstCommandY = 470;
-            int commandTextSize = 20;
-            raylib::Color::Black().DrawText("Admin Commands :", _rightMargin + 10, adminCommandY, 60);
-            raylib::Color::Black().DrawText("Modifier la position:   HACK_POS id x y", _rightMargin + 15, firstCommandY, commandTextSize);
-            raylib::Color::Black().DrawText("Modifier la direction:  HACK_DIR id [UP/RIGHT/DOWN/LEFT]", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 1, commandTextSize);
-            raylib::Color::Black().DrawText("Modifier le niveau:     HACK_LEVEL id level", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 2, commandTextSize);
-            raylib::Color::Black().DrawText("Modifier la vie:        HACK_HEALTH id health", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 3, commandTextSize);
-            raylib::Color::Black().DrawText("Tuer un joueur:         KILL id", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 4, commandTextSize);
-            raylib::Color::Black().DrawText("Modifier la fréquence:  sst time", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 5, commandTextSize);
-            raylib::Color::Black().DrawText("Inventaire d'une case:  HACK_WHOLE_TILE x y food linemate ", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 6, commandTextSize);
-            raylib::Color::Black().DrawText("deraumere sibur mendiane phiras thystame", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 7, commandTextSize);
-            raylib::Color::Black().DrawText("Ressource d'une case:   HACK_TILE ressource quantity x y", _rightMargin + 15, firstCommandY + (commandTextSize + 5) * 8, commandTextSize);
+            // options panel hugs the right edge, admin panel the left
+            raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(
+                Layout::w() - optionsWidth - margin * 2, panelY,
+                optionsWidth + margin + margin / 2, Layout::s(500)));
+            raylib::Color(255, 255, 255, 40).DrawRectangle(raylib::Rectangle(
+                margin, panelY, Layout::s(650), Layout::s(300)));
+
+            raylib::Color::Black().DrawText("Options :",
+                Layout::w() - MeasureText("Options :", titleSize) - margin, adminCommandY, titleSize);
+            raylib::Color::Black().DrawText("Admin Commands :", Layout::left(_rightMargin + 10), adminCommandY, titleSize);
+            raylib::Color::Black().DrawText("Modifier la position:   HACK_POS id x y", commandX, firstCommandY, commandTextSize);
+            raylib::Color::Black().DrawText("Modifier la direction:  HACK_DIR id [UP/RIGHT/DOWN/LEFT]", commandX, firstCommandY + lineStep * 1, commandTextSize);
+            raylib::Color::Black().DrawText("Modifier le niveau:     HACK_LEVEL id level", commandX, firstCommandY + lineStep * 2, commandTextSize);
+            raylib::Color::Black().DrawText("Modifier la vie:        HACK_HEALTH id health", commandX, firstCommandY + lineStep * 3, commandTextSize);
+            raylib::Color::Black().DrawText("Tuer un joueur:         KILL id", commandX, firstCommandY + lineStep * 4, commandTextSize);
+            raylib::Color::Black().DrawText("Modifier la fréquence:  sst time", commandX, firstCommandY + lineStep * 5, commandTextSize);
+            raylib::Color::Black().DrawText("Inventaire d'une case:  HACK_WHOLE_TILE x y food linemate ", commandX, firstCommandY + lineStep * 6, commandTextSize);
+            raylib::Color::Black().DrawText("deraumere sibur mendiane phiras thystame", commandX, firstCommandY + lineStep * 7, commandTextSize);
+            raylib::Color::Black().DrawText("Ressource d'une case:   HACK_TILE ressource quantity x y", commandX, firstCommandY + lineStep * 8, commandTextSize);
             for (auto &button : _buttons) {
                 button->draw();
             }

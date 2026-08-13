@@ -48,7 +48,8 @@ namespace Zappy {
         }
 
         // -- Shader Lighting --
-        SetConfigFlags(FLAG_MSAA_4X_HINT);  // Enable Multi Sampling Anti Aliasing 4x (if available)
+        // NOTE: config flags (MSAA, resizable) are set in main() -- raylib ignores
+        // SetConfigFlags() once the window exists.
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
@@ -59,6 +60,11 @@ namespace Zappy {
         debugMode = std::make_shared<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
         _escapeMenu = std::make_shared<EscapeMenu>(_assetsRoot, *this);
+
+        // Match the monitor before going fullscreen, otherwise the backbuffer stays at
+        // the design resolution and the picture is letterboxed on larger displays.
+        int monitor = GetCurrentMonitor();
+        _window.SetSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
         _window.ToggleFullscreen();
 
         // Create lights

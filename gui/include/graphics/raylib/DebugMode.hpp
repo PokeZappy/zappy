@@ -9,6 +9,7 @@
 
 #include "raylib-cpp.hpp"
 #include "Utils.hpp"
+#include "Layout.hpp"
 #include <filesystem>
 #include <algorithm>
 

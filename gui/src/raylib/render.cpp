@@ -105,10 +105,12 @@ namespace Zappy
             } else if (_menuState == Menu::NONE) {
                 if (_hudMode->activated()) {
                     drawHud(world);
-                    raylib::Color(0, 0, 0, 160).DrawRectangle(1840, 358, 77, 22);
-                    _window.DrawFPS(1842, 360);
+                    raylib::Color(0, 0, 0, 160).DrawRectangle(Layout::right(1840),
+                        Layout::top(358), Layout::s(77), Layout::s(22));
+                    _window.DrawFPS(Layout::right(1842), Layout::top(360));
                 } else {
-                    raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails", 1240, GUI_HEIGHT - 35, 30);
+                    raylib::Color::Black().DrawText("Appuyez sur N pour activer le mode Détails",
+                        Layout::right(1240), Layout::bottom(GUI_HEIGHT - 35), Layout::s(30));
                 }
             }
             _escapeMenu->draw();
