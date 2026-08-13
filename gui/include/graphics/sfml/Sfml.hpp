@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
+#include <map>
 #include "world/World.hpp"
 #include "sfml/PlayerGraphics.hpp"
 #include "AGraphicalModule.hpp"

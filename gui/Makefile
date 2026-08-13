@@ -40,7 +40,8 @@ INCLUDEFLAGS	=	-Iinclude									\
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	$(shell pkg-config --libs libconfig++)		\
 					$(shell pkg-config --libs sfml-graphics)	\
-					-L./lib/raylib/src -lraylib -lpthread -ldl
+					-L./lib/raylib/src -lraylib -lpthread -ldl	\
+					-lGL -lm -lrt -lX11
 DEPSFLAGS		=	-MMD -MP
 
 LDLIBS			+=	-L./criterion/lib -lcriterion

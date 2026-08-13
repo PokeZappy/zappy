@@ -8,15 +8,20 @@
 #include "Sfml.hpp"
 
 #include <filesystem>
+#include <iostream>
 
 namespace Zappy
 {
     Sfml::Sfml(const std::string &assetsRoot) :
-        _window(sf::VideoMode(GUI_WIDTH, GUI_HEIGHT), "GUI")
+        _window(sf::VideoMode(sf::Vector2u(GUI_WIDTH, GUI_HEIGHT)), "GUI"),
+        _resourcesText(_font),
+        _playerLevelText(_font),
+        _shellText(_font)
     {
         resetViewPos();
         _window.setFramerateLimit(60);
-        _font.loadFromFile(assetsRoot + std::string("Type Machine.ttf"));
+        if (!_font.openFromFile(assetsRoot + std::string("Type Machine.ttf")))
+            std::cerr << "Sfml: could not open font " << assetsRoot << "Type Machine.ttf" << std::endl;
 
         _tileSelector.setFillColor(sf::Color::Transparent);
         _tileSelector.setOutlineColor(sf::Color::Red);
@@ -33,16 +38,16 @@ namespace Zappy
 
         _resourcesText.setFont(_font);
         _resourcesText.setCharacterSize(50);
-        _resourcesText.setScale(0.30f, 0.30f);
+        _resourcesText.setScale(sf::Vector2f(0.30f, 0.30f));
         _resourcesText.setFillColor(sf::Color::White);
         _resourcesText.setStyle(sf::Text::Bold);
 
         _entityTriangle.setPointCount(3);
         _entityTriangle.setRadius(25);
         _entityTriangle.setFillColor(sf::Color::Green);
-        _entityTriangle.setOrigin(_entityTriangle.getRadius(), _entityTriangle.getRadius());
+        _entityTriangle.setOrigin(sf::Vector2f(_entityTriangle.getRadius(), _entityTriangle.getRadius()));
         _entityTriangle.setOutlineThickness(8);
-        _entityTriangle.setScale(1, 0.5);
+        _entityTriangle.setScale(sf::Vector2f(1.f, 0.5f));
 
         _playerLevelText.setFont(_font);
         _playerLevelText.setCharacterSize(20);
@@ -109,14 +114,15 @@ namespace Zappy
     void Sfml::resetViewPos(void)
     {
         if (_mapX == -1 || _mapY == -1)
-            _view.setSize(GUI_WIDTH, GUI_HEIGHT);
+            _view.setSize(sf::Vector2f(GUI_WIDTH, GUI_HEIGHT));
         else
-            _view.setSize(GUI_WIDTH * _mapX / 10, GUI_HEIGHT * _mapY / 10);
-        _view.setRotation(0);
-        _view.setCenter(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f);
+            _view.setSize(sf::Vector2f(GUI_WIDTH * _mapX / 10, GUI_HEIGHT * _mapY / 10));
+        _view.setRotation(sf::degrees(0));
+        _view.setCenter(sf::Vector2f(GUI_WIDTH / 2.f, GUI_HEIGHT / 2.f));
         if (_mapX == -1 || _mapY == -1)
-            _view.move(-500, -30);
+            _view.move(sf::Vector2f(-500, -30));
         else
-            _view.move(-500 + (_mapX - 10) * (float)_gridSize, -30 + (_mapY - 10) * (float)_gridSize);
+            _view.move(sf::Vector2f(-500 + (_mapX - 10) * (float)_gridSize,
+                -30 + (_mapY - 10) * (float)_gridSize));
     }
 } // namespace Zappy

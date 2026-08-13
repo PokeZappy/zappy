@@ -13,7 +13,7 @@ namespace Zappy
     {
         _rockModel.UpdateAnimation(_rockAnimations[_rockAnimationIndex], _rockAnimationFrame);
         _rockAnimationFrame++;
-        if (static_cast<int>(_rockAnimationFrame) >= _rockAnimations[_rockAnimationIndex].frameCount) {
+        if (static_cast<int>(_rockAnimationFrame) >= _rockAnimations[_rockAnimationIndex].keyframeCount) {
             _rockAnimationIndex = Utils::random(0, 9) + 3;
             _rockAnimationFrame = 0;
         }
@@ -69,7 +69,7 @@ namespace Zappy
     void Raylib::drawRock(float x, float y, size_t id, size_t quantity)
     {
         float scale = _gridSize / 7;
-        _rockModel.materials[1].maps[MATERIAL_MAP_DIFFUSE].texture = _rockTextures[id - 1];
+        _rockModel.materials[modelMaterialIndex(_rockModel)].maps[MATERIAL_MAP_DIFFUSE].texture = _rockTextures[id - 1];
 
         float offset = _gridSize / 11.;
         for (size_t height = 1; height <= quantity; height *= 10) {

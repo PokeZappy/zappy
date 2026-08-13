@@ -48,7 +48,7 @@ namespace Zappy {
         raylib::Color green = raylib::Color::Green();
         
         green.DrawText(_animations[_animIndex].name, 400, 20, 50);
-        white.DrawText("Frame: " + std::to_string(_animFrame) + "/" + std::to_string(_animations[_animIndex].frameCount) + " (J, L pour changer de frame)", 550, 75, 30);
+        white.DrawText("Frame: " + std::to_string(_animFrame) + "/" + std::to_string(_animations[_animIndex].keyframeCount) + " (J, L pour changer de frame)", 550, 75, 30);
 
         white.DrawText("Appuyez sur F pour quitter le mode FrameStepper", 10, 950, 45);
     }

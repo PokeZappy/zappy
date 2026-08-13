@@ -23,6 +23,8 @@ namespace Zappy {
             size_t _id;
             size_t _x;
             size_t _y;
-            const Team &_team;
+            // Held by value on purpose: World stores teams in a std::vector, so a
+            // reference would dangle as soon as addTeam() makes it reallocate.
+            Team _team;
     };
 }

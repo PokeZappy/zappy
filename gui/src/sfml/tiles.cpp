@@ -13,12 +13,12 @@ namespace Zappy
     {
         for (size_t height = 0; height < tiles.size(); height++) {
             for (size_t width = 0; width < tiles[height].size(); width++) {
-                _tileRect.setPosition(width * _tileWidth, height * _tileHeight);
+                _tileRect.setPosition(sf::Vector2f(width * _tileWidth, height * _tileHeight));
                 _window.draw(_tileRect);
                 for (size_t i = 0; i < 7; i++) {
                     _resourcesText.setString(std::to_string(tiles[height][width].getItem(i)));
-                    _resourcesText.setPosition(width * _tileWidth + 10,
-                        height * _tileHeight + i * 13);
+                    _resourcesText.setPosition(sf::Vector2f(width * _tileWidth + 10,
+                        height * _tileHeight + i * 13));
                     _resourcesText.setFillColor(getItemColor(static_cast<Item>(i)));
                     _window.draw(_resourcesText);
                 }
@@ -32,14 +32,14 @@ namespace Zappy
             entity->getY() * _tileHeight + _tileHeight / 2);
         _entityTriangle.setPosition(tileCenter + getEntityOffset(entity));
         _entityTriangle.setPointCount(getEntityPointCount(entity));
-        _entityTriangle.setRotation(90);
+        _entityTriangle.setRotation(sf::degrees(90));
         if (entity->getType() == EntityType::PLAYER) {
             Player *player = static_cast<Player *>(entity.get());
             switch (player->getOrientation()) {
-            case Orientation::NORTH: _entityTriangle.setRotation(180); break;
-            case Orientation::EAST: _entityTriangle.setRotation(90); break;
-            case Orientation::SOUTH: _entityTriangle.setRotation(0); break;
-            case Orientation::WEST: _entityTriangle.setRotation(270); break;
+            case Orientation::NORTH: _entityTriangle.setRotation(sf::degrees(180)); break;
+            case Orientation::EAST: _entityTriangle.setRotation(sf::degrees(90)); break;
+            case Orientation::SOUTH: _entityTriangle.setRotation(sf::degrees(0)); break;
+            case Orientation::WEST: _entityTriangle.setRotation(sf::degrees(270)); break;
             default:
                 break;
             }

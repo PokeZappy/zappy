@@ -1,145 +1,65 @@
 #ifndef RAYLIB_CPP_INCLUDE_RENDERTEXTURE_HPP_
 #define RAYLIB_CPP_INCLUDE_RENDERTEXTURE_HPP_
 
-#include "./raylib.hpp"
-#include "./raylib-cpp-utils.hpp"
-#include "./RaylibException.hpp"
-#include "./TextureUnmanaged.hpp"
+#include "./RenderTextureUnmanaged.hpp"
 
 namespace raylib {
 /**
- * RenderTexture type, for texture rendering
+ * RenderTexture type, for texture rendering.
+ *
+ * The render texture will be unloaded on object destruction. Use raylib::RenderTextureUnmanaged
+ * if you're looking to not unload.
+ *
+ * @see raylib::RenderTextureUnmanaged
  */
-class RenderTexture : public ::RenderTexture {
- public:
-    /**
-     * Default constructor to build an empty RenderTexture.
-     */
-    RenderTexture() {
-        id = 0;
-    }
-
-    RenderTexture(const ::RenderTexture& renderTexture) {
-        set(renderTexture);
-    }
-
-    RenderTexture(unsigned int id, const ::Texture& texture, const ::Texture& depth) :
-        ::RenderTexture{id, texture, depth} {}
-
-    /**
-     * Load texture for rendering (framebuffer)
-     */
-    RenderTexture(int width, int height) {
-        set(::LoadRenderTexture(width, height));
-    }
+class RenderTexture : public RenderTextureUnmanaged {
+public:
+    using RenderTextureUnmanaged::RenderTextureUnmanaged;
 
     RenderTexture(const RenderTexture&) = delete;
+    RenderTexture& operator=(const RenderTexture&) = delete;
 
-    RenderTexture(RenderTexture&& other) {
+    RenderTexture(RenderTexture&& other) noexcept {
         set(other);
-
         other.id = 0;
         other.texture = {};
         other.depth = {};
     }
-
-    GETTER(unsigned int, Id, id)
-
-    /**
-     * Get the color buffer attachment texture.
-     */
-    TextureUnmanaged GetTexture() {
-        return texture;
-    }
-
-    void SetTexture(const ::Texture& newTexture) {
-        texture = newTexture;
-    }
-
-    /**
-     * Depth buffer attachment texture
-     */
-    TextureUnmanaged GetDepth() {
-        return depth;
-    }
-
-    void SetDepth(const ::Texture& newDepth) {
-        depth = newDepth;
-    }
-
-    RenderTexture& operator=(const ::RenderTexture& texture) {
-        set(texture);
-        return *this;
-    }
-
-    RenderTexture& operator=(const RenderTexture&) = delete;
 
     RenderTexture& operator=(RenderTexture&& other) noexcept {
         if (this == &other) {
             return *this;
         }
-
         Unload();
         set(other);
-
         other.id = 0;
         other.texture = {};
         other.depth = {};
-
         return *this;
     }
 
-    ~RenderTexture() {
+    RenderTexture& operator=(const ::RenderTexture& other) {
         Unload();
-    }
-
-    void Unload() {
-        UnloadRenderTexture(*this);
-    }
-
-    /**
-     * Initializes render texture for drawing
-     */
-    RenderTexture& BeginMode() {
-        ::BeginTextureMode(*this);
+        set(other);
         return *this;
     }
 
-    /**
-     * Ends drawing to render texture
-     */
-    RenderTexture& EndMode() {
-        ::EndTextureMode();
-        return *this;
-    }
+    ~RenderTexture() { Unload(); }
 
     /**
-     * Load texture for rendering (framebuffer)
+     * Unload previous render texture, then load a new one.
      */
-    static RenderTexture Load(int width, int height) {
-        return ::LoadRenderTexture(width, height);
-    }
-
-    /**
-     * Retrieves whether or not the render texture is ready.
-     */
-    bool IsReady() const {
-        return ::IsRenderTextureReady(*this);
-    }
-
- protected:
-    void set(const ::RenderTexture& renderTexture) {
-        id = renderTexture.id;
-        texture = renderTexture.texture;
-        depth = renderTexture.depth;
+    void Load(int width, int height) {
+        Unload();
+        RenderTextureUnmanaged::Load(width, height);
     }
 };
 
 using RenderTexture2D = RenderTexture;
 
-}  // namespace raylib
+} // namespace raylib
 
 using RRenderTexture = raylib::RenderTexture;
 using RRenderTexture2D = raylib::RenderTexture2D;
 
-#endif  // RAYLIB_CPP_INCLUDE_RENDERTEXTURE_HPP_
+#endif // RAYLIB_CPP_INCLUDE_RENDERTEXTURE_HPP_

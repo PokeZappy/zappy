@@ -7,54 +7,50 @@
 
 #include "Sfml.hpp"
 
+#include <optional>
+
 namespace Zappy
 {
     void Sfml::handleEvent(void)
     {
-        sf::Event event;
-
-        while (_window.pollEvent(event)) {
-            switch (event.type) {
-                case (sf::Event::Closed):
-                    _window.close();
-                    break;
-                default: break;
-            }
+        while (const std::optional<sf::Event> event = _window.pollEvent()) {
+            if (event->is<sf::Event::Closed>())
+                _window.close();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            _view.move(0.f, -_viewSpeed);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            _view.move(sf::Vector2f(0.f, -_viewSpeed));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            _view.move(0.f, _viewSpeed);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            _view.move(sf::Vector2f(0.f, _viewSpeed));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            _view.move(-_viewSpeed, 0.f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            _view.move(sf::Vector2f(-_viewSpeed, 0.f));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            _view.move(_viewSpeed, 0.f);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            _view.move(sf::Vector2f(_viewSpeed, 0.f));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
             _view.zoom(1.05f);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
             _view.zoom(0.95f);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            _view.rotate(-2);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            _view.rotate(sf::degrees(-2));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            _view.rotate(2);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            _view.rotate(sf::degrees(2));
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
             _window.close();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
             resetViewPos();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) {
             _viewSpeed *= 1.05;
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::C)) {
             _viewSpeed /= 1.05;
         }
     }

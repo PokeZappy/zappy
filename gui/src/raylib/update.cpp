@@ -91,6 +91,16 @@ namespace Zappy {
                 PokemonInfo pokemon = getPokemon(player.get()->getTeam().getName());
                 pokemon.shiny = Utils::random(0, 20) == 6;
 
+                if (pokemon.id.empty()) {
+                    std::cerr << "updatePlayers: no pokemon id for team '"
+                        << player->getTeam().getName() << "', player not displayed"
+                        << std::endl;
+                    continue;
+                }
+                std::cerr << "updatePlayers: player " << player->getId()
+                    << " (team " << player->getTeam().getName() << ") -> "
+                    << pokemon.id << " [" << world.getPlayers().size()
+                    << " player(s) in world]" << std::endl;
 
                 // add the model if the pokemon doesn't exist in the map
                 if (_models.count(pokemon.id) <= 0) {
@@ -104,15 +114,15 @@ namespace Zappy {
         }
 
         // Update & kill graphical players
-        size_t decal = 0;
-        for (size_t i = 0; i < _players.size(); i++) {
-            if (!world.containsPlayer(_players[i - decal]->worldPlayer->getId())) {
+        for (size_t i = 0; i < _players.size();) {
+            if (!world.containsPlayer(_players[i]->worldPlayer->getId())) {
                 _players[i]->kill();
             }
             _players[i]->update();
             if (_players[i]->getHeight() > _gridSize * 100) {
-                _players.erase(_players.begin() + i - decal);
-                decal++;
+                _players.erase(_players.begin() + i);
+            } else {
+                i++;
             }
         }
     }
@@ -126,15 +136,15 @@ namespace Zappy {
                     _eggModelAnimations, _gridSize, _shader, getTeamColor(egg->getTeam())));
             }
         }
-        size_t decal = 0;
-        for (size_t i = 0; i < _eggs.size(); i++) {
-            if (!world.containsEgg(_eggs[i - decal]->worldEgg->getId())) {
+        for (size_t i = 0; i < _eggs.size();) {
+            if (!world.containsEgg(_eggs[i]->worldEgg->getId())) {
                 _eggs[i]->kill();
             }
             _eggs[i]->update();
             if (_eggs[i]->getAnimatedScale() < 0) {
-                _eggs.erase(_eggs.begin() + i - decal);
-                decal++;
+                _eggs.erase(_eggs.begin() + i);
+            } else {
+                i++;
             }
         }
     }

@@ -101,10 +101,10 @@ namespace Zappy {
         _rockTextures.push_back(_assetsRoot + "textures/pokeball/luxury_ball.png");
         _rockTextures.push_back(_assetsRoot + "textures/pokeball/master_ball.png");
         _rockAnimations = raylib::ModelAnimation::Load(_assetsRoot + POKEBALL_MODEL_PATH);
-        _rockModel.materials[1].shader = _shader;
+        _rockModel.materials[modelMaterialIndex(_rockModel)].shader = _shader;
 
         // -- Food --
-        _foodModel.materials[1].shader = _shader;
+        _foodModel.materials[modelMaterialIndex(_foodModel)].shader = _shader;
         _listTypes = {"grass", "fire", "water",
                       "steel", "dragon", "electric",
                       "bug", "psychic", "ground",
@@ -127,7 +127,7 @@ namespace Zappy {
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(_assetsRoot + EGG_MODEL_PATH);
 
-        _moon.materials[1].shader = _shader;
+        _moon.materials[modelMaterialIndex(_moon)].shader = _shader;
 
         raylib::Color baseColor = raylib::Color(0x5D76F1);
         for (int i = 0; i < _tv.materialCount; i++) {
