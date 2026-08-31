@@ -243,10 +243,27 @@ The server's unit tests link against [Criterion](https://github.com/Snaipe/Crite
 
 - **The server does not build on macOS.** [server/Makefile](server/Makefile) compiles the C
   sources with `g++`, which trips over `sigaction` and other POSIX details on
-  macOS. A prebuilt arm64 binary, [zappy_server_macos](zappy_server_macos), is checked in as a
-  workaround — copy it to `zappy_server`. Linux builds from source normally.
+  macOS. Build it on Linux, or use one of the reference binaries below.
 - `make server` / `make gui` / `make ai` silently do nothing; use `make -C <dir>`
   (see [Build](#2-build)).
+
+### Reference server binaries
+
+The Epitech Zappy **reference server** is checked in for both platforms so the GUI
+and AI can be exercised without a working local server build:
+
+| File                                                             | Platform          |
+| ---------------------------------------------------------------- | ----------------- |
+| [zappy_reference_server_linux](zappy_reference_server_linux)     | Linux x86-64      |
+| [zappy_reference_server_macos](zappy_reference_server_macos)     | macOS arm64       |
+
+They speak the same protocol as `zappy_server` (plus a few extra flags such as
+`--auto-start`, `--display-eggs` and `--game_duration`). Run one in place of
+`./zappy_server`:
+
+```bash
+./zappy_reference_server_macos -p 4242 -x 10 -y 10 -n team1 team2 -c 5 -f 100
+```
 
 ---
 
