@@ -36,28 +36,26 @@ INCLUDEFLAGS	=	-Iinclude									\
 					-I./lib/include								\
 					-I./lib/raylib/src							\
 					-I./lib/raylib-cpp/include					\
-					$(shell pkg-config --cflags libconfig++)
+					$(shell pkg-config --cflags libconfig++)		\
+					$(shell pkg-config --cflags sfml-graphics)
 CXXFLAGS		=	-std=c++20 -Wall -Wextra -g3 $(INCLUDEFLAGS)
 LDFLAGS			=	$(shell pkg-config --libs libconfig++)		\
 					$(shell pkg-config --libs sfml-graphics)	\
-					-L./lib/raylib/src -lraylib -lpthread -ldl	\
-					-lGL -lm -lrt -lX11
+					-L./lib/raylib/src -lraylib -lpthread -lm
 DEPSFLAGS		=	-MMD -MP
 
 LDLIBS			+=	-L./criterion/lib -lcriterion
 
 CC = g++
 
-MACBREWSFML		= 	/opt/homebrew/Cellar/sfml/2.6.1
-
-MACSFMLINCLUDE	=	-I$(MACBREWSFML)/include
-MACSFMLLIB		=	-L$(MACBREWSFML)/lib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-
 UNAME_S := $(shell uname -s)
 
 ifeq ($(UNAME_S),Darwin)
-	CXXFLAGS += $(MACSFMLINCLUDE) -mmacosx-version-min=10.15 -D MACBOOK
-	LDFLAGS += $(MACSFMLLIB)
+	# SFML 3 and libconfig are resolved through pkg-config (Homebrew).
+	CXXFLAGS += -mmacosx-version-min=13.0 -D MACBOOK
+	LDFLAGS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+else
+	LDFLAGS += -ldl -lGL -lrt -lX11
 endif
 
 all: $(NAME)

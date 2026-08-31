@@ -12,6 +12,13 @@ independent binaries:
 
 The server must be started first; the GUI and the AI both connect to it over TCP.
 
+![Zappy title screen](docs/title-screen.png)
+
+<video src="docs/showcase.mp4" controls width="100%"></video>
+
+▶ **[Watch the showcase video](docs/showcase.mp4)** — the 3D raylib viewer in motion
+(the embedded player above only renders on GitHub).
+
 ---
 
 ## 1. Requirements
@@ -36,8 +43,8 @@ pkg-config --modversion sfml-graphics libconfig++
 ```
 
 > **Note on SFML:** the GUI requires SFML **3**, not 2.x. The two are not source
-> compatible. On macOS, [gui/Makefile](gui/Makefile) hardcodes a Homebrew SFML **2.6.1**
-> path, which will not compile — see [Known issues](#6-known-issues).
+> compatible. Both Linux and macOS now resolve SFML and libconfig through
+> `pkg-config`, so `brew install sfml libconfig` (SFML 3) is all macOS needs.
 
 Python dependencies are only needed to run the test suite:
 
@@ -234,10 +241,25 @@ The server's unit tests link against [Criterion](https://github.com/Snaipe/Crite
 
 ## 6. Known issues
 
-- **macOS build is broken for SFML.** [gui/Makefile:50](gui/Makefile#L50) pins
-  `MACBREWSFML = /opt/homebrew/Cellar/sfml/2.6.1`, an SFML 2 install. The GUI code
-  now targets SFML 3, so that path must be updated (e.g. to
-  `$(shell brew --prefix sfml)` with SFML 3 installed) before building on macOS.
-  Linux is unaffected — it resolves SFML through `pkg-config`.
+- **The server does not build on macOS.** [server/Makefile](server/Makefile) compiles the C
+  sources with `g++`, which trips over `sigaction` and other POSIX details on
+  macOS. A prebuilt arm64 binary, [zappy_server_macos](zappy_server_macos), is checked in as a
+  workaround — copy it to `zappy_server`. Linux builds from source normally.
 - `make server` / `make gui` / `make ai` silently do nothing; use `make -C <dir>`
   (see [Build](#2-build)).
+
+---
+
+## 7. Acknowledgements
+
+- **[raylib](https://www.raylib.com/)** by Ramon Santamaria and contributors — the
+  3D rendering, windowing and audio backend of `zappy_gui`. Vendored in
+  [gui/lib/raylib/](gui/lib/raylib/) (v6.0) together with
+  **[raylib-cpp](https://github.com/RobLoach/raylib-cpp)** (v6.0.3). Both are
+  released under the zlib/libpng license.
+- **[Cobblemon](https://cobblemon.com/)** — the Pokémon 3D models, animations and
+  Poké Ball assets under [gui/assets/models/](gui/assets/models/) come from the
+  Cobblemon project and remain the property of their respective creators. They are
+  used here for a non-commercial student project. Pokémon and Poké Ball are
+  trademarks of Nintendo / Game Freak / The Pokémon Company; this project is not
+  affiliated with or endorsed by them.
