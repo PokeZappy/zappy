@@ -1,35 +1,28 @@
 #ifndef RAYLIB_CPP_INCLUDE_VECTOR4_HPP_
 #define RAYLIB_CPP_INCLUDE_VECTOR4_HPP_
 
-#ifndef RAYLIB_CPP_NO_MATH
-#include <cmath>
-#include <utility>
-#endif
 
 #include <string>
 
+#include "./raylib-cpp-utils.hpp"
 #include "./raylib.hpp"
 #include "./raymath.hpp"
-#include "./raylib-cpp-utils.hpp"
 
 namespace raylib {
+class Quaternion : public ::Quaternion {};
+
 /**
  * Vector4 type
  */
 class Vector4 : public ::Vector4 {
- public:
-    Vector4(const ::Vector4& vec) : ::Vector4{vec.x, vec.y, vec.z, vec.w} {}
+public:
+    constexpr Vector4(const ::Vector4& vec) : ::Vector4{vec.x, vec.y, vec.z, vec.w} {}
+    explicit constexpr Vector4(const raylib::Quaternion quat) : ::Vector4{quat.x, quat.y, quat.z, quat.w} {}
 
-    Vector4(float x, float y, float z, float w) : ::Vector4{x, y, z, w} {}
-    Vector4(float x, float y, float z) : ::Vector4{x, y, z, 0} {}
-    Vector4(float x, float y) : ::Vector4{x, y, 0, 0} {}
-    Vector4(float x) : ::Vector4{x, 0, 0, 0} {}
-    Vector4() : ::Vector4{0, 0, 0, 0} {}
-    Vector4(::Rectangle rectangle) : ::Vector4{rectangle.x, rectangle.y, rectangle.width, rectangle.height} {}
+    explicit constexpr Vector4(const float x = 0, const float y = 0, const float z = 0, const float w = 0) : ::Vector4{x, y, z, w} {}
+    explicit constexpr Vector4(const ::Rectangle rectangle) : ::Vector4{rectangle.x, rectangle.y, rectangle.width, rectangle.height} {}
 
-    Vector4(::Color color) {
-        set(ColorNormalize(color));
-    }
+    explicit Vector4(const ::Color color) { set(ColorNormalize(color)); }
 
     GETTERSETTER(float, X, x)
     GETTERSETTER(float, Y, y)
@@ -41,127 +34,261 @@ class Vector4 : public ::Vector4 {
         return *this;
     }
 
-    bool operator==(const ::Vector4& other) const {
-        return x == other.x
-            && y == other.y
-            && z == other.z
-            && w == other.w;
+    /*
+     * An exact value by value equality comparison.
+     * Due to floating point inaccuracies consider using Equals instead.
+     */
+    constexpr bool operator==(const ::Vector4& other) const {
+        return x == other.x && y == other.y && z == other.z && w == other.w;
     }
 
-    bool operator!=(const ::Vector4& other) const {
-        return !(*this == other);
-    }
+    /*
+     * An exact value by value inequality comparison.
+     * Due to floating point inaccuracies consider using Equals instead.
+     */
+    constexpr bool operator!=(const ::Vector4& other) const { return !(*this == other); }
 
-    ::Rectangle ToRectangle() const {
-        return {x, y, z, w};
-    }
+    RLCPP_NODISCARD constexpr ::Rectangle ToRectangle() const { return {x, y, z, w}; }
 
-    operator ::Rectangle() const {
-        return {x, y, z, w};
-    }
+    constexpr operator ::Rectangle() const { return {x, y, z, w}; }
 
-    std::string ToString() const {
-        return TextFormat("Vector4(%f, %f, %f, %f)", x, y, z, w);
-    }
+    RLCPP_NODISCARD std::string ToString() const { return ::TextFormat("Vector4(%f, %f, %f, %f)", x, y, z, w); }
 
-    operator std::string() const {
-        return ToString();
-    }
+    operator std::string() const { return ToString(); }
 
 #ifndef RAYLIB_CPP_NO_MATH
-    Vector4 Multiply(const ::Vector4& vector4) const {
-        return QuaternionMultiply(*this, vector4);
-    }
+    static Vector4 Zero() { return ::Vector4Zero(); }
 
-    Vector4 operator*(const ::Vector4& vector4) const {
-        return QuaternionMultiply(*this, vector4);
-    }
+    static Vector4 One() { return ::Vector4One(); }
 
-    Vector4 Lerp(const ::Vector4& vector4, float amount) const {
-        return QuaternionLerp(*this, vector4, amount);
-    }
+    /**
+     * Add two vectors
+     */
+    RLCPP_NODISCARD Vector4 Add(const ::Vector4& vector4) const { return ::Vector4Add(*this, vector4); }
 
-    Vector4 Nlerp(const ::Vector4& vector4, float amount) const {
-        return QuaternionNlerp(*this, vector4, amount);
-    }
+    /**
+     * Add two vectors
+     */
+    Vector4 operator+(const ::Vector4& vector4) const { return ::Vector4Add(*this, vector4); }
 
-    Vector4 Slerp(const ::Vector4& vector4, float amount) const {
-        return QuaternionSlerp(*this, vector4, amount);
-    }
+    Vector4& operator+=(const ::Vector4& vector4) {
+        set(::Vector4Add(*this, vector4));
 
-    Matrix ToMatrix() const {
-        return QuaternionToMatrix(*this);
-    }
-
-    float Length() const {
-        return QuaternionLength(*this);
-    }
-
-    Vector4 Normalize() const {
-        return QuaternionNormalize(*this);
-    }
-
-    Vector4 Invert() const {
-        return QuaternionInvert(*this);
-    }
-
-    void ToAxisAngle(::Vector3 *outAxis, float *outAngle) const {
-        QuaternionToAxisAngle(*this, outAxis, outAngle);
+        return *this;
     }
 
     /**
-     * Get the rotation angle and axis for a given quaternion
+     * Add vector and float value
      */
-    std::pair<Vector3, float> ToAxisAngle() const {
-        Vector3 outAxis;
-        float outAngle;
-        QuaternionToAxisAngle(*this, &outAxis, &outAngle);
-
-        return std::pair<Vector3, float>(outAxis, outAngle);
+    RLCPP_NODISCARD Vector4 Add(const float value) const {
+        return ::Vector4AddValue(*this, value);
     }
 
-    Vector4 Transform(const ::Matrix& matrix) const {
-        return ::QuaternionTransform(*this, matrix);
+    /**
+     * Add vector and float value
+     */
+    Vector4 operator+(const float value) const {
+        return ::Vector4AddValue(*this, value);
     }
 
-    static Vector4 Identity() {
-        return ::QuaternionIdentity();
+    /**
+     * Add vector and float value
+     */
+    Vector4& operator+=(const float value) {
+        set(::Vector4AddValue(*this, value));
+
+        return *this;
     }
 
-    static Vector4 FromVector3ToVector3(const ::Vector3& from , const ::Vector3& to) {
-        return ::QuaternionFromVector3ToVector3(from , to);
+    /**
+     * Add vector and float value
+     */
+    friend Vector4 operator+(const float lhs, const Vector4& rhs) { return rhs + lhs; }
+
+    /**
+     * Subtract two vectors.
+     */
+    RLCPP_NODISCARD Vector4 Subtract(const ::Vector4& vector4) const { return ::Vector4Subtract(*this, vector4); }
+
+    /**
+     * Subtract two vectors.
+     */
+    Vector4 operator-(const ::Vector4& vector4) const { return ::Vector4Subtract(*this, vector4); }
+
+    Vector4& operator-=(const ::Vector4& vector4) {
+        set(::Vector4Subtract(*this, vector4));
+
+        return *this;
     }
 
-    static Vector4 FromMatrix(const ::Matrix& matrix) {
-        return ::QuaternionFromMatrix(matrix);
+    /**
+     * Subtract vector by float value
+     */
+    RLCPP_NODISCARD Vector4 Subtract(const float value) const {
+        return ::Vector4SubtractValue(*this, value);
     }
 
-    static Vector4 FromAxisAngle(const ::Vector3& axis, const float angle) {
-        return ::QuaternionFromAxisAngle(axis, angle);
+    /**
+     * Subtract vector by float value
+     */
+    Vector4 operator-(const float value) const {
+        return ::Vector4SubtractValue(*this, value);
     }
 
-    static Vector4 FromEuler(const float pitch, const float yaw, const float roll) {
-        return ::QuaternionFromEuler(pitch, yaw, roll);
+    /**
+     * Subtract vector by float value
+     */
+    Vector4& operator-=(const float value) {
+        set(::Vector4SubtractValue(*this, value));
+
+        return *this;
     }
 
-    static Vector4 FromEuler(const ::Vector3& vector3) {
-        return ::QuaternionFromEuler(vector3.x, vector3.y, vector3.z);
+    /**
+     * Subtract vector by float value
+     */
+    friend Vector4 operator-(const float lhs, const Vector4& rhs) { return rhs - lhs; }
+
+    /**
+     * Negate provided vector
+     */
+    RLCPP_NODISCARD Vector4 Negate() const { return ::Vector4Negate(*this); }
+
+    /**
+     * Negate provided vector
+     */
+    Vector4 operator-() const { return ::Vector4Negate(*this); }
+
+    /**
+     * Multiply vector by vector
+     */
+    RLCPP_NODISCARD Vector4 Multiply(const ::Vector4& other) const { return ::Vector4Multiply(*this, other); }
+
+    /**
+     * Multiply vector by vector
+     */
+    Vector4 operator*(const ::Vector4& other) const { return ::Vector4Multiply(*this, other); }
+
+    /**
+     * Multiply vector by vector
+     */
+    Vector4& operator*=(const ::Vector4& other) {
+        set(::Vector4Multiply(*this, other));
+
+        return *this;
     }
 
-    Vector3 ToEuler() const {
-        return ::QuaternionToEuler(*this);
+    /**
+     * Scale vector components by value (multiply)
+     */
+    RLCPP_NODISCARD Vector4 Scale(const float scale) const { return ::Vector4Scale(*this, scale); }
+
+    /**
+     * Scale vector components by value (multiply)
+     */
+    Vector4 operator*(const float scale) const { return ::Vector4Scale(*this, scale); }
+
+    /**
+     * Scale vector components by value (multiply)
+     */
+    Vector4& operator*=(const float scale) {
+        set(::Vector4Scale(*this, scale));
+
+        return *this;
+    }
+
+    /**
+     * Scale vector components by value (multiply)
+     */
+    friend Vector4 operator*(const float lhs, const Vector4& rhs) { return rhs * lhs; }
+
+    /**
+     * Divide vector by vector
+     */
+    RLCPP_NODISCARD Vector4 Divide(const ::Vector4& vector4) const { return ::Vector4Divide(*this, vector4); }
+
+    /**
+     * Divide vector by vector
+     */
+    Vector4 operator/(const ::Vector4& vector4) const { return ::Vector4Divide(*this, vector4); }
+
+    /**
+     * Divide vector by vector
+     */
+    Vector4& operator/=(const ::Vector4& vector4) {
+        set(::Vector4Divide(*this, vector4));
+
+        return *this;
+    }
+
+    /**
+     * Divide vector components by value
+     */
+    RLCPP_NODISCARD constexpr Vector4 Divide(const float div) const { return ::Vector4{x / div, y / div, z / div, w / div}; }
+
+    /**
+     * Divide vector components by value
+     */
+    Vector4 operator/(const float div) const { return Divide(div); }
+
+    /**
+     * Divide vector components by value
+     */
+    Vector4& operator/=(const float div) {
+        x /= div;
+        y /= div;
+        z /= div;
+        w /= div;
+
+        return *this;
+    }
+
+    /**
+     * Divide vector components by value
+     */
+    constexpr friend Vector4 operator/(const float lhs, const Vector4& rhs) {
+        return Vector4{
+            lhs / rhs.x,
+            lhs / rhs.y,
+            lhs / rhs.z,
+            lhs / rhs.w
+        };
+    }
+
+    RLCPP_NODISCARD float Length() const { return ::Vector4Length(*this); }
+
+    RLCPP_NODISCARD float LengthSqr() const { return ::Vector4LengthSqr(*this); }
+
+    RLCPP_NODISCARD float DotProduct(const ::Vector4& v2) const { return ::Vector4DotProduct(*this, v2); }
+
+    RLCPP_NODISCARD float Distance(const ::Vector4& v2) const { return ::Vector4Distance(*this, v2); }
+
+    RLCPP_NODISCARD float DistanceSqr(const ::Vector4& v2) const { return ::Vector4DistanceSqr(*this, v2); }
+
+    RLCPP_NODISCARD Vector4 Normalize() const { return ::Vector4Normalize(*this); }
+
+    RLCPP_NODISCARD Vector4 Min(const ::Vector4& v2) const { return ::Vector4Min(*this, v2); }
+
+    RLCPP_NODISCARD Vector4 Max(const ::Vector4& v2) const { return ::Vector4Max(*this, v2); }
+
+    RLCPP_NODISCARD Vector4 Lerp(const ::Vector4& v2, const float amount) const { return ::Vector4Lerp(*this, v2, amount); }
+
+    RLCPP_NODISCARD Vector4 MoveTowards(const ::Vector4& target, const float maxDistance) const { return ::Vector4MoveTowards(*this, target, maxDistance); }
+
+    RLCPP_NODISCARD Vector4 Invert() const { return ::Vector4Invert(*this); }
+
+    /*
+     * Check whether two given vectors are almost equal
+     */
+    RLCPP_NODISCARD bool Equals(const ::Vector4& other) const {
+        return static_cast<bool>(::Vector4Equals(*this, other));
     }
 #endif
 
-    Color ColorFromNormalized() const {
-        return ::ColorFromNormalized(*this);
-    }
+    RLCPP_NODISCARD Color ColorFromNormalized() const { return ::ColorFromNormalized(*this); }
 
-    operator Color() const {
-        return ColorFromNormalized();
-    }
-
- protected:
+    operator Color() const { return ColorFromNormalized(); }
+protected:
     void set(const ::Vector4& vec4) {
         x = vec4.x;
         y = vec4.y;
@@ -170,12 +297,8 @@ class Vector4 : public ::Vector4 {
     }
 };
 
-// Alias the Vector4 as Quaternion.
-using Quaternion = Vector4;
-
-}  // namespace raylib
+} // namespace raylib
 
 using RVector4 = raylib::Vector4;
-using RQuaternion = raylib::Quaternion;
 
-#endif  // RAYLIB_CPP_INCLUDE_VECTOR4_HPP_
+#endif // RAYLIB_CPP_INCLUDE_VECTOR4_HPP_

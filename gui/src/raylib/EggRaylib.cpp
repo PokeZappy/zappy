@@ -15,7 +15,7 @@ namespace Zappy {
     {
         _scale = _gridSize * 0.06;
 
-        _model.materials[1].shader = shader;
+        _model.materials[modelMaterialIndex(_model)].shader = shader;
 
         offset = raylib::Vector2(
                 Utils::generateRandomFloat(gridSize / 1.3),

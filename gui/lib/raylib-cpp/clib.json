@@ -1,6 +1,6 @@
 {
   "name": "raylib-cpp",
-  "version": "5.0.1",
+  "version": "6.0.3",
   "repo": "RobLoach/raylib-cpp",
   "description": "raylib-cpp: C++ Object-Oriented Wrapper for raylib",
   "homepage": "https://github.com/robloach/raylib-cpp",
@@ -40,6 +40,7 @@
     "include/ModelAnimation.hpp",
     "include/Mouse.hpp",
     "include/Music.hpp",
+    "include/Quaternion.hpp",
     "include/physac.hpp",
     "include/Ray.hpp",
     "include/RayCollision.hpp",

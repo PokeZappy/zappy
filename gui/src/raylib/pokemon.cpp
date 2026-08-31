@@ -64,15 +64,24 @@ namespace Zappy {
         }
         catch (libconfig::SettingNotFoundException &ex)
         {
-            std::cerr << ex.what() << std::endl;
-            // return (false);
+            std::cerr << "getPokemon: type '" << t
+                << "' not found in pokemons.cfg: " << ex.what() << std::endl;
         }
         catch (libconfig::SettingTypeException &ex)
         {
-            std::cerr << ex.what() << std::endl;
-            // return (false);
+            std::cerr << "getPokemon: type '" << t
+                << "' has an unexpected type in pokemons.cfg: " << ex.what() << std::endl;
         }
-        return PokemonInfo();
+        // Never hand back an empty id: it would build the model path
+        // "models/pokemons/.glb", which loads nothing and leaves the player invisible.
+        std::cerr << "getPokemon: falling back to '" << FALLBACK_POKEMON_ID
+            << "' for team '" << team << "'" << std::endl;
+        PokemonInfo fallback;
+        fallback.id = FALLBACK_POKEMON_ID;
+        fallback.displayName = FALLBACK_POKEMON_ID;
+        fallback.stage = 1;
+        fallback.shiny = false;
+        return fallback;
     }
 
     void Raylib::testEvolution(void)

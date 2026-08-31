@@ -48,7 +48,8 @@ namespace Zappy {
         }
 
         // -- Shader Lighting --
-        SetConfigFlags(FLAG_MSAA_4X_HINT);  // Enable Multi Sampling Anti Aliasing 4x (if available)
+        // NOTE: config flags (MSAA, resizable) are set in main() -- raylib ignores
+        // SetConfigFlags() once the window exists.
         _shader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(_shader, "viewPos");
         // Ambient light level (some basic lighting)
         int ambientLoc = GetShaderLocation(_shader, "ambient");
@@ -59,6 +60,11 @@ namespace Zappy {
         debugMode = std::make_shared<DebugMode>(_assetsRoot, _shader, _gridSize);
         _hudMode = std::make_unique<HudMode>(_assetsRoot, _gridSize);
         _escapeMenu = std::make_shared<EscapeMenu>(_assetsRoot, *this);
+
+        // Match the monitor before going fullscreen, otherwise the backbuffer stays at
+        // the design resolution and the picture is letterboxed on larger displays.
+        int monitor = GetCurrentMonitor();
+        _window.SetSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
         _window.ToggleFullscreen();
 
         // Create lights
@@ -101,10 +107,10 @@ namespace Zappy {
         _rockTextures.push_back(_assetsRoot + "textures/pokeball/luxury_ball.png");
         _rockTextures.push_back(_assetsRoot + "textures/pokeball/master_ball.png");
         _rockAnimations = raylib::ModelAnimation::Load(_assetsRoot + POKEBALL_MODEL_PATH);
-        _rockModel.materials[1].shader = _shader;
+        _rockModel.materials[modelMaterialIndex(_rockModel)].shader = _shader;
 
         // -- Food --
-        _foodModel.materials[1].shader = _shader;
+        _foodModel.materials[modelMaterialIndex(_foodModel)].shader = _shader;
         _listTypes = {"grass", "fire", "water",
                       "steel", "dragon", "electric",
                       "bug", "psychic", "ground",
@@ -127,7 +133,7 @@ namespace Zappy {
         // -- Eggs --
         _eggModelAnimations = raylib::ModelAnimation::Load(_assetsRoot + EGG_MODEL_PATH);
 
-        _moon.materials[1].shader = _shader;
+        _moon.materials[modelMaterialIndex(_moon)].shader = _shader;
 
         raylib::Color baseColor = raylib::Color(0x5D76F1);
         for (int i = 0; i < _tv.materialCount; i++) {

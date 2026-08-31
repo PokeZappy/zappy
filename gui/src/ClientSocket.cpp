@@ -33,8 +33,12 @@ void ClientSocket::receive(int flags)
 {
     char buffer[BUFFER_SIZE] = {0};
     int valread = recv(_socketFd, buffer, sizeof(buffer) - 1, flags);
-    buffer[valread] = '\0';
-    _receiveBuffer += buffer;
+
+    // With MSG_DONTWAIT recv returns -1 whenever nothing is pending, which is the
+    // common case; indexing the buffer with it would write out of bounds.
+    if (valread <= 0)
+        return;
+    _receiveBuffer.append(buffer, valread);
 }
 
 void ClientSocket::sendData(std::string data)

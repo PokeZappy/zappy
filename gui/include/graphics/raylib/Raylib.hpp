@@ -18,6 +18,7 @@
 #include "RaylibModel.hpp"
 #include "RaylibModels.hpp"
 #include "Pantheon.hpp"
+#include "Layout.hpp"
 
 #include "raylib-cpp.hpp"
 #define RLIGHTS_IMPLEMENTATION
@@ -31,6 +32,9 @@
 #define MOON_MODEL_PATH "models/pokemons/lunatone.glb"
 #define ARENA_MODEL_PATH "models/arena.glb"
 #define DS_MODEL_PATH "models/nintendo_ds.m3d"
+// Used when a team cannot be resolved to a pokemon in pokemons.cfg, so that we never
+// build a model path out of an empty id.
+#define FALLBACK_POKEMON_ID "bulbasaur"
 
 // #define TILE_TEXTURE_PATH "textures/pokemon_tile.png"
 #define TILE_TEXTURE_PATH "textures/ice_tile.png"

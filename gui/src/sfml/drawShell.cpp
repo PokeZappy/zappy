@@ -21,7 +21,7 @@ namespace Zappy
             sf::Color textColor = sf::Color::White;
             if (command.getEntity() != nullptr) {
                 _shellTextTeamColor.setFillColor(getTeamColor(command.getEntity()->getTeam().getType()));
-                _shellTextTeamColor.setPosition(defaultOffsetX - 20, defaultOffsetY + 5);
+                _shellTextTeamColor.setPosition(sf::Vector2f(defaultOffsetX - 20, defaultOffsetY + 5));
                 _window.draw(_shellTextTeamColor);
                 textColor = getEntityColor(command.getEntity());
             }
@@ -29,7 +29,7 @@ namespace Zappy
             alpha -= 4;
             _shellText.setFillColor(textColor);
             _shellText.setString(command.text);
-            _shellText.setPosition(defaultOffsetX, defaultOffsetY);
+            _shellText.setPosition(sf::Vector2f(defaultOffsetX, defaultOffsetY));
             defaultOffsetY -= 20;
             _window.draw(_shellText);
         }

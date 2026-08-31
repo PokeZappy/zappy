@@ -1,38 +1,34 @@
 #ifndef RAYLIB_CPP_INCLUDE_MODELANIMATION_HPP_
 #define RAYLIB_CPP_INCLUDE_MODELANIMATION_HPP_
 
-#include <vector>
 #include <string>
-#include <cstring>
+#include <vector>
 
-#include "./raylib.hpp"
-#include "./raylib-cpp-utils.hpp"
 #include "./Mesh.hpp"
+#include "./RaylibException.hpp"
+#include "./raylib-cpp-utils.hpp"
+#include "./raylib.hpp"
 
 namespace raylib {
 /**
  * Model animation
  */
 class ModelAnimation : public ::ModelAnimation {
- public:
-    ModelAnimation(const ::ModelAnimation& model) {
-        set(model);
-    }
+public:
+    ModelAnimation(const ::ModelAnimation& model) { set(model); }
 
     ModelAnimation(const ModelAnimation&) = delete;
 
-    ModelAnimation(ModelAnimation&& other) {
+    ModelAnimation(ModelAnimation&& other) noexcept {
         set(other);
 
         other.boneCount = 0;
-        other.frameCount = 0;
-        other.bones = nullptr;
-        other.framePoses = nullptr;
+        other.keyframeCount = 0;
+        other.keyframePoses = nullptr;
     }
 
-    ~ModelAnimation() {
-        Unload();
-    }
+    // Unloads animation data using populated animCount field, which is set by Load() method.
+    ~ModelAnimation() { Unload(); }
 
     /**
      * Load model animations from file
@@ -40,6 +36,7 @@ class ModelAnimation : public ::ModelAnimation {
     static std::vector<ModelAnimation> Load(const std::string& fileName) {
         int count = 0;
         ::ModelAnimation* modelAnimations = ::LoadModelAnimations(fileName.c_str(), &count);
+
         std::vector<ModelAnimation> mats(modelAnimations, modelAnimations + count);
 
         RL_FREE(modelAnimations);
@@ -47,10 +44,37 @@ class ModelAnimation : public ::ModelAnimation {
         return mats;
     }
 
+    /**
+     * Load a single model animation from file by index
+     *
+     * @throws raylib::RaylibException Throws if the index is out of bounds.
+     */
+    static ModelAnimation Load(const std::string& fileName, int index) {
+        int count = 0;
+        ::ModelAnimation* modelAnimations = ::LoadModelAnimations(fileName.c_str(), &count);
+        if (index < 0 || index >= count) {
+            ::UnloadModelAnimations(modelAnimations, count);
+            throw RaylibException(TextFormat("ModelAnimation index %d out of range [0, %d)", index, count));
+        }
+        ModelAnimation result(modelAnimations[index]);
+        modelAnimations[index].keyframePoses = nullptr;
+        ::UnloadModelAnimations(modelAnimations, count);
+        return result;
+    }
+
+    /**
+     * Get the number of model animations in a file without fully loading them
+     */
+    static int LoadCount(const std::string& fileName) {
+        int count = 0;
+        ::ModelAnimation* modelAnimations = ::LoadModelAnimations(fileName.c_str(), &count);
+        ::UnloadModelAnimations(modelAnimations, count);
+        return count;
+    }
+
     GETTERSETTER(int, BoneCount, boneCount)
-    GETTERSETTER(::BoneInfo*, Bones, bones)
-    GETTERSETTER(int, FrameCount, frameCount)
-    GETTERSETTER(::Transform**, FramePoses, framePoses)
+    GETTERSETTER(int, KeyframeCount, keyframeCount)
+    GETTERSETTER(::Transform**, KeyframePoses, keyframePoses)
 
     ModelAnimation& operator=(const ::ModelAnimation& model) {
         set(model);
@@ -68,9 +92,8 @@ class ModelAnimation : public ::ModelAnimation {
         set(other);
 
         other.boneCount = 0;
-        other.frameCount = 0;
-        other.bones = nullptr;
-        other.framePoses = nullptr;
+        other.keyframeCount = 0;
+        other.keyframePoses = nullptr;
 
         return *this;
     }
@@ -79,35 +102,58 @@ class ModelAnimation : public ::ModelAnimation {
      * Unload animation data
      */
     void Unload() {
-        ::UnloadModelAnimation(*this);
+        if (keyframePoses != nullptr) {
+            // LOCAL PATCH: UnloadModelAnimations() ends with RL_FREE(animations), which
+            // frees the pointer it is given. These objects live inside the std::vector
+            // returned by Load(), so passing `this` calls free() on an interior pointer
+            // that was never separately allocated -> "free(): invalid size".
+            // raylib 6.0 removed the singular UnloadModelAnimation(), so the
+            // per-animation cleanup is inlined here, minus that final array free.
+            for (int i = 0; i < keyframeCount; i++) RL_FREE(keyframePoses[i]);
+            RL_FREE(keyframePoses);
+            keyframePoses = nullptr;
+        }
+    }
+
+    static void Unload(ModelAnimation *modelAnimation, int count) {
+        ::UnloadModelAnimations(modelAnimation, count); 
     }
 
     /**
      * Update model animation pose
      */
-    ModelAnimation& Update(const ::Model& model, int frame) {
+    ModelAnimation& Update(const ::Model& model, float frame) {
         ::UpdateModelAnimation(model, *this, frame);
         return *this;
     }
 
     /**
-     * Check model animation skeleton match
+     * Blend two animation poses
      */
-    bool IsValid(const ::Model& model) const {
-        return ::IsModelAnimationValid(model, *this);
+    ModelAnimation& Blend(const ::Model& model, float frameA, const ::ModelAnimation& animB, float frameB, float blend) {
+        ::UpdateModelAnimationEx(model, *this, frameA, animB, frameB, blend);
+        return *this;
     }
 
- protected:
+
+    /**
+     * Check model animation skeleton match
+     */
+    RLCPP_NODISCARD bool IsValid(const ::Model& model) const { return ::IsModelAnimationValid(model, *this); }
+protected:
     void set(const ::ModelAnimation& model) {
         boneCount = model.boneCount;
-        frameCount = model.frameCount;
-        bones = model.bones;
-        framePoses = model.framePoses;
-        std::strcpy(name, model.name);
+        keyframeCount = model.keyframeCount;
+        keyframePoses = model.keyframePoses;
+
+        // Duplicate the name. TextCopy() uses the null terminator, which we ignore here.
+        for (int i = 0; i < 32; i++) {
+            name[i] = model.name[i];
+        }
     }
 };
-}  // namespace raylib
+} // namespace raylib
 
 using RModelAnimation = raylib::ModelAnimation;
 
-#endif  // RAYLIB_CPP_INCLUDE_MODELANIMATION_HPP_
+#endif // RAYLIB_CPP_INCLUDE_MODELANIMATION_HPP_

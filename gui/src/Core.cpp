@@ -35,6 +35,11 @@ namespace Zappy
                     if (_world.handleCommand(command.value()))
                         return;
                 } catch (const std::exception &e) {
+                    std::string faulty = command.value();
+                    if (!faulty.empty() && faulty.back() == '\n')
+                        faulty.pop_back();
+                    std::cerr << "handleCommand(\"" << faulty << "\"): "
+                        << e.what() << std::endl;
                 }
                 command = _socket.getNextCommand();
             }

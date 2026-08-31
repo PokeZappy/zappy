@@ -13,6 +13,7 @@
 #include "raylib-cpp.hpp"
 #include <chrono>
 #include "IGraphicalModule.hpp"
+#include "Layout.hpp"
 
 namespace Zappy {
 
@@ -74,6 +75,7 @@ namespace Zappy {
             std::chrono::time_point<std::chrono::steady_clock> _animClock;
 
             // Start animation
+            // design space -- resolved to screen space at draw time (see render.cpp)
             raylib::Vector2 _endTextPos = raylib::Vector2(200, 10);
             raylib::Vector2 _startTextPos = raylib::Vector2(200, GUI_HEIGHT / 2 - 100);
             float _startDuration = 3.0f;

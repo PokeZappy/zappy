@@ -12,7 +12,7 @@ namespace raylib {
  * @see raylib::TextureUnmanaged
  */
 class Texture : public TextureUnmanaged {
- public:
+public:
     using TextureUnmanaged::TextureUnmanaged;
 
     /**
@@ -28,7 +28,7 @@ class Texture : public TextureUnmanaged {
     /**
      * Move constructor.
      */
-    Texture(Texture&& other) {
+    Texture(Texture&& other)  noexcept {
         set(other);
 
         other.id = 0;
@@ -41,9 +41,7 @@ class Texture : public TextureUnmanaged {
     /**
      * On destruction, unload the Texture.
      */
-    ~Texture() {
-        Unload();
-    }
+    ~Texture() { Unload(); }
 
     /**
      * Move assignment.
@@ -64,16 +62,41 @@ class Texture : public TextureUnmanaged {
 
         return *this;
     }
+
+    /**
+    * Unload previous texture, then load texture from image data
+    */
+    void Load(const ::Image& image) {
+        Unload();
+        TextureUnmanaged::Load(image);
+    }
+
+    /**
+    * Unload previous texture, then load cubemap from image.
+    * Multiple image cubemap layouts supported
+    */
+    void Load(const ::Image& image, int layoutType) {
+      Unload();
+      TextureUnmanaged::Load(image, layoutType);
+    }
+
+    /**
+    * Unload previous texture, then load texture from file into GPU memory (VRAM)
+    */
+    void Load(const std::string& fileName) {
+      Unload();
+      TextureUnmanaged::Load(fileName);
+    }
 };
 
 // Create the Texture aliases.
 using Texture2D = Texture;
 using TextureCubemap = Texture;
 
-}  // namespace raylib
+} // namespace raylib
 
 using RTexture = raylib::Texture;
 using RTexture2D = raylib::Texture2D;
 using RTextureCubemap = raylib::TextureCubemap;
 
-#endif  // RAYLIB_CPP_INCLUDE_TEXTURE_HPP_
+#endif // RAYLIB_CPP_INCLUDE_TEXTURE_HPP_

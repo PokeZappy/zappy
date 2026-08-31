@@ -29,7 +29,10 @@ int main(int ac, char **av)
     if (ac == 2 && strcmp(av[1], "-help") == 0)
         return displayUsage();
     SetTraceLogCallback(LogColored);
-    SetTraceLogLevel(LOG_ERROR);
+    SetTraceLogLevel(LOG_WARNING);
+
+    // Must run before the window exists: raylib ignores SetConfigFlags afterwards.
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE);
 
     std::string assetsRoot;
 
