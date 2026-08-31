@@ -10,19 +10,18 @@ independent binaries:
 | `zappy_gui`    | C++      | Graphical viewer. Connects as a spectator, draws the world.   |
 | `zappy_ai`     | Python   | AI client. One process = one player.                          |
 
-The server must be started first; the GUI and the AI both connect to it over TCP.
+The server must be started first. The GUI and the AI both connect to it over TCP.
 
 ![Zappy title screen](docs/title-screen.png)
 
 ### Showcase
 
 <video src="https://github.com/PokeZappy/zappy/raw/main/docs/showcase.mp4" controls muted width="100%" poster="docs/title-screen.png">
-  Your viewer can't play the embed —
-  <a href="docs/showcase.mp4">download the showcase video</a> instead.
+  If the embed does not play, <a href="docs/showcase.mp4">download the showcase video</a> instead.
 </video>
 
-The 3D raylib viewer in motion. (The player renders on GitHub; other Markdown
-viewers fall back to the download link.)
+The 3D raylib viewer in motion. The player renders on GitHub. Other Markdown
+viewers fall back to the download link.
 
 ---
 
@@ -38,7 +37,7 @@ Install these before building:
 | `python3`    | For the AI client (tested on 3.14)                               |
 | `make`       |                                                                  |
 
-Raylib is **vendored** in [gui/lib/raylib/](gui/lib/raylib/) and built automatically — you do
+Raylib is **vendored** in [gui/lib/raylib/](gui/lib/raylib/) and built automatically, so you do
 not need it installed system-wide.
 
 Check that SFML and libconfig are visible to `pkg-config`:
@@ -97,7 +96,7 @@ make fclean   # remove object files and binaries
 
 Use **three terminals**, in this order.
 
-### Terminal 1 — the server
+### Terminal 1: the server
 
 ```text
 USAGE: ./zappy_server -p [port] -x [width] -y [height] -n {name1} {name2} ... {namex} -c [clientsNb] -f [freq]
@@ -106,8 +105,8 @@ USAGE: ./zappy_server -p [port] -x [width] -y [height] -n {name1} {name2} ... {n
 | Flag | Meaning                                                   |
 | ---- | --------------------------------------------------------- |
 | `-p` | Port to listen on                                          |
-| `-x` | World width — **must be between 10 and 30**                |
-| `-y` | World height — **must be between 10 and 30**               |
+| `-x` | World width (**must be between 10 and 30**)                |
+| `-y` | World height (**must be between 10 and 30**)               |
 | `-n` | Space-separated list of team names                         |
 | `-c` | Max number of clients allowed per team                     |
 | `-f` | Frequency: reciprocal of the time unit for action execution |
@@ -131,9 +130,9 @@ to watch individual actions).
 > ```
 >
 > If the port is already taken the server prints `zappy_server: Socket bind failed.`
-> and exits — pick another port.
+> and exits, so pick another port.
 
-### Terminal 2 — the GUI
+### Terminal 2: the GUI
 
 ```text
 USAGE: ./zappy_gui -p port -h machine
@@ -153,9 +152,9 @@ USAGE: ./zappy_gui -p port -h machine
 > **Run it from the repository root.** The GUI looks for its assets in `./assets`
 > then `./gui/assets` relative to the current directory, and exits with
 > `Folder assets not found` if neither exists ([gui/main.cpp:36-43](gui/main.cpp#L36-L43)). So the repo
-> root and the `gui/` directory both work; other directories do not.
+> root and the `gui/` directory both work. Other directories do not.
 
-### Terminal 3 — the AI clients
+### Terminal 3: the AI clients
 
 ```text
 USAGE: ./zappy_ai -p port -n name -h machine
@@ -164,7 +163,7 @@ USAGE: ./zappy_ai -p port -n name -h machine
 | Flag | Meaning                                                     |
 | ---- | ----------------------------------------------------------- |
 | `-p` | Server port                                                  |
-| `-n` | Team name — **must match one of the server's `-n` names**    |
+| `-n` | Team name (**must match one of the server's `-n` names**)    |
 | `-h` | Server address                                               |
 | `-d` | Debug mode: print the protocol exchange to stdout            |
 
@@ -173,10 +172,10 @@ USAGE: ./zappy_ai -p port -n name -h machine
 ```
 
 One process is one player, so run the command once per player you want. Each team
-accepts at most `-c` clients; connections beyond that are refused.
+accepts at most `-c` clients. Connections beyond that are refused.
 
 To spawn a whole team at once, [ai/launch_army.sh](ai/launch_army.sh) starts 20 clients in the
-background — but note its port (`2000`) and team name (`oui`) are hardcoded, so
+background, but note its port (`2000`) and team name (`oui`) are hardcoded, so
 edit it to match your server before using it.
 
 ### Full example
@@ -249,7 +248,7 @@ The server's unit tests link against [Criterion](https://github.com/Snaipe/Crite
 - **The server does not build on macOS.** [server/Makefile](server/Makefile) compiles the C
   sources with `g++`, which trips over `sigaction` and other POSIX details on
   macOS. Build it on Linux, or use one of the reference binaries below.
-- `make server` / `make gui` / `make ai` silently do nothing; use `make -C <dir>`
+- `make server` / `make gui` / `make ai` silently do nothing. Use `make -C <dir>`
   (see [Build](#2-build)).
 
 ### Reference server binaries
@@ -274,14 +273,13 @@ They speak the same protocol as `zappy_server` (plus a few extra flags such as
 
 ## 7. Acknowledgements
 
-- **[raylib](https://www.raylib.com/)** by Ramon Santamaria and contributors — the
+- **[raylib](https://www.raylib.com/)** by Ramon Santamaria and contributors is the
   3D rendering, windowing and audio backend of `zappy_gui`. Vendored in
   [gui/lib/raylib/](gui/lib/raylib/) (v6.0) together with
   **[raylib-cpp](https://github.com/RobLoach/raylib-cpp)** (v6.0.3). Both are
   released under the zlib/libpng license.
-- **[Cobblemon](https://cobblemon.com/)** — the Pokémon 3D models, animations and
-  Poké Ball assets under [gui/assets/models/](gui/assets/models/) come from the
-  Cobblemon project and remain the property of their respective creators. They are
-  used here for a non-commercial student project. Pokémon and Poké Ball are
-  trademarks of Nintendo / Game Freak / The Pokémon Company; this project is not
-  affiliated with or endorsed by them.
+- **[Cobblemon](https://cobblemon.com/)** provides the Pokémon 3D models, animations
+  and Poké Ball assets under [gui/assets/models/](gui/assets/models/). They remain the
+  property of their respective creators and are used here for a non-commercial
+  student project. Pokémon and Poké Ball are trademarks of Nintendo, Game Freak and
+  The Pokémon Company. This project is not affiliated with or endorsed by them.
