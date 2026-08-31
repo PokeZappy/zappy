@@ -14,10 +14,15 @@ The server must be started first; the GUI and the AI both connect to it over TCP
 
 ![Zappy title screen](docs/title-screen.png)
 
-<video src="docs/showcase.mp4" controls width="100%"></video>
+### Showcase
 
-▶ **[Watch the showcase video](docs/showcase.mp4)** — the 3D raylib viewer in motion
-(the embedded player above only renders on GitHub).
+<video src="https://github.com/PokeZappy/zappy/raw/main/docs/showcase.mp4" controls muted width="100%" poster="docs/title-screen.png">
+  Your viewer can't play the embed —
+  <a href="docs/showcase.mp4">download the showcase video</a> instead.
+</video>
+
+The 3D raylib viewer in motion. (The player renders on GitHub; other Markdown
+viewers fall back to the download link.)
 
 ---
 
