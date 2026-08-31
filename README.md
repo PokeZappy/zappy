@@ -1,3 +1,5 @@
+![Zappy title screen](docs/title-screen.png)
+
 # Zappy
 
 A network game where autonomous AI clients compete on a tiled world to gather
@@ -12,16 +14,7 @@ independent binaries:
 
 The server must be started first. The GUI and the AI both connect to it over TCP.
 
-![Zappy title screen](docs/title-screen.png)
-
-### Showcase
-
-<video src="https://github.com/PokeZappy/zappy/raw/main/docs/showcase.mp4" controls muted width="100%" poster="docs/title-screen.png">
-  If the embed does not play, <a href="docs/showcase.mp4">download the showcase video</a> instead.
-</video>
-
-The 3D raylib viewer in motion. The player renders on GitHub. Other Markdown
-viewers fall back to the download link.
+![The Zappy GUI in motion](docs/showcase.gif)
 
 ---
 
